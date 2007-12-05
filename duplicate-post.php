@@ -407,16 +407,15 @@ function duplicate_post_create_duplicate_from_post($post) {
 	$post_excerpt    = str_replace("'", "''", $post->post_excerpt);
 	$post_title      = str_replace("'", "''", $post->post_title);
 	$post_status     = str_replace("'", "''", $post->post_status);
-	$post_name       = str_replace("'", "''", $post->post_name);
 	$comment_status  = str_replace("'", "''", $post->comment_status);
 	$ping_status     = str_replace("'", "''", $post->ping_status);
 	
 	// Insert the new template in the post table
 	$wpdb->query(
 			"INSERT INTO $wpdb->posts
-			(post_author, post_date, post_date_gmt, post_content, post_content_filtered, post_title, post_excerpt,  post_status, post_type, comment_status, ping_status, post_password, post_name, to_ping, pinged, post_modified, post_modified_gmt, post_parent, menu_order, post_mime_type)
+			(post_author, post_date, post_date_gmt, post_content, post_content_filtered, post_title, post_excerpt,  post_status, post_type, comment_status, ping_status, post_password, to_ping, pinged, post_modified, post_modified_gmt, post_parent, menu_order, post_mime_type)
 			VALUES
-			('$new_post_author->ID', '$new_post_date', '$new_post_date_gmt', '$post_content', '$post_content_filtered', '$post_title', '$post_excerpt', 'draft', '$new_post_type', '$comment_status', '$ping_status', '$template->post_password', '$post_name', '$template->to_ping', '$template->pinged', '$new_post_date', '$new_post_date_gmt', '$template->post_parent', '$template->menu_order', '$template->post_mime_type')");
+			('$new_post_author->ID', '$new_post_date', '$new_post_date_gmt', '$post_content', '$post_content_filtered', '$post_title', '$post_excerpt', 'draft', '$new_post_type', '$comment_status', '$ping_status', '$template->post_password', '$template->to_ping', '$template->pinged', '$new_post_date', '$new_post_date_gmt', '$template->post_parent', '$template->menu_order', '$template->post_mime_type')");
 			
 	$new_post_id = $wpdb->insert_id;
 		
