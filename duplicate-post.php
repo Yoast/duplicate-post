@@ -3,7 +3,7 @@
 Plugin Name: Duplicate Post
 Plugin URI: http://www.lopo.it/duplicate-post.tar.gz
 Description: Create a copy of a post.
-Version: 0.1
+Version: 0.2
 Author: Enrico Battocchi
 Author URI: http://www.lopo.it
 */
