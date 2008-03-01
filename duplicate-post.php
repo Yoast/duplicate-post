@@ -3,7 +3,7 @@
 Plugin Name: Duplicate Post
 Plugin URI: http://www.lopo.it/duplicate-post.tar.gz
 Description: Create a copy of a post.
-Version: 0.2
+Version: 0.3
 Author: Enrico Battocchi
 Author URI: http://www.lopo.it
 */
@@ -26,7 +26,7 @@ Author URI: http://www.lopo.it
 */
 
 // Version of the plugin
-define('DUPLICATE_POST_CURRENT_VERSION', '0.1' );
+define('DUPLICATE_POST_CURRENT_VERSION', '0.3' );
 define('DUPLICATE_POST_COLUMN', 'control_duplicate_post');
 define('DUPLICATE_POST_VIEW_USER_LEVEL_OPTION', 'duplicate_post_view_user_level');
 define('DUPLICATE_POST_CREATE_USER_LEVEL_OPTION', 'duplicate_post_create_user_level');
@@ -106,9 +106,11 @@ function duplicate_post_make_duplicate_link($column_name, $id) {
 
 
 /**
- * Add a button in the post edit form to create a template from current page
+ * Add a button in the post edit form to create a clone
 */
 add_action( 'edit_form_advanced', 'duplicate_post_add_duplicate_post_button' );
+
+
 
 function duplicate_post_add_duplicate_post_button() {
 	if ( isset( $_GET['post'] ) && duplicate_post_is_current_user_allowed_to_create()) {
@@ -137,29 +139,36 @@ function duplicate_post_add_duplicate_post_button() {
 }
 
 /**
- * Add a button in the page edit form to create a template from current page
- *
-add_action( 'edit_page_form', 'duplicate_post_add_promote_page_to_template_button' );
+ * Add a button in the page edit form to create a clone
+*/
+add_action( 'edit_page_form', 'duplicate_post_add_duplicate_page_button' );
 
-function duplicate_post_add_promote_page_to_template_button() {
-	if ( isset( $_GET['post'] ) && duplicate_post_is_current_user_allowed_to_create()) {
+function duplicate_post_add_duplicate_page_button() {
+if ( isset( $_GET['post'] ) && duplicate_post_is_current_user_allowed_to_create()) {
+		$notifyUrl = "edit.php?page=duplicate-post/save_as_new_page.php&post=" . $_GET['post'];
 ?>
 		<script language="JavaScript">
 		<!--
-			function promote_page_to_template( thisForm ) {
-				thisForm.action = "edit.php?page=post-template/templatize_page.php";
+			function save_as_copy( thisForm ) {
+				thisForm.referredby.value = "<?php echo $notifyUrl; ?>";
+				thisForm.action = "edit.php?page=duplicate-post/save_as_new_page.php";
 				thisForm.submit();
 			}
 		// -->
 		</script>	
 		<input type="hidden" name="post" value="<?php echo $_GET['post']; ?>" />
 		<p class="submit">
-			<input type="submit" name="SubmitNotification" value="<?php echo __('Templatize', DUPLICATE_POST_I18N_DOMAIN) . ' &raquo;'; ?>" onclick="promote_page_to_template( this.form )" />
+			<span style="font-weight: bold; color: red;">
+				<?php _e('Click here to create a copy of this page.', DUPLICATE_POST_I18N_DOMAIN); ?>
+			</span>
+			<input type="submit" name="SubmitNotification" 
+				value="<?php echo __('Make Copy', DUPLICATE_POST_I18N_DOMAIN) . ' &raquo;'; ?>" 
+				onclick="save_as_copy( this.form )" />
 		</p>
 <?php
 	}
 }
-*/
+
 /**
  * Wrapper for the option 'duplicate_post_view_user_level'
  */
@@ -415,7 +424,7 @@ function duplicate_post_create_duplicate_from_post($post) {
 			"INSERT INTO $wpdb->posts
 			(post_author, post_date, post_date_gmt, post_content, post_content_filtered, post_title, post_excerpt,  post_status, post_type, comment_status, ping_status, post_password, to_ping, pinged, post_modified, post_modified_gmt, post_parent, menu_order, post_mime_type)
 			VALUES
-			('$new_post_author->ID', '$new_post_date', '$new_post_date_gmt', '$post_content', '$post_content_filtered', '$post_title', '$post_excerpt', 'draft', '$new_post_type', '$comment_status', '$ping_status', '$template->post_password', '$template->to_ping', '$template->pinged', '$new_post_date', '$new_post_date_gmt', '$template->post_parent', '$template->menu_order', '$template->post_mime_type')");
+			('$new_post_author->ID', '', '', '$post_content', '$post_content_filtered', '$post_title', '$post_excerpt', 'draft', '$new_post_type', '$comment_status', '$ping_status', '$post->post_password', '$post->to_ping', '$post->pinged', '', '', '$post->post_parent', '$post->menu_order', '$post->post_mime_type')");
 			
 	$new_post_id = $wpdb->insert_id;
 		
@@ -431,7 +440,7 @@ function duplicate_post_create_duplicate_from_post($post) {
 /**
  * Create a duplicate from a page
  */
-function duplicate_post_create_page_from_template($post) {
+function duplicate_post_create_duplicate_from_page($post) {
 	global $wpdb;
 	$new_post_type = 'page';
 	$new_post_date = current_time('mysql');
@@ -451,12 +460,12 @@ function duplicate_post_create_page_from_template($post) {
 			"INSERT INTO $wpdb->posts
 			(post_author, post_date, post_date_gmt, post_content, post_content_filtered, post_title, post_excerpt,  post_status, post_type, comment_status, ping_status, post_password, post_name, to_ping, pinged, post_modified, post_modified_gmt, post_parent, menu_order, post_mime_type)
 			VALUES
-			('$post->post_author', '$new_post_date', '$new_post_date_gmt', '$post_content', '$post_content_filtered', '$post_title', '$post_excerpt', 'private', '$new_post_type', '$comment_status', '$ping_status', '$post->post_password', '$post_name', '$post->to_ping', '$post->pinged', '$new_post_date', '$new_post_date_gmt', '$post->post_parent', '$post->menu_order', '$post->post_mime_type')");
+			('$post->post_author', '', '', '$post_content', '$post_content_filtered', '$post_title', '$post_excerpt', 'draft', '$new_post_type', '$comment_status', '$ping_status', '$post->post_password', '$post_name', '$post->to_ping', '$post->pinged', '', '', '$post->post_parent', '$post->menu_order', '$post->post_mime_type')");
 			
 	$new_page_id = $wpdb->insert_id;
 	
 	// Copy the meta information
-	duplicate_post_copy_post_meta_info($template->ID, $new_page_id);
+	duplicate_post_copy_post_meta_info($post->ID, $new_page_id);
 	
 	return $new_page_id;
 }

@@ -3,7 +3,7 @@ Contributors: lopo
 Tags: duplicate, post
 Requires at least: 2.3
 Tested up to: 2.3.1
-Stable tag: 0.2
+Stable tag: 0.3
 
 Create a copy of a post.
 
@@ -14,6 +14,8 @@ Allows to create a draft copy of a current post in two ways:
 2. While editing a post, you can click on 'Make Copy' button.
 
 Both ways lead to the edit page of the new draft: change what you want, click on 'Publish' and you're done.
+
+If you want to clone a page, you can only do it with the "Make Copy" button: Wordpress API don't allow to add a 'Duplicate' link in the 'Manage Pages' page.
 
 Credit must be given to the (great) [Post Template](http://post-templates.vincentprat.info) plugin by Vincent Prat: I made this by hacking his work to get something more focused to a sporadic use, without the need to create and manage templates just to make simple copies of some posts every now and then. If my plugin doesn't fits your needs (and even if it does) check Vincent's.
 
