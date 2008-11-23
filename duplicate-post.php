@@ -3,12 +3,12 @@
 Plugin Name: Duplicate Post
 Plugin URI: http://www.lopo.it/duplicate-post.tar.gz
 Description: Create a copy of a post.
-Version: 0.3
+Version: 0.4
 Author: Enrico Battocchi
 Author URI: http://www.lopo.it
 */
 
-/*  Copyright 2007  Enrico Battocchi  (email : enrico.battocchi@gmail.com)
+/*  Copyright 2008	Enrico Battocchi  (email : enrico.battocchi@gmail.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -331,6 +331,10 @@ function duplicate_post_js_escape($text) {
 function duplicate_post_get_page($id) {
 	global $wpdb;
 	$post = $wpdb->get_results("SELECT * FROM $wpdb->posts WHERE ID=$id");
+	if ($post->post_type == "revision"){
+		$id = $post->post_parent;
+		$post = $wpdb->get_results("SELECT * FROM $wpdb->posts WHERE ID=$id");
+		}
 	return $post[0];
 }
 
@@ -340,6 +344,10 @@ function duplicate_post_get_page($id) {
 function duplicate_post_get_post($id) {
 	global $wpdb;
 	$post = $wpdb->get_results("SELECT * FROM $wpdb->posts WHERE ID=$id");
+	if ($post->post_type == "revision"){
+		$id = $post->post_parent;
+		$post = $wpdb->get_results("SELECT * FROM $wpdb->posts WHERE ID=$id");
+		}
 	return $post[0];
 }
 
