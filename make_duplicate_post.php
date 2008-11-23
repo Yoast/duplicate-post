@@ -6,11 +6,11 @@
 </div>
 <?php
 	} else {
-		// Get the original template
+		// Get the original post
 		$id = (isset($_GET['post']) ? $_GET['post'] : $_POST['post']);	
 		$post = duplicate_post_get_post($id);
 		
-		// Copy the post and insert it as a template
+		// Copy the post and insert it
 		if (isset($post) && $post!=null) {
 			$new_id = duplicate_post_create_duplicate_from_post($post);
 		
