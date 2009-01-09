@@ -3,7 +3,7 @@
 Plugin Name: Duplicate Post
 Plugin URI: http://www.lopo.it/duplicate-post.tar.gz
 Description: Create a copy of a post.
-Version: 0.4
+Version: 0.5
 Author: Enrico Battocchi
 Author URI: http://www.lopo.it
 */
@@ -398,10 +398,12 @@ function duplicate_post_copy_post_meta_info($id, $new_id) {
 		for ($i=0; $i<count($post_meta_infos); $i++) {
 			$meta_info = $post_meta_infos[$i];
 			
+			$meta_value = addslashes($meta_info->meta_value);
+
 			if ($i<count($post_meta_infos)-1) {
-				$sql_query .= "SELECT $new_id, '$meta_info->meta_key', '$meta_info->meta_value' UNION ALL ";
+				$sql_query .= "SELECT $new_id, '$meta_info->meta_key', '$meta_value' UNION ALL ";
 			} else {
-				$sql_query .= "SELECT $new_id, '$meta_info->meta_key', '$meta_info->meta_value'";
+				$sql_query .= "SELECT $new_id, '$meta_info->meta_key', '$meta_value'";
 			}
 		}
 	
