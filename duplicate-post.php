@@ -26,7 +26,7 @@ Author URI: http://www.lopo.it
 */
 
 // Version of the plugin
-define('DUPLICATE_POST_CURRENT_VERSION', '0.3' );
+define('DUPLICATE_POST_CURRENT_VERSION', '0.5' );
 define('DUPLICATE_POST_COLUMN', 'control_duplicate_post');
 define('DUPLICATE_POST_VIEW_USER_LEVEL_OPTION', 'duplicate_post_view_user_level');
 define('DUPLICATE_POST_CREATE_USER_LEVEL_OPTION', 'duplicate_post_create_user_level');
