@@ -3,7 +3,7 @@
 Plugin Name: Duplicate Post
 Plugin URI: http://www.lopo.it/duplicate-post.tar.gz
 Description: Create a copy of a post.
-Version: 0.5
+Version: 0.6
 Author: Enrico Battocchi
 Author URI: http://www.lopo.it
 */
@@ -30,7 +30,7 @@ if(!is_admin())
 return;
 
 // Version of the plugin
-define('DUPLICATE_POST_CURRENT_VERSION', '0.5' );
+define('DUPLICATE_POST_CURRENT_VERSION', '0.6' );
 define('DUPLICATE_POST_COLUMN', 'control_duplicate_post');
 define('DUPLICATE_POST_VIEW_USER_LEVEL_OPTION', 'duplicate_post_view_user_level');
 define('DUPLICATE_POST_CREATE_USER_LEVEL_OPTION', 'duplicate_post_create_user_level');
@@ -42,14 +42,12 @@ define('DUPLICATE_POST_I18N_DOMAIN', 'duplicate-post');
 /**
  * Initialise the internationalisation domain
  */
-$duplicate_post_is_i18n_setup = false;
-function duplicate_post_init_i18n() {
-	global $duplicate_post_is_i18n_setup;
-
-	if ($duplicate_post_is_i18n_setup == false) {
-		load_plugin_textdomain(DUPLICATE_POST_I18N_DOMAIN, 'wp-content/plugins/duplicate_post');
-		$duplicate_post_is_i18n_setup = true;
+if (!function_exists('duplicate_post_init_i18n')) {
+	function duplicate_post_init_i18n() {
+		load_plugin_textdomain(DUPLICATE_POST_I18N_DOMAIN,
+'wp-content/plugins/duplicate-post/languages','duplicate-post/languages');
 	}
+	duplicate_post_init_i18n();
 }
 
 /**
