@@ -25,6 +25,10 @@ Author URI: http://www.lopo.it
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+// Added by WarmStal
+if(!is_admin())
+return;
+
 // Version of the plugin
 define('DUPLICATE_POST_CURRENT_VERSION', '0.5' );
 define('DUPLICATE_POST_COLUMN', 'control_duplicate_post');
@@ -84,7 +88,12 @@ function duplicate_post_plugin_activation() {
  * Add a column in the post listing
  */
 add_filter('manage_posts_columns', 'duplicate_post_add_duplicate_post_column');
+// Added by WarmStal
+add_filter('manage_pages_columns', 'duplicate_post_add_duplicate_post_column');
 add_action('manage_posts_custom_column', 'duplicate_post_make_duplicate_link', 10, 2);
+// Added by WarmStal
+add_action('manage_pages_custom_column', 'duplicate_page_make_duplicate_link', 10, 2);
+
 
 function duplicate_post_add_duplicate_post_column($columns) {
 	if (duplicate_post_is_current_user_allowed_to_create()) {
@@ -96,8 +105,19 @@ function duplicate_post_add_duplicate_post_column($columns) {
 function duplicate_post_make_duplicate_link($column_name, $id) {
 	if (duplicate_post_is_current_user_allowed_to_create()) {
 		if ($column_name == DUPLICATE_POST_COLUMN) {
-			echo "<a href='edit.php?page=duplicate-post/make_duplicate_post.php&amp;post=" . $id 
+			echo "<a href='edit.php?page=duplicate-post/save_as_new_post.php&amp;post=" . $id 
 				. "' title='" . __("Make a duplicate from this post", DUPLICATE_POST_I18N_DOMAIN) 
+				. "' class='edit'>" . __("Duplicate", DUPLICATE_POST_I18N_DOMAIN) . "</a>";
+		}
+	}
+}
+
+// Added by WarmStal
+function duplicate_page_make_duplicate_link($column_name, $id) {
+	if (duplicate_post_is_current_user_allowed_to_create()) {
+		if ($column_name == DUPLICATE_POST_COLUMN) {
+			echo "<a href='edit.php?page=duplicate-post/save_as_new_page.php&amp;post=" . $id
+				. "' title='" . __("Make a duplicate from this page", DUPLICATE_POST_I18N_DOMAIN)
 				. "' class='edit'>" . __("Duplicate", DUPLICATE_POST_I18N_DOMAIN) . "</a>";
 		}
 	}
@@ -434,7 +454,7 @@ function duplicate_post_create_duplicate_from_post($post) {
 			"INSERT INTO $wpdb->posts
 			(post_author, post_date, post_date_gmt, post_content, post_content_filtered, post_title, post_excerpt,  post_status, post_type, comment_status, ping_status, post_password, to_ping, pinged, post_modified, post_modified_gmt, post_parent, menu_order, post_mime_type)
 			VALUES
-			('$new_post_author->ID', '', '', '$post_content', '$post_content_filtered', '$post_title', '$post_excerpt', 'draft', '$new_post_type', '$comment_status', '$ping_status', '$post->post_password', '$post->to_ping', '$post->pinged', '', '', '$post->post_parent', '$post->menu_order', '$post->post_mime_type')");
+			('$new_post_author->ID', '$new_post_date', '$new_post_date_gmt', '$post_content', '$post_content_filtered', '$post_title', '$post_excerpt', 'draft', '$new_post_type', '$comment_status', '$ping_status', '$post->post_password', '$post->to_ping', '$post->pinged', '$new_post_date', '$new_post_date_gmt', '$post->post_parent', '$post->menu_order', '$post->post_mime_type')");
 			
 	$new_post_id = $wpdb->insert_id;
 		
