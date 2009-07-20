@@ -4,7 +4,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Duplicate Post 0.5\n"
+"Project-Id-Version: Duplicate Post 0.6\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-06-29 12:58-0500\n"
 "PO-Revision-Date: 2009-06-29 12:59-0500\n"
@@ -41,12 +41,10 @@ msgstr "複製を作成"
 msgid "Click here to create a copy of this page."
 msgstr "クリックしてこのページの複製を作成"
 
-#: make_duplicate_post.php:5
 #: save_as_new_post.php:5
 msgid "No post to duplicate has been supplied!"
 msgstr "複製元の投稿が指定されていません !"
 
-#: make_duplicate_post.php:23
 #: save_as_new_page.php:23
 #: save_as_new_post.php:23
 msgid "Post creation failed, could not find original post:"
