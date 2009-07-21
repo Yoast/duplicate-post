@@ -6,6 +6,7 @@ Description: Create a copy of a post.
 Version: 0.6
 Author: Enrico Battocchi
 Author URI: http://www.lopo.it
+Text Domain: duplicate-post
 */
 
 /*  Copyright 2008	Enrico Battocchi  (email : enrico.battocchi@gmail.com)
@@ -28,7 +29,6 @@ Author URI: http://www.lopo.it
 // Added by WarmStal
 if(!is_admin())
 return;
-
 
 /*
  * This function calls the creation of a new copy of the selected post (as a draft)
@@ -96,13 +96,13 @@ define('DUPLICATE_POST_I18N_DOMAIN', 'duplicate-post');
 /**
  * Initialise the internationalisation domain
  */
-if (!function_exists('duplicate_post_init_i18n')) {
-	function duplicate_post_init_i18n() {
+//if (!function_exists('duplicate_post_init_i18n')) {
+//	function duplicate_post_init_i18n() {
 		load_plugin_textdomain(DUPLICATE_POST_I18N_DOMAIN,
 'wp-content/plugins/duplicate-post/languages','duplicate-post/languages');
-	}
-	duplicate_post_init_i18n();
-}
+//	}
+//	duplicate_post_init_i18n();
+//}
 
 /**
  * Plugin activation
