@@ -14,15 +14,20 @@ msgstr ""
 "X-Poedit-Basepath: ../\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: duplicate-post.php:100
+#: duplicate-post.php:163
 msgid "Make a duplicate from this post"
 msgstr ""
 
-#: duplicate-post.php:101
+#: duplicate-post.php:174
+msgid "Make a duplicate from this page"
+msgstr ""
+
+#: duplicate-post.php:164
+#: duplicate-post.php:175
 msgid "Duplicate"
 msgstr ""
 
-#: duplicate-post.php:131
+#: duplicate-post.php:195
 msgid "Click here to create a copy of this post."
 msgstr ""
 
@@ -31,20 +36,20 @@ msgstr ""
 msgid "Make Copy"
 msgstr ""
 
-#: duplicate-post.php:162
+#: duplicate-post.php:213
 msgid "Click here to create a copy of this page."
 msgstr ""
 
-#: save_as_new_post.php:5
+#: duplicate-post.php:40
 msgid "No post to duplicate has been supplied!"
 msgstr ""
 
-#: save_as_new_page.php:23
-#: save_as_new_post.php:23
+#: duplicate-post.php:55
+#: duplicate-post.php:81
 msgid "Post creation failed, could not find original post:"
 msgstr ""
 
-#: save_as_new_page.php:5
+#: duplicate-post.php:66
 msgid "No page to duplicate has been supplied!"
 msgstr ""
 

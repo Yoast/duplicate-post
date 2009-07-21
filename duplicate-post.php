@@ -29,6 +29,60 @@ Author URI: http://www.lopo.it
 if(!is_admin())
 return;
 
+
+/*
+ * This function calls the creation of a new copy of the selected post (as a draft)
+ * then redirects to the edit post screen
+ */
+
+function duplicate_post_save_as_new_post(){
+	if (! ( isset( $_GET['post']) || isset( $_POST['post'])  || ( isset($_REQUEST['action']) && 'duplicate_post_save_as_new_post' == $_REQUEST['action'] ) ) ) {
+	   wp_die(_e('No post to duplicate has been supplied!', DUPLICATE_POST_I18N_DOMAIN));
+	}
+	
+	// Get the original post
+	$id = (isset($_GET['post']) ? $_GET['post'] : $_POST['post']);	
+	$post = duplicate_post_get_post($id);
+	
+	// Copy the post and insert it
+	if (isset($post) && $post!=null) {
+		$new_id = duplicate_post_create_duplicate_from_post($post);
+	
+		// Show the post edit
+		echo '<meta content="0; URL=post.php?action=edit&post=' . $new_id . '" http-equiv="Refresh" />';
+		exit;
+	} else {
+ 		wp_die(_e('Post creation failed, could not find original post:', DUPLICATE_POST_I18N_DOMAIN) . ' ' . $id);
+		}
+}
+
+
+/*
+ * Same as above, for pages
+ */
+
+function duplicate_post_save_as_new_page(){
+	if (! ( isset( $_GET['post']) || isset( $_POST['post'])  || ( isset($_REQUEST['action']) && 'duplicate_post_save_as_new_post' == $_REQUEST['action'] ) ) ) {
+	   wp_die(_e('No page to duplicate has been supplied!', DUPLICATE_POST_I18N_DOMAIN));
+	}
+	
+	// Get the original page
+	$id = (isset($_GET['post']) ? $_GET['post'] : $_POST['post']);	
+	$post = duplicate_post_get_page($id);
+	
+	// Copy the page and insert it
+	if (isset($post) && $post!=null) {
+		$new_id = duplicate_post_create_duplicate_from_page($post);
+	
+		// Show the page edit
+		echo '<meta content="0; URL=page.php?action=edit&post=' . $new_id . '" http-equiv="Refresh" />';
+		exit;
+	} else {
+ 		wp_die(_e('Post creation failed, could not find original post:', DUPLICATE_POST_I18N_DOMAIN) . ' ' . $id);
+		}
+}
+
+
 // Version of the plugin
 define('DUPLICATE_POST_CURRENT_VERSION', '0.6' );
 define('DUPLICATE_POST_COLUMN', 'control_duplicate_post');
@@ -92,6 +146,8 @@ add_action('manage_posts_custom_column', 'duplicate_post_make_duplicate_link', 1
 // Added by WarmStal
 add_action('manage_pages_custom_column', 'duplicate_page_make_duplicate_link', 10, 2);
 
+add_action('admin_action_duplicate_post_save_as_new_post', 'duplicate_post_save_as_new_post');
+add_action('admin_action_duplicate_post_save_as_new_page', 'duplicate_post_save_as_new_page');
 
 function duplicate_post_add_duplicate_post_column($columns) {
 	if (duplicate_post_is_current_user_allowed_to_create()) {
@@ -103,7 +159,7 @@ function duplicate_post_add_duplicate_post_column($columns) {
 function duplicate_post_make_duplicate_link($column_name, $id) {
 	if (duplicate_post_is_current_user_allowed_to_create()) {
 		if ($column_name == DUPLICATE_POST_COLUMN) {
-			echo "<a href='edit.php?page=duplicate-post/save_as_new_post.php&amp;post=" . $id 
+			echo "<a href='admin.php?action=duplicate_post_save_as_new_post&amp;post=" . $id 
 				. "' title='" . __("Make a duplicate from this post", DUPLICATE_POST_I18N_DOMAIN) 
 				. "' class='edit'>" . __("Duplicate", DUPLICATE_POST_I18N_DOMAIN) . "</a>";
 		}
@@ -114,7 +170,7 @@ function duplicate_post_make_duplicate_link($column_name, $id) {
 function duplicate_page_make_duplicate_link($column_name, $id) {
 	if (duplicate_post_is_current_user_allowed_to_create()) {
 		if ($column_name == DUPLICATE_POST_COLUMN) {
-			echo "<a href='edit.php?page=duplicate-post/save_as_new_page.php&amp;post=" . $id
+			echo "<a href='admin.php?action=duplicate_post_save_as_new_page&amp;post=" . $id
 				. "' title='" . __("Make a duplicate from this page", DUPLICATE_POST_I18N_DOMAIN)
 				. "' class='edit'>" . __("Duplicate", DUPLICATE_POST_I18N_DOMAIN) . "</a>";
 		}
@@ -132,25 +188,12 @@ add_action( 'edit_form_advanced', 'duplicate_post_add_duplicate_post_button' );
 
 function duplicate_post_add_duplicate_post_button() {
 	if ( isset( $_GET['post'] ) && duplicate_post_is_current_user_allowed_to_create()) {
-		$notifyUrl = "edit.php?page=duplicate-post/save_as_new_post.php&post=" . $_GET['post'];
+		$notifyUrl = "admin.php?action=duplicate_post_save_as_new_post&post=" . $_GET['post'];
 ?>
-		<script language="JavaScript">
-		<!--
-			function save_as_copy( thisForm ) {
-				thisForm.referredby.value = "<?php echo $notifyUrl; ?>";
-				thisForm.action = "edit.php?page=duplicate-post/save_as_new_post.php";
-				thisForm.submit();
-			}
-		// -->
-		</script>	
-		<input type="hidden" name="post" value="<?php echo $_GET['post']; ?>" />
 		<p class="submit">
 			<span style="font-weight: bold; color: red;">
-				<?php _e('Click here to create a copy of this post.', DUPLICATE_POST_I18N_DOMAIN); ?>
+				<a href="<?php echo $notifyUrl; ?>"><?php _e('Click here to create a copy of this post.', DUPLICATE_POST_I18N_DOMAIN); ?></a>
 			</span>
-			<input type="submit" name="SubmitNotification" 
-				value="<?php echo __('Make Copy', DUPLICATE_POST_I18N_DOMAIN) . ' &raquo;'; ?>" 
-				onclick="save_as_copy( this.form )" />
 		</p>
 <?php
 	}
@@ -163,25 +206,12 @@ add_action( 'edit_page_form', 'duplicate_post_add_duplicate_page_button' );
 
 function duplicate_post_add_duplicate_page_button() {
 if ( isset( $_GET['post'] ) && duplicate_post_is_current_user_allowed_to_create()) {
-		$notifyUrl = "edit.php?page=duplicate-post/save_as_new_page.php&post=" . $_GET['post'];
+		$notifyUrl = "admin.php?action=duplicate_post_save_as_new_page.php&post=" . $_GET['post'];
 ?>
-		<script language="JavaScript">
-		<!--
-			function save_as_copy( thisForm ) {
-				thisForm.referredby.value = "<?php echo $notifyUrl; ?>";
-				thisForm.action = "edit.php?page=duplicate-post/save_as_new_page.php";
-				thisForm.submit();
-			}
-		// -->
-		</script>	
-		<input type="hidden" name="post" value="<?php echo $_GET['post']; ?>" />
 		<p class="submit">
 			<span style="font-weight: bold; color: red;">
-				<?php _e('Click here to create a copy of this page.', DUPLICATE_POST_I18N_DOMAIN); ?>
+				<a href="<?php echo $notifyUrl; ?>"><?php _e('Click here to create a copy of this page.', DUPLICATE_POST_I18N_DOMAIN); ?></a>
 			</span>
-			<input type="submit" name="SubmitNotification" 
-				value="<?php echo __('Make Copy', DUPLICATE_POST_I18N_DOMAIN) . ' &raquo;'; ?>" 
-				onclick="save_as_copy( this.form )" />
 		</p>
 <?php
 	}
@@ -488,7 +518,7 @@ function duplicate_post_create_duplicate_from_page($post) {
 			"INSERT INTO $wpdb->posts
 			(post_author, post_date, post_date_gmt, post_content, post_content_filtered, post_title, post_excerpt,  post_status, post_type, comment_status, ping_status, post_password, post_name, to_ping, pinged, post_modified, post_modified_gmt, post_parent, menu_order, post_mime_type)
 			VALUES
-			('$post->post_author', '', '', '$post_content', '$post_content_filtered', '$post_title', '$post_excerpt', 'draft', '$new_post_type', '$comment_status', '$ping_status', '$post->post_password', '$post_name', '$post->to_ping', '$post->pinged', '', '', '$post->post_parent', '$post->menu_order', '$post->post_mime_type')");
+			('$post->post_author', '$new_post_date', '$new_post_date_gmt', '$post_content', '$post_content_filtered', '$post_title', '$post_excerpt', 'draft', '$new_post_type', '$comment_status', '$ping_status', '$post->post_password', '$post_name', '$post->to_ping', '$post->pinged', '$new_post_date', '$new_post_date_gmt', '$post->post_parent', '$post->menu_order', '$post->post_mime_type')");
 			
 	$new_page_id = $wpdb->insert_id;
 	

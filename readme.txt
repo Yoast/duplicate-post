@@ -2,8 +2,8 @@
 Contributors: lopo
 Tags: duplicate, post
 Requires at least: 2.3
-Tested up to: 2.7
-Stable tag: 0.5
+Tested up to: 2.8.2
+Stable tag: 0.6
 
 Create a copy of a post.
 

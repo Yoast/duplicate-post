@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Duplicate Post 0.6\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-06-29 12:58-0500\n"
-"PO-Revision-Date: 2009-07-21 01:08+0100\n"
+"POT-Creation-Date: 2009-07-21 14:49+0100\n"
+"PO-Revision-Date: 2009-07-21 14:49+0100\n"
 "Last-Translator: Enrico Battocchi <enrico.battocchi@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -20,37 +20,42 @@ msgstr ""
 "X-Poedit-Basepath: ../\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: duplicate-post.php:100
-msgid "Make a duplicate from this post"
-msgstr "Crea una copia di questo articolo"
-
-#: duplicate-post.php:101
-msgid "Duplicate"
-msgstr "Copia"
-
-#: duplicate-post.php:131
-msgid "Click here to create a copy of this post."
-msgstr "Clicca qui per creare una copia di questo articolo"
-
-#: duplicate-post.php:134
-#: duplicate-post.php:165
-msgid "Make Copy"
-msgstr "Crea una copia"
-
-#: duplicate-post.php:162
-msgid "Click here to create a copy of this page."
-msgstr "Clicca qui per creare una copia di questa pagina"
-
-#: save_as_new_post.php:5
-msgid "No post to duplicate has been supplied!"
-msgstr "Non è stato indicato alcun articolo da copiare!"
+#: save_as_new_page.php:5
+#: duplicate-post.php:66
+msgid "No page to duplicate has been supplied!"
+msgstr "Non è stato indicata alcuna pagina da copiare!"
 
 #: save_as_new_page.php:23
-#: save_as_new_post.php:23
+#: duplicate-post.php:55
+#: duplicate-post.php:81
 msgid "Post creation failed, could not find original post:"
 msgstr "Creazione articolo fallita, non è stato possibile trovare l'articolo originale:"
 
-#: save_as_new_page.php:5
-msgid "No page to duplicate has been supplied!"
-msgstr "Non è stato indicata alcuna pagina da copiare!"
+#: duplicate-post.php:40
+msgid "No post to duplicate has been supplied!"
+msgstr "Non è stato indicato alcun articolo da copiare!"
+
+#: duplicate-post.php:163
+msgid "Make a duplicate from this post"
+msgstr "Crea una copia di questo articolo"
+
+#: duplicate-post.php:164
+#: duplicate-post.php:175
+msgid "Duplicate"
+msgstr "Copia"
+
+#: duplicate-post.php:174
+msgid "Make a duplicate from this page"
+msgstr "Crea una copia di questa pagina"
+
+#: duplicate-post.php:195
+msgid "Click here to create a copy of this post."
+msgstr "Clicca qui per creare una copia di questo articolo"
+
+#: duplicate-post.php:213
+msgid "Click here to create a copy of this page."
+msgstr "Clicca qui per creare una copia di questa pagina"
+
+#~ msgid "Make Copy"
+#~ msgstr "Crea una copia"
 
