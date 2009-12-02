@@ -1,9 +1,9 @@
 <?php
 /*
 Plugin Name: Duplicate Post
-Plugin URI: http://www.lopo.it/duplicate-post.tar.gz
-Description: Create a copy of a post.
-Version: 0.6
+Plugin URI: http://wordpress.org/extend/plugins/duplicate-post/
+Description: Creates a copy of a post.
+Version: 1.0
 Author: Enrico Battocchi
 Author URI: http://www.lopo.it
 Text Domain: duplicate-post
@@ -34,7 +34,6 @@ return;
  * This function calls the creation of a new copy of the selected post (as a draft)
  * then redirects to the edit post screen
  */
-
 function duplicate_post_save_as_new_post(){
 	if (! ( isset( $_GET['post']) || isset( $_POST['post'])  || ( isset($_REQUEST['action']) && 'duplicate_post_save_as_new_post' == $_REQUEST['action'] ) ) ) {
 	   wp_die(_e('No post to duplicate has been supplied!', DUPLICATE_POST_I18N_DOMAIN));
@@ -56,11 +55,9 @@ function duplicate_post_save_as_new_post(){
 		}
 }
 
-
 /*
  * Same as above, for pages
  */
-
 function duplicate_post_save_as_new_page(){
 	if (! ( isset( $_GET['post']) || isset( $_POST['post'])  || ( isset($_REQUEST['action']) && 'duplicate_post_save_as_new_post' == $_REQUEST['action'] ) ) ) {
 	   wp_die(_e('No page to duplicate has been supplied!', DUPLICATE_POST_I18N_DOMAIN));
@@ -82,9 +79,8 @@ function duplicate_post_save_as_new_page(){
 		}
 }
 
-
 // Version of the plugin
-define('DUPLICATE_POST_CURRENT_VERSION', '0.6' );
+define('DUPLICATE_POST_CURRENT_VERSION', '1.0' );
 define('DUPLICATE_POST_COLUMN', 'control_duplicate_post');
 define('DUPLICATE_POST_VIEW_USER_LEVEL_OPTION', 'duplicate_post_view_user_level');
 define('DUPLICATE_POST_CREATE_USER_LEVEL_OPTION', 'duplicate_post_create_user_level');
@@ -96,19 +92,13 @@ define('DUPLICATE_POST_I18N_DOMAIN', 'duplicate-post');
 /**
  * Initialise the internationalisation domain
  */
-//if (!function_exists('duplicate_post_init_i18n')) {
-//	function duplicate_post_init_i18n() {
-		load_plugin_textdomain(DUPLICATE_POST_I18N_DOMAIN,
-'wp-content/plugins/duplicate-post/languages','duplicate-post/languages');
-//	}
-//	duplicate_post_init_i18n();
-//}
+load_plugin_textdomain(DUPLICATE_POST_I18N_DOMAIN, 
+			'wp-content/plugins/duplicate-post/languages','duplicate-post/languages');
 
 /**
  * Plugin activation
  */
 add_action('activate_duplicate-post/duplicate-post.php','duplicate_post_plugin_activation');
-
 
 function duplicate_post_plugin_activation() {
 	$installed_version = duplicate_post_get_installed_version();
@@ -130,89 +120,57 @@ function duplicate_post_plugin_activation() {
 			'8',
 			'Default user level to change the plugin options' );
 	}
-	
 	// Update version number
 	update_option( 'duplicate_post_version', duplicate_post_get_current_version() );	
 }
 
+/**
+ * Add to the links shown when the mouse gets over a post title in 'Edit Posts' or 'Edit Pages' screen 
+ */
+add_filter('post_row_actions', 'duplicate_post_make_duplicate_link_row',10,2);
+add_filter('page_row_actions', 'duplicate_page_make_duplicate_link_row',10,2);
 
 /**
- * Add a column in the post listing
+ * Connect actions to functions
  */
-add_filter('manage_posts_columns', 'duplicate_post_add_duplicate_post_column');
-// Added by WarmStal
-add_filter('manage_pages_columns', 'duplicate_post_add_duplicate_post_column');
-add_action('manage_posts_custom_column', 'duplicate_post_make_duplicate_link', 10, 2);
-// Added by WarmStal
-add_action('manage_pages_custom_column', 'duplicate_page_make_duplicate_link', 10, 2);
-
 add_action('admin_action_duplicate_post_save_as_new_post', 'duplicate_post_save_as_new_post');
 add_action('admin_action_duplicate_post_save_as_new_page', 'duplicate_post_save_as_new_page');
 
-function duplicate_post_add_duplicate_post_column($columns) {
+/**
+ * Add the link to action list for post_row_actions
+ */
+function duplicate_post_make_duplicate_link_row($actions, $post) {
 	if (duplicate_post_is_current_user_allowed_to_create()) {
-		$columns[DUPLICATE_POST_COLUMN] = '';
+			$actions['duplicate'] = '<a href="admin.php?action=duplicate_post_save_as_new_post&amp;post=' . $post->ID . '" title="' . __("Make a duplicate from this post", DUPLICATE_POST_I18N_DOMAIN) 
+				. '" rel="permalink">' .  __("Duplicate", DUPLICATE_POST_I18N_DOMAIN) . '</a>';
 	}
-	return $columns;
+	return $actions;
 }
-
-function duplicate_post_make_duplicate_link($column_name, $id) {
-	if (duplicate_post_is_current_user_allowed_to_create()) {
-		if ($column_name == DUPLICATE_POST_COLUMN) {
-			echo "<a href='admin.php?action=duplicate_post_save_as_new_post&amp;post=" . $id 
-				. "' title='" . __("Make a duplicate from this post", DUPLICATE_POST_I18N_DOMAIN) 
-				. "' class='edit'>" . __("Duplicate", DUPLICATE_POST_I18N_DOMAIN) . "</a>";
-		}
-	}
-}
-
-// Added by WarmStal
-function duplicate_page_make_duplicate_link($column_name, $id) {
-	if (duplicate_post_is_current_user_allowed_to_create()) {
-		if ($column_name == DUPLICATE_POST_COLUMN) {
-			echo "<a href='admin.php?action=duplicate_post_save_as_new_page&amp;post=" . $id
-				. "' title='" . __("Make a duplicate from this page", DUPLICATE_POST_I18N_DOMAIN)
-				. "' class='edit'>" . __("Duplicate", DUPLICATE_POST_I18N_DOMAIN) . "</a>";
-		}
-	}
-}
-
-
 
 /**
- * Add a button in the post edit form to create a clone
+ * Add the link to action list for page_row_actions
+ */
+function duplicate_page_make_duplicate_link_row($actions, $page) {
+	if (duplicate_post_is_current_user_allowed_to_create()) {
+			$actions['duplicate'] = '<a href="admin.php?action=duplicate_post_save_as_new_page&amp;post=' . $page->ID . '" title="' . __("Make a duplicate from this page", DUPLICATE_POST_I18N_DOMAIN) 
+				. '" rel="permalink">' .  __("Duplicate", DUPLICATE_POST_I18N_DOMAIN) . '</a>';
+	}
+	return $actions;
+}
+
+/**
+ * Add a button in the post/page edit screeb to create a clone
 */
-add_action( 'edit_form_advanced', 'duplicate_post_add_duplicate_post_button' );
-
-
+add_action( 'post_submitbox_start', 'duplicate_post_add_duplicate_post_button' );
 
 function duplicate_post_add_duplicate_post_button() {
 	if ( isset( $_GET['post'] ) && duplicate_post_is_current_user_allowed_to_create()) {
 		$notifyUrl = "admin.php?action=duplicate_post_save_as_new_post&post=" . $_GET['post'];
 ?>
-		<p class="submit">
-			<span style="font-weight: bold; color: red;">
-				<a href="<?php echo $notifyUrl; ?>"><?php _e('Click here to create a copy of this post.', DUPLICATE_POST_I18N_DOMAIN); ?></a>
+		<div id="duplicate-action">
+				<a class="submitduplicate duplication" href="<?php echo $notifyUrl; ?>"><?php _e('Copy to a new draft', DUPLICATE_POST_I18N_DOMAIN); ?></a>
 			</span>
-		</p>
-<?php
-	}
-}
-
-/**
- * Add a button in the page edit form to create a clone
-*/
-add_action( 'edit_page_form', 'duplicate_post_add_duplicate_page_button' );
-
-function duplicate_post_add_duplicate_page_button() {
-if ( isset( $_GET['post'] ) && duplicate_post_is_current_user_allowed_to_create()) {
-		$notifyUrl = "admin.php?action=duplicate_post_save_as_new_page.php&post=" . $_GET['post'];
-?>
-		<p class="submit">
-			<span style="font-weight: bold; color: red;">
-				<a href="<?php echo $notifyUrl; ?>"><?php _e('Click here to create a copy of this page.', DUPLICATE_POST_I18N_DOMAIN); ?></a>
-			</span>
-		</p>
+		</div>
 <?php
 	}
 }
@@ -527,6 +485,4 @@ function duplicate_post_create_duplicate_from_page($post) {
 	
 	return $new_page_id;
 }
-
-
 ?>
