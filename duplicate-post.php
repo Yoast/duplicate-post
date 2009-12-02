@@ -3,7 +3,7 @@
 Plugin Name: Duplicate Post
 Plugin URI: http://wordpress.org/extend/plugins/duplicate-post/
 Description: Creates a copy of a post.
-Version: 1.0
+Version: 0.6.1
 Author: Enrico Battocchi
 Author URI: http://www.lopo.it
 Text Domain: duplicate-post
