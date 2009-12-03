@@ -1,4 +1,4 @@
-=== Plugin Name ===
+=== Duplicate Post ===
 Contributors: lopo
 Donate link: http://www.lopo.it/duplicate-post-plugin/
 Tags: duplicate, post, copy
