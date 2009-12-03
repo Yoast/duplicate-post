@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Duplicate Post 1.0\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/duplicate-post\n"
 "POT-Creation-Date: 2009-12-02 23:12+0000\n"
-"PO-Revision-Date: 2009-12-03 11:29+0100\n"
+"PO-Revision-Date: 2009-12-03 15:30+0100\n"
 "Last-Translator: Enrico Battocchi <enrico.battocchi@gmail.com>\n"
 "Language-Team: Enrico Battocchi <enrico.battocchi@gmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -30,20 +30,24 @@ msgstr "La création de l&rsquo;article a échoué, il n&rsquo;était pas possib
 msgid "No page to duplicate has been supplied!"
 msgstr "Aucune page à copier!"
 
-#: duplicate-post.php:144
+#: duplicate-post.php:163
+#: duplicate-post.php:194
 msgid "Make a duplicate from this post"
 msgstr "Copier cet article"
 
-#: duplicate-post.php:145
-#: duplicate-post.php:156
+#: duplicate-post.php:164
+#: duplicate-post.php:178
+#: duplicate-post.php:195
+#: duplicate-post.php:206
 msgid "Duplicate"
 msgstr "Copier"
 
-#: duplicate-post.php:155
+#: duplicate-post.php:177
+#: duplicate-post.php:205
 msgid "Make a duplicate from this page"
 msgstr "Copier cette page"
 
-#: duplicate-post.php:171
+#: duplicate-post.php:224
 msgid "Copy to a new draft"
 msgstr "Copier dans un nouveau brouillon"
 

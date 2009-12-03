@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: Duplicate Post 0.6.1\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/duplicate-post\n"
 "POT-Creation-Date: 2009-12-02 23:12+0000\n"
-"PO-Revision-Date: 2009-12-02 20:01-0500\n"
+"PO-Revision-Date: 2009-12-03 15:34+0100\n"
 "Last-Translator: Naoko McCracken <info@nao-net.com>\n"
 "Language-Team: WordPress J-Series Project <http://wppluginsj.sourceforge.jp/i18n-ja_jp/>\n"
 "MIME-Version: 1.0\n"
@@ -34,20 +34,24 @@ msgstr "複製の作成に失敗しました。複製元の投稿が見つかり
 msgid "No page to duplicate has been supplied!"
 msgstr "複製元のページが指定されていません !"
 
-#: duplicate-post.php:144
+#: duplicate-post.php:163
+#: duplicate-post.php:194
 msgid "Make a duplicate from this post"
 msgstr "この投稿を元に複製を作成"
 
-#: duplicate-post.php:145
-#: duplicate-post.php:156
+#: duplicate-post.php:164
+#: duplicate-post.php:178
+#: duplicate-post.php:195
+#: duplicate-post.php:206
 msgid "Duplicate"
 msgstr "複製"
 
-#: duplicate-post.php:155
+#: duplicate-post.php:177
+#: duplicate-post.php:205
 msgid "Make a duplicate from this page"
 msgstr "この投稿を元に複製を作成"
 
-#: duplicate-post.php:171
+#: duplicate-post.php:224
 msgid "Copy to a new draft"
 msgstr "新規下書きとしてコピー"
 
