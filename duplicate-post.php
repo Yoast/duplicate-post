@@ -102,6 +102,7 @@ add_action('activate_duplicate-post/duplicate-post.php','duplicate_post_plugin_a
 
 function duplicate_post_plugin_activation() {
 	$installed_version = duplicate_post_get_installed_version();
+	
 	if ( $installed_version==duplicate_post_get_current_version() ) {
 		// do nothing
 	} else if ( $installed_version=='' ) {
@@ -124,10 +125,10 @@ function duplicate_post_plugin_activation() {
 }
 
 /**
- * Check if WP version < 2.8.x: if so, there's no post_row_filter so we must add the custom column "the old way"
+ * Check if WP version < 2.8: if so, post_row_actions does not exist, so we must add a custom column (the old way)
  */
 global $wp_version;
-if ((strncmp($wp_version, "2.7",3) == 0) || (strncmp($wp_version, "2.6",3) == 0) || (strncmp($wp_version, "2.5",3) == 0)){
+if (strncmp($wp_version, "2.7",3) == 0 ){
 	add_filter('manage_posts_columns', 'duplicate_post_add_duplicate_post_column');
 	// Added by WarmStal
 	add_filter('manage_pages_columns', 'duplicate_post_add_duplicate_post_column');
@@ -135,56 +136,15 @@ if ((strncmp($wp_version, "2.7",3) == 0) || (strncmp($wp_version, "2.6",3) == 0)
 	// Added by WarmStal
 	add_action('manage_pages_custom_column', 'duplicate_page_make_duplicate_link', 10, 2);
 } else {
-/**
- * Add to the links shown when the mouse gets over a post title in 'Edit Posts' or 'Edit Pages' screen 
- */
+	/**
+	* Add to the links shown when the mouse gets over a post title in 'Edit Posts' or 'Edit Pages' screen 
+	*/
 	add_filter('post_row_actions', 'duplicate_post_make_duplicate_link_row',10,2);
 	add_filter('page_row_actions', 'duplicate_page_make_duplicate_link_row',10,2);
 }
 
 /**
- * Check if WP version < 2.7.x: if so, there's no post_submitbox_start so we must add the link at the bottom of Edit screen "the old way"
- */
-if ((strncmp($wp_version, "2.6",3) == 0) || (strncmp($wp_version, "2.5",3) == 0)){
-	// for posts
-	add_action( 'edit_form_advanced', 'duplicate_post_add_duplicate_post_button' );
-	// for pages
-	add_action( 'edit_page_form', 'duplicate_post_add_duplicate_page_button' );
-} else {
-	// for both post/page
-	add_action( 'post_submitbox_start', 'duplicate_post_add_duplicate_post_button_box' );
-}
-
-/**
- * Connect actions to functions
- */
-add_action('admin_action_duplicate_post_save_as_new_post', 'duplicate_post_save_as_new_post');
-add_action('admin_action_duplicate_post_save_as_new_page', 'duplicate_post_save_as_new_page');
-
-/**
- * Link for post_row_actions
- */
-function duplicate_post_make_duplicate_link_row($actions, $post) {
-	if (duplicate_post_is_current_user_allowed_to_create()) {
-			$actions['duplicate'] = '<a href="admin.php?action=duplicate_post_save_as_new_post&amp;post=' . $post->ID . '" title="' . __("Make a duplicate from this post", DUPLICATE_POST_I18N_DOMAIN) 
-				. '" rel="permalink">' .  __("Duplicate", DUPLICATE_POST_I18N_DOMAIN) . '</a>';
-	}
-	return $actions;
-}
-
-/**
- * Link for page_row_actions
- */
-function duplicate_page_make_duplicate_link_row($actions, $page) {
-	if (duplicate_post_is_current_user_allowed_to_create()) {
-			$actions['duplicate'] = '<a href="admin.php?action=duplicate_post_save_as_new_page&amp;post=' . $page->ID . '" title="' . __("Make a duplicate from this page", DUPLICATE_POST_I18N_DOMAIN) 
-				. '" rel="permalink">' .  __("Duplicate", DUPLICATE_POST_I18N_DOMAIN) . '</a>';
-	}
-	return $actions;
-}
-
-/**
- * New custom columns for both posts & pages
+ * WP version < 2.8: add a custom column
  */
 function duplicate_post_add_duplicate_post_column($columns) {
 	if (duplicate_post_is_current_user_allowed_to_create()) {
@@ -194,7 +154,7 @@ function duplicate_post_add_duplicate_post_column($columns) {
 }
 
 /**
- * Link in custom column for posts
+ * WP version < 2.8: add link to custom column for posts
  */
 function duplicate_post_make_duplicate_link($column_name, $id) {
 	if (duplicate_post_is_current_user_allowed_to_create()) {
@@ -206,10 +166,10 @@ function duplicate_post_make_duplicate_link($column_name, $id) {
 	}
 }
 
-// Added by WarmStal
 /**
- * Link in custom column for pages
+ * WP version < 2.8: add link to custom column for pages
  */
+// Added by WarmStal
 function duplicate_page_make_duplicate_link($column_name, $id) {
 	if (duplicate_post_is_current_user_allowed_to_create()) {
 		if ($column_name == DUPLICATE_POST_COLUMN) {
@@ -221,73 +181,48 @@ function duplicate_page_make_duplicate_link($column_name, $id) {
 }
 
 /**
- * Add a button in the post/page edit screen to create a clone: WP version >= 2.7
+ * Connect actions to functions
+ */
+add_action('admin_action_duplicate_post_save_as_new_post', 'duplicate_post_save_as_new_post');
+add_action('admin_action_duplicate_post_save_as_new_page', 'duplicate_post_save_as_new_page');
+
+/**
+ * Add the link to action list for post_row_actions
+ */
+function duplicate_post_make_duplicate_link_row($actions, $post) {
+	if (duplicate_post_is_current_user_allowed_to_create()) {
+			$actions['duplicate'] = '<a href="admin.php?action=duplicate_post_save_as_new_post&amp;post=' . $post->ID . '" title="' . __("Make a duplicate from this post", DUPLICATE_POST_I18N_DOMAIN) 
+				. '" rel="permalink">' .  __("Duplicate", DUPLICATE_POST_I18N_DOMAIN) . '</a>';
+	}
+	return $actions;
+}
+
+/**
+ * Add the link to action list for page_row_actions
+ */
+function duplicate_page_make_duplicate_link_row($actions, $page) {
+	if (duplicate_post_is_current_user_allowed_to_create()) {
+			$actions['duplicate'] = '<a href="admin.php?action=duplicate_post_save_as_new_page&amp;post=' . $page->ID . '" title="' . __("Make a duplicate from this page", DUPLICATE_POST_I18N_DOMAIN) 
+				. '" rel="permalink">' .  __("Duplicate", DUPLICATE_POST_I18N_DOMAIN) . '</a>';
+	}
+	return $actions;
+}
+
+/**
+ * Add a button in the post/page edit screen to create a clone
 */
-function duplicate_post_add_duplicate_post_button_box() {
+add_action( 'post_submitbox_start', 'duplicate_post_add_duplicate_post_button' );
+
+function duplicate_post_add_duplicate_post_button() {
 	if ( isset( $_GET['post'] ) && duplicate_post_is_current_user_allowed_to_create()) {
-		$notifyUrl = "admin.php?action=duplicate_post_save_as_new_post&post=" . $_GET['post'];
+		$act = "admin.php?action=duplicate_post_save_as_new_post";
+		global $post;
+		if ($post->post_type == "page") $act = "admin.php?action=duplicate_post_save_as_new_page";
+		$notifyUrl = $act."&post=" . $_GET['post'];
 ?>
 		<div id="duplicate-action">
 				<a class="submitduplicate duplication" href="<?php echo $notifyUrl; ?>"><?php _e('Copy to a new draft', DUPLICATE_POST_I18N_DOMAIN); ?></a>
 		</div>
-<?php
-	}
-}
-
-/**
- * Add a button in the post edit screen to create a clone: WP version < 2.7
-*/
-function duplicate_post_add_duplicate_post_button() {
-	if ( isset( $_GET['post'] ) && duplicate_post_is_current_user_allowed_to_create()) {
-		$notifyUrl = "edit.php?page=duplicate-post/save_as_new_post.php&post=" . $_GET['post'];
-?>
-		<script language="JavaScript">
-		<!--
-			function save_as_copy( thisForm ) {
-				thisForm.referredby.value = "<?php echo $notifyUrl; ?>";
-				thisForm.action = "edit.php?page=duplicate-post/save_as_new_post.php";
-				thisForm.submit();
-			}
-		// -->
-		</script>	
-		<input type="hidden" name="post" value="<?php echo $_GET['post']; ?>" />
-		<p class="submit">
-			<span style="font-weight: bold; color: red;">
-				<?php _e('Click here to create a copy of this post.', DUPLICATE_POST_I18N_DOMAIN); ?>
-			</span>
-			<input type="submit" name="SubmitNotification" 
-				value="<?php echo __('Make Copy', DUPLICATE_POST_I18N_DOMAIN) . ' &raquo;'; ?>" 
-				onclick="save_as_copy( this.form )" />
-		</p>
-<?php
-	}
-}
-
-/**
- * Add a button in the page edit screen to create a clone: WP version < 2.7
-*/
-function duplicate_post_add_duplicate_page_button() {
-if ( isset( $_GET['post'] ) && duplicate_post_is_current_user_allowed_to_create()) {
-		$notifyUrl = "edit.php?page=duplicate-post/save_as_new_page.php&post=" . $_GET['post'];
-?>
-		<script language="JavaScript">
-		<!--
-			function save_as_copy( thisForm ) {
-				thisForm.referredby.value = "<?php echo $notifyUrl; ?>";
-				thisForm.action = "edit.php?page=duplicate-post/save_as_new_page.php";
-				thisForm.submit();
-			}
-		// -->
-		</script>	
-		<input type="hidden" name="post" value="<?php echo $_GET['post']; ?>" />
-		<p class="submit">
-			<span style="font-weight: bold; color: red;">
-				<?php _e('Click here to create a copy of this page.', DUPLICATE_POST_I18N_DOMAIN); ?>
-			</span>
-			<input type="submit" name="SubmitNotification" 
-				value="<?php echo __('Make Copy', DUPLICATE_POST_I18N_DOMAIN) . ' &raquo;'; ?>" 
-				onclick="save_as_copy( this.form )" />
-		</p>
 <?php
 	}
 }
