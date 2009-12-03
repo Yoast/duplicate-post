@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Duplicate Post
-Plugin URI: http://wordpress.org/extend/plugins/duplicate-post/
+Plugin URI: http://www.lopo.it/duplicate-post-plugin/
 Description: Creates a copy of a post.
 Version: 0.6.1
 Author: Enrico Battocchi
