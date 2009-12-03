@@ -23,7 +23,7 @@ Credit must be given to the (great) [Post Template](http://post-templates.vincen
 Thanks for all the suggestions and bug reports, mainly:
 - Franz, for giving me some hints on where to search to fix the bug with WP 2.8.1;
 - Ben ter Stal, for WPMU compatibility and some fixes;
-- Naoko McCracken, for helping me with i18n (now the plugin ships Japanese and Italian language files)
+- Naoko McCracken, for helping me with i18n (now the plugin ships Japanese, Italian and French language files: feel free to send me your translation in other languages)
 
 An example of use: I started this for a small movie theater website which I'm building. Every friday there's a new movie showing with a new timetable, and thus a new post: but sometimes a movie stays for more than a week, so I need to copy the last post and change only the dates, leaving movie title, director's and actors' names etc. unchanged.
 The website is http://www.kino-desse.org and the cinema is located in Livorno, Italy.
