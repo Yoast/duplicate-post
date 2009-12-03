@@ -1,5 +1,6 @@
 === Plugin Name ===
 Contributors: lopo
+Donate link: http://www.lopo.it/duplicate-post-plugin/
 Tags: duplicate, post, copy
 Requires at least: 2.7
 Tested up to: 2.9
