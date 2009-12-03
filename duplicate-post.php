@@ -169,7 +169,6 @@ function duplicate_post_add_duplicate_post_button() {
 ?>
 		<div id="duplicate-action">
 				<a class="submitduplicate duplication" href="<?php echo $notifyUrl; ?>"><?php _e('Copy to a new draft', DUPLICATE_POST_I18N_DOMAIN); ?></a>
-			</span>
 		</div>
 <?php
 	}
