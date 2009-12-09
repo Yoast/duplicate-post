@@ -9,7 +9,7 @@
  Text Domain: duplicate-post
  */
 
-/*  Copyright 2008	Enrico Battocchi  (email : enrico.battocchi@gmail.com)
+/*  Copyright 2009	Enrico Battocchi  (email : enrico.battocchi@gmail.com)
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -74,11 +74,10 @@ function duplicate_post_save_as_new_page(){
 	// Copy the page and insert it
 	if (isset($post) && $post!=null) {
 		$new_id = duplicate_post_create_duplicate_from_page($post);
-		
+
 		// If you have written a plugin which uses non-WP database tables to save
 		// information about a page you can hook this action to dupe that data.
 		do_action( 'dp_duplicate_page', $new_id, $post );
-		
 
 		// Redirect to the edit screen for the new draft page
 		wp_redirect( admin_url( 'page.php?action=edit&post=' . $new_id ) );
