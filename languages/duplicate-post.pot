@@ -1,12 +1,12 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR Enrico Battocchi
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Duplicate Post plugin for WordPress
+# Copyright (C) 2009 Enrico Battocchi
+# This file is distributed under the same license as the Duplicate Post package.
+# Enrico Battocchi <enrico.battocchi@gmail.com>, 2009.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: Duplicate Post 1.0\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/duplicate-post\n"
 "POT-Creation-Date: 2009-12-03 14:26+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
@@ -20,28 +20,28 @@ msgstr ""
 msgid "No post to duplicate has been supplied!"
 msgstr ""
 
-#: duplicate-post.php:54 duplicate-post.php:78
+#: duplicate-post.php:58 duplicate-post.php:86
 msgid "Post creation failed, could not find original post:"
 msgstr ""
 
-#: duplicate-post.php:63
+#: duplicate-post.php:67
 msgid "No page to duplicate has been supplied!"
 msgstr ""
 
-#: duplicate-post.php:163 duplicate-post.php:194
+#: duplicate-post.php:171
 msgid "Make a duplicate from this post"
 msgstr ""
 
-#: duplicate-post.php:164 duplicate-post.php:178 duplicate-post.php:195
-#: duplicate-post.php:206
+#: duplicate-post.php:172 duplicate-post.php:186 duplicate-post.php:203
+#: duplicate-post.php:214
 msgid "Duplicate"
 msgstr ""
 
-#: duplicate-post.php:177 duplicate-post.php:205
+#: duplicate-post.php:185
 msgid "Make a duplicate from this page"
 msgstr ""
 
-#: duplicate-post.php:224
+#: duplicate-post.php:232
 msgid "Copy to a new draft"
 msgstr ""
 

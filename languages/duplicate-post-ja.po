@@ -25,33 +25,28 @@ msgstr ""
 msgid "No post to duplicate has been supplied!"
 msgstr "複製元の投稿が指定されていません !"
 
-#: duplicate-post.php:54
-#: duplicate-post.php:78
+#: duplicate-post.php:58 duplicate-post.php:86
 msgid "Post creation failed, could not find original post:"
 msgstr "複製の作成に失敗しました。複製元の投稿が見つかりません:"
 
-#: duplicate-post.php:63
+#: duplicate-post.php:67
 msgid "No page to duplicate has been supplied!"
 msgstr "複製元のページが指定されていません !"
 
-#: duplicate-post.php:163
-#: duplicate-post.php:194
+#: duplicate-post.php:1171
 msgid "Make a duplicate from this post"
 msgstr "この投稿を元に複製を作成"
 
-#: duplicate-post.php:164
-#: duplicate-post.php:178
-#: duplicate-post.php:195
-#: duplicate-post.php:206
+#: duplicate-post.php:172 duplicate-post.php:186 duplicate-post.php:203
+#: duplicate-post.php:214
 msgid "Duplicate"
 msgstr "複製"
 
-#: duplicate-post.php:177
-#: duplicate-post.php:205
+#: duplicate-post.php:185
 msgid "Make a duplicate from this page"
 msgstr "この投稿を元に複製を作成"
 
-#: duplicate-post.php:224
+#: duplicate-post.php:232
 msgid "Copy to a new draft"
 msgstr "新規下書きとしてコピー"
 

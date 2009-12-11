@@ -20,33 +20,28 @@ msgstr ""
 msgid "No post to duplicate has been supplied!"
 msgstr "No se facilitó ninguna entrada a copiar"
 
-#: duplicate-post.php:54
-#: duplicate-post.php:78
+#: duplicate-post.php:58 duplicate-post.php:86
 msgid "Post creation failed, could not find original post:"
 msgstr "Creación realizada sin éxito, no ha sido posible encontrar la entrada original:"
 
-#: duplicate-post.php:63
+#: duplicate-post.php:67
 msgid "No page to duplicate has been supplied!"
 msgstr "No se facilitó ninguna página a copiar"
 
-#: duplicate-post.php:163
-#: duplicate-post.php:194
+#: duplicate-post.php:171
 msgid "Make a duplicate from this post"
 msgstr "Crea una copia de esta entrada"
 
-#: duplicate-post.php:164
-#: duplicate-post.php:178
-#: duplicate-post.php:195
-#: duplicate-post.php:206
+#: duplicate-post.php:172 duplicate-post.php:186 duplicate-post.php:203
+#: duplicate-post.php:214
 msgid "Duplicate"
 msgstr "Copiar"
 
-#: duplicate-post.php:177
-#: duplicate-post.php:205
+#: duplicate-post.php:185
 msgid "Make a duplicate from this page"
 msgstr "Crea una copia de esta página"
 
-#: duplicate-post.php:224
+#: duplicate-post.php:232
 msgid "Copy to a new draft"
 msgstr "Copia en un borrador nuevo"
 
