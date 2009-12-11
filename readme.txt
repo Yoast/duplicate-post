@@ -11,6 +11,7 @@ Creates a copy of a post.
 == Description ==
 
 Allows to create a draft copy of a post (or page) in two ways:
+
 1. In 'Edit Posts'/'Edit Pages', you can click on 'Duplicate' link;
 2. While editing a post/page, you can click on 'Copy to a new draft' above "Cancel"/"Move to trash".
 
@@ -18,7 +19,7 @@ Both ways lead to the edit page for the new draft: change what you want, click o
 
 Duplicate post is shipped with Italian, Japanese, French and Spanish language files. Feel free to contact me if you want to add your language.
 
-If you're a plugin developer, I suggest to read the section made just for you under "Other Notes", to ensure compatibility between your plugin(s) and mine!
+If you're a plugin developer, I suggest to read the section made just for you under [Other Notes](other_notes/), to ensure compatibility between your plugin(s) and mine!
 
 This plugin used to be tested on at least WP 2.6.5. From version 1.0 onwards, it uses some APIs first introduced with WP 2.7 to achieve better integration with the new WordPress interface.
 
@@ -54,7 +55,7 @@ It's very simple. Just write your function that copies post metadata to a new ro
 
 Then hook the function to the action:
 
-`add_action( "dp_duplicate_post", "myplugin_copy_post", $priority, 2);`
+`add_action("dp_duplicate_post", "myplugin_copy_post", $mypriority, 2);`
 
 
 Please refer to the [Plugin API](http://codex.wordpress.org/Plugin_API) for every information about the subject.
