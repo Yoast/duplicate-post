@@ -46,14 +46,14 @@ From version 1.0 onwards, thanks to [Simon Wheatley](http://www.simonwheatley.co
 Since Duplicate Post knows only of standard WP tables, it can't copy other data relevant to the post which is being copied if this information is stored elsewhere. So, if you're a plugin developer which acts this way, and you want to ensure compatibility with Duplicate Post, you can hook your functions to those actions to make sure that they will be called when a post (or page) is cloned.
 
 It's very simple. Just write your function that copies post metadata to a new row of your table:
-
 `function myplugin_copy_post($new_post_id, $old_post_object){
 /* your code */
 }`
 
-Then hook the function to the action:
 
+Then hook the function to the action:
 `add_action( "dp_duplicate_post", "myplugin_copy_post", $priority, 2);`
+
 
 Please refer to the [Plugin API](http://codex.wordpress.org/Plugin_API) for every information about the subject.
 
