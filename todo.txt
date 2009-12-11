@@ -1,0 +1,2 @@
+- Role manager compatibility
+- Configuration page with a list of meta fields which must not be copied (for compatibility with some other plugins)
