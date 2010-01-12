@@ -17,7 +17,7 @@ Allows to create a draft copy of a post (or page) in two ways:
 
 Both ways lead to the edit page for the new draft: change what you want, click on 'Publish' and you're done.
 
-Duplicate post is shipped with Italian, Japanese, French and Spanish language files. Feel free to contact me if you want to add your language.
+Duplicate post is natively in English, and is shipped with Italian, Japanese, French and Spanish language files. Feel free to contact me if you want to add your language.
 
 If you're a plugin developer, I suggest to read the section made just for you under [Other Notes](other_notes/), to ensure compatibility between your plugin(s) and mine!
 
