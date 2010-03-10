@@ -3,13 +3,13 @@
  Plugin Name: Duplicate Post
  Plugin URI: http://www.lopo.it/duplicate-post-plugin/
  Description: Creates a copy of a post.
- Version: 1.0
+ Version: 1.1
  Author: Enrico Battocchi
  Author URI: http://www.lopo.it
  Text Domain: duplicate-post
  */
 
-/*  Copyright 2009	Enrico Battocchi  (email : enrico.battocchi@gmail.com)
+/*  Copyright 2009-2010	Enrico Battocchi  (email : enrico.battocchi@gmail.com)
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -90,9 +90,7 @@ function duplicate_post_save_as_new_page(){
 // Version of the plugin
 define('DUPLICATE_POST_CURRENT_VERSION', '1.0' );
 define('DUPLICATE_POST_COLUMN', 'control_duplicate_post');
-define('DUPLICATE_POST_VIEW_USER_LEVEL_OPTION', 'duplicate_post_view_user_level');
-define('DUPLICATE_POST_CREATE_USER_LEVEL_OPTION', 'duplicate_post_create_user_level');
-define('DUPLICATE_POST_ADMIN_USER_LEVEL_OPTION', 'duplicate_post_admin_user_level');
+define('DUPLICATE_POST_COPY_USER_LEVEL_OPTION', 'duplicate_post_copy_user_level');
 
 // i18n plugin domain
 define('DUPLICATE_POST_I18N_DOMAIN', 'duplicate-post');
@@ -113,20 +111,12 @@ function duplicate_post_plugin_activation() {
 
 	if ( $installed_version==duplicate_post_get_current_version() ) {
 		// do nothing
-	} else if ( $installed_version=='' ) {
+	} else {
 		// Add all options, nothing already installed
 		add_option(
-		DUPLICATE_POST_VIEW_USER_LEVEL_OPTION,
-			'2',
-			'Default user level to copy posts' );
-		add_option(
-		DUPLICATE_POST_CREATE_USER_LEVEL_OPTION,
+		DUPLICATE_POST_COPY_USER_LEVEL_OPTION,
 			'5',
-			'Default user level to create the templates' );
-		add_option(
-		DUPLICATE_POST_ADMIN_USER_LEVEL_OPTION,
-			'8',
-			'Default user level to change the plugin options' );
+			'Default user level to copy posts' );
 	}
 	// Update version number
 	update_option( 'duplicate_post_version', duplicate_post_get_current_version() );
@@ -155,7 +145,7 @@ if (strncmp($wp_version, "2.7",3) == 0 ){
  * WP version < 2.8: add a custom column
  */
 function duplicate_post_add_duplicate_post_column($columns) {
-	if (duplicate_post_is_current_user_allowed_to_create()) {
+	if (duplicate_post_is_current_user_allowed_to_copy()) {
 		$columns[DUPLICATE_POST_COLUMN] = '';
 	}
 	return $columns;
@@ -165,7 +155,7 @@ function duplicate_post_add_duplicate_post_column($columns) {
  * WP version < 2.8: add link to custom column for posts
  */
 function duplicate_post_make_duplicate_link($column_name, $id) {
-	if (duplicate_post_is_current_user_allowed_to_create()) {
+	if (duplicate_post_is_current_user_allowed_to_copy()) {
 		if ($column_name == DUPLICATE_POST_COLUMN) {
 			echo "<a href='admin.php?action=duplicate_post_save_as_new_post&amp;post=" . $id
 			. "' title='" . __("Make a duplicate from this post", DUPLICATE_POST_I18N_DOMAIN)
@@ -179,7 +169,7 @@ function duplicate_post_make_duplicate_link($column_name, $id) {
  */
 // Added by WarmStal
 function duplicate_page_make_duplicate_link($column_name, $id) {
-	if (duplicate_post_is_current_user_allowed_to_create()) {
+	if (duplicate_post_is_current_user_allowed_to_copy()) {
 		if ($column_name == DUPLICATE_POST_COLUMN) {
 			echo "<a href='admin.php?action=duplicate_post_save_as_new_page&amp;post=" . $id
 			. "' title='" . __("Make a duplicate from this page", DUPLICATE_POST_I18N_DOMAIN)
@@ -198,7 +188,7 @@ add_action('admin_action_duplicate_post_save_as_new_page', 'duplicate_post_save_
  * Add the link to action list for post_row_actions
  */
 function duplicate_post_make_duplicate_link_row($actions, $post) {
-	if (duplicate_post_is_current_user_allowed_to_create()) {
+	if (duplicate_post_is_current_user_allowed_to_copy()) {
 		$actions['duplicate'] = '<a href="admin.php?action=duplicate_post_save_as_new_post&amp;post=' . $post->ID . '" title="' . __("Make a duplicate from this post", DUPLICATE_POST_I18N_DOMAIN)
 		. '" rel="permalink">' .  __("Duplicate", DUPLICATE_POST_I18N_DOMAIN) . '</a>';
 	}
@@ -209,7 +199,7 @@ function duplicate_post_make_duplicate_link_row($actions, $post) {
  * Add the link to action list for page_row_actions
  */
 function duplicate_page_make_duplicate_link_row($actions, $page) {
-	if (duplicate_post_is_current_user_allowed_to_create()) {
+	if (duplicate_post_is_current_user_allowed_to_copy()) {
 		$actions['duplicate'] = '<a href="admin.php?action=duplicate_post_save_as_new_page&amp;post=' . $page->ID . '" title="' . __("Make a duplicate from this page", DUPLICATE_POST_I18N_DOMAIN)
 		. '" rel="permalink">' .  __("Duplicate", DUPLICATE_POST_I18N_DOMAIN) . '</a>';
 	}
@@ -222,7 +212,7 @@ function duplicate_page_make_duplicate_link_row($actions, $page) {
 add_action( 'post_submitbox_start', 'duplicate_post_add_duplicate_post_button' );
 
 function duplicate_post_add_duplicate_post_button() {
-	if ( isset( $_GET['post'] ) && duplicate_post_is_current_user_allowed_to_create()) {
+	if ( isset( $_GET['post'] ) && duplicate_post_is_current_user_allowed_to_copy()) {
 		$act = "admin.php?action=duplicate_post_save_as_new_post";
 		global $post;
 		if ($post->post_type == "page") $act = "admin.php?action=duplicate_post_save_as_new_page";
@@ -236,45 +226,17 @@ function duplicate_post_add_duplicate_post_button() {
 }
 
 /**
- * Wrapper for the option 'duplicate_post_view_user_level'
+ * Wrapper for the option 'duplicate_post_create_user_level'
  */
-function duplicate_post_get_view_user_level() {
-	return get_option( DUPLICATE_POST_VIEW_USER_LEVEL_OPTION );
-}
-
-/**
- * Wrapper for the option 'duplicate_post_view_user_level'
- */
-function duplicate_post_set_view_user_level($new_level) {
-	return update_option( DUPLICATE_POST_VIEW_USER_LEVEL_OPTION, $new_level );
+function duplicate_post_get_copy_user_level() {
+	return get_option( DUPLICATE_POST_COPY_USER_LEVEL_OPTION );
 }
 
 /**
  * Wrapper for the option 'duplicate_post_create_user_level'
  */
-function duplicate_post_get_create_user_level() {
-	return get_option( DUPLICATE_POST_CREATE_USER_LEVEL_OPTION );
-}
-
-/**
- * Wrapper for the option 'duplicate_post_create_user_level'
- */
-function duplicate_post_set_create_user_level($new_level) {
-	return update_option( DUPLICATE_POST_CREATE_USER_LEVEL_OPTION, $new_level );
-}
-
-/**
- * Wrapper for the option 'duplicate_post_admin_user_level'
- */
-function duplicate_post_get_admin_user_level() {
-	return get_option( DUPLICATE_POST_ADMIN_USER_LEVEL_OPTION );
-}
-
-/**
- * Wrapper for the option 'duplicate_post_admin_user_level'
- */
-function duplicate_post_set_admin_user_level($new_level) {
-	return update_option( DUPLICATE_POST_ADMIN_USER_LEVEL_OPTION, $new_level );
+function duplicate_post_set_copy_user_level($new_level) {
+	return update_option( DUPLICATE_POST_COPY_USER_LEVEL_OPTION, $new_level );
 }
 
 /**
@@ -292,24 +254,10 @@ function duplicate_post_get_current_version() {
 }
 
 /**
- * Test if the user is allowed to view the templates & create posts
- */
-function duplicate_post_is_current_user_allowed_to_view() {
-	return current_user_can("level_" . duplicate_post_get_view_user_level());
-}
-
-/**
  * Test if the user is allowed to create templates
  */
-function duplicate_post_is_current_user_allowed_to_create() {
-	return current_user_can("level_" . duplicate_post_get_create_user_level());
-}
-
-/**
- * Test if the user is allowed to administrate the plugin
- */
-function duplicate_post_is_current_user_allowed_to_admin() {
-	return current_user_can("level_" . duplicate_post_get_admin_user_level());
+function duplicate_post_is_current_user_allowed_to_copy() {
+	return current_user_can("level_" . duplicate_post_get_copy_user_level());
 }
 
 /**
@@ -435,7 +383,7 @@ function duplicate_post_copy_post_categories($id, $new_id) {
 		$post_categories = $wpdb->get_results("SELECT category_id FROM $wpdb->post2cat WHERE post_id=$id");
 		if (count($post_categories)!=0) {
 			$sql_query = "INSERT INTO $wpdb->post2cat (post_id, category_id) ";
-				
+
 			for ($i=0; $i<count($post_categories); $i++) {
 				$post_category = $post_categories[$i]->category_id;
 
@@ -460,19 +408,15 @@ function duplicate_post_copy_post_meta_info($id, $new_id) {
 
 	if (count($post_meta_infos)!=0) {
 		$sql_query = "INSERT INTO $wpdb->postmeta (post_id, meta_key, meta_value) ";
-
-		for ($i=0; $i<count($post_meta_infos); $i++) {
-			$meta_info = $post_meta_infos[$i];
-				
+		$meta_no_copy = explode(",",get_option('duplicate_post_blacklist'));
+		foreach ($post_meta_infos as $meta_info) {
+			$meta_key = $meta_info->meta_key;
 			$meta_value = addslashes($meta_info->meta_value);
-
-			if ($i<count($post_meta_infos)-1) {
-				$sql_query .= "SELECT $new_id, '$meta_info->meta_key', '$meta_value' UNION ALL ";
-			} else {
-				$sql_query .= "SELECT $new_id, '$meta_info->meta_key', '$meta_value'";
+			if (!in_array($meta_key,$meta_no_copy)) {
+				$sql_query_sel[]= "SELECT $new_id, '$meta_key', '$meta_value'";
 			}
 		}
-
+		$sql_query.= implode(" UNION ALL ", $sql_query_sel);
 		$wpdb->query($sql_query);
 	}
 }
@@ -486,11 +430,13 @@ function duplicate_post_create_duplicate_from_post($post) {
 	$new_post_author = duplicate_post_get_current_user();
 	$new_post_date = current_time('mysql');
 	$new_post_date_gmt = get_gmt_from_date($new_post_date);
+	$prefix = get_option('duplicate_post_title_prefix');
+	if (!empty($prefix)) $prefix.= " ";
 
 	$post_content    = str_replace("'", "''", $post->post_content);
 	$post_content_filtered = str_replace("'", "''", $post->post_content_filtered);
 	$post_excerpt    = str_replace("'", "''", $post->post_excerpt);
-	$post_title      = str_replace("'", "''", $post->post_title);
+	$post_title      = $prefix.str_replace("'", "''", $post->post_title);
 	$post_status     = str_replace("'", "''", $post->post_status);
 	$comment_status  = str_replace("'", "''", $post->comment_status);
 	$ping_status     = str_replace("'", "''", $post->ping_status);
@@ -501,7 +447,7 @@ function duplicate_post_create_duplicate_from_post($post) {
 			(post_author, post_date, post_date_gmt, post_content, post_content_filtered, post_title, post_excerpt,  post_status, post_type, comment_status, ping_status, post_password, to_ping, pinged, post_modified, post_modified_gmt, post_parent, menu_order, post_mime_type)
 			VALUES
 			('$new_post_author->ID', '$new_post_date', '$new_post_date_gmt', '$post_content', '$post_content_filtered', '$post_title', '$post_excerpt', 'draft', '$new_post_type', '$comment_status', '$ping_status', '$post->post_password', '$post->to_ping', '$post->pinged', '$new_post_date', '$new_post_date_gmt', '$post->post_parent', '$post->menu_order', '$post->post_mime_type')");
-		
+
 	$new_post_id = $wpdb->insert_id;
 
 	// Copy the categories
@@ -519,13 +465,16 @@ function duplicate_post_create_duplicate_from_post($post) {
 function duplicate_post_create_duplicate_from_page($post) {
 	global $wpdb;
 	$new_post_type = 'page';
+	$new_post_author = duplicate_post_get_current_user();
 	$new_post_date = current_time('mysql');
 	$new_post_date_gmt = get_gmt_from_date($new_post_date);
+	$prefix = get_option('duplicate_post_title_prefix');
+	if (!empty($prefix)) $prefix.= " ";
 
 	$post_content    = str_replace("'", "''", $post->post_content);
 	$post_content_filtered = str_replace("'", "''", $post->post_content_filtered);
 	$post_excerpt    = str_replace("'", "''", $post->post_excerpt);
-	$post_title      = str_replace("'", "''", $post->post_title);
+	$post_title      = $prefix.str_replace("'", "''", $post->post_title);
 	$post_status     = str_replace("'", "''", $post->post_status);
 	$post_name       = str_replace("'", "''", $post->post_name);
 	$comment_status  = str_replace("'", "''", $post->comment_status);
@@ -536,13 +485,77 @@ function duplicate_post_create_duplicate_from_page($post) {
 			"INSERT INTO $wpdb->posts
 			(post_author, post_date, post_date_gmt, post_content, post_content_filtered, post_title, post_excerpt,  post_status, post_type, comment_status, ping_status, post_password, post_name, to_ping, pinged, post_modified, post_modified_gmt, post_parent, menu_order, post_mime_type)
 			VALUES
-			('$post->post_author', '$new_post_date', '$new_post_date_gmt', '$post_content', '$post_content_filtered', '$post_title', '$post_excerpt', 'draft', '$new_post_type', '$comment_status', '$ping_status', '$post->post_password', '$post_name', '$post->to_ping', '$post->pinged', '$new_post_date', '$new_post_date_gmt', '$post->post_parent', '$post->menu_order', '$post->post_mime_type')");
-		
+			('$new_post_author->ID', '$new_post_date', '$new_post_date_gmt', '$post_content', '$post_content_filtered', '$post_title', '$post_excerpt', 'draft', '$new_post_type', '$comment_status', '$ping_status', '$post->post_password', '$post_name', '$post->to_ping', '$post->pinged', '$new_post_date', '$new_post_date_gmt', '$post->post_parent', '$post->menu_order', '$post->post_mime_type')");
+
 	$new_page_id = $wpdb->insert_id;
 
 	// Copy the meta information
 	duplicate_post_copy_post_meta_info($post->ID, $new_page_id);
 
 	return $new_page_id;
+}
+
+
+/**
+ * Add an option page where you can specify which meta fields you don't want to copy
+ */
+if ( is_admin() ){ // admin actions
+	add_action('admin_menu', 'duplicate_post_menu');
+	add_action( 'admin_init', 'register_mysettings');
+}
+
+function register_mysettings() { // whitelist options
+	register_setting( 'duplicate_post_group', 'duplicate_post_blacklist');
+	register_setting( 'duplicate_post_group', 'duplicate_post_title_prefix');
+}
+
+
+function duplicate_post_menu() {
+	add_options_page(__("Duplicate Post Options", DUPLICATE_POST_I18N_DOMAIN), __("Duplicate Post", DUPLICATE_POST_I18N_DOMAIN), 'administrator', 'duplicatepost', 'duplicate_post_options');
+}
+
+function duplicate_post_options() {
+	?>
+<div class="wrap">
+<h2><?php _e("Duplicate Post", DUPLICATE_POST_I18N_DOMAIN); ?></h2>
+
+<form method="post" action="options.php"><?php settings_fields('duplicate_post_group'); ?>
+
+
+<table class="form-table">
+
+	<tr valign="top">
+		<th scope="row"><?php _e("Do not copy these fields", DUPLICATE_POST_I18N_DOMAIN); ?></th>
+		<td><input type="text" name="duplicate_post_blacklist"
+			value="<?php echo get_option('duplicate_post_blacklist'); ?>" /> <span
+			class="description"><?php _e("Comma-separated list of meta fields that must not be copied when cloning a post/page", DUPLICATE_POST_I18N_DOMAIN); ?></span>
+		</td>
+	</tr>
+	<tr valign="top">
+		<th scope="row"><?php _e("Title prefix", DUPLICATE_POST_I18N_DOMAIN); ?></th>
+		<td><input type="text" name="duplicate_post_title_prefix"
+			value="<?php echo get_option('duplicate_post_title_prefix'); ?>" /> <span
+			class="description"><?php _e("Prefix to be added before the original title when cloning a post/page, e.g. \"Copy of \" (blank for no prefix)", DUPLICATE_POST_I18N_DOMAIN); ?></span>
+		</td>
+	</tr>
+
+</table>
+
+<p class="submit"><input type="submit" class="button-primary"
+	value="<?php _e('Save Changes', DUPLICATE_POST_I18N_DOMAIN) ?>" /></p>
+
+</form>
+</div>
+	<?php
+}
+
+//Add some links on the plugin page
+add_filter('plugin_row_meta', 'duplicate_post_add_plugin_links', 10, 2);
+
+function duplicate_post_add_plugin_links($links, $file) {
+	if ( $file == plugin_basename(__FILE__) ) {
+		$links[] = '<a href="http://www.lopo.it/duplicate-post-plugin">' . __('Donate', DUPLICATE_POST_I18N_DOMAIN) . '</a>';
+	}
+	return $links;
 }
 ?>
