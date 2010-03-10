@@ -535,7 +535,7 @@ function duplicate_post_options() {
 		<th scope="row"><?php _e("Title prefix", DUPLICATE_POST_I18N_DOMAIN); ?></th>
 		<td><input type="text" name="duplicate_post_title_prefix"
 			value="<?php echo get_option('duplicate_post_title_prefix'); ?>" /> <span
-			class="description"><?php _e("Prefix to be added before the original title when cloning a post/page, e.g. \"Copy of \" (blank for no prefix)", DUPLICATE_POST_I18N_DOMAIN); ?></span>
+			class="description"><?php _e("Prefix to be added before the original title when cloning a post/page, e.g. \"Copy of\" (blank for no prefix)", DUPLICATE_POST_I18N_DOMAIN); ?></span>
 		</td>
 	</tr>
 
