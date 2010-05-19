@@ -548,23 +548,23 @@ function duplicate_post_options() {
 		<?php global $wp_version;
 		if (strncmp($wp_version, "2.7",3) == 0 ){ ?>
 			<option value="1"
-			<?php if(get_option('duplicate_post_copy_user_level') == 1) echo 'selected="selected"'?>><?php echo _c("Contributor|User role")?></option>
+			<?php if(get_option('duplicate_post_copy_user_level') == 1) echo 'selected="selected"'?>><?php echo _c("Contributor|User role", "default")?></option>
 			<option value="2"
-			<?php if(get_option('duplicate_post_copy_user_level') == 2) echo 'selected="selected"'?>><?php echo _c("Author|User role")?></option>
+			<?php if(get_option('duplicate_post_copy_user_level') == 2) echo 'selected="selected"'?>><?php echo _c("Author|User role", "default")?></option>
 			<option value="5"
-			<?php if(get_option('duplicate_post_copy_user_level') == 5) echo 'selected="selected"'?>><?php echo _c("Editor|User role")?></option>
+			<?php if(get_option('duplicate_post_copy_user_level') == 5) echo 'selected="selected"'?>><?php echo _c("Editor|User role", "default")?></option>
 			<option value="8"
-			<?php if(get_option('duplicate_post_copy_user_level') == 8) echo 'selected="selected"'?>><?php echo _c("Administrator|User role")?></option>
+			<?php if(get_option('duplicate_post_copy_user_level') == 8) echo 'selected="selected"'?>><?php echo _c("Administrator|User role", "default")?></option>
 
 			<?php } else { ?>
 			<option value="1"
-			<?php if(get_option('duplicate_post_copy_user_level') == 1) echo 'selected="selected"'?>><?php echo _x("Contributor", "User role")?></option>
+			<?php if(get_option('duplicate_post_copy_user_level') == 1) echo 'selected="selected"'?>><?php echo _x("Contributor", "User role", "default")?></option>
 			<option value="2"
-			<?php if(get_option('duplicate_post_copy_user_level') == 2) echo 'selected="selected"'?>><?php echo _x("Author", "User role")?></option>
+			<?php if(get_option('duplicate_post_copy_user_level') == 2) echo 'selected="selected"'?>><?php echo _x("Author", "User role", "default")?></option>
 			<option value="5"
-			<?php if(get_option('duplicate_post_copy_user_level') == 5) echo 'selected="selected"'?>><?php echo _x("Editor", "User role")?></option>
+			<?php if(get_option('duplicate_post_copy_user_level') == 5) echo 'selected="selected"'?>><?php echo _x("Editor", "User role", "default")?></option>
 			<option value="8"
-			<?php if(get_option('duplicate_post_copy_user_level') == 8) echo 'selected="selected"'?>><?php echo _x("Administrator", "User role")?></option>
+			<?php if(get_option('duplicate_post_copy_user_level') == 8) echo 'selected="selected"'?>><?php echo _x("Administrator", "User role", "default")?></option>
 
 			<?php };?>
 		</select> <span class="description"><?php _e("Warning: users will be able to copy all posts, even those of higher level users", DUPLICATE_POST_I18N_DOMAIN); ?></span>
