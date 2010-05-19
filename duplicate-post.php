@@ -88,9 +88,8 @@ function duplicate_post_save_as_new_page(){
 }
 
 // Version of the plugin
-define('DUPLICATE_POST_CURRENT_VERSION', '1.0' );
+define('DUPLICATE_POST_CURRENT_VERSION', '1.1' );
 define('DUPLICATE_POST_COLUMN', 'control_duplicate_post');
-define('DUPLICATE_POST_COPY_USER_LEVEL_OPTION', 'duplicate_post_copy_user_level');
 
 // i18n plugin domain
 define('DUPLICATE_POST_I18N_DOMAIN', 'duplicate-post');
@@ -112,9 +111,13 @@ function duplicate_post_plugin_activation() {
 	if ( $installed_version==duplicate_post_get_current_version() ) {
 		// do nothing
 	} else {
+		// delete old, obsolete options
+		delete_option('duplicate_post_admin_user_level');
+		delete_option('duplicate_post_create_user_level');
+		delete_option('duplicate_post_view_user_level');
 		// Add all options, nothing already installed
 		add_option(
-		DUPLICATE_POST_COPY_USER_LEVEL_OPTION,
+		'duplicate_post_copy_user_level',
 			'5',
 			'Default user level to copy posts' );
 	}
@@ -229,14 +232,14 @@ function duplicate_post_add_duplicate_post_button() {
  * Wrapper for the option 'duplicate_post_create_user_level'
  */
 function duplicate_post_get_copy_user_level() {
-	return get_option( DUPLICATE_POST_COPY_USER_LEVEL_OPTION );
+	return get_option( 'duplicate_post_copy_user_level' );
 }
 
 /**
  * Wrapper for the option 'duplicate_post_create_user_level'
  */
 function duplicate_post_set_copy_user_level($new_level) {
-	return update_option( DUPLICATE_POST_COPY_USER_LEVEL_OPTION, $new_level );
+	return update_option( 'duplicate_post_copy_user_level', $new_level );
 }
 
 /**
@@ -507,6 +510,7 @@ if ( is_admin() ){ // admin actions
 function register_mysettings() { // whitelist options
 	register_setting( 'duplicate_post_group', 'duplicate_post_blacklist');
 	register_setting( 'duplicate_post_group', 'duplicate_post_title_prefix');
+	register_setting( 'duplicate_post_group', 'duplicate_post_copy_user_level');
 }
 
 
@@ -538,6 +542,34 @@ function duplicate_post_options() {
 			class="description"><?php _e("Prefix to be added before the original title when cloning a post/page, e.g. \"Copy of\" (blank for no prefix)", DUPLICATE_POST_I18N_DOMAIN); ?></span>
 		</td>
 	</tr>
+	<tr valign="top">
+		<th scope="row"><?php _e("Minimum level to copy posts", DUPLICATE_POST_I18N_DOMAIN); ?></th>
+		<td><select name="duplicate_post_copy_user_level">
+		<?php global $wp_version;
+		if (strncmp($wp_version, "2.7",3) == 0 ){ ?>
+			<option value="1"
+			<?php if(get_option('duplicate_post_copy_user_level') == 1) echo 'selected="selected"'?>><?php echo _c("Contributor|User role")?></option>
+			<option value="2"
+			<?php if(get_option('duplicate_post_copy_user_level') == 2) echo 'selected="selected"'?>><?php echo _c("Author|User role")?></option>
+			<option value="5"
+			<?php if(get_option('duplicate_post_copy_user_level') == 5) echo 'selected="selected"'?>><?php echo _c("Editor|User role")?></option>
+			<option value="8"
+			<?php if(get_option('duplicate_post_copy_user_level') == 8) echo 'selected="selected"'?>><?php echo _c("Administrator|User role")?></option>
+
+			<?php } else { ?>
+			<option value="1"
+			<?php if(get_option('duplicate_post_copy_user_level') == 1) echo 'selected="selected"'?>><?php echo _x("Contributor", "User role")?></option>
+			<option value="2"
+			<?php if(get_option('duplicate_post_copy_user_level') == 2) echo 'selected="selected"'?>><?php echo _x("Author", "User role")?></option>
+			<option value="5"
+			<?php if(get_option('duplicate_post_copy_user_level') == 5) echo 'selected="selected"'?>><?php echo _x("Editor", "User role")?></option>
+			<option value="8"
+			<?php if(get_option('duplicate_post_copy_user_level') == 8) echo 'selected="selected"'?>><?php echo _x("Administrator", "User role")?></option>
+
+			<?php };?>
+		</select> <span class="description"><?php _e("Warning: users will be able to copy all posts, even those of higher level users", DUPLICATE_POST_I18N_DOMAIN); ?></span>
+		</td>
+	</tr>
 
 </table>
 
@@ -546,7 +578,7 @@ function duplicate_post_options() {
 
 </form>
 </div>
-	<?php
+			<?php
 }
 
 //Add some links on the plugin page
@@ -555,6 +587,7 @@ add_filter('plugin_row_meta', 'duplicate_post_add_plugin_links', 10, 2);
 function duplicate_post_add_plugin_links($links, $file) {
 	if ( $file == plugin_basename(__FILE__) ) {
 		$links[] = '<a href="http://www.lopo.it/duplicate-post-plugin">' . __('Donate', DUPLICATE_POST_I18N_DOMAIN) . '</a>';
+		$links[] = '<a href="http://www.lopo.it/duplicate-post-plugin">' . __('Translate', DUPLICATE_POST_I18N_DOMAIN) . '</a>';
 	}
 	return $links;
 }
