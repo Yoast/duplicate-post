@@ -11,18 +11,16 @@ Creates a copy of a post.
 == Description ==
 
 Allows to create a draft copy of a post (or page) in two ways:
-
 1. In 'Edit Posts'/'Edit Pages', you can click on 'Duplicate' link;
 2. While editing a post/page, you can click on 'Copy to a new draft' above "Cancel"/"Move to trash".
 
 Both ways lead to the edit page for the new draft: change what you want, click on 'Publish' and you're done.
 
-Duplicate post is natively in English, and is shipped with Italian, Japanese, French and Spanish language files. Feel free to contact me if you want to add your language.
+Duplicate post is natively in English, but it is shipped with some other language files. Now there is a [Launchpad translation project](https://translations.launchpad.net/duplicate-post/) available to help translating this plugin: feel free to contribute (you can also send me an e-mail using the form on my website).
 
-If you're a plugin developer, I suggest to read the section made just for you under [Other Notes](other_notes/), to ensure compatibility between your plugin(s) and mine!
+If you're a plugin developer, I suggest to read the section made just for you under "Other Notes", to ensure compatibility between your plugin(s) and mine!
 
 This plugin used to be tested on at least WP 2.6.5. From version 1.0 onwards, it uses some APIs first introduced with WP 2.7 to achieve better integration with the new WordPress interface.
-
 
 Credit must be given to the (great) [Post Template](http://post-templates.vincentprat.info) plugin by Vincent Prat: I made this by hacking his work to get something more focused to a sporadic use, without the need to create and manage templates just to make simple copies of some posts every now and then. If my plugin doesn't fits your needs (and even if it does) check Vincent's.
 
@@ -47,16 +45,12 @@ From version 1.0 onwards, thanks to [Simon Wheatley](http://www.simonwheatley.co
 Since Duplicate Post knows only of standard WP tables, it can't copy other data relevant to the post which is being copied if this information is stored elsewhere. So, if you're a plugin developer which acts this way, and you want to ensure compatibility with Duplicate Post, you can hook your functions to those actions to make sure that they will be called when a post (or page) is cloned.
 
 It's very simple. Just write your function that copies post metadata to a new row of your table:
-
 `function myplugin_copy_post($new_post_id, $old_post_object){
 /* your code */
 }`
 
-
 Then hook the function to the action:
-
-`add_action("dp_duplicate_post", "myplugin_copy_post", $mypriority, 2);`
-
+`add_action( "dp_duplicate_post", "myplugin_copy_post", $priority, 2);`
 
 Please refer to the [Plugin API](http://codex.wordpress.org/Plugin_API) for every information about the subject.
 
@@ -91,3 +85,4 @@ If you find this useful and you if you want to contribute, there are three ways:
 
 = 0.4 =
 * Support for new WP post revision feature
+
