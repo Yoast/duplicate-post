@@ -80,7 +80,7 @@ function duplicate_post_save_as_new_page(){
 		do_action( 'dp_duplicate_page', $new_id, $post );
 
 		// Redirect to the edit screen for the new draft page
-		wp_redirect( admin_url( 'page.php?action=edit&post=' . $new_id ) );
+		wp_redirect( admin_url( 'post.php?action=edit&post=' . $new_id ) );
 		exit;
 	} else {
 		wp_die(__('Post creation failed, could not find original post:', DUPLICATE_POST_I18N_DOMAIN) . ' ' . $id);
@@ -431,7 +431,7 @@ function duplicate_post_create_duplicate_from_post($post) {
 	global $wpdb;
 	$new_post_type = 'post';
 	$new_post_author = duplicate_post_get_current_user();
-	$new_post_date = current_time('mysql');
+	$new_post_date = (get_option('duplicate_post_copydate') == 1)?  $post->post_date : current_time('mysql');
 	$new_post_date_gmt = get_gmt_from_date($new_post_date);
 	$prefix = get_option('duplicate_post_title_prefix');
 	if (!empty($prefix)) $prefix.= " ";
@@ -469,7 +469,7 @@ function duplicate_post_create_duplicate_from_page($post) {
 	global $wpdb;
 	$new_post_type = 'page';
 	$new_post_author = duplicate_post_get_current_user();
-	$new_post_date = current_time('mysql');
+	$new_post_date = (get_option('duplicate_post_copydate') == 1)?  $post->post_date : current_time('mysql');
 	$new_post_date_gmt = get_gmt_from_date($new_post_date);
 	$prefix = get_option('duplicate_post_title_prefix');
 	if (!empty($prefix)) $prefix.= " ";
@@ -508,6 +508,7 @@ if ( is_admin() ){ // admin actions
 }
 
 function register_mysettings() { // whitelist options
+	register_setting( 'duplicate_post_group', 'duplicate_post_copydate');
 	register_setting( 'duplicate_post_group', 'duplicate_post_blacklist');
 	register_setting( 'duplicate_post_group', 'duplicate_post_title_prefix');
 	register_setting( 'duplicate_post_group', 'duplicate_post_copy_user_level');
@@ -528,6 +529,13 @@ function duplicate_post_options() {
 
 <table class="form-table">
 
+	<tr valign="top">
+		<th scope="row"><?php _e("Copy post/page date also", DUPLICATE_POST_I18N_DOMAIN); ?></th>
+		<td><input type="checkbox" name="duplicate_post_copydate"
+			value="1" <?php  if(get_option('duplicate_post_copydate') == 1) echo 'checked="checked"'; ?>"/> <span
+			class="description"><?php _e("Normally, the new draft has current time set as publication date: check the box to copy the original post/page date", DUPLICATE_POST_I18N_DOMAIN); ?></span>
+		</td>
+	</tr>
 	<tr valign="top">
 		<th scope="row"><?php _e("Do not copy these fields", DUPLICATE_POST_I18N_DOMAIN); ?></th>
 		<td><input type="text" name="duplicate_post_blacklist"
