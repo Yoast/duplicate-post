@@ -526,14 +526,12 @@ function duplicate_post_options() {
 
 <form method="post" action="options.php"><?php settings_fields('duplicate_post_group'); ?>
 
-
 <table class="form-table">
 
 	<tr valign="top">
 		<th scope="row"><?php _e("Copy post/page date also", DUPLICATE_POST_I18N_DOMAIN); ?></th>
-		<td><input type="checkbox" name="duplicate_post_copydate"
-			value="1" <?php  if(get_option('duplicate_post_copydate') == 1) echo 'checked="checked"'; ?>"/> <span
-			class="description"><?php _e("Normally, the new draft has publication date set to current time: check the box to copy the original post/page date", DUPLICATE_POST_I18N_DOMAIN); ?></span>
+		<td><input type="checkbox" name="duplicate_post_copydate" value="1" <?php  if(get_option('duplicate_post_copydate') == 1) echo 'checked="checked"'; ?>"/>
+		<span class="description"><?php _e("Normally, the new draft has publication date set to current time: check the box to copy the original post/page date", DUPLICATE_POST_I18N_DOMAIN); ?></span>
 		</td>
 	</tr>
 	<tr valign="top">
