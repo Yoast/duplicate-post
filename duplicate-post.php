@@ -63,7 +63,7 @@ function duplicate_post_save_as_new_post(){
  * Same as above, for pages
  */
 function duplicate_post_save_as_new_page(){
-	if (! ( isset( $_GET['post']) || isset( $_POST['post'])  || ( isset($_REQUEST['action']) && 'duplicate_post_save_as_new_post' == $_REQUEST['action'] ) ) ) {
+	if (! ( isset( $_GET['post']) || isset( $_POST['post'])  || ( isset($_REQUEST['action']) && 'duplicate_post_save_as_new_page' == $_REQUEST['action'] ) ) ) {
 		wp_die(__('No page to duplicate has been supplied!', DUPLICATE_POST_I18N_DOMAIN));
 	}
 
@@ -369,35 +369,18 @@ function duplicate_post_get_post($id) {
 }
 
 /**
- * Copy the categories of a post to another post
+ * Copy the taxnomies of a post to another post
  */
-function duplicate_post_copy_post_categories($id, $new_id) {
+function duplicate_post_copy_post_taxonomies($id, $new_id, $post_type) {
 	global $wpdb;
 	if (isset($wpdb->terms)) {
 		// WordPress 2.3
-		$taxonomies = get_object_taxonomies('post'); //array("category", "post_tag");
+		$taxonomies = get_object_taxonomies($post_type); //array("category", "post_tag");
 		foreach ($taxonomies as $taxonomy) {
 			$post_terms = wp_get_object_terms($id, $taxonomy);
 			for ($i=0; $i<count($post_terms); $i++) {
 				wp_set_object_terms($new_id, $post_terms[$i]->slug, $taxonomy, true);
 			}
-		}
-	} else {
-		$post_categories = $wpdb->get_results("SELECT category_id FROM $wpdb->post2cat WHERE post_id=$id");
-		if (count($post_categories)!=0) {
-			$sql_query = "INSERT INTO $wpdb->post2cat (post_id, category_id) ";
-
-			for ($i=0; $i<count($post_categories); $i++) {
-				$post_category = $post_categories[$i]->category_id;
-
-				if ($i<count($post_categories)-1) {
-					$sql_query .= "SELECT $new_id, $post_category UNION ALL ";
-				} else {
-					$sql_query .= "SELECT $new_id, $post_category";
-				}
-			}
-
-			$wpdb->query($sql_query);
 		}
 	}
 }
@@ -429,18 +412,20 @@ function duplicate_post_copy_post_meta_info($id, $new_id) {
  */
 function duplicate_post_create_duplicate_from_post($post) {
 	global $wpdb;
-	$new_post_type = 'post';
+	//$new_post_type = 'post';
 	$new_post_author = duplicate_post_get_current_user();
 	$new_post_date = (get_option('duplicate_post_copydate') == 1)?  $post->post_date : current_time('mysql');
 	$new_post_date_gmt = get_gmt_from_date($new_post_date);
 	$prefix = get_option('duplicate_post_title_prefix');
 	if (!empty($prefix)) $prefix.= " ";
 
+	$new_post_type 	= $post->post_type;
 	$post_content    = str_replace("'", "''", $post->post_content);
 	$post_content_filtered = str_replace("'", "''", $post->post_content_filtered);
 	$post_excerpt    = str_replace("'", "''", $post->post_excerpt);
 	$post_title      = $prefix.str_replace("'", "''", $post->post_title);
 	$post_status     = str_replace("'", "''", $post->post_status);
+	$post_name       = str_replace("'", "''", $post->post_name);
 	$comment_status  = str_replace("'", "''", $post->comment_status);
 	$ping_status     = str_replace("'", "''", $post->ping_status);
 
@@ -453,8 +438,8 @@ function duplicate_post_create_duplicate_from_post($post) {
 
 	$new_post_id = $wpdb->insert_id;
 
-	// Copy the categories
-	duplicate_post_copy_post_categories($post->ID, $new_post_id);
+	// Copy the taxonomies
+	duplicate_post_copy_post_taxonomies($post->ID, $new_post_id, $post->post_type);
 
 	// Copy the meta information
 	duplicate_post_copy_post_meta_info($post->ID, $new_post_id);
@@ -467,13 +452,14 @@ function duplicate_post_create_duplicate_from_post($post) {
  */
 function duplicate_post_create_duplicate_from_page($post) {
 	global $wpdb;
-	$new_post_type = 'page';
+	//$new_post_type = 'page';
 	$new_post_author = duplicate_post_get_current_user();
 	$new_post_date = (get_option('duplicate_post_copydate') == 1)?  $post->post_date : current_time('mysql');
 	$new_post_date_gmt = get_gmt_from_date($new_post_date);
 	$prefix = get_option('duplicate_post_title_prefix');
 	if (!empty($prefix)) $prefix.= " ";
 
+	$new_post_type 	= $post->post_type;
 	$post_content    = str_replace("'", "''", $post->post_content);
 	$post_content_filtered = str_replace("'", "''", $post->post_content_filtered);
 	$post_excerpt    = str_replace("'", "''", $post->post_excerpt);
@@ -491,6 +477,9 @@ function duplicate_post_create_duplicate_from_page($post) {
 			('$new_post_author->ID', '$new_post_date', '$new_post_date_gmt', '$post_content', '$post_content_filtered', '$post_title', '$post_excerpt', 'draft', '$new_post_type', '$comment_status', '$ping_status', '$post->post_password', '$post_name', '$post->to_ping', '$post->pinged', '$new_post_date', '$new_post_date_gmt', '$post->post_parent', '$post->menu_order', '$post->post_mime_type')");
 
 	$new_page_id = $wpdb->insert_id;
+
+	// Copy the taxonomies
+	duplicate_post_copy_post_taxonomies($post->ID, $new_page_id, $post->post_type);
 
 	// Copy the meta information
 	duplicate_post_copy_post_meta_info($post->ID, $new_page_id);
