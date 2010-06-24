@@ -3,8 +3,8 @@ Contributors: lopo
 Donate link: http://www.lopo.it/duplicate-post-plugin/
 Tags: duplicate, post, copy
 Requires at least: 2.7
-Tested up to: 2.9
-Stable tag: 1.0
+Tested up to: 3.0
+Stable tag: 1.1
 
 Creates a copy of a post.
 
@@ -16,20 +16,21 @@ Allows to create a draft copy of a post (or page) in two ways:
 
 Both ways lead to the edit page for the new draft: change what you want, click on 'Publish' and you're done.
 
-Duplicate post is natively in English, but it is shipped with some other language files. Now there is a [Launchpad translation project](https://translations.launchpad.net/duplicate-post/) available to help translating this plugin: feel free to contribute (you can also send me an e-mail using the form on my website).
+In the Options page it is now possible to choose:
+* if the original post/page date must be copied too
+* which custom fields must not be copied
+* a prefix to place before the title of the cloned post/page
+* the minimum user level to clone posts or pages
+
+Duplicate post is natively in English, but it's shipped with translations in 10 other languages (though some are incomplete). Now there is a [Launchpad translation project](https://translations.launchpad.net/duplicate-post/) available to help translating this plugin: feel free to contribute (you can also send me an e-mail using the form on my website).
 
 If you're a plugin developer, I suggest to read the section made just for you under "Other Notes", to ensure compatibility between your plugin(s) and mine!
 
-This plugin used to be tested on at least WP 2.6.5. From version 1.0 onwards, it uses some APIs first introduced with WP 2.7 to achieve better integration with the new WordPress interface.
+The plugin has been tested against versions 2.7 -> 3.0. It should be compatible with the Custom Post Type and Custom Taxonomies features of WP 3.0. It's not yet been tested with the multiblog feature active (but it used to work with WPMU).
+
+Thanks for all the suggestions, bug reports, translations and donations: Franz, Ben ter Stal, [Naoko McCracken](http://blog.detlog.org), [Simon Wheatley](http://www.simonwheatley.co.uk/), [Magnus Anemo](http://www.anemo.se/en), Michelle Drumm, Richard Vencu, [el_libre](http://www.catmidia.cat/), Antoine Jouve, Sebastian, Yaron, Hiroshi Tagawa, Adam Skiba, Bartosz Kaszubowski, Braiam Peguero, Jonay, tam, my friends Livia, Alessandra, Ada and anybody else that I may have forgotten (sorry!)
 
 Credit must be given to the (great) [Post Template](http://post-templates.vincentprat.info) plugin by Vincent Prat: I made this by hacking his work to get something more focused to a sporadic use, without the need to create and manage templates just to make simple copies of some posts every now and then. If my plugin doesn't fits your needs (and even if it does) check Vincent's.
-
-Thanks for all the suggestions and bug reports, mainly:
-
-* Franz, for giving me some hints on where to search to fix the bug with WP 2.8.1;
-* Ben ter Stal, for WPMU compatibility and some fixes;
-* [Naoko McCracken](http://blog.detlog.org), for helping me with i18n and for the Japanese language files
-* [Simon Wheatley](http://www.simonwheatley.co.uk/), for his suggestions, especially about adding actions for other developers to use.
 
 An example of use: I started this for a small movie theater website which I'm building. Every Friday there's a new movie showing with a new timetable, and thus a new post: but sometimes a movie stays for more than a week, so I need to copy the last post and change only the dates, leaving movie title, director's and actors' names etc. unchanged.
 The website is http://www.kino-desse.org and the cinema is located in Livorno, Italy.
@@ -38,6 +39,7 @@ The website is http://www.kino-desse.org and the cinema is located in Livorno, I
 
 1. Upload `duplicate-post` directory to the `/wp-content/plugins/` directory
 2. Activate the plugin through the 'Plugins' menu in WordPress
+3. Go to Options -> Duplicate Post and customize behaviour as needed
 
 == For plugin developers ==
 
@@ -59,11 +61,20 @@ Please refer to the [Plugin API](http://codex.wordpress.org/Plugin_API) for ever
 If you find this useful and you if you want to contribute, there are three ways:
 
    1. You can [write me](http://www.lopo.it/contatti/) and submit your bug reports, suggestions and requests for features;
-   2. If you want to translate it to your language (there are just a few lines of text), you can [contact me](http://www.lopo.it/contatti/) and I’ll send you the .pot catalogue; your translation could be featured in next releases;
+   2. If you want to translate it to your language (there are just a few lines of text), you can use the [Launchpad translation project](https://translations.launchpad.net/duplicate-post/), or [contact me](http://www.lopo.it/contatti/) and I’ll send you the .pot catalogue; your translation could be featured in next releases;
    3. Using the plugin is free, but if you want you can send me some bucks with PayPal [here](http://www.lopo.it/duplicate-post-plugin/)
 
+== Upgrade Notice ==
+
+= 1.1 =
+New features and customization, WP 3.0 compatibility: you should upgrade if you want to copy Custom Posts with Custom Taxonomies.
 
 == Changelog ==
+
+= 1.1 =
+* WP 3.0 compatibility (not tested against multiblog feature, so beware)
+* Option page: minimum user level, title prefix, fields not to be copied, copy post/page date also
+* Added German, Swedish, Romanian, Hebrew, Catalan (incomplete) and Polish (incomplete) language files
 
 = 1.0 =
 * Better integration with WP 2.7+ interface
