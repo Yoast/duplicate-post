@@ -369,7 +369,7 @@ function duplicate_post_get_post($id) {
 }
 
 /**
- * Copy the taxnomies of a post to another post
+ * Copy the taxonomies of a post to another post
  */
 function duplicate_post_copy_post_taxonomies($id, $new_id, $post_type) {
 	global $wpdb;
