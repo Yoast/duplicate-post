@@ -493,10 +493,10 @@ function duplicate_post_create_duplicate_from_page($post) {
  */
 if ( is_admin() ){ // admin actions
 	add_action('admin_menu', 'duplicate_post_menu');
-	add_action( 'admin_init', 'register_mysettings');
+	add_action( 'admin_init', 'duplicate_post_register_settings');
 }
 
-function register_mysettings() { // whitelist options
+function duplicate_post_register_settings() { // whitelist options
 	register_setting( 'duplicate_post_group', 'duplicate_post_copydate');
 	register_setting( 'duplicate_post_group', 'duplicate_post_blacklist');
 	register_setting( 'duplicate_post_group', 'duplicate_post_title_prefix');
