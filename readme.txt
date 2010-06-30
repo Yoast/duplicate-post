@@ -4,7 +4,7 @@ Donate link: http://www.lopo.it/duplicate-post-plugin/
 Tags: duplicate, post, copy
 Requires at least: 2.7
 Tested up to: 3.0
-Stable tag: 1.1
+Stable tag: 1.1.1
 
 Creates a copy of a post.
 
@@ -22,7 +22,7 @@ In the Options page it is now possible to choose:
 * a prefix to place before the title of the cloned post/page
 * the minimum user level to clone posts or pages
 
-Duplicate post is natively in English, but it's shipped with translations in 10 other languages (though some are incomplete). Now there is a [Launchpad translation project](https://translations.launchpad.net/duplicate-post/) available to help translating this plugin: feel free to contribute (you can also send me an e-mail using the form on my website).
+Duplicate post is natively in English, but it's shipped with translations in 11 other languages (though some are incomplete). Now there is a [Launchpad translation project](https://translations.launchpad.net/duplicate-post/) available to help translating this plugin: feel free to contribute (you can also send me an e-mail using the form on my website).
 
 If you're a plugin developer, I suggest to read the section made just for you under "Other Notes", to ensure compatibility between your plugin(s) and mine!
 
@@ -66,10 +66,18 @@ If you find this useful and you if you want to contribute, there are three ways:
 
 == Upgrade Notice ==
 
+= 1.1.1 =
+Some users have experienced a fatal error when upgrading to v1.1: this may fix it, if it's caused by a plugin conflict.
+
 = 1.1 =
 New features and customization, WP 3.0 compatibility: you should upgrade if you want to copy Custom Posts with Custom Taxonomies.
 
 == Changelog ==
+
+= 1.1.1 =
+* Plugin split in two files for faster opening in Plugins list page
+* fix conflicts with a few other plugins
+* Added Dutch language files
 
 = 1.1 =
 * WP 3.0 compatibility (not tested against multiblog feature, so beware)
