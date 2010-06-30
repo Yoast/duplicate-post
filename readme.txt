@@ -28,7 +28,7 @@ If you're a plugin developer, I suggest to read the section made just for you un
 
 The plugin has been tested against versions 2.7 -> 3.0. It should be compatible with the Custom Post Type and Custom Taxonomies features of WP 3.0. It's not yet been tested with the multiblog feature active (but it used to work with WPMU).
 
-Thanks for all the suggestions, bug reports, translations and donations: Franz, Ben ter Stal, [Naoko McCracken](http://blog.detlog.org), [Simon Wheatley](http://www.simonwheatley.co.uk/), [Magnus Anemo](http://www.anemo.se/en), Michelle Drumm, Richard Vencu, [el_libre](http://www.catmidia.cat/), Antoine Jouve, Sebastian, Yaron, Hiroshi Tagawa, Adam Skiba, Bartosz Kaszubowski, Braiam Peguero, Jonay, tam, my friends Livia, Alessandra, Ada and anybody else that I may have forgotten (sorry!)
+Thanks for all the suggestions, bug reports, translations and donations: Franz, Ben ter Stal, [Naoko McCracken](http://blog.detlog.org), [Simon Wheatley](http://www.simonwheatley.co.uk/), [Magnus Anemo](http://www.anemo.se/en), Michelle Drumm, [TVbytheNumbers.com](http://www.TVbytheNumbers.com), Richard Vencu, [el_libre](http://www.catmidia.cat/), Antoine Jouve, Sebastian, Yaron, Hiroshi Tagawa, Adam Skiba, Bartosz Kaszubowski, Braiam Peguero, Jonay, tam, my friends Livia, Alessandra, Ada and anybody else that I may have forgotten (sorry!)
 
 Credit must be given to the (great) [Post Template](http://post-templates.vincentprat.info) plugin by Vincent Prat: I made this by hacking his work to get something more focused to a sporadic use, without the need to create and manage templates just to make simple copies of some posts every now and then. If my plugin doesn't fits your needs (and even if it does) check Vincent's.
 
