@@ -3,8 +3,8 @@ Contributors: lopo
 Donate link: http://www.lopo.it/duplicate-post-plugin/
 Tags: duplicate, post, copy
 Requires at least: 2.7
-Tested up to: 3.0
-Stable tag: 1.1.1
+Tested up to: 3.1.1
+Stable tag: 1.1.2
 
 Creates a copy of a post.
 
@@ -26,9 +26,9 @@ Duplicate post is natively in English, but it's shipped with translations in 11 
 
 If you're a plugin developer, I suggest to read the section made just for you under "Other Notes", to ensure compatibility between your plugin(s) and mine!
 
-The plugin has been tested against versions 2.7 -> 3.0. It should be compatible with the Custom Post Type and Custom Taxonomies features of WP 3.0. It's not yet been tested with the multiblog feature active (but it used to work with WPMU).
+The plugin has been tested against versions 2.7 -> 3.1.1. It should be compatible with the Custom Post Type and Custom Taxonomies features of WP 3.0+. It's not yet been tested with the multiblog feature active (but it used to work with WPMU).
 
-Thanks for all the suggestions, bug reports, translations and donations: Franz, Ben ter Stal, [Naoko McCracken](http://blog.detlog.org), [Simon Wheatley](http://www.simonwheatley.co.uk/), [Magnus Anemo](http://www.anemo.se/en), Michelle Drumm, [TVbytheNumbers.com](http://www.TVbytheNumbers.com), Richard Vencu, [el_libre](http://www.catmidia.cat/), Antoine Jouve, Sebastian, Yaron, Hiroshi Tagawa, Adam Skiba, Bartosz Kaszubowski, Braiam Peguero, Jonay, tam, my friends Livia, Alessandra, Ada and anybody else that I may have forgotten (sorry!)
+Thanks for all the suggestions, bug reports, translations and donations: Franz, Ben ter Stal, [Naoko McCracken](http://blog.detlog.org), [Simon Wheatley](http://www.simonwheatley.co.uk/), [Magnus Anemo](http://www.anemo.se/en), Michelle Drumm, [TVbytheNumbers.com](http://www.TVbytheNumbers.com), Richard Vencu, [el_libre](http://www.catmidia.cat/), Antoine Jouve, Sebastian, Yaron, Hiroshi Tagawa, Adam Skiba, Bartosz Kaszubowski, Szymon Sieciński, Braiam Peguero, Jonay, tam, my friends Livia, Alessandra, Ada and anybody else that I may have forgotten (sorry!)
 
 Credit must be given to the (great) [Post Template](http://post-templates.vincentprat.info) plugin by Vincent Prat: I made this by hacking his work to get something more focused to a sporadic use, without the need to create and manage templates just to make simple copies of some posts every now and then. If my plugin doesn't fits your needs (and even if it does) check Vincent's.
 
@@ -73,6 +73,10 @@ Some users have experienced a fatal error when upgrading to v1.1: this may fix i
 New features and customization, WP 3.0 compatibility: you should upgrade if you want to copy Custom Posts with Custom Taxonomies.
 
 == Changelog ==
+
+= 1.1.2 =
+* WP 3.1.1 compatibility (still not tested against multiblog feature, so beware)
+* Added complete Polish language files
 
 = 1.1.1 =
 * Plugin split in two files for faster opening in Plugins list page
