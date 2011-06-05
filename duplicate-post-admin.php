@@ -416,6 +416,8 @@ function duplicate_post_create_duplicate_from_post($post) {
 
 	// Copy the meta information
 	duplicate_post_copy_post_meta_info($post->ID, $new_post_id);
+	
+	add_post_meta($new_post_id, '_dp_original', $post->ID);
 
 	return $new_post_id;
 }
@@ -456,6 +458,8 @@ function duplicate_post_create_duplicate_from_page($post) {
 
 	// Copy the meta information
 	duplicate_post_copy_post_meta_info($post->ID, $new_page_id);
+	
+	add_post_meta($new_page_id, '_dp_original', $post->ID);
 
 	return $new_page_id;
 }
