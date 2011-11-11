@@ -26,6 +26,15 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+// i18n plugin domain
+define('DUPLICATE_POST_I18N_DOMAIN', 'duplicate-post');
+
+/**
+ * Initialise the internationalisation domain
+ */
+load_plugin_textdomain(DUPLICATE_POST_I18N_DOMAIN,
+			'wp-content/plugins/duplicate-post/languages','duplicate-post/languages');
+
 require_once (dirname(__FILE__).'/duplicate-post-common.php');
 
 if (is_admin()){

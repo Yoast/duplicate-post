@@ -22,15 +22,6 @@ function duplicate_post_get_current_version() {
 	return DUPLICATE_POST_CURRENT_VERSION;
 }
 
-// i18n plugin domain
-define('DUPLICATE_POST_I18N_DOMAIN', 'duplicate-post');
-
-/**
- * Initialise the internationalisation domain
- */
-load_plugin_textdomain(DUPLICATE_POST_I18N_DOMAIN,
-			'wp-content/plugins/duplicate-post/languages','duplicate-post/languages');
-
 /**
  * Plugin activation
  */
