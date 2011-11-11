@@ -143,8 +143,7 @@ function duplicate_post_save_as_new_post($status = ''){
 
 	} else {
 		$post_type_obj = get_post_type_object( $post->post_type );
-		wp_die(esc_attr(sprintf(__('Copy creation failed, could not find original $s:', DUPLICATE_POST_I18N_DOMAIN), $post_type_obj->labels->singular_name) . ' ' . $id));
-
+		wp_die(esc_attr(__('Copy creation failed, could not find original:', DUPLICATE_POST_I18N_DOMAIN)) . ' ' . $id);
 	}
 }
 
