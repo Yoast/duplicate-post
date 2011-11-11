@@ -112,33 +112,14 @@ add_action('admin_action_duplicate_post_save_as_new_post_draft', 'duplicate_post
  * then redirects to the edit post screen
  */
 function duplicate_post_save_as_new_post_draft(){
-	if (! ( isset( $_GET['post']) || isset( $_POST['post'])  || ( isset($_REQUEST['action']) && 'duplicate_post_save_as_new_post_draft' == $_REQUEST['action'] ) ) ) {
-		wp_die(__('No post to duplicate has been supplied!', DUPLICATE_POST_I18N_DOMAIN));
-	}
-
-	// Get the original post
-	$id = (isset($_GET['post']) ? $_GET['post'] : $_POST['post']);
-	$post = duplicate_post_get_post($id);
-
-	// Copy the post and insert it
-	if (isset($post) && $post!=null) {
-		$new_id = duplicate_post_create_duplicate($post, 'draft');
-
-		// Redirect to the edit screen for the new draft post
-		wp_redirect( admin_url( 'post.php?action=edit&post=' . $new_id ) );
-		exit;
-
-	} else {
-		$post_type_obj = get_post_type_object( $post->post_type );
-		wp_die(esc_attr(sprintf(__('Copy creation failed, could not find original $s:', DUPLICATE_POST_I18N_DOMAIN), $post_type_obj->labels->singular_name) . ' ' . $id));
-	}
+	duplicate_post_save_as_new_post('draft');
 }
 
 /*
  * This function calls the creation of a new copy of the selected post (preserving the original publish status)
  * then redirects to the post list
  */
-function duplicate_post_save_as_new_post(){
+function duplicate_post_save_as_new_post($status = ''){
 	if (! ( isset( $_GET['post']) || isset( $_POST['post'])  || ( isset($_REQUEST['action']) && 'duplicate_post_save_as_new_post' == $_REQUEST['action'] ) ) ) {
 		wp_die(__('No post to duplicate has been supplied!', DUPLICATE_POST_I18N_DOMAIN));
 	}
@@ -149,10 +130,15 @@ function duplicate_post_save_as_new_post(){
 
 	// Copy the post and insert it
 	if (isset($post) && $post!=null) {
-		$new_id = duplicate_post_create_duplicate($post);
+		$new_id = duplicate_post_create_duplicate($post, $status);
 
-		// Redirect to the edit screen for the new draft post
-		wp_redirect( admin_url( 'edit.php?post_type='.$post->post_type) );
+		if ($status == ''){
+			// Redirect to the post list screen
+			wp_redirect( admin_url( 'edit.php?post_type='.$post->post_type) );
+		} else {
+			// Redirect to the edit screen for the new draft post
+			wp_redirect( admin_url( 'post.php?action=edit&post=' . $new_id ) );
+		}
 		exit;
 
 	} else {
