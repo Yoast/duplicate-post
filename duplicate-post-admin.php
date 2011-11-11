@@ -7,6 +7,27 @@ return;
  * This function calls the creation of a new copy of the selected post (as a draft)
  * then redirects to the edit post screen
  */
+function duplicate_post_save_as_new_post_draft(){
+	if (! ( isset( $_GET['post']) || isset( $_POST['post'])  || ( isset($_REQUEST['action']) && 'duplicate_post_save_as_new_post_draft' == $_REQUEST['action'] ) ) ) {
+		wp_die(__('No post to duplicate has been supplied!', DUPLICATE_POST_I18N_DOMAIN));
+	}
+
+	// Get the original post
+	$id = (isset($_GET['post']) ? $_GET['post'] : $_POST['post']);
+	$post = duplicate_post_get_post($id);
+
+	// Copy the post and insert it
+	if (isset($post) && $post!=null) {
+		$new_id = duplicate_post_create_duplicate($post, 'draft');
+
+		// Redirect to the edit screen for the new draft post
+		wp_redirect( admin_url( 'post.php?action=edit&post=' . $new_id ) );
+		exit;
+	} else {
+		wp_die(__('Post creation failed, could not find original post:', DUPLICATE_POST_I18N_DOMAIN) . ' ' . $id);
+	}
+}
+
 function duplicate_post_save_as_new_post(){
 	if (! ( isset( $_GET['post']) || isset( $_POST['post'])  || ( isset($_REQUEST['action']) && 'duplicate_post_save_as_new_post' == $_REQUEST['action'] ) ) ) {
 		wp_die(__('No post to duplicate has been supplied!', DUPLICATE_POST_I18N_DOMAIN));
@@ -18,42 +39,10 @@ function duplicate_post_save_as_new_post(){
 
 	// Copy the post and insert it
 	if (isset($post) && $post!=null) {
-		$new_id = duplicate_post_create_duplicate_from_post($post);
-
-		// If you have written a plugin which uses non-WP database tables to save
-		// information about a post you can hook this action to dupe that data.
-		do_action( 'dp_duplicate_post', $new_id, $post );
+		$new_id = duplicate_post_create_duplicate($post);
 
 		// Redirect to the edit screen for the new draft post
-		wp_redirect( admin_url( 'post.php?action=edit&post=' . $new_id ) );
-		exit;
-	} else {
-		wp_die(__('Post creation failed, could not find original post:', DUPLICATE_POST_I18N_DOMAIN) . ' ' . $id);
-	}
-}
-
-/*
- * Same as above, for pages
- */
-function duplicate_post_save_as_new_page(){
-	if (! ( isset( $_GET['post']) || isset( $_POST['post'])  || ( isset($_REQUEST['action']) && 'duplicate_post_save_as_new_page' == $_REQUEST['action'] ) ) ) {
-		wp_die(__('No page to duplicate has been supplied!', DUPLICATE_POST_I18N_DOMAIN));
-	}
-
-	// Get the original page
-	$id = (isset($_GET['post']) ? $_GET['post'] : $_POST['post']);
-	$post = duplicate_post_get_page($id);
-
-	// Copy the page and insert it
-	if (isset($post) && $post!=null) {
-		$new_id = duplicate_post_create_duplicate_from_page($post);
-
-		// If you have written a plugin which uses non-WP database tables to save
-		// information about a page you can hook this action to dupe that data.
-		do_action( 'dp_duplicate_page', $new_id, $post );
-
-		// Redirect to the edit screen for the new draft page
-		wp_redirect( admin_url( 'post.php?action=edit&post=' . $new_id ) );
+		wp_redirect( admin_url( 'edit.php?post_type='.$post->post_type) );
 		exit;
 	} else {
 		wp_die(__('Post creation failed, could not find original post:', DUPLICATE_POST_I18N_DOMAIN) . ' ' . $id);
@@ -61,7 +50,7 @@ function duplicate_post_save_as_new_page(){
 }
 
 // Version of the plugin
-define('DUPLICATE_POST_CURRENT_VERSION', '1.1' );
+define('DUPLICATE_POST_CURRENT_VERSION', '1.5' );
 define('DUPLICATE_POST_COLUMN', 'control_duplicate_post');
 
 // i18n plugin domain
@@ -93,90 +82,35 @@ function duplicate_post_plugin_activation() {
 		'duplicate_post_copy_user_level',
 			'5',
 			'Default user level to copy posts' );
+		add_option(
+		'duplicate_post_copyexcerpt',
+			'1',
+			'Copy the excerpt from the original post/page' );
+		add_option(
+		'duplicate_post_taxonomies_blacklist',
+			array(),
+			'List of the taxonomies that mustn\'t be copied' );
 	}
 	// Update version number
 	update_option( 'duplicate_post_version', duplicate_post_get_current_version() );
 }
 
-/**
- * Check if WP version < 2.8: if so, post_row_actions does not exist, so we must add a custom column (the old way)
- */
-global $wp_version;
-if (strncmp($wp_version, "2.7",3) == 0 ){
-	add_filter('manage_posts_columns', 'duplicate_post_add_duplicate_post_column');
-	// Added by WarmStal
-	add_filter('manage_pages_columns', 'duplicate_post_add_duplicate_post_column');
-	add_action('manage_posts_custom_column', 'duplicate_post_make_duplicate_link', 10, 2);
-	// Added by WarmStal
-	add_action('manage_pages_custom_column', 'duplicate_page_make_duplicate_link', 10, 2);
-} else {
-	/**
-	 * Add to the links shown when the mouse gets over a post title in 'Edit Posts' or 'Edit Pages' screen
-	 */
-	add_filter('post_row_actions', 'duplicate_post_make_duplicate_link_row',10,2);
-	add_filter('page_row_actions', 'duplicate_page_make_duplicate_link_row',10,2);
-}
-
-/**
- * WP version < 2.8: add a custom column
- */
-function duplicate_post_add_duplicate_post_column($columns) {
-	if (duplicate_post_is_current_user_allowed_to_copy()) {
-		$columns[DUPLICATE_POST_COLUMN] = '';
-	}
-	return $columns;
-}
-
-/**
- * WP version < 2.8: add link to custom column for posts
- */
-function duplicate_post_make_duplicate_link($column_name, $id) {
-	if (duplicate_post_is_current_user_allowed_to_copy()) {
-		if ($column_name == DUPLICATE_POST_COLUMN) {
-			echo "<a href='admin.php?action=duplicate_post_save_as_new_post&amp;post=" . $id
-			. "' title='" . __("Make a duplicate from this post", DUPLICATE_POST_I18N_DOMAIN)
-			. "' class='edit'>" . __("Duplicate", DUPLICATE_POST_I18N_DOMAIN) . "</a>";
-		}
-	}
-}
-
-/**
- * WP version < 2.8: add link to custom column for pages
- */
-// Added by WarmStal
-function duplicate_page_make_duplicate_link($column_name, $id) {
-	if (duplicate_post_is_current_user_allowed_to_copy()) {
-		if ($column_name == DUPLICATE_POST_COLUMN) {
-			echo "<a href='admin.php?action=duplicate_post_save_as_new_page&amp;post=" . $id
-			. "' title='" . __("Make a duplicate from this page", DUPLICATE_POST_I18N_DOMAIN)
-			. "' class='edit'>" . __("Duplicate", DUPLICATE_POST_I18N_DOMAIN) . "</a>";
-		}
-	}
-}
+add_filter('post_row_actions', 'duplicate_post_make_duplicate_link_row',10,2);
+add_filter('page_row_actions', 'duplicate_post_make_duplicate_link_row',10,2);
 
 /**
  * Connect actions to functions
  */
 add_action('admin_action_duplicate_post_save_as_new_post', 'duplicate_post_save_as_new_post');
-add_action('admin_action_duplicate_post_save_as_new_page', 'duplicate_post_save_as_new_page');
+add_action('admin_action_duplicate_post_save_as_new_post_draft', 'duplicate_post_save_as_new_post_draft');
 
 /**
  * Add the link to action list for post_row_actions
  */
 function duplicate_post_make_duplicate_link_row($actions, $post) {
 	if (duplicate_post_is_current_user_allowed_to_copy()) {
-		$actions['duplicate'] = '<a href="admin.php?action=duplicate_post_save_as_new_post&amp;post=' . $post->ID . '" title="' . __("Make a duplicate from this post", DUPLICATE_POST_I18N_DOMAIN)
-		. '" rel="permalink">' .  __("Duplicate", DUPLICATE_POST_I18N_DOMAIN) . '</a>';
-	}
-	return $actions;
-}
-
-/**
- * Add the link to action list for page_row_actions
- */
-function duplicate_page_make_duplicate_link_row($actions, $page) {
-	if (duplicate_post_is_current_user_allowed_to_copy()) {
-		$actions['duplicate'] = '<a href="admin.php?action=duplicate_post_save_as_new_page&amp;post=' . $page->ID . '" title="' . __("Make a duplicate from this page", DUPLICATE_POST_I18N_DOMAIN)
+		$theUrl = admin_url('admin.php?action=duplicate_post_save_as_new_post&amp;post=' . $post->ID);
+		$actions['duplicate'] = '<a href="'.$theUrl.'" title="' . __("Make a duplicate from this post", DUPLICATE_POST_I18N_DOMAIN)
 		. '" rel="permalink">' .  __("Duplicate", DUPLICATE_POST_I18N_DOMAIN) . '</a>';
 	}
 	return $actions;
@@ -189,30 +123,15 @@ add_action( 'post_submitbox_start', 'duplicate_post_add_duplicate_post_button' )
 
 function duplicate_post_add_duplicate_post_button() {
 	if ( isset( $_GET['post'] ) && duplicate_post_is_current_user_allowed_to_copy()) {
-		$act = "admin.php?action=duplicate_post_save_as_new_post";
+		$act = "admin.php?action=duplicate_post_save_as_new_post_draft";
 		global $post;
-		if ($post->post_type == "page") $act = "admin.php?action=duplicate_post_save_as_new_page";
 		$notifyUrl = $act."&post=" . $_GET['post'];
 		?>
 <div id="duplicate-action"><a class="submitduplicate duplication"
-	href="<?php echo $notifyUrl; ?>"><?php _e('Copy to a new draft', DUPLICATE_POST_I18N_DOMAIN); ?></a>
+	href="<?php echo admin_url($notifyUrl); ?>"><?php _e('Copy to a new draft', DUPLICATE_POST_I18N_DOMAIN); ?></a>
 </div>
 		<?php
 	}
-}
-
-/**
- * Wrapper for the option 'duplicate_post_create_user_level'
- */
-function duplicate_post_get_copy_user_level() {
-	return get_option( 'duplicate_post_copy_user_level' );
-}
-
-/**
- * Wrapper for the option 'duplicate_post_create_user_level'
- */
-function duplicate_post_set_copy_user_level($new_level) {
-	return update_option( 'duplicate_post_copy_user_level', $new_level );
 }
 
 /**
@@ -227,56 +146,6 @@ function duplicate_post_get_installed_version() {
  */
 function duplicate_post_get_current_version() {
 	return DUPLICATE_POST_CURRENT_VERSION;
-}
-
-/**
- * Test if the user is allowed to create templates
- */
-function duplicate_post_is_current_user_allowed_to_copy() {
-	return current_user_can("level_" . duplicate_post_get_copy_user_level());
-}
-
-/**
- * Get a level given a role
- */
-function duplicate_post_get_level_from_role($role) {
-	switch ($role) {
-		case 0:		// subscribers		0
-			return 0;
-		case 1:		// contributors		1
-			return 1;
-		case 2:		// authors			2..4
-			return 2;
-		case 3:		// editors			5..7
-			return 5;
-		case 4:		// administrators		8..10
-			return 8;
-		default:	// error
-			return 0;
-	}
-}
-
-/**
- * Get a role given a level
- */
-function duplicate_post_get_role_from_level($level) {
-	if ($level<=0) {
-		// subscribers		0
-		return 0;
-	} else if ($level==1) {
-		// contributors		1
-		return 1;
-	} else if ($level>=2 && $level<=4) {
-		// authors			2..4
-		return 2;
-	} else if ($level>=5 && $level<=7) {
-		// editors			5..7
-		return 3;
-	} else if ($level>=8) {
-		// admins			8..10
-		return 4;
-	}
-	return 0;
 }
 
 /**
@@ -297,45 +166,13 @@ function duplicate_post_get_current_user() {
 }
 
 /**
- * Escape single quotes, specialchar double quotes, and fix line endings.
- */
-function duplicate_post_js_escape($text) {
-	if (function_exists('js_escape')) {
-		return js_escape($text);
-	} else {
-		$safe_text = str_replace('&&', '&#038;&', $text);
-		$safe_text = str_replace('&&', '&#038;&', $safe_text);
-		$safe_text = preg_replace('/&(?:$|([^#])(?![a-z1-4]{1,8};))/', '&#038;$1', $safe_text);
-		$safe_text = str_replace('<', '&lt;', $safe_text);
-		$safe_text = str_replace('>', '&gt;', $safe_text);
-		$safe_text = str_replace('"', '&quot;', $safe_text);
-		$safe_text = str_replace('&#039;', "'", $safe_text);
-		$safe_text = preg_replace("/\r?\n/", "\\n", addslashes($safe_text));
-		return safe_text;
-	}
-}
-
-/**
- * Get a page from the database
- */
-function duplicate_post_get_page($id) {
-	global $wpdb;
-	$post = $wpdb->get_results("SELECT * FROM $wpdb->posts WHERE ID=$id");
-	if ($post->post_type == "revision"){
-		$id = $post->post_parent;
-		$post = $wpdb->get_results("SELECT * FROM $wpdb->posts WHERE ID=$id");
-	}
-	return $post[0];
-}
-
-/**
  * Get a post from the database
  */
 function duplicate_post_get_post($id) {
 	global $wpdb;
 	$post = $wpdb->get_results("SELECT * FROM $wpdb->posts WHERE ID=$id");
-	if ($post->post_type == "revision"){
-		$id = $post->post_parent;
+	if ($post[0]->post_type == "revision"){
+		$id = $post[0]->post_parent;
 		$post = $wpdb->get_results("SELECT * FROM $wpdb->posts WHERE ID=$id");
 	}
 	return $post[0];
@@ -349,7 +186,9 @@ function duplicate_post_copy_post_taxonomies($id, $new_id, $post_type) {
 	if (isset($wpdb->terms)) {
 		// WordPress 2.3
 		$taxonomies = get_object_taxonomies($post_type); //array("category", "post_tag");
+		$taxonomies_blacklist = get_option('duplicate_post_taxonomies_blacklist');
 		foreach ($taxonomies as $taxonomy) {
+			if(!empty($taxonomies_blacklist) && in_array($taxonomy,$taxonomies_blacklist)) continue;
 			$post_terms = wp_get_object_terms($id, $taxonomy);
 			for ($i=0; $i<count($post_terms); $i++) {
 				wp_set_object_terms($new_id, $post_terms[$i]->slug, $taxonomy, true);
@@ -383,7 +222,7 @@ function duplicate_post_copy_post_meta_info($id, $new_id) {
 /**
  * Create a duplicate from a post
  */
-function duplicate_post_create_duplicate_from_post($post) {
+function duplicate_post_create_duplicate($post, $status = '') {
 	global $wpdb;
 	//$new_post_type = 'post';
 	$new_post_author = duplicate_post_get_current_user();
@@ -395,21 +234,37 @@ function duplicate_post_create_duplicate_from_post($post) {
 	$new_post_type 	= $post->post_type;
 	$post_content    = str_replace("'", "''", $post->post_content);
 	$post_content_filtered = str_replace("'", "''", $post->post_content_filtered);
-	$post_excerpt    = str_replace("'", "''", $post->post_excerpt);
+	if (get_option('duplicate_post_copyexcerpt') == '1')
+		$post_excerpt = str_replace("'", "''", $post->post_excerpt);
+	else
+		$post_excerpt = "";
 	$post_title      = $prefix.str_replace("'", "''", $post->post_title);
-	$post_status     = str_replace("'", "''", $post->post_status);
-	$post_name       = str_replace("'", "''", $post->post_name);
+	if (empty($status))
+		$new_post_status  = str_replace("'", "''", $post->post_status);
+	else
+		$new_post_status  = $status;
+	$post_name       = sanitize_title($post_title);
 	$comment_status  = str_replace("'", "''", $post->comment_status);
 	$ping_status     = str_replace("'", "''", $post->ping_status);
 
 	// Insert the new template in the post table
 	$wpdb->query(
 			"INSERT INTO $wpdb->posts
-			(post_author, post_date, post_date_gmt, post_content, post_content_filtered, post_title, post_excerpt,  post_status, post_type, comment_status, ping_status, post_password, to_ping, pinged, post_modified, post_modified_gmt, post_parent, menu_order, post_mime_type)
+			(post_author, post_date, post_date_gmt, post_content, post_content_filtered, post_title, post_excerpt,  post_status, post_type, comment_status, ping_status, post_password, to_ping, pinged, post_modified, post_modified_gmt, post_parent, menu_order, post_mime_type, post_name)
 			VALUES
-			('$new_post_author->ID', '$new_post_date', '$new_post_date_gmt', '$post_content', '$post_content_filtered', '$post_title', '$post_excerpt', 'draft', '$new_post_type', '$comment_status', '$ping_status', '$post->post_password', '$post->to_ping', '$post->pinged', '$new_post_date', '$new_post_date_gmt', '$post->post_parent', '$post->menu_order', '$post->post_mime_type')");
+			('$new_post_author->ID', '$new_post_date', '$new_post_date_gmt', '$post_content', '$post_content_filtered', '$post_title', '$post_excerpt', '$new_post_status', '$new_post_type', '$comment_status', '$ping_status', '$post->post_password', '$post->to_ping', '$post->pinged', '$new_post_date', '$new_post_date_gmt', '$post->post_parent', '$post->menu_order', '$post->post_mime_type', '$post_name')");
 
 	$new_post_id = $wpdb->insert_id;
+	
+	$post_name = wp_unique_post_slug($post_name, $new_post_id, $new_post_status, $new_post_type, $post->post_parent);
+	// Update post 37
+  	$new_post = array();
+  	$new_post['ID'] = $new_post_id;
+  	$new_post['post_name'] = $post_name;
+
+	// Update the post into the database
+  	wp_update_post( $new_post );
+	
 
 	// Copy the taxonomies
 	duplicate_post_copy_post_taxonomies($post->ID, $new_post_id, $post->post_type);
@@ -418,52 +273,16 @@ function duplicate_post_create_duplicate_from_post($post) {
 	duplicate_post_copy_post_meta_info($post->ID, $new_post_id);
 	
 	add_post_meta($new_post_id, '_dp_original', $post->ID);
+	
+	// If you have written a plugin which uses non-WP database tables to save
+	// information about a post you can hook this action to dupe that data.
+	if ($post->post_type == 'page' || (function_exists(is_post_type_hierarchical) && is_post_type_hierarchical( $post->post_type )))
+		do_action( 'dp_duplicate_page', $new_id, $post );
+	else 
+		do_action( 'dp_duplicate_post', $new_id, $post );
 
 	return $new_post_id;
 }
-
-/**
- * Create a duplicate from a page
- */
-function duplicate_post_create_duplicate_from_page($post) {
-	global $wpdb;
-	//$new_post_type = 'page';
-	$new_post_author = duplicate_post_get_current_user();
-	$new_post_date = (get_option('duplicate_post_copydate') == 1)?  $post->post_date : current_time('mysql');
-	$new_post_date_gmt = get_gmt_from_date($new_post_date);
-	$prefix = get_option('duplicate_post_title_prefix');
-	if (!empty($prefix)) $prefix.= " ";
-
-	$new_post_type 	= $post->post_type;
-	$post_content    = str_replace("'", "''", $post->post_content);
-	$post_content_filtered = str_replace("'", "''", $post->post_content_filtered);
-	$post_excerpt    = str_replace("'", "''", $post->post_excerpt);
-	$post_title      = $prefix.str_replace("'", "''", $post->post_title);
-	$post_status     = str_replace("'", "''", $post->post_status);
-	$post_name       = str_replace("'", "''", $post->post_name);
-	$comment_status  = str_replace("'", "''", $post->comment_status);
-	$ping_status     = str_replace("'", "''", $post->ping_status);
-
-	// Insert the new template in the post table
-	$wpdb->query(
-			"INSERT INTO $wpdb->posts
-			(post_author, post_date, post_date_gmt, post_content, post_content_filtered, post_title, post_excerpt,  post_status, post_type, comment_status, ping_status, post_password, post_name, to_ping, pinged, post_modified, post_modified_gmt, post_parent, menu_order, post_mime_type)
-			VALUES
-			('$new_post_author->ID', '$new_post_date', '$new_post_date_gmt', '$post_content', '$post_content_filtered', '$post_title', '$post_excerpt', 'draft', '$new_post_type', '$comment_status', '$ping_status', '$post->post_password', '$post_name', '$post->to_ping', '$post->pinged', '$new_post_date', '$new_post_date_gmt', '$post->post_parent', '$post->menu_order', '$post->post_mime_type')");
-
-	$new_page_id = $wpdb->insert_id;
-
-	// Copy the taxonomies
-	duplicate_post_copy_post_taxonomies($post->ID, $new_page_id, $post->post_type);
-
-	// Copy the meta information
-	duplicate_post_copy_post_meta_info($post->ID, $new_page_id);
-	
-	add_post_meta($new_page_id, '_dp_original', $post->ID);
-
-	return $new_page_id;
-}
-
 
 /**
  * Add an option page where you can specify which meta fields you don't want to copy
@@ -475,7 +294,9 @@ if ( is_admin() ){ // admin actions
 
 function duplicate_post_register_settings() { // whitelist options
 	register_setting( 'duplicate_post_group', 'duplicate_post_copydate');
+	register_setting( 'duplicate_post_group', 'duplicate_post_copyexcerpt');
 	register_setting( 'duplicate_post_group', 'duplicate_post_blacklist');
+	register_setting( 'duplicate_post_group', 'duplicate_post_taxonomies_blacklist');
 	register_setting( 'duplicate_post_group', 'duplicate_post_title_prefix');
 	register_setting( 'duplicate_post_group', 'duplicate_post_copy_user_level');
 }
@@ -501,10 +322,31 @@ function duplicate_post_options() {
 		</td>
 	</tr>
 	<tr valign="top">
+		<th scope="row"><?php _e("Copy excerpt", DUPLICATE_POST_I18N_DOMAIN); ?></th>
+		<td><input type="checkbox" name="duplicate_post_copyexcerpt" value="1" <?php  if(get_option('duplicate_post_copyexcerpt') == 1) echo 'checked="checked"'; ?>"/>
+		<span class="description"><?php _e("Copy the excerpt from the original post/page", DUPLICATE_POST_I18N_DOMAIN); ?></span>
+		</td>
+	</tr>
+	<tr valign="top">
 		<th scope="row"><?php _e("Do not copy these fields", DUPLICATE_POST_I18N_DOMAIN); ?></th>
 		<td><input type="text" name="duplicate_post_blacklist"
 			value="<?php echo get_option('duplicate_post_blacklist'); ?>" /> <span
 			class="description"><?php _e("Comma-separated list of meta fields that must not be copied when cloning a post/page", DUPLICATE_POST_I18N_DOMAIN); ?></span>
+		</td>
+	</tr>
+	<tr valign="top">
+		<th scope="row"><?php _e("Do not copy these taxonomies", DUPLICATE_POST_I18N_DOMAIN); ?></th>
+		<td><div style="height: 100px; width: 300px; padding: 5px; overflow: auto; border: 1px solid #ccc">
+			<?php $taxonomies=get_taxonomies(array('public' => true),'objects');
+			$taxonomies_blacklist = get_option('duplicate_post_taxonomies_blacklist');
+			if ($taxonomies_blacklist == "") $taxonomies_blacklist = array();
+			foreach ($taxonomies as $taxonomy ) : ?>
+  			<label style="display:block;">
+			<input type="checkbox" name="duplicate_post_taxonomies_blacklist[]" value="<?php echo $taxonomy->name?>" <?php if(in_array($taxonomy->name,$taxonomies_blacklist)) echo 'checked="checked"'?>/>
+			 <?php echo $taxonomy->labels->name?></label>
+			<?php endforeach; ?>
+		</div>
+		<span class="description"><?php _e("Select the taxonomies you don't want to be copied", DUPLICATE_POST_I18N_DOMAIN); ?></span>
 		</td>
 	</tr>
 	<tr valign="top">
@@ -517,28 +359,14 @@ function duplicate_post_options() {
 	<tr valign="top">
 		<th scope="row"><?php _e("Minimum level to copy posts", DUPLICATE_POST_I18N_DOMAIN); ?></th>
 		<td><select name="duplicate_post_copy_user_level">
-		<?php global $wp_version;
-		if (strncmp($wp_version, "2.7",3) == 0 ){ ?>
-			<option value="1"
-			<?php if(get_option('duplicate_post_copy_user_level') == 1) echo 'selected="selected"'?>><?php echo _c("Contributor|User role", "default")?></option>
-			<option value="2"
-			<?php if(get_option('duplicate_post_copy_user_level') == 2) echo 'selected="selected"'?>><?php echo _c("Author|User role", "default")?></option>
-			<option value="5"
-			<?php if(get_option('duplicate_post_copy_user_level') == 5) echo 'selected="selected"'?>><?php echo _c("Editor|User role", "default")?></option>
-			<option value="8"
-			<?php if(get_option('duplicate_post_copy_user_level') == 8) echo 'selected="selected"'?>><?php echo _c("Administrator|User role", "default")?></option>
-
-			<?php } else { ?>
-			<option value="1"
-			<?php if(get_option('duplicate_post_copy_user_level') == 1) echo 'selected="selected"'?>><?php echo _x("Contributor", "User role", "default")?></option>
-			<option value="2"
-			<?php if(get_option('duplicate_post_copy_user_level') == 2) echo 'selected="selected"'?>><?php echo _x("Author", "User role", "default")?></option>
-			<option value="5"
-			<?php if(get_option('duplicate_post_copy_user_level') == 5) echo 'selected="selected"'?>><?php echo _x("Editor", "User role", "default")?></option>
 			<option value="8"
 			<?php if(get_option('duplicate_post_copy_user_level') == 8) echo 'selected="selected"'?>><?php echo _x("Administrator", "User role", "default")?></option>
-
-			<?php };?>
+			<option value="5"
+			<?php if(get_option('duplicate_post_copy_user_level') == 5) echo 'selected="selected"'?>><?php echo _x("Editor", "User role", "default")?></option>
+			<option value="2"
+			<?php if(get_option('duplicate_post_copy_user_level') == 2) echo 'selected="selected"'?>><?php echo _x("Author", "User role", "default")?></option>
+			<option value="1"
+			<?php if(get_option('duplicate_post_copy_user_level') == 1) echo 'selected="selected"'?>><?php echo _x("Contributor", "User role", "default")?></option>
 		</select> <span class="description"><?php _e("Warning: users will be able to copy all posts, even those of higher level users", DUPLICATE_POST_I18N_DOMAIN); ?></span>
 		</td>
 	</tr>
@@ -563,4 +391,6 @@ function duplicate_post_add_plugin_links($links, $file) {
 	}
 	return $links;
 }
+
+
 ?>
