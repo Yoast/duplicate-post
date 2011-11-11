@@ -3,7 +3,7 @@
  Plugin Name: Duplicate Post
  Plugin URI: http://lopo.it/duplicate-post-plugin/
  Description: Creates a copy of a post.
- Version: 1.1.2
+ Version: 2.0
  Author: Enrico Battocchi
  Author URI: http://lopo.it
  Text Domain: duplicate-post
@@ -29,6 +29,6 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 require_once (dirname(__FILE__).'/duplicate-post-common.php');
 
 if (is_admin()){
-        require_once (dirname(__FILE__).'/duplicate-post-admin.php');
+	require_once (dirname(__FILE__).'/duplicate-post-admin.php');
 }
 ?>

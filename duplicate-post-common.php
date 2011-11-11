@@ -27,18 +27,22 @@ function duplicate_post_get_copy_user_level() {
  * @return string
  */
 function duplicate_post_get_clone_post_link( $id = 0, $context = 'display' ) {
-        if ( !$post = &get_post( $id ) )
-                return;
-        if ( 'display' == $context )
-                $action = '?action=duplicate_post_save_as_new_post_draft&amp;post='.$post->ID;
-        else
-                $action = '?action=duplicate_post_save_as_new_post_draft&post='.$post->ID;
-        $post_type_object = get_post_type_object( $post->post_type );
-        if ( !$post_type_object )
-                return;
-        if ( !duplicate_post_is_current_user_allowed_to_copy() )
-                return;
-        return apply_filters( 'duplicate_post_get_clone_post_link', admin_url( "admin.php". $action ), $post->ID, $context );
+	if ( !duplicate_post_is_current_user_allowed_to_copy() )
+	return;
+
+	if ( !$post = &get_post( $id ) )
+	return;
+
+	if ( 'display' == $context )
+	$action = '?action=duplicate_post_save_as_new_post_draft&amp;post='.$post->ID;
+	else
+	$action = '?action=duplicate_post_save_as_new_post_draft&post='.$post->ID;
+
+	$post_type_object = get_post_type_object( $post->post_type );
+	if ( !$post_type_object )
+	return;
+
+	return apply_filters( 'duplicate_post_get_clone_post_link', admin_url( "admin.php". $action ), $post->ID, $context );
 }
 /**
  * Display duplicate post link for post.
@@ -49,15 +53,20 @@ function duplicate_post_get_clone_post_link( $id = 0, $context = 'display' ) {
  * @param int $id Optional. Post ID.
  */
 function duplicate_post_clone_post_link( $link = null, $before = '', $after = '', $id = 0 ) {
-        if ( !$post = &get_post( $id ) )
-                return;
-        if ( !$url = duplicate_post_get_clone_post_link( $post->ID ) )
-                return;
-        if ( null === $link )
-                $link = __('Edit This');
-        $post_type_obj = get_post_type_object( $post->post_type );
-        $link = '<a class="post-clone-link" href="' . $url . '" title="' . __("Clone this ", DUPLICATE_POST_I18N_DOMAIN) . esc_attr( $post_type_obj->labels->singular_name ).'">' . $link . '</a>';
-        echo $before . apply_filters( 'duplicate_post_clone_post_link', $link, $post->ID ) . $after;
+	if ( !$post = &get_post( $id ) )
+	return;
+
+	if ( !$url = duplicate_post_get_clone_post_link( $post->ID ) )
+	return;
+
+	if ( null === $link )
+	$link = __('Clone', DUPLICATE_POST_I18N_DOMAIN);
+
+	$post_type_obj = get_post_type_object( $post->post_type );
+	$link = '<a class="post-clone-link" href="' . $url . '" title="'
+	. esc_attr(__("Clone this item", DUPLICATE_POST_I18N_DOMAIN))
+	.'">' . $link . '</a>';
+	echo $before . apply_filters( 'duplicate_post_clone_post_link', $link, $post->ID ) . $after;
 }
 
 ?>
