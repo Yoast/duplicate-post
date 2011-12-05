@@ -280,7 +280,7 @@ function duplicate_post_create_duplicate($post, $status = '') {
 add_filter('plugin_row_meta', 'duplicate_post_add_plugin_links', 10, 2);
 
 function duplicate_post_add_plugin_links($links, $file) {
-	if ( $file == plugin_basename(__FILE__) ) {
+	if ( $file == plugin_basename(dirname(__FILE__).'/duplicate-post.php') ) {
 		$links[] = '<a href="http://lopo.it/duplicate-post-plugin">' . __('Donate', DUPLICATE_POST_I18N_DOMAIN) . '</a>';
 		$links[] = '<a href="http://lopo.it/duplicate-post-plugin">' . __('Translate', DUPLICATE_POST_I18N_DOMAIN) . '</a>';
 	}
