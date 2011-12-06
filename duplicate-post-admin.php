@@ -6,7 +6,7 @@ return;
 require_once (dirname(__FILE__).'/duplicate-post-options.php');
 
 // Version of the plugin
-define('DUPLICATE_POST_CURRENT_VERSION', '1.6' );
+define('DUPLICATE_POST_CURRENT_VERSION', '2.0' );
 
 /**
  * Wrapper for the option 'duplicate_post_version'
