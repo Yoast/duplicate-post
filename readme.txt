@@ -53,8 +53,10 @@ Use WordPress' Add New Plugin feature, searching "Duplicate Post", or download t
 
 = The plugin doesn't work, why? =
 
-First, check your version of WordPress: the plugin is not supposed to work anymore on old version.
+First, check your version of WordPress: the plugin is not supposed to work anymore on old versions.
+
 Then try to deactivate and re-activate it, some user have reported that this fixes the problem.
+
 If not, maybe there is some kind of conflict with other plugins: feel free to write me and we'll try to discover a solution (it will be *really* helpful if you try to deactivate all your other plugins one by one to see which one conflicts with mine... But do it only if you know what you're doing, I will not be responsible of any problem you may experience).
 
 = Can you add it to the bulk actions in the post/page list? =
@@ -137,24 +139,16 @@ That means that you can put it in your template (e.g., in single.php or page.php
 The parameters are:
 
 * *link*
-    (string) (optional) The link text.
-
-        Default: __('Clone','duplicate-post') 
+    (string) (optional) The link text. Default: __('Clone','duplicate-post') 
 
 * *before*
-    (string) (optional) Text to put before the link text.
-
-        Default: None 
+    (string) (optional) Text to put before the link text. Default: None 
 
 * *after*
-    (string) (optional) Text to put after the link text.
-
-        Default: None 
+    (string) (optional) Text to put after the link text. Default: None 
 
 * *id*
-    (integer) (optional) Post ID.
-
-        Default: Current post ID 
+    (integer) (optional) Post ID. Default: Current post ID 
 
 
 
