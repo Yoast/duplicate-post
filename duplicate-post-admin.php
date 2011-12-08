@@ -72,10 +72,10 @@ function duplicate_post_make_duplicate_link_row($actions, $post) {
 		$post_type_obj = get_post_type_object( $post->post_type );
 		$actions['duplicate'] = '<a href="'.$theUrl.'" title="'
 		. esc_attr(__("Clone this item", DUPLICATE_POST_I18N_DOMAIN))
-		. '" rel="permalink">' .  __("Duplicate", DUPLICATE_POST_I18N_DOMAIN) . '</a>';
+		. '" rel="permalink">' .  __('Clone', DUPLICATE_POST_I18N_DOMAIN) . '</a>';
 		$actions['edit_as_new_draft'] = '<a href="'.$theUrlDraft.'" title="'
 		. esc_attr(__('Copy to a new draft', DUPLICATE_POST_I18N_DOMAIN))
-		. '" rel="permalink">' .  __('New draft', DUPLICATE_POST_I18N_DOMAIN) . '</a>';
+		. '" rel="permalink">' .  __('New Draft', DUPLICATE_POST_I18N_DOMAIN) . '</a>';
 	}
 	return $actions;
 }

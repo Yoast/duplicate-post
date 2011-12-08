@@ -47,7 +47,7 @@ function duplicate_post_options() {
 				<th scope="row"><?php _e("Copy post/page status", DUPLICATE_POST_I18N_DOMAIN); ?>
 				</th>
 				<td><input type="checkbox" name="duplicate_post_copystatus" value="1" <?php  if(get_option('duplicate_post_copystatus') == 1) echo 'checked="checked"'; ?>"/>
-					<span class="description"><?php _e("Copy the original post status (draft, published, pending) when cloning from the post list. Cloning from the edit screen will always create a new draft.", DUPLICATE_POST_I18N_DOMAIN); ?>
+					<span class="description"><?php _e("Copy the original post status (draft, published, pending) when cloning from the post list.", DUPLICATE_POST_I18N_DOMAIN); ?>
 				</span>
 				</td>
 			</tr>
@@ -112,19 +112,19 @@ function duplicate_post_options() {
 				<td><select name="duplicate_post_copy_user_level">
 						<option value="8"
 						<?php if(get_option('duplicate_post_copy_user_level') == 8) echo 'selected="selected"'?>>
-							<?php echo _x("Administrator", "User role", "default")?>
+							<?php echo _x("Administrator", "User role")?>
 						</option>
 						<option value="5"
 						<?php if(get_option('duplicate_post_copy_user_level') == 5) echo 'selected="selected"'?>>
-							<?php echo _x("Editor", "User role", "default")?>
+							<?php echo _x("Editor", "User role")?>
 						</option>
 						<option value="2"
 						<?php if(get_option('duplicate_post_copy_user_level') == 2) echo 'selected="selected"'?>>
-							<?php echo _x("Author", "User role", "default")?>
+							<?php echo _x("Author", "User role")?>
 						</option>
 						<option value="1"
 						<?php if(get_option('duplicate_post_copy_user_level') == 1) echo 'selected="selected"'?>>
-							<?php echo _x("Contributor", "User role", "default")?>
+							<?php echo _x("Contributor", "User role")?>
 						</option>
 				</select> <span class="description"><?php _e("Warning: users will be able to copy all posts, even those of higher level users", DUPLICATE_POST_I18N_DOMAIN); ?>
 				</span>
