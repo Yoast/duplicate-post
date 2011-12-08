@@ -68,10 +68,14 @@ add_filter('page_row_actions', 'duplicate_post_make_duplicate_link_row',10,2);
 function duplicate_post_make_duplicate_link_row($actions, $post) {
 	if (duplicate_post_is_current_user_allowed_to_copy()) {
 		$theUrl = admin_url('admin.php?action=duplicate_post_save_as_new_post&amp;post=' . $post->ID);
+		$theUrlDraft = admin_url('admin.php?action=duplicate_post_save_as_new_post_draft&amp;post=' . $post->ID);
 		$post_type_obj = get_post_type_object( $post->post_type );
 		$actions['duplicate'] = '<a href="'.$theUrl.'" title="'
 		. esc_attr(__("Clone this item", DUPLICATE_POST_I18N_DOMAIN))
 		. '" rel="permalink">' .  __("Duplicate", DUPLICATE_POST_I18N_DOMAIN) . '</a>';
+		$actions['edit_as_new_draft'] = '<a href="'.$theUrlDraft.'" title="'
+		. esc_attr(__('Copy to a new draft', DUPLICATE_POST_I18N_DOMAIN))
+		. '" rel="permalink">' .  __('New draft', DUPLICATE_POST_I18N_DOMAIN) . '</a>';
 	}
 	return $actions;
 }
@@ -268,6 +272,7 @@ function duplicate_post_create_duplicate($post, $status = '') {
 	else
 	do_action( 'dp_duplicate_post', $new_post_id, $post );
 
+	// If the copy gets immediately published, we have to set a proper slug.
 	if ($new_post_status == 'publish'){
 		$post_name = wp_unique_post_slug($post_name, $new_post_id, $new_post_status, $new_post_type, $post->post_parent);
 
