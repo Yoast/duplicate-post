@@ -4,7 +4,7 @@ Donate link: http://lopo.it/duplicate-post-plugin/
 Tags: duplicate post, copy, clone
 Requires at least: 3.0
 Tested up to: 3.3
-Stable tag: 2.0
+Stable tag: 2.0.1
 
 Clone posts and pages.
 
@@ -12,7 +12,7 @@ Clone posts and pages.
 
 This plugin allows to create a copy of a post (or page) in two ways.
 
-1. In 'Edit Posts'/'Edit Pages', you can click on 'Duplicate' link below the post/page title: this will immediately create a copy (with the same publish status of the original: 'publish', 'draft' or 'pending') and return to the list.
+1. In 'Edit Posts'/'Edit Pages', you can click on 'Duplicate' link below the post/page title: this will immediately create a copy and return to the list.
 
 2. While editing a post/page, you can click on 'Copy to a new draft' above "Cancel"/"Move to trash". This will lead to the edit page for the new draft: change what you want, click on 'Publish' and you're done.
 
@@ -23,6 +23,7 @@ There is also a **template tag**, so you can put it in your templates and clone 
 In the Options page under Settings it is now possible to choose:
 
 * if the original post/page date must be copied too
+* if the original post/page status (draft, published, pending) must be copied too when cloning from the post list
 * if the original post/page excerpt must be copied too
 * which taxonomies and custom fields must not be copied
 * a prefix (or a suffix) to place before (or after) the title of the cloned post/page
@@ -72,12 +73,15 @@ There is an open ticket in WordPress Trac, as other plugin developers too are in
 
 == Screenshots ==
 
-1. Here you can copy the post you're editing to a new draft
+1. Here you can copy the post you're editing to a new draft.
 2. By clicking on "Duplicate" the post is cloned immediately.
-3. The option page
-4. The template tag manually added to the Twenty Ten theme. Click on the "Clone" link and you're redirected to the edit screen for a new draft copy of your post. 
+3. The options page.
+4. The template tag manually added to Twenty Ten theme. Click on the "Clone" link and you're redirected to the edit screen for a new draft copy of your post. 
 
 == Upgrade Notice ==
+
+= 2.0.1 =
+Bug fix + new option
 
 = 2.0 =
 Several improvements and new features, see changelog. Requires WP 3.0+.
@@ -89,6 +93,10 @@ Some users have experienced a fatal error when upgrading to v1.1: this may fix i
 New features and customization, WP 3.0 compatibility: you should upgrade if you want to copy Custom Posts with Custom Taxonomies.
 
 == Changelog ==
+
+= 2.0.1 =
+* Fixed bug for action filters
+* New option so you can choose if cloning from the posts list must copy the post status (draft, published, pending) too.
 
 = 2.0 =
 * WP 3.3 compatibility (still not tested against multiblog feature, so beware)
