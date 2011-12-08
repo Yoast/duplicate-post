@@ -247,9 +247,9 @@ function duplicate_post_create_duplicate($post, $status = '') {
 	// Insert the new template in the post table
 	$wpdb->query(
 			"INSERT INTO $wpdb->posts
-			(post_author, post_date, post_date_gmt, post_content, post_content_filtered, post_title, post_excerpt,  post_status, post_type, comment_status, ping_status, post_password, to_ping, pinged, post_modified, post_modified_gmt, post_parent, menu_order, post_mime_type, post_name)
+			(post_author, post_date, post_date_gmt, post_content, post_content_filtered, post_title, post_excerpt,  post_status, post_type, comment_status, ping_status, post_password, to_ping, pinged, post_modified, post_modified_gmt, post_parent, menu_order, post_mime_type)
 			VALUES
-			('$new_post_author->ID', '$new_post_date', '$new_post_date_gmt', '$post_content', '$post_content_filtered', '$post_title', '$post_excerpt', '$new_post_status', '$new_post_type', '$comment_status', '$ping_status', '$post->post_password', '$post->to_ping', '$post->pinged', '$new_post_date', '$new_post_date_gmt', '$post->post_parent', '$post->menu_order', '$post->post_mime_type', '$post_name')");
+			('$new_post_author->ID', '$new_post_date', '$new_post_date_gmt', '$post_content', '$post_content_filtered', '$post_title', '$post_excerpt', '$new_post_status', '$new_post_type', '$comment_status', '$ping_status', '$post->post_password', '$post->to_ping', '$post->pinged', '$new_post_date', '$new_post_date_gmt', '$post->post_parent', '$post->menu_order', '$post->post_mime_type')");
 
 	$new_post_id = $wpdb->insert_id;
 
@@ -268,14 +268,16 @@ function duplicate_post_create_duplicate($post, $status = '') {
 	else
 	do_action( 'dp_duplicate_post', $new_post_id, $post );
 
-	$post_name = wp_unique_post_slug($post_name, $new_post_id, $new_post_status, $new_post_type, $post->post_parent);
+	if ($new_post_status == 'publish'){
+		$post_name = wp_unique_post_slug($post_name, $new_post_id, $new_post_status, $new_post_type, $post->post_parent);
 
-	$new_post = array();
-	$new_post['ID'] = $new_post_id;
-	$new_post['post_name'] = $post_name;
+		$new_post = array();
+		$new_post['ID'] = $new_post_id;
+		$new_post['post_name'] = $post_name;
 
-	// Update the post into the database
-	wp_update_post( $new_post );
+		// Update the post into the database
+		wp_update_post( $new_post );
+	}
 
 	return $new_post_id;
 }
