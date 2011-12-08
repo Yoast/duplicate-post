@@ -10,6 +10,7 @@ if ( is_admin() ){ // admin actions
 function duplicate_post_register_settings() { // whitelist options
 	register_setting( 'duplicate_post_group', 'duplicate_post_copydate');
 	register_setting( 'duplicate_post_group', 'duplicate_post_copyexcerpt');
+	register_setting( 'duplicate_post_group', 'duplicate_post_copystatus');
 	register_setting( 'duplicate_post_group', 'duplicate_post_blacklist');
 	register_setting( 'duplicate_post_group', 'duplicate_post_taxonomies_blacklist');
 	register_setting( 'duplicate_post_group', 'duplicate_post_title_prefix');
@@ -39,6 +40,14 @@ function duplicate_post_options() {
 				</th>
 				<td><input type="checkbox" name="duplicate_post_copydate" value="1" <?php  if(get_option('duplicate_post_copydate') == 1) echo 'checked="checked"'; ?>"/>
 					<span class="description"><?php _e("Normally, the new draft has publication date set to current time: check the box to copy the original post/page date", DUPLICATE_POST_I18N_DOMAIN); ?>
+				</span>
+				</td>
+			</tr>
+			<tr valign="top">
+				<th scope="row"><?php _e("Copy post/page status", DUPLICATE_POST_I18N_DOMAIN); ?>
+				</th>
+				<td><input type="checkbox" name="duplicate_post_copystatus" value="1" <?php  if(get_option('duplicate_post_copystatus') == 1) echo 'checked="checked"'; ?>"/>
+					<span class="description"><?php _e("Copy the original post status (draft, published, pending) when cloning from the post list. Cloning from the edit screen will always create a new draft.", DUPLICATE_POST_I18N_DOMAIN); ?>
 				</span>
 				</td>
 			</tr>

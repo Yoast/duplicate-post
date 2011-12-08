@@ -6,7 +6,7 @@ return;
 require_once (dirname(__FILE__).'/duplicate-post-options.php');
 
 // Version of the plugin
-define('DUPLICATE_POST_CURRENT_VERSION', '2.0' );
+define('DUPLICATE_POST_CURRENT_VERSION', '2.0.1' );
 
 /**
  * Wrapper for the option 'duplicate_post_version'
@@ -46,6 +46,10 @@ function duplicate_post_plugin_activation() {
 		'duplicate_post_copyexcerpt',
 			'1',
 			'Copy the excerpt from the original post/page' );
+		add_option(
+		'duplicate_post_copystatus',
+			'0',
+			'Copy the status (draft, published, pending) from the original post/page' );
 		add_option(
 		'duplicate_post_taxonomies_blacklist',
 		array(),
@@ -231,6 +235,7 @@ function duplicate_post_create_duplicate($post, $status = '') {
 	else
 	$post_excerpt = "";
 	$post_title      = $prefix.str_replace("'", "''", $post->post_title).$suffix;
+	if (get_option('duplicate_post_copystatus') == 0) $status = 'draft';
 	if (empty($status))
 	$new_post_status  = str_replace("'", "''", $post->post_status);
 	else
@@ -249,7 +254,7 @@ function duplicate_post_create_duplicate($post, $status = '') {
 	$new_post_id = $wpdb->insert_id;
 
 	$post_name = wp_unique_post_slug($post_name, $new_post_id, $new_post_status, $new_post_type, $post->post_parent);
-	// Update post 37
+
 	$new_post = array();
 	$new_post['ID'] = $new_post_id;
 	$new_post['post_name'] = $post_name;
@@ -268,10 +273,10 @@ function duplicate_post_create_duplicate($post, $status = '') {
 
 	// If you have written a plugin which uses non-WP database tables to save
 	// information about a post you can hook this action to dupe that data.
-	if ($post->post_type == 'page' || (function_exists(is_post_type_hierarchical) && is_post_type_hierarchical( $post->post_type )))
-	do_action( 'dp_duplicate_page', $new_id, $post );
+	if ($post->post_type == 'page' || (function_exists('is_post_type_hierarchical') && is_post_type_hierarchical( $post->post_type )))
+	do_action( 'dp_duplicate_page', $new_post_id, $post );
 	else
-	do_action( 'dp_duplicate_post', $new_id, $post );
+	do_action( 'dp_duplicate_post', $new_post_id, $post );
 
 	return $new_post_id;
 }
