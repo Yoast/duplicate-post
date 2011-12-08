@@ -1,0 +1,135 @@
+# Polish translation for duplicate-post
+# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# This file is distributed under the same license as the duplicate-post package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: duplicate-post\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2010-05-21 10:01+0000\n"
+"PO-Revision-Date: 2011-04-02 14:28+0000\n"
+"Last-Translator: Szymon Sieciński <Unknown>\n"
+"Language-Team: Polish <pl@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2011-04-08 10:28+0000\n"
+"X-Generator: Launchpad (build 12757)\n"
+
+#: duplicate-post.php:39
+msgid "No post to duplicate has been supplied!"
+msgstr "Niedostraczono postu do zduplikowania!"
+
+#: duplicate-post.php:58 duplicate-post.php:86
+msgid "Post creation failed, could not find original post:"
+msgstr ""
+"Stworzenie postu niepowiodło się, nie można było znaleźć oryginalnego postu:"
+
+#: duplicate-post.php:67
+msgid "No page to duplicate has been supplied!"
+msgstr "Niedostraczono strony do zduplikowania!"
+
+#: duplicate-post.php:164 duplicate-post.php:195
+msgid "Make a duplicate from this post"
+msgstr "Stwórz duplikat tego postu."
+
+#: duplicate-post.php:165 duplicate-post.php:179 duplicate-post.php:196
+#: duplicate-post.php:207
+msgid "Duplicate"
+msgstr "Duplikuj"
+
+#: duplicate-post.php:178 duplicate-post.php:206
+msgid "Make a duplicate from this page"
+msgstr "Stwórz duplikat tej strony."
+
+#: duplicate-post.php:225
+msgid "Copy to a new draft"
+msgstr "Skopiuj do nowego szkicu"
+
+#: duplicate-post.php:519
+msgid "Duplicate Post Options"
+msgstr "Opcje Duplicate Post"
+
+#. #-#-#-#-#  plugin.pot (Duplicate Post 1.1)  #-#-#-#-#
+#. Plugin Name of the plugin/theme
+#: duplicate-post.php:519 duplicate-post.php:525
+msgid "Duplicate Post"
+msgstr "Duplikuj wpis"
+
+#: duplicate-post.php:532
+msgid "Copy post/page date also"
+msgstr "Kopiuj również datę wpisu/strony"
+
+#: duplicate-post.php:534
+msgid ""
+"Normally, the new draft has publication date set to current time: check the "
+"box to copy the original post/page date"
+msgstr ""
+"Normalnie, nowy szkic ma datę publikacji ustawioną na aktualną datę: zaznacz "
+"pole wyboru aby skopiować oryginalną datę wpisu/strony."
+
+#: duplicate-post.php:538
+msgid "Do not copy these fields"
+msgstr "Nie kopiuj tych pól"
+
+#: duplicate-post.php:541
+msgid ""
+"Comma-separated list of meta fields that must not be copied when cloning a "
+"post/page"
+msgstr ""
+"Lista pól meta (oddzielona przecinkami), które nie mają być kopiowane "
+"podczas klonowania wpisu/strony"
+
+#: duplicate-post.php:545
+msgid "Title prefix"
+msgstr "Prefiks tytułu"
+
+#: duplicate-post.php:548
+msgid ""
+"Prefix to be added before the original title when cloning a post/page, e.g. "
+"\"Copy of\" (blank for no prefix)"
+msgstr ""
+"Dodaj prefiks przed oryginalnym tytułem, np. \"Kopia ...\" Jeżeli nie chcesz "
+"prefiksu - zostaw to pole puste."
+
+#: duplicate-post.php:552
+msgid "Minimum level to copy posts"
+msgstr ""
+"Minimalny poziom (uprawnień użytkownika) potrzebny do kopiowania postów"
+
+#: duplicate-post.php:576
+msgid ""
+"Warning: users will be able to copy all posts, even those of higher level "
+"users"
+msgstr ""
+"Uwaga: użytkownicy będą mieli możliwość kopiowania wszystkich postów, nawet "
+"tych od użytkowników z wyższymi prawami."
+
+#: duplicate-post.php:583
+msgid "Save Changes"
+msgstr "Zapisz zmiany"
+
+#: duplicate-post.php:595
+msgid "Donate"
+msgstr "Wesprzyj"
+
+#: duplicate-post.php:596
+msgid "Translate"
+msgstr "Przetłumacz"
+
+#. Plugin URI of the plugin/theme
+msgid "http://www.lopo.it/duplicate-post-plugin/"
+msgstr "http://www.lopo.it/duplicate-post-plugin/"
+
+#. Description of the plugin/theme
+msgid "Creates a copy of a post."
+msgstr "Tworzy kopię postu."
+
+#. Author of the plugin/theme
+msgid "Enrico Battocchi"
+msgstr "Enrico Battocchi"
+
+#. Author URI of the plugin/theme
+msgid "http://www.lopo.it"
+msgstr "http://www.lopo.it"
