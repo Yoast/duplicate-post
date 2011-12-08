@@ -51,6 +51,11 @@ Use WordPress' Add New Plugin feature, searching "Duplicate Post", or download t
 
 == Frequently Asked Questions ==
 
+= When I click "Duplicate" in the Posts list, I'm not redirected to the edit screen anymore! Is it a bug? =
+
+No, it's a new feature. A lot of users found the usual behaviour of the plugin too complicated when they had a large number of posts to clone, and they were right.
+Check the description to learn how the plugin behaves now.
+
 = The plugin doesn't work, why? =
 
 First, check your version of WordPress: the plugin is not supposed to work anymore on old versions.
