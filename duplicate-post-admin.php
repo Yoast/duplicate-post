@@ -253,16 +253,6 @@ function duplicate_post_create_duplicate($post, $status = '') {
 
 	$new_post_id = $wpdb->insert_id;
 
-	$post_name = wp_unique_post_slug($post_name, $new_post_id, $new_post_status, $new_post_type, $post->post_parent);
-
-	$new_post = array();
-	$new_post['ID'] = $new_post_id;
-	$new_post['post_name'] = $post_name;
-
-	// Update the post into the database
-	wp_update_post( $new_post );
-
-
 	// Copy the taxonomies
 	duplicate_post_copy_post_taxonomies($post->ID, $new_post_id, $post->post_type);
 
@@ -277,6 +267,15 @@ function duplicate_post_create_duplicate($post, $status = '') {
 	do_action( 'dp_duplicate_page', $new_post_id, $post );
 	else
 	do_action( 'dp_duplicate_post', $new_post_id, $post );
+
+	$post_name = wp_unique_post_slug($post_name, $new_post_id, $new_post_status, $new_post_type, $post->post_parent);
+
+	$new_post = array();
+	$new_post['ID'] = $new_post_id;
+	$new_post['post_name'] = $post_name;
+
+	// Update the post into the database
+	wp_update_post( $new_post );
 
 	return $new_post_id;
 }
