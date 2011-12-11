@@ -57,7 +57,21 @@ function duplicate_post_plugin_activation() {
 	}
 	// Update version number
 	update_option( 'duplicate_post_version', duplicate_post_get_current_version() );
+	
+	// enable notice
+	update_option('dp_notice', 1);
 }
+
+
+function dp_admin_notice(){
+    echo '<div class="updated">
+       <p>'.sprintf(__('Duplicate Post now has two different ways to work: you can clone immediately or you can copy to a new draft to edit.<br/>
+       Learn more on the <a href="%s">plugin page</a>', DUPLICATE_POST_I18N_DOMAIN), "http://wordpress.org/extend/plugins/duplicate-post/").'</p>
+    </div>';
+	update_option('dp_notice', 0);
+}
+
+if(get_option('dp_notice') != 0) add_action('admin_notices', 'dp_admin_notice');
 
 add_filter('post_row_actions', 'duplicate_post_make_duplicate_link_row',10,2);
 add_filter('page_row_actions', 'duplicate_post_make_duplicate_link_row',10,2);

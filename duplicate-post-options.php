@@ -112,19 +112,19 @@ function duplicate_post_options() {
 				<td><select name="duplicate_post_copy_user_level">
 						<option value="8"
 						<?php if(get_option('duplicate_post_copy_user_level') == 8) echo 'selected="selected"'?>>
-							<?php echo _x("Administrator", "User role")?>
+							<?php echo _x("Administrator", "User role", "default")?>
 						</option>
 						<option value="5"
 						<?php if(get_option('duplicate_post_copy_user_level') == 5) echo 'selected="selected"'?>>
-							<?php echo _x("Editor", "User role")?>
+							<?php echo _x("Editor", "User role", "default")?>
 						</option>
 						<option value="2"
 						<?php if(get_option('duplicate_post_copy_user_level') == 2) echo 'selected="selected"'?>>
-							<?php echo _x("Author", "User role")?>
+							<?php echo _x("Author", "User role", "default")?>
 						</option>
 						<option value="1"
 						<?php if(get_option('duplicate_post_copy_user_level') == 1) echo 'selected="selected"'?>>
-							<?php echo _x("Contributor", "User role")?>
+							<?php echo _x("Contributor", "User role", "default")?>
 						</option>
 				</select> <span class="description"><?php _e("Warning: users will be able to copy all posts, even those of higher level users", DUPLICATE_POST_I18N_DOMAIN); ?>
 				</span>
