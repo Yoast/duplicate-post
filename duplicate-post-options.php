@@ -39,7 +39,7 @@ function duplicate_post_options() {
 				<th scope="row"><?php _e("Copy post/page date also", DUPLICATE_POST_I18N_DOMAIN); ?>
 				</th>
 				<td><input type="checkbox" name="duplicate_post_copydate" value="1" <?php  if(get_option('duplicate_post_copydate') == 1) echo 'checked="checked"'; ?>"/>
-					<span class="description"><?php _e("Normally, the new draft has publication date set to current time: check the box to copy the original post/page date", DUPLICATE_POST_I18N_DOMAIN); ?>
+					<span class="description"><?php _e("Normally, the new copy has its publication date set to current time: check the box to copy the original post/page date", DUPLICATE_POST_I18N_DOMAIN); ?>
 				</span>
 				</td>
 			</tr>
@@ -65,7 +65,7 @@ function duplicate_post_options() {
 				</th>
 				<td><input type="text" name="duplicate_post_blacklist"
 					value="<?php echo get_option('duplicate_post_blacklist'); ?>" /> <span
-					class="description"><?php _e("Comma-separated list of meta fields that must not be copied when cloning a post/page", DUPLICATE_POST_I18N_DOMAIN); ?>
+					class="description"><?php _e("Comma-separated list of meta fields that must not be copied", DUPLICATE_POST_I18N_DOMAIN); ?>
 				</span>
 				</td>
 			</tr>
@@ -93,7 +93,7 @@ function duplicate_post_options() {
 				</th>
 				<td><input type="text" name="duplicate_post_title_prefix"
 					value="<?php echo get_option('duplicate_post_title_prefix'); ?>" />
-					<span class="description"><?php _e("Prefix to be added before the original title when cloning a post/page, e.g. \"Copy of\" (blank for no prefix)", DUPLICATE_POST_I18N_DOMAIN); ?>
+					<span class="description"><?php _e("Prefix to be added before the original title, e.g. \"Copy of\" (blank for no prefix)", DUPLICATE_POST_I18N_DOMAIN); ?>
 				</span>
 				</td>
 			</tr>
@@ -102,7 +102,7 @@ function duplicate_post_options() {
 				</th>
 				<td><input type="text" name="duplicate_post_title_suffix"
 					value="<?php echo get_option('duplicate_post_title_suffix'); ?>" />
-					<span class="description"><?php _e("Suffix to be added after the original title when cloning a post/page, e.g. \"(dup)\" (blank for no suffix)", DUPLICATE_POST_I18N_DOMAIN); ?>
+					<span class="description"><?php _e("Suffix to be added after the original title, e.g. \"(dup)\" (blank for no suffix)", DUPLICATE_POST_I18N_DOMAIN); ?>
 				</span>
 				</td>
 			</tr>

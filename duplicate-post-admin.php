@@ -65,8 +65,8 @@ function duplicate_post_plugin_activation() {
 
 function dp_admin_notice(){
     echo '<div class="updated">
-       <p>'.sprintf(__('Duplicate Post now has two different ways to work: you can clone immediately or you can copy to a new draft to edit.<br/>
-       Learn more on the <a href="%s">plugin page</a>', DUPLICATE_POST_I18N_DOMAIN), "http://wordpress.org/extend/plugins/duplicate-post/").'</p>
+       <p>'.sprintf(__('<strong>Duplicate Post</strong> now has two different ways to work: you can clone immediately or you can copy to a new draft to edit.<br/>
+       Learn more on the <a href="%s">plugin page</a>.', DUPLICATE_POST_I18N_DOMAIN), "http://wordpress.org/extend/plugins/duplicate-post/").'</p>
     </div>';
 	update_option('dp_notice', 0);
 }
