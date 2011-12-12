@@ -69,4 +69,24 @@ function duplicate_post_clone_post_link( $link = null, $before = '', $after = ''
 	echo $before . apply_filters( 'duplicate_post_clone_post_link', $link, $post->ID ) . $after;
 }
 
+function duplicate_post_admin_bar_render() {
+	global $wp_admin_bar;
+	$current_object = get_queried_object();
+	if ( empty($current_object) )
+	return;
+	if ( ! empty( $current_object->post_type )
+	&& ( $post_type_object = get_post_type_object( $current_object->post_type ) )
+	&& duplicate_post_is_current_user_allowed_to_copy()
+	&& ( $post_type_object->show_ui || 'attachment' == $current_object->post_type ) )
+	{
+		$wp_admin_bar->add_menu( array(
+		'parent' => 'edit',
+        'id' => 'new_draft',
+        'title' => __("Copy to a new draft", DUPLICATE_POST_I18N_DOMAIN),
+        'href' => duplicate_post_get_clone_post_link( $post->ID )
+		) );
+	}
+}
+
+add_action( 'wp_before_admin_bar_render', 'duplicate_post_admin_bar_render' );
 ?>
