@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the Duplicate Post package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Duplicate Post 2.0\n"
+"Project-Id-Version: Duplicate Post 2.0.2\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/duplicate-post\n"
-"POT-Creation-Date: 2011-12-08 14:06:45+00:00\n"
+"POT-Creation-Date: 2011-12-12 12:29:18+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -12,31 +12,43 @@ msgstr ""
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 
-#: duplicate-post-admin.php:73 duplicate-post-common.php:67
+#: duplicate-post-admin.php:68
+msgid ""
+"<strong>Duplicate Post</strong> now has two different ways to work: you can "
+"clone immediately or you can copy to a new draft to edit.<br/>\n"
+"       Learn more on the <a href=\"%s\">plugin page</a>."
+msgstr ""
+
+#: duplicate-post-admin.php:88
 msgid "Clone this item"
 msgstr ""
 
-#: duplicate-post-admin.php:74
-msgid "Duplicate"
+#: duplicate-post-admin.php:89
+msgid "Clone"
 msgstr ""
 
-#: duplicate-post-admin.php:92
+#: duplicate-post-admin.php:91 duplicate-post-admin.php:110
+#: duplicate-post-common.php:63 duplicate-post-common.php:67
 msgid "Copy to a new draft"
 msgstr ""
 
-#: duplicate-post-admin.php:119
+#: duplicate-post-admin.php:92
+msgid "New Draft"
+msgstr ""
+
+#: duplicate-post-admin.php:137
 msgid "No post to duplicate has been supplied!"
 msgstr ""
 
-#: duplicate-post-admin.php:141
+#: duplicate-post-admin.php:159
 msgid "Copy creation failed, could not find original:"
 msgstr ""
 
-#: duplicate-post-admin.php:289
+#: duplicate-post-admin.php:309
 msgid "Donate"
 msgstr ""
 
-#: duplicate-post-admin.php:290
+#: duplicate-post-admin.php:310
 msgid "Translate"
 msgstr ""
 
@@ -44,7 +56,7 @@ msgstr ""
 msgid "Duplicate Post Options"
 msgstr ""
 
-#. #-#-#-#-#  plugin.pot (Duplicate Post 2.0)  #-#-#-#-#
+#. #-#-#-#-#  plugin.pot (Duplicate Post 2.0.2)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: duplicate-post-options.php:23 duplicate-post-options.php:30
 msgid "Duplicate Post"
@@ -56,8 +68,8 @@ msgstr ""
 
 #: duplicate-post-options.php:42
 msgid ""
-"Normally, the new draft has publication date set to current time: check the "
-"box to copy the original post/page date"
+"Normally, the new copy has its publication date set to current time: check "
+"the box to copy the original post/page date"
 msgstr ""
 
 #: duplicate-post-options.php:47
@@ -67,7 +79,7 @@ msgstr ""
 #: duplicate-post-options.php:50
 msgid ""
 "Copy the original post status (draft, published, pending) when cloning from "
-"the post list. Cloning from the edit screen will always create a new draft."
+"the post list."
 msgstr ""
 
 #: duplicate-post-options.php:55
@@ -83,9 +95,7 @@ msgid "Do not copy these fields"
 msgstr ""
 
 #: duplicate-post-options.php:68
-msgid ""
-"Comma-separated list of meta fields that must not be copied when cloning a "
-"post/page"
+msgid "Comma-separated list of meta fields that must not be copied"
 msgstr ""
 
 #: duplicate-post-options.php:73
@@ -102,8 +112,8 @@ msgstr ""
 
 #: duplicate-post-options.php:96
 msgid ""
-"Prefix to be added before the original title when cloning a post/page, e.g. "
-"\"Copy of\" (blank for no prefix)"
+"Prefix to be added before the original title, e.g. \"Copy of\" (blank for no "
+"prefix)"
 msgstr ""
 
 #: duplicate-post-options.php:101
@@ -112,8 +122,8 @@ msgstr ""
 
 #: duplicate-post-options.php:105
 msgid ""
-"Suffix to be added after the original title when cloning a post/page, e.g. "
-"\"(dup)\" (blank for no suffix)"
+"Suffix to be added after the original title, e.g. \"(dup)\" (blank for no "
+"suffix)"
 msgstr ""
 
 #: duplicate-post-options.php:110
@@ -130,16 +140,12 @@ msgstr ""
 msgid "Save Changes"
 msgstr ""
 
-#: duplicate-post-common.php:63
-msgid "Clone"
-msgstr ""
-
 #. Plugin URI of the plugin/theme
 msgid "http://lopo.it/duplicate-post-plugin/"
 msgstr ""
 
 #. Description of the plugin/theme
-msgid "Creates a copy of a post."
+msgid "Clone posts and pages."
 msgstr ""
 
 #. Author of the plugin/theme

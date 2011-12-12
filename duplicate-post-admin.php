@@ -6,7 +6,7 @@ return;
 require_once (dirname(__FILE__).'/duplicate-post-options.php');
 
 // Version of the plugin
-define('DUPLICATE_POST_CURRENT_VERSION', '2.0.1' );
+define('DUPLICATE_POST_CURRENT_VERSION', '2.0.2' );
 
 /**
  * Wrapper for the option 'duplicate_post_version'
@@ -57,7 +57,21 @@ function duplicate_post_plugin_activation() {
 	}
 	// Update version number
 	update_option( 'duplicate_post_version', duplicate_post_get_current_version() );
+	
+	// enable notice
+	update_option('dp_notice', 1);
 }
+
+
+function dp_admin_notice(){
+    echo '<div class="updated">
+       <p>'.sprintf(__('<strong>Duplicate Post</strong> now has two different ways to work: you can clone immediately or you can copy to a new draft to edit.<br/>
+       Learn more on the <a href="%s">plugin page</a>.', DUPLICATE_POST_I18N_DOMAIN), "http://wordpress.org/extend/plugins/duplicate-post/").'</p>
+    </div>';
+	update_option('dp_notice', 0);
+}
+
+if(get_option('dp_notice') != 0) add_action('admin_notices', 'dp_admin_notice');
 
 add_filter('post_row_actions', 'duplicate_post_make_duplicate_link_row',10,2);
 add_filter('page_row_actions', 'duplicate_post_make_duplicate_link_row',10,2);
@@ -68,10 +82,14 @@ add_filter('page_row_actions', 'duplicate_post_make_duplicate_link_row',10,2);
 function duplicate_post_make_duplicate_link_row($actions, $post) {
 	if (duplicate_post_is_current_user_allowed_to_copy()) {
 		$theUrl = admin_url('admin.php?action=duplicate_post_save_as_new_post&amp;post=' . $post->ID);
+		$theUrlDraft = admin_url('admin.php?action=duplicate_post_save_as_new_post_draft&amp;post=' . $post->ID);
 		$post_type_obj = get_post_type_object( $post->post_type );
 		$actions['duplicate'] = '<a href="'.$theUrl.'" title="'
 		. esc_attr(__("Clone this item", DUPLICATE_POST_I18N_DOMAIN))
-		. '" rel="permalink">' .  __("Duplicate", DUPLICATE_POST_I18N_DOMAIN) . '</a>';
+		. '" rel="permalink">' .  __('Clone', DUPLICATE_POST_I18N_DOMAIN) . '</a>';
+		$actions['edit_as_new_draft'] = '<a href="'.$theUrlDraft.'" title="'
+		. esc_attr(__('Copy to a new draft', DUPLICATE_POST_I18N_DOMAIN))
+		. '" rel="permalink">' .  __('New Draft', DUPLICATE_POST_I18N_DOMAIN) . '</a>';
 	}
 	return $actions;
 }
@@ -247,21 +265,11 @@ function duplicate_post_create_duplicate($post, $status = '') {
 	// Insert the new template in the post table
 	$wpdb->query(
 			"INSERT INTO $wpdb->posts
-			(post_author, post_date, post_date_gmt, post_content, post_content_filtered, post_title, post_excerpt,  post_status, post_type, comment_status, ping_status, post_password, to_ping, pinged, post_modified, post_modified_gmt, post_parent, menu_order, post_mime_type, post_name)
+			(post_author, post_date, post_date_gmt, post_content, post_content_filtered, post_title, post_excerpt,  post_status, post_type, comment_status, ping_status, post_password, to_ping, pinged, post_modified, post_modified_gmt, post_parent, menu_order, post_mime_type)
 			VALUES
-			('$new_post_author->ID', '$new_post_date', '$new_post_date_gmt', '$post_content', '$post_content_filtered', '$post_title', '$post_excerpt', '$new_post_status', '$new_post_type', '$comment_status', '$ping_status', '$post->post_password', '$post->to_ping', '$post->pinged', '$new_post_date', '$new_post_date_gmt', '$post->post_parent', '$post->menu_order', '$post->post_mime_type', '$post_name')");
+			('$new_post_author->ID', '$new_post_date', '$new_post_date_gmt', '$post_content', '$post_content_filtered', '$post_title', '$post_excerpt', '$new_post_status', '$new_post_type', '$comment_status', '$ping_status', '$post->post_password', '$post->to_ping', '$post->pinged', '$new_post_date', '$new_post_date_gmt', '$post->post_parent', '$post->menu_order', '$post->post_mime_type')");
 
 	$new_post_id = $wpdb->insert_id;
-
-	$post_name = wp_unique_post_slug($post_name, $new_post_id, $new_post_status, $new_post_type, $post->post_parent);
-
-	$new_post = array();
-	$new_post['ID'] = $new_post_id;
-	$new_post['post_name'] = $post_name;
-
-	// Update the post into the database
-	wp_update_post( $new_post );
-
 
 	// Copy the taxonomies
 	duplicate_post_copy_post_taxonomies($post->ID, $new_post_id, $post->post_type);
@@ -277,6 +285,18 @@ function duplicate_post_create_duplicate($post, $status = '') {
 	do_action( 'dp_duplicate_page', $new_post_id, $post );
 	else
 	do_action( 'dp_duplicate_post', $new_post_id, $post );
+
+	// If the copy gets immediately published, we have to set a proper slug.
+	if ($new_post_status == 'publish'){
+		$post_name = wp_unique_post_slug($post_name, $new_post_id, $new_post_status, $new_post_type, $post->post_parent);
+
+		$new_post = array();
+		$new_post['ID'] = $new_post_id;
+		$new_post['post_name'] = $post_name;
+
+		// Update the post into the database
+		wp_update_post( $new_post );
+	}
 
 	return $new_post_id;
 }

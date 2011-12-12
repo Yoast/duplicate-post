@@ -60,11 +60,11 @@ function duplicate_post_clone_post_link( $link = null, $before = '', $after = ''
 	return;
 
 	if ( null === $link )
-	$link = __('Clone', DUPLICATE_POST_I18N_DOMAIN);
+	$link = __('Copy to a new draft', DUPLICATE_POST_I18N_DOMAIN);
 
 	$post_type_obj = get_post_type_object( $post->post_type );
 	$link = '<a class="post-clone-link" href="' . $url . '" title="'
-	. esc_attr(__("Clone this item", DUPLICATE_POST_I18N_DOMAIN))
+	. esc_attr(__("Copy to a new draft", DUPLICATE_POST_I18N_DOMAIN))
 	.'">' . $link . '</a>';
 	echo $before . apply_filters( 'duplicate_post_clone_post_link', $link, $post->ID ) . $after;
 }

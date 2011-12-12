@@ -10,34 +10,36 @@ Clone posts and pages.
 
 == Description ==
 
-This plugin allows to create a copy of a post (or page) in two ways.
+This plugin allows to clone a post or page, or edit it as a new draft.
 
-1. In 'Edit Posts'/'Edit Pages', you can click on 'Duplicate' link below the post/page title: this will immediately create a copy and return to the list.
+1. In 'Edit Posts'/'Edit Pages', you can click on 'Clone' link below the post/page title: this will immediately create a copy and return to the list.
 
-2. While editing a post/page, you can click on 'Copy to a new draft' above "Cancel"/"Move to trash". This will lead to the edit page for the new draft: change what you want, click on 'Publish' and you're done.
+2a. In 'Edit Posts'/'Edit Pages', you can click on 'New Draft' link below the post/page title.
+
+2b. On the post edit screen, you can click on 'Copy to a new draft' above "Cancel"/"Move to trash". 
+
+2a and 2b will lead to the edit page for the new draft: change what you want, click on 'Publish' and you're done.
 
 **Pay attention to the new behaviour!** The first way now allows you to clone a post with a single click, speeding up your work if you have many posts to duplicate.
 
 There is also a **template tag**, so you can put it in your templates and clone your posts/pages from the front-end. Clicking on the link will lead you to the edit page for the new draft, just like the second way above.
 
-In the Options page under Settings it is now possible to choose:
+In the Options page under Settings it is now possible to choose what to copy:
 
-* if the original post/page date must be copied too
-* if the original post/page status (draft, published, pending) must be copied too when cloning from the post list
-* if the original post/page excerpt must be copied too
-* which taxonomies and custom fields must not be copied
-* a prefix (or a suffix) to place before (or after) the title of the cloned post/page
-* the minimum user level to clone posts or pages.
+* the original post/page date
+* the original post/page status (draft, published, pending), when cloning from the posts list.
+* the original post/page excerpt
+* which taxonomies and custom fields
+
+You can also set a prefix (or a suffix) to place before (or after) the title of the cloned post/page, and the minimum user level to clone posts or pages.
 
 Duplicate post is natively in English, but it's shipped with translations in several other languages (though some are incomplete). Now there is a [Launchpad translation project](https://translations.launchpad.net/duplicate-post/) available to help translating this plugin: feel free to contribute (you can also send me an e-mail using the form on my website).
 
 **If you're a plugin developer**, I suggest to read the section made just for you under "Other Notes", to ensure compatibility between your plugin(s) and mine!
 
-The plugin has been tested against versions 3.0 -> 3.3. It's not yet been tested with the multiblog feature active (but it used to work with WPMU).
+The plugin has been tested against versions 3.0 -> 3.3, both in single site and network mode.
 
 Thanks for all the suggestions, bug reports, translations and donations, they're frankly too many to be listed here!
-
-Credit must be given to the (great) [Post Template](http://post-templates.vincentprat.info) plugin by Vincent Prat: I made this by hacking his work to get something more focused to a sporadic use, without the need to create and manage templates just to make simple copies of some posts every now and then. If my plugin doesn't fits your needs (and even if it does) check Vincent's.
 
 An example of use: I started this for a small movie theater website which I was building. Every Friday there's a new movie showing with a new timetable, and thus a new post: but sometimes a movie stays for more than a week, so I need to copy the last post and change only the dates, leaving movie title, director's and actors' names etc. unchanged.
 The website is http://www.kino-desse.org and the cinema is located in Livorno, Italy.
@@ -52,14 +54,9 @@ Use WordPress' Add New Plugin feature, searching "Duplicate Post", or download t
 
 == Frequently Asked Questions ==
 
-= When I click "Duplicate" in the Posts list, I'm not redirected to the edit screen anymore! Is it a bug? =
-
-No, it's a new feature. A lot of users found the usual behaviour of the plugin too complicated when they had a large number of posts to clone, and they were right.
-Check the description to learn how the plugin behaves now.
-
 = The plugin doesn't work, why? =
 
-First, check your version of WordPress: the plugin is not supposed to work anymore on old versions.
+First, check your version of WordPress: the plugin is not supposed to work on old versions anymore.
 
 Then try to deactivate and re-activate it, some user have reported that this fixes the problem.
 
@@ -74,11 +71,14 @@ There is an open ticket in WordPress Trac, as other plugin developers too are in
 == Screenshots ==
 
 1. Here you can copy the post you're editing to a new draft.
-2. By clicking on "Duplicate" the post is cloned immediately.
+2. By clicking on "Clone" the post is cloned immediately. "New draft" leads to the edit screen.
 3. The options page.
-4. The template tag manually added to Twenty Ten theme. Click on the "Clone" link and you're redirected to the edit screen for a new draft copy of your post. 
+4. The template tag manually added to Twenty Ten theme. Click on the "Copy to a new draft" link and you're redirected to the edit screen for a new draft copy of your post. 
 
 == Upgrade Notice ==
+
+= 2.0.2 =
+Fixed permalink bug + double choice on posts list
 
 = 2.0.1 =
 Bug fix + new option
@@ -93,6 +93,11 @@ Some users have experienced a fatal error when upgrading to v1.1: this may fix i
 New features and customization, WP 3.0 compatibility: you should upgrade if you want to copy Custom Posts with Custom Taxonomies.
 
 == Changelog ==
+
+= 2.0.2 =
+* Fixed bug for permalinks
+* Two links on posts list: clone immediately or copy to a new draft to edit.
+* Tested on multisite mode.
 
 = 2.0.1 =
 * Fixed bug for action filters
@@ -186,7 +191,7 @@ Please refer to the [Plugin API](http://codex.wordpress.org/Plugin_API) for ever
 
 If you find this useful and you if you want to contribute, there are three ways:
 
-   1. You can [write me](http://www.lopo.it/contatti/) and submit your bug reports, suggestions and requests for features;
-   2. If you want to translate it to your language (there are just a few lines of text), you can use the [Launchpad translation project](https://translations.launchpad.net/duplicate-post/), or [contact me](http://www.lopo.it/contatti/) and I’ll send you the .pot catalogue; your translation could be featured in next releases;
-   3. Using the plugin is free, but if you want you can send me some bucks with PayPal [here](http://www.lopo.it/duplicate-post-plugin/)
+   1. You can [write me](http://lopo.it/contatti/) and submit your bug reports, suggestions and requests for features;
+   2. If you want to translate it to your language (there are just a few lines of text), you can use the [Launchpad translation project](https://translations.launchpad.net/duplicate-post/), or [contact me](http://lopo.it/contatti/) and I’ll send you the .pot catalogue; your translation could be featured in next releases;
+   3. Using the plugin is free, but if you want you can send me some bucks with PayPal [here](http://lopo.it/duplicate-post-plugin/)
 
