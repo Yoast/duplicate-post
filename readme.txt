@@ -18,7 +18,7 @@ This plugin allows to clone a post or page, or edit it as a new draft.
 
 3. On the post edit screen, you can click on 'Copy to a new draft' above "Cancel"/"Move to trash". 
 
-2 and 2 will lead to the edit page for the new draft: change what you want, click on 'Publish' and you're done.
+2 and 3 will lead to the edit page for the new draft: change what you want, click on 'Publish' and you're done.
 
 **Pay attention to the new behaviour!** The first way now allows you to clone a post with a single click, speeding up your work if you have many posts to duplicate.
 
