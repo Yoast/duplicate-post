@@ -14,7 +14,7 @@ function duplicate_post_get_copy_user_level() {
 	return get_option( 'duplicate_post_copy_user_level' );
 }
 
-// Template tag
+// Template tags
 /**
  * Retrieve duplicate post link for post.
  *
@@ -26,17 +26,22 @@ function duplicate_post_get_copy_user_level() {
  * @param string $context Optional, default to display. How to write the '&', defaults to '&amp;'.
  * @return string
  */
-function duplicate_post_get_clone_post_link( $id = 0, $context = 'display' ) {
+function duplicate_post_get_clone_post_link( $id = 0, $context = 'display', $draft = true ) {
 	if ( !duplicate_post_is_current_user_allowed_to_copy() )
 	return;
 
 	if ( !$post = &get_post( $id ) )
 	return;
+	
+	if ($draft)
+	$action_name = "duplicate_post_save_as_new_post_draft";
+	else 
+	$action_name = "duplicate_post_save_as_new_post";
 
 	if ( 'display' == $context )
-	$action = '?action=duplicate_post_save_as_new_post_draft&amp;post='.$post->ID;
+	$action = '?action='.$action_name.'&amp;post='.$post->ID;
 	else
-	$action = '?action=duplicate_post_save_as_new_post_draft&post='.$post->ID;
+	$action = '?action='.$action_name.'&post='.$post->ID;
 
 	$post_type_object = get_post_type_object( $post->post_type );
 	if ( !$post_type_object )
@@ -68,7 +73,23 @@ function duplicate_post_clone_post_link( $link = null, $before = '', $after = ''
 	.'">' . $link . '</a>';
 	echo $before . apply_filters( 'duplicate_post_clone_post_link', $link, $post->ID ) . $after;
 }
+/**
+ * Get original post .
+ *
+ * @param int $id Optional. Post ID.
+ * @param string $output Optional, default is Object. Either OBJECT, ARRAY_A, or ARRAY_N.
+ * @return mixed Post data
+ */
+function duplicate_post_get_original($id = 0 , $output = OBJECT){
+	if ( !$post = &get_post( $id ) )
+	return;
+	$original_ID = get_post_meta( $post->ID, '_dp_original');
+	if (empty($original_ID)) return null;
+	$original_post = &get_post($original_ID[0],  $output);
+	return $original_post;
+}
 
+// Admin bar
 function duplicate_post_admin_bar_render() {
 	global $wp_admin_bar;
 	$current_object = get_queried_object();

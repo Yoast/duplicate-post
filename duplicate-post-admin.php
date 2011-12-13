@@ -57,14 +57,14 @@ function duplicate_post_plugin_activation() {
 	}
 	// Update version number
 	update_option( 'duplicate_post_version', duplicate_post_get_current_version() );
-	
+
 	// enable notice
 	update_option('dp_notice', 1);
 }
 
 
 function dp_admin_notice(){
-    echo '<div class="updated">
+	echo '<div class="updated">
        <p>'.sprintf(__('<strong>Duplicate Post</strong> now has two different ways to work: you can clone immediately or you can copy to a new draft to edit.<br/>
        Learn more on the <a href="%s">plugin page</a>.', DUPLICATE_POST_I18N_DOMAIN), "http://wordpress.org/extend/plugins/duplicate-post/").'</p>
     </div>';
@@ -81,15 +81,12 @@ add_filter('page_row_actions', 'duplicate_post_make_duplicate_link_row',10,2);
  */
 function duplicate_post_make_duplicate_link_row($actions, $post) {
 	if (duplicate_post_is_current_user_allowed_to_copy()) {
-		$theUrl = admin_url('admin.php?action=duplicate_post_save_as_new_post&amp;post=' . $post->ID);
-		$theUrlDraft = admin_url('admin.php?action=duplicate_post_save_as_new_post_draft&amp;post=' . $post->ID);
-		$post_type_obj = get_post_type_object( $post->post_type );
-		$actions['duplicate'] = '<a href="'.$theUrl.'" title="'
+		$actions['clone'] = '<a href="'.duplicate_post_get_clone_post_link( $post->ID , 'display', false).'" title="'
 		. esc_attr(__("Clone this item", DUPLICATE_POST_I18N_DOMAIN))
-		. '" rel="permalink">' .  __('Clone', DUPLICATE_POST_I18N_DOMAIN) . '</a>';
-		$actions['edit_as_new_draft'] = '<a href="'.$theUrlDraft.'" title="'
+		. '">' .  __('Clone', DUPLICATE_POST_I18N_DOMAIN) . '</a>';
+		$actions['edit_as_new_draft'] = '<a href="'. duplicate_post_get_clone_post_link( $post->ID ) .'" title="'
 		. esc_attr(__('Copy to a new draft', DUPLICATE_POST_I18N_DOMAIN))
-		. '" rel="permalink">' .  __('New Draft', DUPLICATE_POST_I18N_DOMAIN) . '</a>';
+		. '">' .  __('New Draft', DUPLICATE_POST_I18N_DOMAIN) . '</a>';
 	}
 	return $actions;
 }
@@ -101,13 +98,10 @@ add_action( 'post_submitbox_start', 'duplicate_post_add_duplicate_post_button' )
 
 function duplicate_post_add_duplicate_post_button() {
 	if ( isset( $_GET['post'] ) && duplicate_post_is_current_user_allowed_to_copy()) {
-		$act = "admin.php?action=duplicate_post_save_as_new_post_draft";
-		global $post;
-		$notifyUrl = $act."&post=" . $_GET['post'];
 		?>
 <div id="duplicate-action">
 	<a class="submitduplicate duplication"
-		href="<?php echo admin_url($notifyUrl); ?>"><?php _e('Copy to a new draft', DUPLICATE_POST_I18N_DOMAIN); ?>
+		href="<?php echo duplicate_post_get_clone_post_link( $_GET['post'] ) ?>"><?php _e('Copy to a new draft', DUPLICATE_POST_I18N_DOMAIN); ?>
 	</a>
 </div>
 		<?php
@@ -129,7 +123,7 @@ function duplicate_post_save_as_new_post_draft(){
 }
 
 /*
- * This function calls the creation of a new copy of the selected post (preserving the original publish status)
+ * This function calls the creation of a new copy of the selected post (by default preserving the original publish status)
  * then redirects to the post list
  */
 function duplicate_post_save_as_new_post($status = ''){
@@ -196,14 +190,14 @@ function duplicate_post_get_post($id) {
 function duplicate_post_copy_post_taxonomies($id, $new_id, $post_type) {
 	global $wpdb;
 	if (isset($wpdb->terms)) {
-		$taxonomies = get_object_taxonomies($post_type); //array("category", "post_tag");
+		$post_taxonomies = get_object_taxonomies($post_type);
 		$taxonomies_blacklist = get_option('duplicate_post_taxonomies_blacklist');
 		if ($taxonomies_blacklist == "") $taxonomies_blacklist = array();
+		$taxonomies = array_diff($post_taxonomies, $taxonomies_blacklist);
 		foreach ($taxonomies as $taxonomy) {
-			if(!empty($taxonomies_blacklist) && in_array($taxonomy,$taxonomies_blacklist)) continue;
 			$post_terms = wp_get_object_terms($id, $taxonomy);
-			for ($i=0; $i<count($post_terms); $i++) {
-				wp_set_object_terms($new_id, $post_terms[$i]->slug, $taxonomy, true);
+			foreach ($post_terms as $post_term) {
+				wp_set_object_terms($new_id, $post_term->slug, $taxonomy, true);
 			}
 		}
 	}
@@ -213,21 +207,16 @@ function duplicate_post_copy_post_taxonomies($id, $new_id, $post_type) {
  * Copy the meta information of a post to another post
  */
 function duplicate_post_copy_post_meta_info($id, $new_id) {
-	global $wpdb;
-	$post_meta_infos = $wpdb->get_results("SELECT meta_key, meta_value FROM $wpdb->postmeta WHERE post_id=$id");
+	$post_meta_keys = get_post_custom_keys($id);
+	$meta_blacklist = explode(",",get_option('duplicate_post_blacklist'));
+	if ($meta_blacklist == "") $meta_blacklist = array();
+	$meta_keys = array_diff($post_meta_keys, $meta_blacklist);
 
-	if (count($post_meta_infos)!=0) {
-		$sql_query = "INSERT INTO $wpdb->postmeta (post_id, meta_key, meta_value) ";
-		$meta_no_copy = explode(",",get_option('duplicate_post_blacklist'));
-		foreach ($post_meta_infos as $meta_info) {
-			$meta_key = $meta_info->meta_key;
-			$meta_value = addslashes($meta_info->meta_value);
-			if (!in_array($meta_key,$meta_no_copy)) {
-				$sql_query_sel[]= "SELECT $new_id, '$meta_key', '$meta_value'";
-			}
+	foreach ($meta_keys as $meta_key) {
+		$meta_values = get_post_custom_values($meta_key, $id);
+		foreach ($meta_values as $meta_value) {
+			add_post_meta($new_id, $meta_key, $meta_value);
 		}
-		$sql_query.= implode(" UNION ALL ", $sql_query_sel);
-		$wpdb->query($sql_query);
 	}
 }
 
