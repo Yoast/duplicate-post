@@ -175,13 +175,8 @@ function duplicate_post_get_current_user() {
  * Get a post from the database
  */
 function duplicate_post_get_post($id) {
-	global $wpdb;
-	$post = $wpdb->get_results("SELECT * FROM $wpdb->posts WHERE ID=$id");
-	if ($post[0]->post_type == "revision"){
-		$id = $post[0]->post_parent;
-		$post = $wpdb->get_results("SELECT * FROM $wpdb->posts WHERE ID=$id");
-	}
-	return $post[0];
+	$post = &get_post( $id );
+	return $post;
 }
 
 /**
@@ -190,6 +185,10 @@ function duplicate_post_get_post($id) {
 function duplicate_post_copy_post_taxonomies($id, $new_id, $post_type) {
 	global $wpdb;
 	if (isset($wpdb->terms)) {
+
+		// Clear default category (added by wp_insert_post)
+		wp_set_object_terms( $new_id, NULL, 'category' );
+
 		$post_taxonomies = get_object_taxonomies($post_type);
 		$taxonomies_blacklist = get_option('duplicate_post_taxonomies_blacklist');
 		if ($taxonomies_blacklist == "") $taxonomies_blacklist = array();
@@ -225,40 +224,32 @@ function duplicate_post_copy_post_meta_info($id, $new_id) {
  */
 function duplicate_post_create_duplicate($post, $status = '') {
 	global $wpdb;
-	//$new_post_type = 'post';
-	$new_post_author = duplicate_post_get_current_user();
-	$new_post_date = (get_option('duplicate_post_copydate') == 1)?  $post->post_date : current_time('mysql');
-	$new_post_date_gmt = get_gmt_from_date($new_post_date);
 	$prefix = get_option('duplicate_post_title_prefix');
 	$suffix = get_option('duplicate_post_title_suffix');
 	if (!empty($prefix)) $prefix.= " ";
 	if (!empty($prefix)) $suffix = " ".$suffix;
-
-	$new_post_type 	= $post->post_type;
-	$post_content    = str_replace("'", "''", $post->post_content);
-	$post_content_filtered = str_replace("'", "''", $post->post_content_filtered);
-	if (get_option('duplicate_post_copyexcerpt') == '1')
-	$post_excerpt = str_replace("'", "''", $post->post_excerpt);
-	else
-	$post_excerpt = "";
-	$post_title      = $prefix.str_replace("'", "''", $post->post_title).$suffix;
 	if (get_option('duplicate_post_copystatus') == 0) $status = 'draft';
-	if (empty($status))
-	$new_post_status  = str_replace("'", "''", $post->post_status);
-	else
-	$new_post_status  = $status;
-	$post_name       = sanitize_title($post_title);
-	$comment_status  = str_replace("'", "''", $post->comment_status);
-	$ping_status     = str_replace("'", "''", $post->ping_status);
+	$new_post_author = duplicate_post_get_current_user();
 
-	// Insert the new template in the post table
-	$wpdb->query(
-			"INSERT INTO $wpdb->posts
-			(post_author, post_date, post_date_gmt, post_content, post_content_filtered, post_title, post_excerpt,  post_status, post_type, comment_status, ping_status, post_password, to_ping, pinged, post_modified, post_modified_gmt, post_parent, menu_order, post_mime_type)
-			VALUES
-			('$new_post_author->ID', '$new_post_date', '$new_post_date_gmt', '$post_content', '$post_content_filtered', '$post_title', '$post_excerpt', '$new_post_status', '$new_post_type', '$comment_status', '$ping_status', '$post->post_password', '$post->to_ping', '$post->pinged', '$new_post_date', '$new_post_date_gmt', '$post->post_parent', '$post->menu_order', '$post->post_mime_type')");
+	$new_post = array(
+	'menu_order' => $post->menu_order,
+	'comment_status' => $post->comment_status,
+	'ping_status' => $post->ping_status,
+	'pinged' => $post->pinged,
+	'post_author' => $new_post_author->ID,
+	'post_content' => $post->post_content,
+	'post_date' => $new_post_date = (get_option('duplicate_post_copydate') == 1)?  $post->post_date : current_time('mysql'),
+	'post_date_gmt' => $new_post_date_gmt = get_gmt_from_date($new_post_date),
+	'post_excerpt' => (get_option('duplicate_post_copyexcerpt') == '1')?$post->post_excerpt:"",
+	'post_parent' => $post->post_parent,
+	'post_password' => $post->post_password,
+	'post_status' => $new_post_status = (empty($status))? $post->post_status: $status,
+	'post_title' => $prefix.$post->post_title.$suffix,
+	'post_type' => $post->post_type,
+	'to_ping' => $post->to_ping 
+	);
 
-	$new_post_id = $wpdb->insert_id;
+	$new_post_id = wp_insert_post($new_post);
 
 	// Copy the taxonomies
 	duplicate_post_copy_post_taxonomies($post->ID, $new_post_id, $post->post_type);
