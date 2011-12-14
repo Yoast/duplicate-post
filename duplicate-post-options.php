@@ -70,7 +70,8 @@ function duplicate_post_options() {
 			<tr valign="top">
 				<th scope="row"><?php _e("Copy post/page status", DUPLICATE_POST_I18N_DOMAIN); ?>
 				</th>
-				<td><input type="checkbox" name="duplicate_post_copystatus" value="1" <?php  if(get_option('duplicate_post_copystatus') == 1) echo 'checked="checked"'; ?>"/>
+				<td><input type="checkbox" name="duplicate_post_copystatus"
+					value="1" <?php  if(get_option('duplicate_post_copystatus') == 1) echo 'checked="checked"'; ?>"/>
 					<span class="description"><?php _e("Copy the original post status (draft, published, pending) when cloning from the post list.", DUPLICATE_POST_I18N_DOMAIN); ?>
 				</span>
 				</td>
@@ -96,7 +97,8 @@ function duplicate_post_options() {
 			<tr valign="top">
 				<th scope="row"><?php _e("Do not copy these taxonomies", DUPLICATE_POST_I18N_DOMAIN); ?>
 				</th>
-				<td><div style="height: 100px; width: 300px; padding: 5px; overflow: auto; border: 1px solid #ccc">
+				<td><div
+						style="height: 100px; width: 300px; padding: 5px; overflow: auto; border: 1px solid #ccc">
 						<?php $taxonomies=get_taxonomies(array('public' => true),'objects');
 						$taxonomies_blacklist = get_option('duplicate_post_taxonomies_blacklist');
 						if ($taxonomies_blacklist == "") $taxonomies_blacklist = array();
@@ -132,18 +134,18 @@ function duplicate_post_options() {
 			<tr valign="top">
 				<th scope="row"><?php _e("Roles allowed to copy", DUPLICATE_POST_I18N_DOMAIN); ?>
 				</th>
-				<td><div style="height: 100px; width: 300px; padding: 5px; overflow: auto; border: 1px solid #ccc">
-				<?php	global $wp_roles;
-					$roles = $wp_roles->get_names();
-					foreach ($roles as $name => $display_name): $role = get_role($name); 
+				<td><div
+						style="height: 100px; width: 300px; padding: 5px; overflow: auto; border: 1px solid #ccc">
+						<?php	global $wp_roles;
+						$roles = $wp_roles->get_names();
+						foreach ($roles as $name => $display_name): $role = get_role($name);
 						if ( !$role->has_cap('edit_posts') ) continue; ?>
 						<label style="display: block;"> <input type="checkbox"
-							name="duplicate_post_roles[]"
-							value="<?php echo $name ?>"
+							name="duplicate_post_roles[]" value="<?php echo $name ?>"
 							<?php if($role->has_cap('copy_posts')) echo 'checked="checked"'?> />
 							<?php echo _x($display_name, "User role", "default") ?> </label>
-					<?php endforeach; ?></div>
-<span class="description"><?php _e("Warning: users will be able to copy all posts, even those of other users", DUPLICATE_POST_I18N_DOMAIN); ?>
+							<?php endforeach; ?>
+					</div> <span class="description"><?php _e("Warning: users will be able to copy all posts, even those of other users", DUPLICATE_POST_I18N_DOMAIN); ?>
 				</span>
 				</td>
 			</tr>
@@ -157,6 +159,6 @@ function duplicate_post_options() {
 
 	</form>
 </div>
-							<?php
+<?php
 }
 ?>

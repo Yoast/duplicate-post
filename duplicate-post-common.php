@@ -32,10 +32,10 @@ function duplicate_post_get_clone_post_link( $id = 0, $context = 'display', $dra
 
 	if ( !$post = &get_post( $id ) )
 	return;
-	
+
 	if ($draft)
 	$action_name = "duplicate_post_save_as_new_post_draft";
-	else 
+	else
 	$action_name = "duplicate_post_save_as_new_post";
 
 	if ( 'display' == $context )

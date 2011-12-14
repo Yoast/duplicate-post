@@ -177,9 +177,9 @@ function duplicate_post_get_current_user() {
 function duplicate_post_copy_post_taxonomies($new_id, $post) {
 	global $wpdb;
 	if (isset($wpdb->terms)) {
-		// Clear default category (added by wp_insert_post) 
+		// Clear default category (added by wp_insert_post)
 		wp_set_object_terms( $new_id, NULL, 'category' );
-		
+
 		$post_taxonomies = get_object_taxonomies($post->post_type);
 		$taxonomies_blacklist = get_option('duplicate_post_taxonomies_blacklist');
 		if ($taxonomies_blacklist == "") $taxonomies_blacklist = array();
