@@ -133,7 +133,7 @@ function duplicate_post_save_as_new_post($status = ''){
 
 	// Get the original post
 	$id = (isset($_GET['post']) ? $_GET['post'] : $_POST['post']);
-	$post = duplicate_post_get_post($id);
+	$post = get_post($id);
 
 	// Copy the post and insert it
 	if (isset($post) && $post!=null) {
@@ -172,29 +172,20 @@ function duplicate_post_get_current_user() {
 }
 
 /**
- * Get a post from the database
- */
-function duplicate_post_get_post($id) {
-	$post = &get_post( $id );
-	return $post;
-}
-
-/**
  * Copy the taxonomies of a post to another post
  */
-function duplicate_post_copy_post_taxonomies($id, $new_id, $post_type) {
+function duplicate_post_copy_post_taxonomies($new_id, $post) {
 	global $wpdb;
 	if (isset($wpdb->terms)) {
-
-		// Clear default category (added by wp_insert_post)
+		// Clear default category (added by wp_insert_post) 
 		wp_set_object_terms( $new_id, NULL, 'category' );
-
-		$post_taxonomies = get_object_taxonomies($post_type);
+		
+		$post_taxonomies = get_object_taxonomies($post->post_type);
 		$taxonomies_blacklist = get_option('duplicate_post_taxonomies_blacklist');
 		if ($taxonomies_blacklist == "") $taxonomies_blacklist = array();
 		$taxonomies = array_diff($post_taxonomies, $taxonomies_blacklist);
 		foreach ($taxonomies as $taxonomy) {
-			$post_terms = wp_get_object_terms($id, $taxonomy);
+			$post_terms = wp_get_object_terms($post->ID, $taxonomy);
 			foreach ($post_terms as $post_term) {
 				wp_set_object_terms($new_id, $post_term->slug, $taxonomy, true);
 			}
@@ -202,22 +193,30 @@ function duplicate_post_copy_post_taxonomies($id, $new_id, $post_type) {
 	}
 }
 
+// Using our action hooks to copy taxonomies
+add_action('dp_duplicate_post', 'duplicate_post_copy_post_taxonomies', 10, 2);
+add_action('dp_duplicate_page', 'duplicate_post_copy_post_taxonomies', 10, 2);
+
 /**
  * Copy the meta information of a post to another post
  */
-function duplicate_post_copy_post_meta_info($id, $new_id) {
-	$post_meta_keys = get_post_custom_keys($id);
+function duplicate_post_copy_post_meta_info($new_id, $post) {
+	$post_meta_keys = get_post_custom_keys($post->ID);
 	$meta_blacklist = explode(",",get_option('duplicate_post_blacklist'));
 	if ($meta_blacklist == "") $meta_blacklist = array();
 	$meta_keys = array_diff($post_meta_keys, $meta_blacklist);
 
 	foreach ($meta_keys as $meta_key) {
-		$meta_values = get_post_custom_values($meta_key, $id);
+		$meta_values = get_post_custom_values($meta_key, $post->ID);
 		foreach ($meta_values as $meta_value) {
 			add_post_meta($new_id, $meta_key, $meta_value);
 		}
 	}
 }
+
+// Using our action hooks to copy meta fields
+add_action('dp_duplicate_post', 'duplicate_post_copy_post_meta_info', 10, 2);
+add_action('dp_duplicate_page', 'duplicate_post_copy_post_meta_info', 10, 2);
 
 /**
  * Create a duplicate from a post
@@ -238,9 +237,9 @@ function duplicate_post_create_duplicate($post, $status = '') {
 	'pinged' => $post->pinged,
 	'post_author' => $new_post_author->ID,
 	'post_content' => $post->post_content,
-	'post_date' => $new_post_date = (get_option('duplicate_post_copydate') == 1)?  $post->post_date : current_time('mysql'),
-	'post_date_gmt' => $new_post_date_gmt = get_gmt_from_date($new_post_date),
-	'post_excerpt' => (get_option('duplicate_post_copyexcerpt') == '1')?$post->post_excerpt:"",
+	'post_date' => $new_post_date = (get_option('duplicate_post_copydate') == 1) ? $post->post_date : current_time('mysql'),
+	'post_date_gmt' => get_gmt_from_date($new_post_date),
+	'post_excerpt' => (get_option('duplicate_post_copyexcerpt') == '1') ? $post->post_excerpt : "",
 	'post_parent' => $post->post_parent,
 	'post_password' => $post->post_password,
 	'post_status' => $new_post_status = (empty($status))? $post->post_status: $status,
@@ -250,12 +249,6 @@ function duplicate_post_create_duplicate($post, $status = '') {
 	);
 
 	$new_post_id = wp_insert_post($new_post);
-
-	// Copy the taxonomies
-	duplicate_post_copy_post_taxonomies($post->ID, $new_post_id, $post->post_type);
-
-	// Copy the meta information
-	duplicate_post_copy_post_meta_info($post->ID, $new_post_id);
 
 	add_post_meta($new_post_id, '_dp_original', $post->ID);
 
@@ -267,8 +260,8 @@ function duplicate_post_create_duplicate($post, $status = '') {
 	do_action( 'dp_duplicate_post', $new_post_id, $post );
 
 	// If the copy gets immediately published, we have to set a proper slug.
-	if ($new_post_status == 'publish'){
-		$post_name = wp_unique_post_slug($post_name, $new_post_id, $new_post_status, $new_post_type, $post->post_parent);
+	if ($new_post_status == 'publish' || $new_post_status == 'future'){
+		$post_name = wp_unique_post_slug($post->post_name, $new_post_id, $new_post_status, $post->post_type, $post->post_parent);
 
 		$new_post = array();
 		$new_post['ID'] = $new_post_id;

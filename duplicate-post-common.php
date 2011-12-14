@@ -4,7 +4,7 @@
  * Test if the user is allowed to copy posts
  */
 function duplicate_post_is_current_user_allowed_to_copy() {
-	return current_user_can("level_" . duplicate_post_get_copy_user_level());
+	return current_user_can('copy_posts');
 }
 
 /**
@@ -14,7 +14,7 @@ function duplicate_post_get_copy_user_level() {
 	return get_option( 'duplicate_post_copy_user_level' );
 }
 
-// Template tags
+// Template tag
 /**
  * Retrieve duplicate post link for post.
  *
@@ -72,21 +72,6 @@ function duplicate_post_clone_post_link( $link = null, $before = '', $after = ''
 	. esc_attr(__("Copy to a new draft", DUPLICATE_POST_I18N_DOMAIN))
 	.'">' . $link . '</a>';
 	echo $before . apply_filters( 'duplicate_post_clone_post_link', $link, $post->ID ) . $after;
-}
-/**
- * Get original post .
- *
- * @param int $id Optional. Post ID.
- * @param string $output Optional, default is Object. Either OBJECT, ARRAY_A, or ARRAY_N.
- * @return mixed Post data
- */
-function duplicate_post_get_original($id = 0 , $output = OBJECT){
-	if ( !$post = &get_post( $id ) )
-	return;
-	$original_ID = get_post_meta( $post->ID, '_dp_original');
-	if (empty($original_ID)) return null;
-	$original_post = &get_post($original_ID[0],  $output);
-	return $original_post;
 }
 
 // Admin bar

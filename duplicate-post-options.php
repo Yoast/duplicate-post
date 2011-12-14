@@ -15,7 +15,7 @@ function duplicate_post_register_settings() { // whitelist options
 	register_setting( 'duplicate_post_group', 'duplicate_post_taxonomies_blacklist');
 	register_setting( 'duplicate_post_group', 'duplicate_post_title_prefix');
 	register_setting( 'duplicate_post_group', 'duplicate_post_title_suffix');
-	register_setting( 'duplicate_post_group', 'duplicate_post_copy_user_level');
+	register_setting( 'duplicate_post_group', 'duplicate_post_roles');
 }
 
 
@@ -24,6 +24,30 @@ function duplicate_post_menu() {
 }
 
 function duplicate_post_options() {
+
+	if ( current_user_can( 'edit_roles' ) && $_GET['settings-updated'] == true){
+		global $wp_roles;
+		$roles = $wp_roles->get_names();
+
+		$dp_roles = get_option('duplicate_post_roles');
+		if ( $dp_roles == "" ) $dp_roles = array();
+
+		foreach ($roles as $name => $display_name){
+			$role = get_role($name);
+
+			// role should have at least edit_posts capability
+			if ( !$role->has_cap('edit_posts') ) continue;
+
+			/* If the role doesn't have the capability and it was selected, add it. */
+			if ( !$role->has_cap( 'copy_posts' )  && in_array($name, $dp_roles) )
+			$role->add_cap( 'copy_posts' );
+
+			/* If the role has the capability and it wasn't selected, remove it. */
+			elseif ( $role->has_cap( 'copy_posts' ) && !in_array($name, $dp_roles) )
+			$role->remove_cap( 'copy_posts' );
+		}
+	}
+
 	?>
 <div class="wrap">
 	<h2>
@@ -72,8 +96,7 @@ function duplicate_post_options() {
 			<tr valign="top">
 				<th scope="row"><?php _e("Do not copy these taxonomies", DUPLICATE_POST_I18N_DOMAIN); ?>
 				</th>
-				<td><div
-						style="height: 100px; width: 300px; padding: 5px; overflow: auto; border: 1px solid #ccc">
+				<td><div style="height: 100px; width: 300px; padding: 5px; overflow: auto; border: 1px solid #ccc">
 						<?php $taxonomies=get_taxonomies(array('public' => true),'objects');
 						$taxonomies_blacklist = get_option('duplicate_post_taxonomies_blacklist');
 						if ($taxonomies_blacklist == "") $taxonomies_blacklist = array();
@@ -107,26 +130,20 @@ function duplicate_post_options() {
 				</td>
 			</tr>
 			<tr valign="top">
-				<th scope="row"><?php _e("Minimum level to copy posts", DUPLICATE_POST_I18N_DOMAIN); ?>
+				<th scope="row"><?php _e("Roles allowed to copy", DUPLICATE_POST_I18N_DOMAIN); ?>
 				</th>
-				<td><select name="duplicate_post_copy_user_level">
-						<option value="8"
-						<?php if(get_option('duplicate_post_copy_user_level') == 8) echo 'selected="selected"'?>>
-							<?php echo _x("Administrator", "User role", "default")?>
-						</option>
-						<option value="5"
-						<?php if(get_option('duplicate_post_copy_user_level') == 5) echo 'selected="selected"'?>>
-							<?php echo _x("Editor", "User role", "default")?>
-						</option>
-						<option value="2"
-						<?php if(get_option('duplicate_post_copy_user_level') == 2) echo 'selected="selected"'?>>
-							<?php echo _x("Author", "User role", "default")?>
-						</option>
-						<option value="1"
-						<?php if(get_option('duplicate_post_copy_user_level') == 1) echo 'selected="selected"'?>>
-							<?php echo _x("Contributor", "User role", "default")?>
-						</option>
-				</select> <span class="description"><?php _e("Warning: users will be able to copy all posts, even those of higher level users", DUPLICATE_POST_I18N_DOMAIN); ?>
+				<td><div style="height: 100px; width: 300px; padding: 5px; overflow: auto; border: 1px solid #ccc">
+				<?php	global $wp_roles;
+					$roles = $wp_roles->get_names();
+					foreach ($roles as $name => $display_name): $role = get_role($name); 
+						if ( !$role->has_cap('edit_posts') ) continue; ?>
+						<label style="display: block;"> <input type="checkbox"
+							name="duplicate_post_roles[]"
+							value="<?php echo $name ?>"
+							<?php if($role->has_cap('copy_posts')) echo 'checked="checked"'?> />
+							<?php echo _x($display_name, "User role", "default") ?> </label>
+					<?php endforeach; ?></div>
+<span class="description"><?php _e("Warning: users will be able to copy all posts, even those of other users", DUPLICATE_POST_I18N_DOMAIN); ?>
 				</span>
 				</td>
 			</tr>
