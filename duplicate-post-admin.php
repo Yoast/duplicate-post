@@ -185,10 +185,12 @@ function duplicate_post_copy_post_taxonomies($new_id, $post) {
 		if ($taxonomies_blacklist == "") $taxonomies_blacklist = array();
 		$taxonomies = array_diff($post_taxonomies, $taxonomies_blacklist);
 		foreach ($taxonomies as $taxonomy) {
-			$post_terms = wp_get_object_terms($post->ID, $taxonomy);
-			foreach ($post_terms as $post_term) {
-				wp_set_object_terms($new_id, $post_term->slug, $taxonomy, true);
+			$post_terms = wp_get_object_terms($post->ID, $taxonomy, array( 'orderby' => 'term_order' ));
+			$terms = array();
+			for ($i=0; $i<count($post_terms); $i++) {
+				$terms[] = $post_terms[$i]->slug;
 			}
+			wp_set_object_terms($new_id, $terms, $taxonomy);
 		}
 	}
 }
