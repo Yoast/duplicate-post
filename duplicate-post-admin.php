@@ -278,6 +278,7 @@ function duplicate_post_create_duplicate($post, $status = '') {
 
 //Add some links on the plugin page
 add_filter('plugin_row_meta', 'duplicate_post_add_plugin_links', 10, 2);
+add_filter("plugin_action_links_".plugin_basename(__FILE__), "duplicate_post_plugin_actions", 10, 4);
 
 function duplicate_post_add_plugin_links($links, $file) {
 	if ( $file == plugin_basename(dirname(__FILE__).'/duplicate-post.php') ) {
@@ -285,5 +286,10 @@ function duplicate_post_add_plugin_links($links, $file) {
 		$links[] = '<a href="http://lopo.it/duplicate-post-plugin">' . __('Translate', DUPLICATE_POST_I18N_DOMAIN) . '</a>';
 	}
 	return $links;
+}
+
+function duplicate_post_plugin_actions( $actions, $plugin_file, $plugin_data, $context ) {
+	array_unshift($actions, "<a href=\"options-general.php?page=duplicate_post\">".__("Settings")."</a>");
+	return $actions;
 }
 ?>
