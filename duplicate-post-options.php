@@ -50,9 +50,17 @@ function duplicate_post_options() {
 
 	?>
 <div class="wrap">
-	<h2>
-	<?php _e("Duplicate Post", DUPLICATE_POST_I18N_DOMAIN); ?>
+	<div id="icon-options-general" class="icon32"><br></div>
+	<h2 style="width: auto; float: left;">
+	<?php _e("Duplicate Post Options", DUPLICATE_POST_I18N_DOMAIN); ?>
 	</h2>
+
+	<div style="border: solid 1px #aaaaaa; background-color: #eeeeee; padding: 10px 25px; text-align: center; font-weight: bold; float: right;">
+		<?php _e("Duplicate Post", DUPLICATE_POST_I18N_DOMAIN); ?> v<?php echo duplicate_post_get_current_version(); ?><br/>
+		<a href="http://lopo.it/duplicate-post-plugin"><?php _e('Visit plugin site'); ?></a> -
+		<a href="http://lopo.it/duplicate-post-plugin"><?php _e('Donate', DUPLICATE_POST_I18N_DOMAIN); ?></a> - 
+		<a href="http://lopo.it/duplicate-post-plugin"><?php _e('Translate', DUPLICATE_POST_I18N_DOMAIN); ?></a>
+	</div>
 
 	<form method="post" action="options.php">
 	<?php settings_fields('duplicate_post_group'); ?>
