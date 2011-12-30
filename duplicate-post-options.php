@@ -55,8 +55,7 @@ function duplicate_post_options() {
 	<?php _e("Duplicate Post Options", DUPLICATE_POST_I18N_DOMAIN); ?>
 	</h2>
 
-	<div style="border: solid 1px #aaaaaa; background-color: #eeeeee; padding: 10px 25px; text-align: center; font-weight: bold; float: right;">
-		<?php _e("Duplicate Post", DUPLICATE_POST_I18N_DOMAIN); ?> v<?php echo duplicate_post_get_current_version(); ?><br/>
+	<div style="border: solid 1px #aaaaaa; background-color: #eeeeee; margin:9px 15px 4px 0; padding: 5px; text-align: center; font-weight: bold; float: left;">
 		<a href="http://lopo.it/duplicate-post-plugin"><?php _e('Visit plugin site'); ?></a> -
 		<a href="http://lopo.it/duplicate-post-plugin"><?php _e('Donate', DUPLICATE_POST_I18N_DOMAIN); ?></a> - 
 		<a href="http://lopo.it/duplicate-post-plugin"><?php _e('Translate', DUPLICATE_POST_I18N_DOMAIN); ?></a>

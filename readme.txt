@@ -18,11 +18,13 @@ This plugin allows to clone a post or page, or edit it as a new draft.
 
 3. On the post edit screen, you can click on 'Copy to a new draft' above "Cancel"/"Move to trash". 
 
-2 and 3 will lead to the edit page for the new draft: change what you want, click on 'Publish' and you're done.
+4. While viewing a post as a logged in user, you can click on 'Copy to a new draft' as a dropdown link under "Edi Post" in the admin bar.
+
+2, 3 and 4 will lead to the edit page for the new draft: change what you want, click on 'Publish' and you're done.
 
 **Pay attention to the new behaviour!** The first way now allows you to clone a post with a single click, speeding up your work if you have many posts to duplicate.
 
-There is also a **template tag**, so you can put it in your templates and clone your posts/pages from the front-end. Clicking on the link will lead you to the edit page for the new draft, just like the second way above.
+There is also a **template tag**, so you can put it in your templates and clone your posts/pages from the front-end. Clicking on the link will lead you to the edit page for the new draft, just like the admin bar link.
 
 In the Options page under Settings it is now possible to choose what to copy:
 
@@ -31,9 +33,9 @@ In the Options page under Settings it is now possible to choose what to copy:
 * the original post/page excerpt
 * which taxonomies and custom fields
 
-You can also set a prefix (or a suffix) to place before (or after) the title of the cloned post/page, and the minimum user level to clone posts or pages.
+You can also set a prefix (or a suffix) to place before (or after) the title of the cloned post/page, and the roles allowed to clone posts or pages.
 
-Duplicate post is natively in English, but it's shipped with translations in several other languages (though some are incomplete). Now there is a [Launchpad translation project](https://translations.launchpad.net/duplicate-post/) available to help translating this plugin: feel free to contribute (you can also send me an e-mail using the form on my website).
+Duplicate post is natively in English, but it's shipped with translations in several other languages (though some are incomplete). There is a [Launchpad translation project](https://translations.launchpad.net/duplicate-post/) available to help translating this plugin: feel free to contribute (you can also send me an e-mail using the form on my website).
 
 **If you're a plugin developer**, I suggest to read the section made just for you under "Other Notes", to ensure compatibility between your plugin(s) and mine!
 
@@ -60,6 +62,8 @@ First, check your version of WordPress: the plugin is not supposed to work on ol
 
 Then try to deactivate and re-activate it, some user have reported that this fixes the problem.
 
+Pay also attention to the new "Roles allowed to copy" option: it should convert the former "user level" option to the new standard, but unknown problems may arise. Make sure that your role is enabled.
+
 If not, maybe there is some kind of conflict with other plugins: feel free to write me and we'll try to discover a solution (it will be *really* helpful if you try to deactivate all your other plugins one by one to see which one conflicts with mine... But do it only if you know what you're doing, I will not be responsible of any problem you may experience).
 
 = Can you add it to the bulk actions in the post/page list? =
@@ -77,6 +81,9 @@ There is an open ticket in WordPress Trac, as other plugin developers too are in
 
 == Upgrade Notice ==
 
+= 2.1 =
+Copy from admin bar + user levels out, roles and capabilities in. 
+
 = 2.0.2 =
 Fixed permalink bug + double choice on posts list
 
@@ -93,6 +100,14 @@ Some users have experienced a fatal error when upgrading to v1.1: this may fix i
 New features and customization, WP 3.0 compatibility: you should upgrade if you want to copy Custom Posts with Custom Taxonomies.
 
 == Changelog ==
+
+= 2.1 =
+* Even more code cleaning (no more custom queries, using WP API)
+* Term order preserved when copying
+* Stopped using deprecated User levels, now it uses Roles and Capabilities
+* 'Copy to a new draft' link in admin bar
+* duplicate_post_get_original template tag
+* Settings link in plugin list, 'Donate' and 'Translate' link in option page
 
 = 2.0.2 =
 * Fixed bug for permalinks
@@ -149,7 +164,7 @@ New features and customization, WP 3.0 compatibility: you should upgrade if you 
 
 
 
-== Template tag ==
+== Template tags ==
 
 I have added the template tag `duplicate_post_clone_post_link( $link, $before, $after, $id )`, which behaves just like [edit_post_link()](http://codex.wordpress.org/Function_Reference/edit_post_link).
 That means that you can put it in your template (e.g., in single.php or page.php) so you can get a "Clone" link when displaying a post or page.
@@ -166,8 +181,10 @@ The parameters are:
     (string) (optional) Text to put after the link text. Default: None 
 
 * *id*
-    (integer) (optional) Post ID. Default: Current post ID 
-
+    (integer) (optional) Post ID. Default: Current post ID
+    
+Another available template tag is `duplicate_post_get_original($id, $output)` which returns the original post, either as a post object, an associative array or a numeric array (depending on the $output parameter), jus as [get_post()](http://codex.wordpress.org/Function_Reference/get_post) does.
+`duplicate_post_get_original()` relies on the `_dp_original` custom field.
 
 
 == For plugin developers ==
