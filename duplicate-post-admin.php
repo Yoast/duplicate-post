@@ -34,11 +34,32 @@ function duplicate_post_plugin_activation() {
 		delete_option('duplicate_post_admin_user_level');
 		delete_option('duplicate_post_create_user_level');
 		delete_option('duplicate_post_view_user_level');
-		// Add all options, nothing already installed
-		add_option(
-		'duplicate_post_copy_user_level',
-			'5',
-			'Default user level to copy posts' );
+	
+		/*
+		 * Convert old userlevel option to new capability scheme
+		 */
+		
+		// Get old duplicate_post_copy_user_level option
+		$min_user_level = get_option('duplicate_post_copy_user_level');
+		
+		// Get default roles
+		$default_roles = array(
+			1 => 'contributor',
+			2 => 'author',
+			3 => 'editor',
+			8 => 'administrator',
+		);
+			
+		// Cycle all roles and assign capability if its level >= duplicate_post_copy_user_level
+		foreach ($default_roles as $level => $name){
+			$role = get_role($name);
+			if ($role && $min_user_level <= $level)
+			$role->add_cap( 'copy_posts' );
+		}
+		
+		// delete old option
+		delete_option('duplicate_post_copy_user_level');
+		
 		add_option(
 		'duplicate_post_copyexcerpt',
 			'1',
