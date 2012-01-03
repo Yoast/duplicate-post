@@ -75,7 +75,8 @@ There is an open ticket in WordPress Trac, as other plugin developers too are in
 1. Here you can copy the post you're editing to a new draft.
 2. By clicking on "Clone" the post is cloned immediately. "New draft" leads to the edit screen.
 3. The options page.
-4. The template tag manually added to Twenty Ten theme. Click on the "Copy to a new draft" link and you're redirected to the edit screen for a new draft copy of your post. 
+4. The template tag manually added to Twenty Ten theme. Click on the "Copy to a new draft" link and you're redirected to the edit screen for a new draft copy of your post.
+5. The admin bar link. 
 
 == Upgrade Notice ==
 
