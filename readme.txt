@@ -35,11 +35,9 @@ In the Options page under Settings it is now possible to choose what to copy:
 
 You can also set a prefix (or a suffix) to place before (or after) the title of the cloned post/page, and the roles allowed to clone posts or pages.
 
-Duplicate post is natively in English, but it's shipped with translations in several other languages (though some are incomplete). There is a [Launchpad translation project](https://translations.launchpad.net/duplicate-post/) available to help translating this plugin: feel free to contribute (you can also send me an e-mail using the form on my website).
+If you want to contribute to translate the plugin in languages other than English, there is a [Launchpad translation project](https://translations.launchpad.net/duplicate-post/) available (you can also send me an e-mail using the form on my website).
 
-**If you're a plugin developer**, I suggest to read the section made just for you under "Other Notes", to ensure compatibility between your plugin(s) and mine!
-
-The plugin has been tested against versions 3.0 -> 3.3, both in single site and network mode.
+**If you're a plugin developer**, I suggest to read the section made just for you under "Other Notes", to ensure compatibility between your plugin(s) and mine.
 
 Thanks for all the suggestions, bug reports, translations and donations, they're frankly too many to be listed here!
 
@@ -210,5 +208,5 @@ If you find this useful and you if you want to contribute, there are three ways:
 
    1. You can [write me](http://lopo.it/contatti/) and submit your bug reports, suggestions and requests for features;
    2. If you want to translate it to your language (there are just a few lines of text), you can use the [Launchpad translation project](https://translations.launchpad.net/duplicate-post/), or [contact me](http://lopo.it/contatti/) and I’ll send you the .pot catalogue; your translation could be featured in next releases;
-   3. Using the plugin is free, but if you want you can send me some bucks with PayPal [here](http://lopo.it/duplicate-post-plugin/)
+   3. Using the plugin is free, but if you want you can send me some money with PayPal [here](http://lopo.it/duplicate-post-plugin/)
 
