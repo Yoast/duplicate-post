@@ -80,6 +80,9 @@ There is an open ticket in WordPress Trac, as other plugin developers too are in
 
 == Upgrade Notice ==
 
+= 2.1.1 =
+Fix for upgrade problem 
+
 = 2.1 =
 Copy from admin bar + user levels out, roles and capabilities in. 
 
@@ -99,6 +102,9 @@ Some users have experienced a fatal error when upgrading to v1.1: this may fix i
 New features and customization, WP 3.0 compatibility: you should upgrade if you want to copy Custom Posts with Custom Taxonomies.
 
 == Changelog ==
+
+= 2.1.1 =
+* Can't rely on activation hook for upgrade, this caused problems with new options
 
 = 2.1 =
 * Even more code cleaning (no more custom queries, using WP API)

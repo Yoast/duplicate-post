@@ -3,7 +3,7 @@
  Plugin Name: Duplicate Post
  Plugin URI: http://lopo.it/duplicate-post-plugin/
  Description: Clone posts and pages.
- Version: 2.1
+ Version: 2.1.1
  Author: Enrico Battocchi
  Author URI: http://lopo.it
  Text Domain: duplicate-post
