@@ -27,9 +27,37 @@ add_action('admin_init','duplicate_post_plugin_upgrade');
 function duplicate_post_plugin_upgrade() {
 	$installed_version = duplicate_post_get_installed_version();
 
-	if ( $installed_version==duplicate_post_get_current_version() ) {
+	if (empty($installed_version)) { // first install
+		
+		// Add capability to admin and editors
+		
+		// Get default roles
+		$default_roles = array(
+			3 => 'editor',
+			8 => 'administrator',
+		);
+		
+		// Cycle all roles and assign capability if its level >= duplicate_post_copy_user_level
+		foreach ($default_roles as $level => $name){
+			$role = get_role($name);
+			$role->add_cap( 'copy_posts' );
+		}
+			
+		add_option(
+		'duplicate_post_copyexcerpt',
+			'1',
+			'Copy the excerpt from the original post/page' );
+		add_option(
+		'duplicate_post_copystatus',
+			'0',
+			'Copy the status (draft, published, pending) from the original post/page' );
+		add_option(
+		'duplicate_post_taxonomies_blacklist',
+		array(),
+			'List of the taxonomies that mustn\'t be copied' );
+	} else if ( $installed_version==duplicate_post_get_current_version() ) { //re-install
 		// do nothing
-	} else {
+	} else { //upgrade form previous version
 		// delete old, obsolete options
 		delete_option('duplicate_post_admin_user_level');
 		delete_option('duplicate_post_create_user_level');
