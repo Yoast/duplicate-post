@@ -51,7 +51,7 @@ function duplicate_post_options() {
 	?>
 <div class="wrap">
 	<div id="icon-options-general" class="icon32"><br></div>
-	<h2 style="width: auto; float: left;">
+	<h2>
 	<?php _e("Duplicate Post Options", DUPLICATE_POST_I18N_DOMAIN); ?>
 	</h2>
 
