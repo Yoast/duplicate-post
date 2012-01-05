@@ -43,18 +43,9 @@ function duplicate_post_plugin_upgrade() {
 			$role->add_cap( 'copy_posts' );
 		}
 			
-		add_option(
-		'duplicate_post_copyexcerpt',
-			'1',
-			'Copy the excerpt from the original post/page' );
-		add_option(
-		'duplicate_post_copystatus',
-			'0',
-			'Copy the status (draft, published, pending) from the original post/page' );
-		add_option(
-		'duplicate_post_taxonomies_blacklist',
-		array(),
-			'List of the taxonomies that mustn\'t be copied' );
+		add_option('duplicate_post_copyexcerpt','1');
+		add_option('duplicate_post_copystatus','0');
+		add_option('duplicate_post_taxonomies_blacklist',array());
 	} else if ( $installed_version==duplicate_post_get_current_version() ) { //re-install
 		// do nothing
 	} else { //upgrade form previous version
@@ -91,18 +82,9 @@ function duplicate_post_plugin_upgrade() {
 			delete_option('duplicate_post_copy_user_level');
 		}
 		
-		add_option(
-		'duplicate_post_copyexcerpt',
-			'1',
-			'Copy the excerpt from the original post/page' );
-		add_option(
-		'duplicate_post_copystatus',
-			'0',
-			'Copy the status (draft, published, pending) from the original post/page' );
-		add_option(
-		'duplicate_post_taxonomies_blacklist',
-		array(),
-			'List of the taxonomies that mustn\'t be copied' );
+		add_option('duplicate_post_copyexcerpt','1');
+		add_option('duplicate_post_copystatus','0');
+		add_option('duplicate_post_taxonomies_blacklist',array());
 	}
 	// Update version number
 	update_option( 'duplicate_post_version', duplicate_post_get_current_version() );
