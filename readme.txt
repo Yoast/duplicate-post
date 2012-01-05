@@ -3,7 +3,7 @@ Contributors: lopo
 Donate link: http://lopo.it/duplicate-post-plugin/
 Tags: duplicate post, copy, clone
 Requires at least: 3.0
-Tested up to: 3.3
+Tested up to: 3.3.1
 Stable tag: 2.1.1
 
 Clone posts and pages.
@@ -80,6 +80,9 @@ There is an open ticket in WordPress Trac, as other plugin developers too are in
 
 == Upgrade Notice ==
 
+= 2.2 =
+VERY IMPORTANT UPGRADE to get rid of problems with complex custom fields, afflictiong both 2.1.* releases.
+
 = 2.1.1 =
 Fix for upgrade problem 
 
@@ -102,6 +105,11 @@ Some users have experienced a fatal error when upgrading to v1.1: this may fix i
 New features and customization, WP 3.0 compatibility: you should upgrade if you want to copy Custom Posts with Custom Taxonomies.
 
 == Changelog ==
+
+= 2.2 =
+* Fix for problems when copying serialized meta fields
+* Fix for multiple _dp_original field
+* Removed deprecated parameter when adding options
 
 = 2.1.1 =
 * Can't rely on activation hook for upgrade, this caused problems with new options
