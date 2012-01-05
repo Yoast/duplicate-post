@@ -81,7 +81,7 @@ There is an open ticket in WordPress Trac, as other plugin developers too are in
 == Upgrade Notice ==
 
 = 2.2 =
-VERY IMPORTANT UPGRADE to get rid of problems with complex custom fields, afflictiong both 2.1.* releases.
+VERY IMPORTANT UPGRADE to get rid of problems with complex custom fields, afflicting both 2.1.* releases.
 
 = 2.1.1 =
 Fix for upgrade problem 
