@@ -229,7 +229,9 @@ function duplicate_post_copy_post_meta_info($new_id, $post) {
 	foreach ($meta_keys as $meta_key) {
 		$meta_values = get_post_custom_values($meta_key, $post->ID);
 		foreach ($meta_values as $meta_value) {
-			add_post_meta($new_id, $meta_key, $meta_value);
+			$meta_obj = unserialize($meta_value);
+			if(!$meta_obj) add_post_meta($new_id, $meta_key, $meta_value);
+			else add_post_meta($new_id, $meta_key, $meta_obj);
 		}
 	}
 }
@@ -270,7 +272,6 @@ function duplicate_post_create_duplicate($post, $status = '') {
 
 	$new_post_id = wp_insert_post($new_post);
 
-	add_post_meta($new_post_id, '_dp_original', $post->ID);
 
 	// If you have written a plugin which uses non-WP database tables to save
 	// information about a post you can hook this action to dupe that data.
@@ -278,6 +279,9 @@ function duplicate_post_create_duplicate($post, $status = '') {
 	do_action( 'dp_duplicate_page', $new_post_id, $post );
 	else
 	do_action( 'dp_duplicate_post', $new_post_id, $post );
+	
+	delete_post_meta($new_post_id, '_dp_original');
+	add_post_meta($new_post_id, '_dp_original', $post->ID);
 
 	// If the copy gets immediately published, we have to set a proper slug.
 	if ($new_post_status == 'publish' || $new_post_status == 'future'){
