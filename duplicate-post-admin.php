@@ -46,6 +46,9 @@ function duplicate_post_plugin_upgrade() {
 		add_option('duplicate_post_copyexcerpt','1');
 		add_option('duplicate_post_copystatus','0');
 		add_option('duplicate_post_taxonomies_blacklist',array());
+		add_option('duplicate_post_show_row','1');
+		add_option('duplicate_post_show_adminbar','1');
+		add_option('duplicate_post_show_submitbox','1');
 	} else if ( $installed_version==duplicate_post_get_current_version() ) { //re-install
 		// do nothing
 	} else { //upgrade form previous version
@@ -85,14 +88,19 @@ function duplicate_post_plugin_upgrade() {
 		add_option('duplicate_post_copyexcerpt','1');
 		add_option('duplicate_post_copystatus','0');
 		add_option('duplicate_post_taxonomies_blacklist',array());
+		add_option('duplicate_post_show_row','1');
+		add_option('duplicate_post_show_adminbar','1');
+		add_option('duplicate_post_show_submitbox','1');
 	}
 	// Update version number
 	update_option( 'duplicate_post_version', duplicate_post_get_current_version() );
 
 }
 
-add_filter('post_row_actions', 'duplicate_post_make_duplicate_link_row',10,2);
-add_filter('page_row_actions', 'duplicate_post_make_duplicate_link_row',10,2);
+if (get_option('duplicate_post_show_row') == 1){
+	add_filter('post_row_actions', 'duplicate_post_make_duplicate_link_row',10,2);
+	add_filter('page_row_actions', 'duplicate_post_make_duplicate_link_row',10,2);
+}
 
 /**
  * Add the link to action list for post_row_actions
@@ -112,7 +120,9 @@ function duplicate_post_make_duplicate_link_row($actions, $post) {
 /**
  * Add a button in the post/page edit screen to create a clone
  */
-add_action( 'post_submitbox_start', 'duplicate_post_add_duplicate_post_button' );
+if (get_option('duplicate_post_show_submitbox') == 1){
+	add_action( 'post_submitbox_start', 'duplicate_post_add_duplicate_post_button' );
+}
 
 function duplicate_post_add_duplicate_post_button() {
 	if ( isset( $_GET['post'] ) && duplicate_post_is_current_user_allowed_to_copy()) {

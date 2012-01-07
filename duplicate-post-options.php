@@ -16,6 +16,9 @@ function duplicate_post_register_settings() { // whitelist options
 	register_setting( 'duplicate_post_group', 'duplicate_post_title_prefix');
 	register_setting( 'duplicate_post_group', 'duplicate_post_title_suffix');
 	register_setting( 'duplicate_post_group', 'duplicate_post_roles');
+	register_setting( 'duplicate_post_group', 'duplicate_post_show_row');
+	register_setting( 'duplicate_post_group', 'duplicate_post_show_adminbar');
+	register_setting( 'duplicate_post_group', 'duplicate_post_show_submitbox');
 }
 
 
@@ -156,9 +159,24 @@ function duplicate_post_options() {
 				</span>
 				</td>
 			</tr>
-
+			<tr valign="top">
+				<th scope="row"><?php _e("Show links in", DUPLICATE_POST_I18N_DOMAIN); ?>
+				</th>
+				<td><label style="display: block"><input type="checkbox" name="duplicate_post_show_row"
+					value="1" <?php  if(get_option('duplicate_post_show_row') == 1) echo 'checked="checked"'; ?>"/>
+					<?php _e("Post list", DUPLICATE_POST_I18N_DOMAIN); ?>
+				</label>
+				<label style="display: block"><input type="checkbox" name="duplicate_post_show_adminbar"
+					value="1" <?php  if(get_option('duplicate_post_show_adminbar') == 1) echo 'checked="checked"'; ?>"/>
+					<?php _e("Admin bar", DUPLICATE_POST_I18N_DOMAIN); ?>
+				</label>
+				<label style="display: block"><input type="checkbox" name="duplicate_post_show_submitbox"
+					value="1" <?php  if(get_option('duplicate_post_show_submitbox') == 1) echo 'checked="checked"'; ?>"/>
+					<?php _e("Edit screen", DUPLICATE_POST_I18N_DOMAIN); ?>
+				</label>
+				</td>
+			</tr>
 		</table>
-
 		<p class="submit">
 			<input type="submit" class="button-primary"
 				value="<?php _e('Save Changes', DUPLICATE_POST_I18N_DOMAIN) ?>" />
