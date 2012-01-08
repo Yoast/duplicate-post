@@ -153,7 +153,7 @@ function duplicate_post_options() {
 						<label style="display: block;"> <input type="checkbox"
 							name="duplicate_post_roles[]" value="<?php echo $name ?>"
 							<?php if($role->has_cap('copy_posts')) echo 'checked="checked"'?> />
-							<?php echo _x($display_name, "User role", "default") ?> </label>
+							<?php echo translate_user_role($display_name); ?> </label>
 							<?php endforeach; ?>
 					</div> <span class="description"><?php _e("Warning: users will be able to copy all posts, even those of other users", DUPLICATE_POST_I18N_DOMAIN); ?>
 				</span>
