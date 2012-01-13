@@ -53,15 +53,19 @@ function duplicate_post_options() {
 
 	?>
 <div class="wrap">
-	<div id="icon-options-general" class="icon32"><br></div>
+	<div id="icon-options-general" class="icon32">
+		<br>
+	</div>
 	<h2>
 	<?php _e("Duplicate Post Options", DUPLICATE_POST_I18N_DOMAIN); ?>
 	</h2>
 
-	<div style="border: solid 1px #aaaaaa; background-color: #eeeeee; margin:9px 15px 4px 0; padding: 5px; text-align: center; font-weight: bold; float: left;">
-		<a href="http://lopo.it/duplicate-post-plugin"><?php _e('Visit plugin site'); ?></a> -
-		<a href="http://lopo.it/duplicate-post-plugin"><?php _e('Donate', DUPLICATE_POST_I18N_DOMAIN); ?></a> - 
-		<a href="http://lopo.it/duplicate-post-plugin"><?php _e('Translate', DUPLICATE_POST_I18N_DOMAIN); ?></a>
+	<div
+		style="border: solid 1px #aaaaaa; background-color: #eeeeee; margin: 9px 15px 4px 0; padding: 5px; text-align: center; font-weight: bold; float: left;">
+		<a href="http://lopo.it/duplicate-post-plugin"><?php _e('Visit plugin site'); ?>
+		</a> - <a href="http://lopo.it/duplicate-post-plugin"><?php _e('Donate', DUPLICATE_POST_I18N_DOMAIN); ?>
+		</a> - <a href="http://lopo.it/duplicate-post-plugin"><?php _e('Translate', DUPLICATE_POST_I18N_DOMAIN); ?>
+		</a>
 	</div>
 
 	<form method="post" action="options.php">
@@ -162,18 +166,15 @@ function duplicate_post_options() {
 			<tr valign="top">
 				<th scope="row"><?php _e("Show links in", DUPLICATE_POST_I18N_DOMAIN); ?>
 				</th>
-				<td><label style="display: block"><input type="checkbox" name="duplicate_post_show_row"
-					value="1" <?php  if(get_option('duplicate_post_show_row') == 1) echo 'checked="checked"'; ?>"/>
-					<?php _e("Post list", DUPLICATE_POST_I18N_DOMAIN); ?>
-				</label>
-				<label style="display: block"><input type="checkbox" name="duplicate_post_show_adminbar"
-					value="1" <?php  if(get_option('duplicate_post_show_adminbar') == 1) echo 'checked="checked"'; ?>"/>
-					<?php _e("Admin bar", DUPLICATE_POST_I18N_DOMAIN); ?>
-				</label>
-				<label style="display: block"><input type="checkbox" name="duplicate_post_show_submitbox"
-					value="1" <?php  if(get_option('duplicate_post_show_submitbox') == 1) echo 'checked="checked"'; ?>"/>
-					<?php _e("Edit screen", DUPLICATE_POST_I18N_DOMAIN); ?>
-				</label>
+				<td><label style="display: block"><input type="checkbox"
+						name="duplicate_post_show_row" value="1" <?php  if(get_option('duplicate_post_show_row') == 1) echo 'checked="checked"'; ?>"/>
+						<?php _e("Post list", DUPLICATE_POST_I18N_DOMAIN); ?> </label> <label
+					style="display: block"><input type="checkbox"
+						name="duplicate_post_show_adminbar" value="1" <?php  if(get_option('duplicate_post_show_adminbar') == 1) echo 'checked="checked"'; ?>"/>
+						<?php _e("Admin bar", DUPLICATE_POST_I18N_DOMAIN); ?> </label> <label
+					style="display: block"><input type="checkbox"
+						name="duplicate_post_show_submitbox" value="1" <?php  if(get_option('duplicate_post_show_submitbox') == 1) echo 'checked="checked"'; ?>"/>
+						<?php _e("Edit screen", DUPLICATE_POST_I18N_DOMAIN); ?> </label>
 				</td>
 			</tr>
 		</table>

@@ -28,15 +28,15 @@ function duplicate_post_plugin_upgrade() {
 	$installed_version = duplicate_post_get_installed_version();
 
 	if (empty($installed_version)) { // first install
-		
+
 		// Add capability to admin and editors
-		
+
 		// Get default roles
 		$default_roles = array(
-			3 => 'editor',
-			8 => 'administrator',
+		3 => 'editor',
+		8 => 'administrator',
 		);
-		
+
 		// Cycle all roles and assign capability if its level >= duplicate_post_copy_user_level
 		foreach ($default_roles as $level => $name){
 			$role = get_role($name);
@@ -57,11 +57,11 @@ function duplicate_post_plugin_upgrade() {
 		delete_option('duplicate_post_create_user_level');
 		delete_option('duplicate_post_view_user_level');
 		delete_option('dp_notice');
-	
+
 		/*
 		 * Convert old userlevel option to new capability scheme
 		 */
-		
+
 		// Get old duplicate_post_copy_user_level option
 		$min_user_level = get_option('duplicate_post_copy_user_level');
 
@@ -73,7 +73,7 @@ function duplicate_post_plugin_upgrade() {
 			3 => 'editor',
 			8 => 'administrator',
 			);
-				
+
 			// Cycle all roles and assign capability if its level >= duplicate_post_copy_user_level
 			foreach ($default_roles as $level => $name){
 				$role = get_role($name);
@@ -84,7 +84,7 @@ function duplicate_post_plugin_upgrade() {
 			// delete old option
 			delete_option('duplicate_post_copy_user_level');
 		}
-		
+
 		add_option('duplicate_post_copyexcerpt','1');
 		add_option('duplicate_post_copystatus','0');
 		add_option('duplicate_post_taxonomies_blacklist',array());
@@ -289,7 +289,7 @@ function duplicate_post_create_duplicate($post, $status = '') {
 	do_action( 'dp_duplicate_page', $new_post_id, $post );
 	else
 	do_action( 'dp_duplicate_post', $new_post_id, $post );
-	
+
 	delete_post_meta($new_post_id, '_dp_original');
 	add_post_meta($new_post_id, '_dp_original', $post->ID);
 
