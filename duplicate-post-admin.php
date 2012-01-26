@@ -239,9 +239,8 @@ function duplicate_post_copy_post_meta_info($new_id, $post) {
 	foreach ($meta_keys as $meta_key) {
 		$meta_values = get_post_custom_values($meta_key, $post->ID);
 		foreach ($meta_values as $meta_value) {
-			$meta_obj = unserialize($meta_value);
-			if(!$meta_obj) add_post_meta($new_id, $meta_key, $meta_value);
-			else add_post_meta($new_id, $meta_key, $meta_obj);
+			$meta_value = maybe_unserialize($meta_value);
+			add_post_meta($new_id, $meta_key, $meta_value);
 		}
 	}
 }
