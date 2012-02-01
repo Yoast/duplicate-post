@@ -18,7 +18,7 @@ This plugin allows to clone a post or page, or edit it as a new draft.
 
 3. On the post edit screen, you can click on 'Copy to a new draft' above "Cancel"/"Move to trash". 
 
-4. While viewing a post as a logged in user, you can click on 'Copy to a new draft' as a dropdown link under "Edi Post" in the admin bar.
+4. While viewing a post as a logged in user, you can click on 'Copy to a new draft' as a dropdown link under "Edit Post" in the admin bar.
 
 2, 3 and 4 will lead to the edit page for the new draft: change what you want, click on 'Publish' and you're done.
 
@@ -56,7 +56,7 @@ Use WordPress' Add New Plugin feature, searching "Duplicate Post", or download t
 
 = The plugin doesn't work, why? =
 
-First, check your version of WordPress: the plugin is not supposed to work on old versions anymore.
+First, check your version of WordPress: the plugin is not supposed to work on old versions anymore. Make sure also to upgrade to the last version of the plugin!
 
 Then try to deactivate and re-activate it, some user have reported that this fixes the problem.
 
