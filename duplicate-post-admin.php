@@ -40,7 +40,7 @@ function duplicate_post_plugin_upgrade() {
 		// Cycle all roles and assign capability if its level >= duplicate_post_copy_user_level
 		foreach ($default_roles as $level => $name){
 			$role = get_role($name);
-			$role->add_cap( 'copy_posts' );
+			if(!empty($role)) $role->add_cap( 'copy_posts' );
 		}
 			
 		add_option('duplicate_post_copyexcerpt','1');

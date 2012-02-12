@@ -14,7 +14,7 @@ function duplicate_post_get_copy_user_level() {
 	return get_option( 'duplicate_post_copy_user_level' );
 }
 
-// Template tag2
+// Template tag
 /**
  * Retrieve duplicate post link for post.
  *
