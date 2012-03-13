@@ -28,7 +28,7 @@ function duplicate_post_menu() {
 
 function duplicate_post_options() {
 
-	if ( current_user_can( 'edit_users' ) && $_GET['settings-updated'] == true){
+	if ( current_user_can( 'edit_users' ) && (isset($_GET['settings-updated'])  && $_GET['settings-updated'] == true)){
 		global $wp_roles;
 		$roles = $wp_roles->get_names();
 
