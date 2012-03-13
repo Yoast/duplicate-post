@@ -86,6 +86,7 @@ function duplicate_post_plugin_upgrade() {
 		}
 
 		add_option('duplicate_post_copyexcerpt','1');
+		add_option('duplicate_post_copyattachments','0');
 		add_option('duplicate_post_copystatus','0');
 		add_option('duplicate_post_taxonomies_blacklist',array());
 		add_option('duplicate_post_show_row','1');
@@ -250,10 +251,61 @@ add_action('dp_duplicate_post', 'duplicate_post_copy_post_meta_info', 10, 2);
 add_action('dp_duplicate_page', 'duplicate_post_copy_post_meta_info', 10, 2);
 
 /**
+ * Copy the attachments
+ * It simply copies the table entries, actual file won't be duplicated
+ */
+function duplicate_post_copy_attachments($new_id, $post){
+	if (get_option('duplicate_post_copyattachments') == 0) return; 
+	
+	// get old attachments
+	$attachments = get_posts(array( 'post_type' => 'attachment', 'numberposts' => -1, 'post_status' => null, 'post_parent' => $post->ID ));
+	// clone old attachments
+	foreach($attachments as $att){
+		$new_att_author = duplicate_post_get_current_user();
+
+		$new_att = array(
+			'menu_order' => $att->menu_order,
+			'comment_status' => $att->comment_status,
+			'guid' => $att->guid,
+			'ping_status' => $att->ping_status,
+			'pinged' => $att->pinged,
+			'post_author' => $new_att_author->ID,
+			'post_content' => $att->post_content,
+			'post_date' => $new_att_date = (get_option('duplicate_post_copydate') == 1) ? $att->post_date : current_time('mysql'),
+			'post_date_gmt' => get_gmt_from_date($new_att_date),
+			'post_excerpt' => $att->post_excerpt,
+			'post_mime_type' => $att->post_mime_type,
+			'post_parent' => $new_id,
+			'post_password' => $att->post_password,
+			'post_status' => $att->post_status,
+			'post_title' => $att->post_title,
+			'post_type' => $att->post_type,
+			'to_ping' => $att->to_ping 
+		);
+
+		$new_att_id = wp_insert_post($new_att);
+
+		// get and apply a unique slug
+		$att_name = wp_unique_post_slug($att->post_name, $new_att_id, $att->post_status, $att->post_type, $new_id);
+		$new_att = array();
+		$new_att['ID'] = $new_att_id;
+		$new_att['post_name'] = $att_name;
+
+		wp_update_post( $new_att );
+		
+		// call hooks to copy attachement metadata
+		do_action( 'dp_duplicate_post', $new_att_id, $att );
+	}
+}
+// Using our action hooks to copy attachments
+add_action('dp_duplicate_post', 'duplicate_post_copy_attachments', 10, 2);
+add_action('dp_duplicate_page', 'duplicate_post_copy_attachments', 10, 2);
+
+
+/**
  * Create a duplicate from a post
  */
 function duplicate_post_create_duplicate($post, $status = '') {
-	global $wpdb;
 	$prefix = get_option('duplicate_post_title_prefix');
 	$suffix = get_option('duplicate_post_title_suffix');
 	if (!empty($prefix)) $prefix.= " ";
