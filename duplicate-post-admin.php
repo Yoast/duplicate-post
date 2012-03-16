@@ -233,6 +233,7 @@ add_action('dp_duplicate_page', 'duplicate_post_copy_post_taxonomies', 10, 2);
  */
 function duplicate_post_copy_post_meta_info($new_id, $post) {
 	$post_meta_keys = get_post_custom_keys($post->ID);
+	if (empty($post_meta_keys)) return;
 	$meta_blacklist = explode(",",get_option('duplicate_post_blacklist'));
 	if ($meta_blacklist == "") $meta_blacklist = array();
 	$meta_keys = array_diff($post_meta_keys, $meta_blacklist);
