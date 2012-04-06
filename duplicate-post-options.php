@@ -180,11 +180,11 @@ function duplicate_post_options() {
 						name="duplicate_post_show_row" value="1" <?php  if(get_option('duplicate_post_show_row') == 1) echo 'checked="checked"'; ?>"/>
 						<?php _e("Post list", DUPLICATE_POST_I18N_DOMAIN); ?> </label> <label
 					style="display: block"><input type="checkbox"
-						name="duplicate_post_show_adminbar" value="1" <?php  if(get_option('duplicate_post_show_adminbar') == 1) echo 'checked="checked"'; ?>"/>
-						<?php _e("Admin bar", DUPLICATE_POST_I18N_DOMAIN); ?> </label> <label
-					style="display: block"><input type="checkbox"
 						name="duplicate_post_show_submitbox" value="1" <?php  if(get_option('duplicate_post_show_submitbox') == 1) echo 'checked="checked"'; ?>"/>
-						<?php _e("Edit screen", DUPLICATE_POST_I18N_DOMAIN); ?> </label>
+						<?php _e("Edit screen", DUPLICATE_POST_I18N_DOMAIN); ?> </label> <label
+					style="display: block"><input type="checkbox"
+						name="duplicate_post_show_adminbar" value="1" <?php  if(get_option('duplicate_post_show_adminbar') == 1) echo 'checked="checked"'; ?>"/>
+						<?php _e("Admin bar", DUPLICATE_POST_I18N_DOMAIN); ?> (WP 3.1+)</label>
 				</td>
 			</tr>
 		</table>
