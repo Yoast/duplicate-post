@@ -29,8 +29,9 @@ There is also a **template tag**, so you can put it in your templates and clone 
 In the Options page under Settings it is now possible to choose what to copy:
 
 * the original post/page date
-* the original post/page status (draft, published, pending), when cloning from the posts list.
+* the original post/page status (draft, published, pending), when cloning from the posts list
 * the original post/page excerpt
+* the original post/page attachments (actual files won't be copied)
 * which taxonomies and custom fields
 
 You can also set a prefix (or a suffix) to place before (or after) the title of the cloned post/page, and the roles allowed to clone posts or pages.
@@ -80,6 +81,9 @@ There is an open ticket in WordPress Trac, as other plugin developers too are in
 
 == Upgrade Notice ==
 
+= 2.3 =
+Fixes a bunch of bugs + copy attachments + choose where to show the links.
+
 = 2.2 =
 VERY IMPORTANT UPGRADE to get rid of problems with complex custom fields, afflicting both 2.1.* releases.
 
@@ -105,6 +109,12 @@ Some users have experienced a fatal error when upgrading to v1.1: this may fix i
 New features and customization, WP 3.0 compatibility: you should upgrade if you want to copy Custom Posts with Custom Taxonomies.
 
 == Changelog ==
+
+= 2.3 =
+* Added options to choose where to show the "Clone" links
+* Clone attachments (i.e. references in the DB, not physical files) 
+* Fix for untranslated user roles
+* Some other fixes (missing checks, PHP warnings and errors, etc.)
 
 = 2.2 =
 * Fix for problems when copying serialized meta fields
