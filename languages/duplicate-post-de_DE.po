@@ -7,128 +7,192 @@ msgid ""
 msgstr ""
 "Project-Id-Version: duplicate-post\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-05-21 10:01+0000\n"
-"PO-Revision-Date: 2010-05-22 09:33+0000\n"
-"Last-Translator: Enrico Battocchi <Unknown>\n"
+"POT-Creation-Date: 2012-04-02 13:27+0000\n"
+"PO-Revision-Date: 2012-03-30 23:20+0000\n"
+"Last-Translator: Dennis Baudys <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-06-23 21:48+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2012-04-06 11:16+0000\n"
+"X-Generator: Launchpad (build 15060)\n"
 
-#: duplicate-post.php:39
-msgid "No post to duplicate has been supplied!"
-msgstr "Es wurde kein Artikel zum Duplizieren gefunden!"
+#: duplicate-post-admin.php:112
+msgid "Clone this item"
+msgstr "Dieses Element duplizieren"
 
-#: duplicate-post.php:58 duplicate-post.php:86
-msgid "Post creation failed, could not find original post:"
-msgstr "Duplizieren fehlgeschlagen! Original Seite/Artikel nicht gefunden:"
-
-#: duplicate-post.php:67
-msgid "No page to duplicate has been supplied!"
-msgstr "Es wurde keine Seite zum Duplizieren gefunden!"
-
-#: duplicate-post.php:164 duplicate-post.php:195
-msgid "Make a duplicate from this post"
-msgstr "Duplikat von diesem Artikel erstellen."
-
-#: duplicate-post.php:165 duplicate-post.php:179 duplicate-post.php:196
-#: duplicate-post.php:207
-msgid "Duplicate"
+#: duplicate-post-admin.php:113
+msgid "Clone"
 msgstr "Duplizieren"
 
-#: duplicate-post.php:178 duplicate-post.php:206
-msgid "Make a duplicate from this page"
-msgstr "Duplikat von dieser Seite erstellen"
-
-#: duplicate-post.php:225
+#: duplicate-post-admin.php:115 duplicate-post-admin.php:133
+#: duplicate-post-common.php:66 duplicate-post-common.php:70
+#: duplicate-post-common.php:103
 msgid "Copy to a new draft"
 msgstr "Seite/Artikel als Entwurf duplizieren"
 
-#: duplicate-post.php:519
-msgid "Duplicate Post Options"
-msgstr "Duplicate Post Optionen"
+#: duplicate-post-admin.php:116
+msgid "New Draft"
+msgstr "Neuer Entwurf"
 
-#. #-#-#-#-#  plugin.pot (Duplicate Post 1.1)  #-#-#-#-#
-#. Plugin Name of the plugin/theme
-#: duplicate-post.php:519 duplicate-post.php:525
-msgid "Duplicate Post"
-msgstr "Duplicate Post"
+#: duplicate-post-admin.php:160
+msgid "No post to duplicate has been supplied!"
+msgstr "Es wurde kein Artikel zum Duplizieren gefunden!"
 
-#: duplicate-post.php:532
-msgid "Copy post/page date also"
-msgstr "Datum aus Artikel/Seite übernehmen"
-
-#: duplicate-post.php:534
-msgid ""
-"Normally, the new draft has publication date set to current time: check the "
-"box to copy the original post/page date"
+#: duplicate-post-admin.php:182
+msgid "Copy creation failed, could not find original:"
 msgstr ""
-"Normalerweise wird das Datum des neuen Entwurfs automatisch auf die jeweils "
-"aktuelle Zeit gesetzt. Diese Option setzt das Datum auf die Zeit des "
-"Originals."
+"Anlegen der Kopie gescheitert. Das Original konnte nicht gefunden werden:"
 
-#: duplicate-post.php:538
-msgid "Do not copy these fields"
-msgstr "Diese Felder nicht kopieren"
-
-#: duplicate-post.php:541
-msgid ""
-"Comma-separated list of meta fields that must not be copied when cloning a "
-"post/page"
-msgstr ""
-"Komma-separierte Liste aller benutzerdefinierten Felder, die nicht in das "
-"Duplikat übernommen werden sollen."
-
-#: duplicate-post.php:545
-msgid "Title prefix"
-msgstr "Titel Prefix"
-
-#: duplicate-post.php:548
-msgid ""
-"Prefix to be added before the original title when cloning a post/page, e.g. "
-"\"Copy of\" (blank for no prefix)"
-msgstr ""
-"Optionaler Prefix zur Verwendung vor dem Titel des Originals - z.B. 'Kopie "
-"von'."
-
-#: duplicate-post.php:552
-msgid "Minimum level to copy posts"
-msgstr "Minimum Benutzerlevel zur Nutzung von Duplicate Post"
-
-#: duplicate-post.php:576
-msgid ""
-"Warning: users will be able to copy all posts, even those of higher level "
-"users"
-msgstr ""
-"Achtung: Der Benutzer wird Seiten und Artikel duplizieren können, auch "
-"solche von Benutzern mit höherem Benutzerlevel."
-
-#: duplicate-post.php:583
-msgid "Save Changes"
-msgstr "Änderungen speichern"
-
-#: duplicate-post.php:595
+#: duplicate-post-admin.php:368 duplicate-post-options.php:67
 msgid "Donate"
 msgstr "Spenden"
 
-#: duplicate-post.php:596
+#: duplicate-post-admin.php:369 duplicate-post-options.php:68
 msgid "Translate"
 msgstr "Übersetzen"
 
+#: duplicate-post-options.php:27 duplicate-post-options.php:61
+msgid "Duplicate Post Options"
+msgstr "Duplicate Post Optionen"
+
+#. #-#-#-#-#  plugin.pot (Duplicate Post 2.3)  #-#-#-#-#
+#. Plugin Name of the plugin/theme
+#: duplicate-post-options.php:27
+msgid "Duplicate Post"
+msgstr "Duplicate Post"
+
+#: duplicate-post-options.php:66
+msgid "Visit plugin site"
+msgstr ""
+
+#: duplicate-post-options.php:78
+msgid "Copy post/page date also"
+msgstr "Datum aus Artikel/Seite übernehmen"
+
+#: duplicate-post-options.php:81
+msgid ""
+"Normally, the new copy has its publication date set to current time: check "
+"the box to copy the original post/page date"
+msgstr ""
+"Normalerweise hat die neue Kopie das Veröffentlichungsdatum des aktuellen "
+"Zeitpunkts: Markieren Sie das Ankreuzfeld, um das original "
+"Veröffentlichungsdatum des/der Artikels/Seite zu kopieren"
+
+#: duplicate-post-options.php:86
+msgid "Copy post/page status"
+msgstr "Artikel/Seiten-Status duplizieren"
+
+#: duplicate-post-options.php:90
+msgid ""
+"Copy the original post status (draft, published, pending) when cloning from "
+"the post list."
+msgstr ""
+"Original Artikelstatus (Entwurf, veröffentlicht, wartend) kopieren, wenn aus "
+"der Artikelliste heraus dupliziert wird."
+
+#: duplicate-post-options.php:95
+msgid "Copy excerpt"
+msgstr "Kurzfassung duplizieren"
+
+#: duplicate-post-options.php:99
+msgid "Copy the excerpt from the original post/page"
+msgstr "Die Kurzfassung des/der originalen Artikels/Seite kopieren"
+
+#: duplicate-post-options.php:104
+msgid "Copy attachments"
+msgstr ""
+
+#: duplicate-post-options.php:108
+msgid "Copy the attachments from the original post/page"
+msgstr ""
+
+#: duplicate-post-options.php:113
+msgid "Do not copy these fields"
+msgstr "Diese Felder nicht kopieren"
+
+#: duplicate-post-options.php:117
+msgid "Comma-separated list of meta fields that must not be copied"
+msgstr ""
+"Kommata-getrennte Liste der Meta-Felder, die nicht kopiert werden dürfen"
+
+#: duplicate-post-options.php:122
+msgid "Do not copy these taxonomies"
+msgstr "Diese Schlagworte nicht kopieren"
+
+#: duplicate-post-options.php:136
+msgid "Select the taxonomies you don't want to be copied"
+msgstr "Wählen Sie die Schlagworte aus, die nicht kopiert werden sollen"
+
+#: duplicate-post-options.php:141
+msgid "Title prefix"
+msgstr "Titel Prefix"
+
+#: duplicate-post-options.php:145
+msgid ""
+"Prefix to be added before the original title, e.g. \"Copy of\" (blank for no "
+"prefix)"
+msgstr ""
+"Präfix, der vor den original Titel eingefügt werden soll, z.B. »Kopie von« "
+"(freilassen, wenn kein Präfix)"
+
+#: duplicate-post-options.php:150
+msgid "Title suffix"
+msgstr "Titel-Suffix"
+
+#: duplicate-post-options.php:154
+msgid ""
+"Suffix to be added after the original title, e.g. \"(dup)\" (blank for no "
+"suffix)"
+msgstr ""
+"Suffix, der hinter den original Titel angehängt werden soll, z.B. "
+"»(Duplikat)« (freilassen, wenn kein Suffix)"
+
+#: duplicate-post-options.php:159
+msgid "Roles allowed to copy"
+msgstr ""
+
+#: duplicate-post-options.php:172
+msgid ""
+"Warning: users will be able to copy all posts, even those of other users"
+msgstr ""
+
+#: duplicate-post-options.php:177
+msgid "Show links in"
+msgstr ""
+
+#: duplicate-post-options.php:181
+msgid "Post list"
+msgstr ""
+
+#: duplicate-post-options.php:184
+msgid "Admin bar"
+msgstr ""
+
+#: duplicate-post-options.php:187
+msgid "Edit screen"
+msgstr ""
+
+#: duplicate-post-options.php:193
+msgid "Save Changes"
+msgstr "Änderungen speichern"
+
+#: duplicate-post.php:44
+msgid "Settings"
+msgstr ""
+
 #. Plugin URI of the plugin/theme
-msgid "http://www.lopo.it/duplicate-post-plugin/"
-msgstr "http://www.lopo.it/duplicate-post-plugin/"
+msgid "http://lopo.it/duplicate-post-plugin/"
+msgstr "http://lopo.it/duplicate-post-plugin/"
 
 #. Description of the plugin/theme
-msgid "Creates a copy of a post."
-msgstr "Erstellt eine Kopie dieses Artikels."
+msgid "Clone posts and pages."
+msgstr "Artikel und Seiten duplizieren."
 
 #. Author of the plugin/theme
 msgid "Enrico Battocchi"
 msgstr "Enrico Battocchi"
 
 #. Author URI of the plugin/theme
-msgid "http://www.lopo.it"
-msgstr "http://www.lopo.it"
+msgid "http://lopo.it"
+msgstr "http://lopo.it"

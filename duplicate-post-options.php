@@ -10,12 +10,16 @@ if ( is_admin() ){ // admin actions
 function duplicate_post_register_settings() { // whitelist options
 	register_setting( 'duplicate_post_group', 'duplicate_post_copydate');
 	register_setting( 'duplicate_post_group', 'duplicate_post_copyexcerpt');
+	register_setting( 'duplicate_post_group', 'duplicate_post_copyattachments');
 	register_setting( 'duplicate_post_group', 'duplicate_post_copystatus');
 	register_setting( 'duplicate_post_group', 'duplicate_post_blacklist');
 	register_setting( 'duplicate_post_group', 'duplicate_post_taxonomies_blacklist');
 	register_setting( 'duplicate_post_group', 'duplicate_post_title_prefix');
 	register_setting( 'duplicate_post_group', 'duplicate_post_title_suffix');
 	register_setting( 'duplicate_post_group', 'duplicate_post_roles');
+	register_setting( 'duplicate_post_group', 'duplicate_post_show_row');
+	register_setting( 'duplicate_post_group', 'duplicate_post_show_adminbar');
+	register_setting( 'duplicate_post_group', 'duplicate_post_show_submitbox');
 }
 
 
@@ -25,7 +29,7 @@ function duplicate_post_menu() {
 
 function duplicate_post_options() {
 
-	if ( current_user_can( 'edit_users' ) && $_GET['settings-updated'] == true){
+	if ( current_user_can( 'edit_users' ) && (isset($_GET['settings-updated'])  && $_GET['settings-updated'] == true)){
 		global $wp_roles;
 		$roles = $wp_roles->get_names();
 
@@ -50,15 +54,19 @@ function duplicate_post_options() {
 
 	?>
 <div class="wrap">
-	<div id="icon-options-general" class="icon32"><br></div>
+	<div id="icon-options-general" class="icon32">
+		<br>
+	</div>
 	<h2>
 	<?php _e("Duplicate Post Options", DUPLICATE_POST_I18N_DOMAIN); ?>
 	</h2>
 
-	<div style="border: solid 1px #aaaaaa; background-color: #eeeeee; margin:9px 15px 4px 0; padding: 5px; text-align: center; font-weight: bold; float: left;">
-		<a href="http://lopo.it/duplicate-post-plugin"><?php _e('Visit plugin site'); ?></a> -
-		<a href="http://lopo.it/duplicate-post-plugin"><?php _e('Donate', DUPLICATE_POST_I18N_DOMAIN); ?></a> - 
-		<a href="http://lopo.it/duplicate-post-plugin"><?php _e('Translate', DUPLICATE_POST_I18N_DOMAIN); ?></a>
+	<div
+		style="border: solid 1px #aaaaaa; background-color: #eeeeee; margin: 9px 15px 4px 0; padding: 5px; text-align: center; font-weight: bold; float: left;">
+		<a href="http://lopo.it/duplicate-post-plugin"><?php _e('Visit plugin site'); ?>
+		</a> - <a href="http://lopo.it/duplicate-post-plugin"><?php _e('Donate', DUPLICATE_POST_I18N_DOMAIN); ?>
+		</a> - <a href="http://lopo.it/duplicate-post-plugin"><?php _e('Translate', DUPLICATE_POST_I18N_DOMAIN); ?>
+		</a>
 	</div>
 
 	<form method="post" action="options.php">
@@ -89,6 +97,15 @@ function duplicate_post_options() {
 				<td><input type="checkbox" name="duplicate_post_copyexcerpt"
 					value="1" <?php  if(get_option('duplicate_post_copyexcerpt') == 1) echo 'checked="checked"'; ?>"/>
 					<span class="description"><?php _e("Copy the excerpt from the original post/page", DUPLICATE_POST_I18N_DOMAIN); ?>
+				</span>
+				</td>
+			</tr>
+			<tr valign="top">
+				<th scope="row"><?php _e("Copy attachments", DUPLICATE_POST_I18N_DOMAIN); ?>
+				</th>
+				<td><input type="checkbox" name="duplicate_post_copyattachments"
+					value="1" <?php  if(get_option('duplicate_post_copyattachments') == 1) echo 'checked="checked"'; ?>"/>
+					<span class="description"><?php _e("Copy the attachments from the original post/page", DUPLICATE_POST_I18N_DOMAIN); ?>
 				</span>
 				</td>
 			</tr>
@@ -150,15 +167,27 @@ function duplicate_post_options() {
 						<label style="display: block;"> <input type="checkbox"
 							name="duplicate_post_roles[]" value="<?php echo $name ?>"
 							<?php if($role->has_cap('copy_posts')) echo 'checked="checked"'?> />
-							<?php echo _x($display_name, "User role", "default") ?> </label>
+							<?php echo translate_user_role($display_name); ?> </label>
 							<?php endforeach; ?>
 					</div> <span class="description"><?php _e("Warning: users will be able to copy all posts, even those of other users", DUPLICATE_POST_I18N_DOMAIN); ?>
 				</span>
 				</td>
 			</tr>
-
+			<tr valign="top">
+				<th scope="row"><?php _e("Show links in", DUPLICATE_POST_I18N_DOMAIN); ?>
+				</th>
+				<td><label style="display: block"><input type="checkbox"
+						name="duplicate_post_show_row" value="1" <?php  if(get_option('duplicate_post_show_row') == 1) echo 'checked="checked"'; ?>"/>
+						<?php _e("Post list", DUPLICATE_POST_I18N_DOMAIN); ?> </label> <label
+					style="display: block"><input type="checkbox"
+						name="duplicate_post_show_submitbox" value="1" <?php  if(get_option('duplicate_post_show_submitbox') == 1) echo 'checked="checked"'; ?>"/>
+						<?php _e("Edit screen", DUPLICATE_POST_I18N_DOMAIN); ?> </label> <label
+					style="display: block"><input type="checkbox"
+						name="duplicate_post_show_adminbar" value="1" <?php  if(get_option('duplicate_post_show_adminbar') == 1) echo 'checked="checked"'; ?>"/>
+						<?php _e("Admin bar", DUPLICATE_POST_I18N_DOMAIN); ?> (WP 3.1+)</label>
+				</td>
+			</tr>
 		</table>
-
 		<p class="submit">
 			<input type="submit" class="button-primary"
 				value="<?php _e('Save Changes', DUPLICATE_POST_I18N_DOMAIN) ?>" />

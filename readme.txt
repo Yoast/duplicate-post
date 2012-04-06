@@ -4,7 +4,7 @@ Donate link: http://lopo.it/duplicate-post-plugin/
 Tags: duplicate post, copy, clone
 Requires at least: 3.0
 Tested up to: 3.3.1
-Stable tag: 2.1.1
+Stable tag: 2.2
 
 Clone posts and pages.
 
@@ -18,7 +18,7 @@ This plugin allows to clone a post or page, or edit it as a new draft.
 
 3. On the post edit screen, you can click on 'Copy to a new draft' above "Cancel"/"Move to trash". 
 
-4. While viewing a post as a logged in user, you can click on 'Copy to a new draft' as a dropdown link under "Edi Post" in the admin bar.
+4. While viewing a post as a logged in user, you can click on 'Copy to a new draft' as a dropdown link under "Edit Post" in the admin bar.
 
 2, 3 and 4 will lead to the edit page for the new draft: change what you want, click on 'Publish' and you're done.
 
@@ -29,8 +29,9 @@ There is also a **template tag**, so you can put it in your templates and clone 
 In the Options page under Settings it is now possible to choose what to copy:
 
 * the original post/page date
-* the original post/page status (draft, published, pending), when cloning from the posts list.
+* the original post/page status (draft, published, pending), when cloning from the posts list
 * the original post/page excerpt
+* the original post/page attachments (actual files won't be copied)
 * which taxonomies and custom fields
 
 You can also set a prefix (or a suffix) to place before (or after) the title of the cloned post/page, and the roles allowed to clone posts or pages.
@@ -56,7 +57,7 @@ Use WordPress' Add New Plugin feature, searching "Duplicate Post", or download t
 
 = The plugin doesn't work, why? =
 
-First, check your version of WordPress: the plugin is not supposed to work on old versions anymore.
+First, check your version of WordPress: the plugin is not supposed to work on old versions anymore. Make sure also to upgrade to the last version of the plugin!
 
 Then try to deactivate and re-activate it, some user have reported that this fixes the problem.
 
@@ -80,8 +81,11 @@ There is an open ticket in WordPress Trac, as other plugin developers too are in
 
 == Upgrade Notice ==
 
+= 2.3 =
+Fixes a bunch of bugs + copy attachments + choose where to show the links.
+
 = 2.2 =
-VERY IMPORTANT UPGRADE to get rid of problems with complex custom fields, afflictiong both 2.1.* releases.
+VERY IMPORTANT UPGRADE to get rid of problems with complex custom fields, afflicting both 2.1.* releases.
 
 = 2.1.1 =
 Fix for upgrade problem 
@@ -105,6 +109,12 @@ Some users have experienced a fatal error when upgrading to v1.1: this may fix i
 New features and customization, WP 3.0 compatibility: you should upgrade if you want to copy Custom Posts with Custom Taxonomies.
 
 == Changelog ==
+
+= 2.3 =
+* Added options to choose where to show the "Clone" links
+* Clone attachments (i.e. references in the DB, not physical files) 
+* Fix for untranslated user roles
+* Some other fixes (missing checks, PHP warnings and errors, etc.)
 
 = 2.2 =
 * Fix for problems when copying serialized meta fields

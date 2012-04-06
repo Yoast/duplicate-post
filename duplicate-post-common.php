@@ -14,7 +14,7 @@ function duplicate_post_get_copy_user_level() {
 	return get_option( 'duplicate_post_copy_user_level' );
 }
 
-// Template tag2
+// Template tag
 /**
  * Retrieve duplicate post link for post.
  *
@@ -79,12 +79,12 @@ function duplicate_post_clone_post_link( $link = null, $before = '', $after = ''
  * @return mixed Post data
  */
 function duplicate_post_get_original($id = 0 , $output = OBJECT){
-        if ( !$post = &get_post( $id ) )
-        return;
-        $original_ID = get_post_meta( $post->ID, '_dp_original');
-        if (empty($original_ID)) return null;
-        $original_post = &get_post($original_ID[0],  $output);
-        return $original_post;
+	if ( !$post = &get_post( $id ) )
+	return;
+	$original_ID = get_post_meta( $post->ID, '_dp_original');
+	if (empty($original_ID)) return null;
+	$original_post = &get_post($original_ID[0],  $output);
+	return $original_post;
 }
 // Admin bar
 function duplicate_post_admin_bar_render() {
@@ -101,10 +101,12 @@ function duplicate_post_admin_bar_render() {
 		'parent' => 'edit',
         'id' => 'new_draft',
         'title' => __("Copy to a new draft", DUPLICATE_POST_I18N_DOMAIN),
-        'href' => duplicate_post_get_clone_post_link( $post->ID )
+        'href' => duplicate_post_get_clone_post_link( $current_object->ID )
 		) );
 	}
 }
 
-add_action( 'wp_before_admin_bar_render', 'duplicate_post_admin_bar_render' );
+if (get_option('duplicate_post_show_adminbar') == 1){
+	add_action( 'wp_before_admin_bar_render', 'duplicate_post_admin_bar_render' );
+}
 ?>

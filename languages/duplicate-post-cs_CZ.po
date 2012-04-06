@@ -7,134 +7,181 @@ msgid ""
 msgstr ""
 "Project-Id-Version: duplicate-post\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-11-11 13:14+0000\n"
-"PO-Revision-Date: 2011-12-02 16:29+0000\n"
-"Last-Translator: František Zatloukal <Unknown>\n"
+"POT-Creation-Date: 2012-04-02 13:27+0000\n"
+"PO-Revision-Date: 2012-03-12 14:51+0000\n"
+"Last-Translator: IdeFixx <Unknown>\n"
 "Language-Team: Czech <cs@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-07 15:04+0000\n"
-"X-Generator: Launchpad (build 14443)\n"
+"X-Launchpad-Export-Date: 2012-04-06 11:16+0000\n"
+"X-Generator: Launchpad (build 15060)\n"
 
-#: duplicate-post-admin.php:78 duplicate-post-common.php:67
+#: duplicate-post-admin.php:112
 msgid "Clone this item"
 msgstr "Klonovat tuto položku"
 
-#: duplicate-post-admin.php:79
-msgid "Duplicate"
-msgstr "Duplikovat"
+#: duplicate-post-admin.php:113
+msgid "Clone"
+msgstr "Klonovat"
 
-#: duplicate-post-admin.php:97
+#: duplicate-post-admin.php:115 duplicate-post-admin.php:133
+#: duplicate-post-common.php:66 duplicate-post-common.php:70
+#: duplicate-post-common.php:103
 msgid "Copy to a new draft"
-msgstr "Duplikovat"
+msgstr "Kopírovat jako koncept"
 
-#: duplicate-post-admin.php:124
+#: duplicate-post-admin.php:116
+msgid "New Draft"
+msgstr ""
+
+#: duplicate-post-admin.php:160
 msgid "No post to duplicate has been supplied!"
 msgstr "Nebyl poskytnut příspěvek k duplikování!"
 
-#: duplicate-post-admin.php:146
+#: duplicate-post-admin.php:182
 msgid "Copy creation failed, could not find original:"
 msgstr "Vytvoření kopie selhalo, nemohu nalézt originál:"
 
-#: duplicate-post-admin.php:293
+#: duplicate-post-admin.php:368 duplicate-post-options.php:67
 msgid "Donate"
 msgstr "Přispět"
 
-#: duplicate-post-admin.php:294
+#: duplicate-post-admin.php:369 duplicate-post-options.php:68
 msgid "Translate"
 msgstr "Přeložit"
 
-#: duplicate-post-options.php:22
+#: duplicate-post-options.php:27 duplicate-post-options.php:61
 msgid "Duplicate Post Options"
 msgstr "Možnosti duplikace příspěvku"
 
-#. #-#-#-#-#  plugin.pot (Duplicate Post 2.0)  #-#-#-#-#
+#. #-#-#-#-#  plugin.pot (Duplicate Post 2.3)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
-#: duplicate-post-options.php:22 duplicate-post-options.php:29
+#: duplicate-post-options.php:27
 msgid "Duplicate Post"
 msgstr "Duplikování"
 
-#: duplicate-post-options.php:38
-msgid "Copy post/page date also"
-msgstr "Kopírovat i čas publikování"
-
-#: duplicate-post-options.php:41
-msgid ""
-"Normally, the new draft has publication date set to current time: check the "
-"box to copy the original post/page date"
-msgstr ""
-"Nezatrhnuto znamená, že datum publikování duplikátu je vždy nastaveno na "
-"aktuální čas."
-
-#: duplicate-post-options.php:46
-msgid "Copy excerpt"
-msgstr ""
-
-#: duplicate-post-options.php:50
-msgid "Copy the excerpt from the original post/page"
-msgstr ""
-
-#: duplicate-post-options.php:55
-msgid "Do not copy these fields"
-msgstr "Nekopírovat tyto uživatelská pole"
-
-#: duplicate-post-options.php:59
-msgid ""
-"Comma-separated list of meta fields that must not be copied when cloning a "
-"post/page"
-msgstr "Jména polí oddělte čárkou"
-
-#: duplicate-post-options.php:64
-msgid "Do not copy these taxonomies"
+#: duplicate-post-options.php:66
+msgid "Visit plugin site"
 msgstr ""
 
 #: duplicate-post-options.php:78
-msgid "Select the taxonomies you don't want to be copied"
+msgid "Copy post/page date also"
+msgstr "Kopírovat i čas publikování"
+
+#: duplicate-post-options.php:81
+msgid ""
+"Normally, the new copy has its publication date set to current time: check "
+"the box to copy the original post/page date"
 msgstr ""
 
-#: duplicate-post-options.php:83
+#: duplicate-post-options.php:86
+msgid "Copy post/page status"
+msgstr ""
+
+#: duplicate-post-options.php:90
+msgid ""
+"Copy the original post status (draft, published, pending) when cloning from "
+"the post list."
+msgstr ""
+
+#: duplicate-post-options.php:95
+msgid "Copy excerpt"
+msgstr "Kopírovat výňatek (stručný výpis)"
+
+#: duplicate-post-options.php:99
+msgid "Copy the excerpt from the original post/page"
+msgstr "Kopírovat výňatek (stručný výpis) z původního příspěvku/stránky"
+
+#: duplicate-post-options.php:104
+msgid "Copy attachments"
+msgstr ""
+
+#: duplicate-post-options.php:108
+msgid "Copy the attachments from the original post/page"
+msgstr ""
+
+#: duplicate-post-options.php:113
+msgid "Do not copy these fields"
+msgstr "Nekopírovat tyto uživatelská pole"
+
+#: duplicate-post-options.php:117
+msgid "Comma-separated list of meta fields that must not be copied"
+msgstr ""
+
+#: duplicate-post-options.php:122
+msgid "Do not copy these taxonomies"
+msgstr "Nekopírovat tyto taxonomie"
+
+#: duplicate-post-options.php:136
+msgid "Select the taxonomies you don't want to be copied"
+msgstr "Vyberte taxonomie, které nechcete zkopírovat"
+
+#: duplicate-post-options.php:141
 msgid "Title prefix"
 msgstr "Prefix titulku"
 
-#: duplicate-post-options.php:87
+#: duplicate-post-options.php:145
 msgid ""
-"Prefix to be added before the original title when cloning a post/page, e.g. "
-"\"Copy of\" (blank for no prefix)"
+"Prefix to be added before the original title, e.g. \"Copy of\" (blank for no "
+"prefix)"
 msgstr ""
-"Text přidávaný kopii na začátek názvu. (Můžete nechat prázdné, anebo zadat "
-"např. \\\"Kopie\\\" .)"
 
-#: duplicate-post-options.php:92
+#: duplicate-post-options.php:150
 msgid "Title suffix"
-msgstr ""
+msgstr "Přípona titulku"
 
-#: duplicate-post-options.php:96
+#: duplicate-post-options.php:154
 msgid ""
-"Suffix to be added after the original title when cloning a post/page, e.g. "
-"\"(dup)\" (blank for no suffix)"
+"Suffix to be added after the original title, e.g. \"(dup)\" (blank for no "
+"suffix)"
 msgstr ""
 
-#: duplicate-post-options.php:101
-msgid "Minimum level to copy posts"
-msgstr "Minimální úroveň uživatele"
+#: duplicate-post-options.php:159
+msgid "Roles allowed to copy"
+msgstr ""
 
-#: duplicate-post-options.php:120
+#: duplicate-post-options.php:172
 msgid ""
-"Warning: users will be able to copy all posts, even those of higher level "
-"users"
+"Warning: users will be able to copy all posts, even those of other users"
 msgstr ""
-"Pozor! Uživatelé budou moci kopírovat všechny příspěvky, včetně příspěvků "
-"uživatelů vyšší úrovně"
 
-#: duplicate-post-options.php:129
+#: duplicate-post-options.php:177
+msgid "Show links in"
+msgstr ""
+
+#: duplicate-post-options.php:181
+msgid "Post list"
+msgstr ""
+
+#: duplicate-post-options.php:184
+msgid "Admin bar"
+msgstr ""
+
+#: duplicate-post-options.php:187
+msgid "Edit screen"
+msgstr ""
+
+#: duplicate-post-options.php:193
 msgid "Save Changes"
 msgstr "Uložit změny"
 
-#: duplicate-post-common.php:63
-msgid "Clone"
+#: duplicate-post.php:44
+msgid "Settings"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "http://lopo.it/duplicate-post-plugin/"
 msgstr ""
 
 #. Description of the plugin/theme
-msgid "Creates a copy of a post."
-msgstr "Vytvoří kopii příspěvku."
+msgid "Clone posts and pages."
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "Enrico Battocchi"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "http://lopo.it"
+msgstr ""
