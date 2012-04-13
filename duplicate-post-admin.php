@@ -256,8 +256,8 @@ add_action('dp_duplicate_page', 'duplicate_post_copy_post_meta_info', 10, 2);
  * It simply copies the table entries, actual file won't be duplicated
  */
 function duplicate_post_copy_attachments($new_id, $post){
-	if (get_option('duplicate_post_copyattachments') == 0) return; 
-	
+	if (get_option('duplicate_post_copyattachments') == 0) return;
+
 	// get old attachments
 	$attachments = get_posts(array( 'post_type' => 'attachment', 'numberposts' => -1, 'post_status' => null, 'post_parent' => $post->ID ));
 	// clone old attachments
@@ -272,8 +272,6 @@ function duplicate_post_copy_attachments($new_id, $post){
 			'pinged' => $att->pinged,
 			'post_author' => $new_att_author->ID,
 			'post_content' => $att->post_content,
-			'post_date' => $new_att_date = (get_option('duplicate_post_copydate') == 1) ? $att->post_date : current_time('mysql'),
-			'post_date_gmt' => get_gmt_from_date($new_att_date),
 			'post_excerpt' => $att->post_excerpt,
 			'post_mime_type' => $att->post_mime_type,
 			'post_parent' => $new_id,
@@ -284,6 +282,11 @@ function duplicate_post_copy_attachments($new_id, $post){
 			'to_ping' => $att->to_ping 
 		);
 
+		if(get_option('duplicate_post_copydate') == 1){
+			$new_att['post_date'] = $new_att_date =  $att->post_date ;
+			$new_att['post_date_gmt'] = get_gmt_from_date($new_att_date);
+		}
+
 		$new_att_id = wp_insert_post($new_att);
 
 		// get and apply a unique slug
@@ -293,7 +296,7 @@ function duplicate_post_copy_attachments($new_id, $post){
 		$new_att['post_name'] = $att_name;
 
 		wp_update_post( $new_att );
-		
+
 		// call hooks to copy attachement metadata
 		do_action( 'dp_duplicate_post', $new_att_id, $att );
 	}
@@ -321,8 +324,6 @@ function duplicate_post_create_duplicate($post, $status = '') {
 	'pinged' => $post->pinged,
 	'post_author' => $new_post_author->ID,
 	'post_content' => $post->post_content,
-	'post_date' => $new_post_date = (get_option('duplicate_post_copydate') == 1) ? $post->post_date : current_time('mysql'),
-	'post_date_gmt' => get_gmt_from_date($new_post_date),
 	'post_excerpt' => (get_option('duplicate_post_copyexcerpt') == '1') ? $post->post_excerpt : "",
 	'post_parent' => $post->post_parent,
 	'post_password' => $post->post_password,
@@ -331,6 +332,11 @@ function duplicate_post_create_duplicate($post, $status = '') {
 	'post_type' => $post->post_type,
 	'to_ping' => $post->to_ping 
 	);
+
+	if(get_option('duplicate_post_copydate') == 1){
+		$new_post['post_date'] = $new_post_date =  $post->post_date ;
+		$new_post['post_date_gmt'] = get_gmt_from_date($new_post_date);
+	}
 
 	$new_post_id = wp_insert_post($new_post);
 
