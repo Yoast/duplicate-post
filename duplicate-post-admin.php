@@ -313,7 +313,7 @@ function duplicate_post_create_duplicate($post, $status = '') {
 	$prefix = get_option('duplicate_post_title_prefix');
 	$suffix = get_option('duplicate_post_title_suffix');
 	if (!empty($prefix)) $prefix.= " ";
-	if (!empty($prefix)) $suffix = " ".$suffix;
+	if (!empty($suffix)) $suffix = " ".$suffix;
 	if (get_option('duplicate_post_copystatus') == 0) $status = 'draft';
 	$new_post_author = duplicate_post_get_current_user();
 
