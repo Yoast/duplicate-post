@@ -11,6 +11,7 @@ function duplicate_post_register_settings() { // whitelist options
 	register_setting( 'duplicate_post_group', 'duplicate_post_copydate');
 	register_setting( 'duplicate_post_group', 'duplicate_post_copyexcerpt');
 	register_setting( 'duplicate_post_group', 'duplicate_post_copyattachments');
+	register_setting( 'duplicate_post_group', 'duplicate_post_copychildren');
 	register_setting( 'duplicate_post_group', 'duplicate_post_copystatus');
 	register_setting( 'duplicate_post_group', 'duplicate_post_blacklist');
 	register_setting( 'duplicate_post_group', 'duplicate_post_taxonomies_blacklist');
@@ -106,6 +107,15 @@ function duplicate_post_options() {
 				<td><input type="checkbox" name="duplicate_post_copyattachments"
 					value="1" <?php  if(get_option('duplicate_post_copyattachments') == 1) echo 'checked="checked"'; ?>"/>
 					<span class="description"><?php _e("Copy the attachments from the original post/page", DUPLICATE_POST_I18N_DOMAIN); ?>
+				</span>
+				</td>
+			</tr>
+			<tr valign="top">
+				<th scope="row"><?php _e("Copy children", DUPLICATE_POST_I18N_DOMAIN); ?>
+				</th>
+				<td><input type="checkbox" name="duplicate_post_copychildren"
+					value="1" <?php  if(get_option('duplicate_post_copychildren') == 1) echo 'checked="checked"'; ?>"/>
+					<span class="description"><?php _e("Copy the children from the original post/page", DUPLICATE_POST_I18N_DOMAIN); ?>
 				</span>
 				</td>
 			</tr>
