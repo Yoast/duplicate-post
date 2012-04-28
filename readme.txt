@@ -32,6 +32,7 @@ In the Options page under Settings it is now possible to choose what to copy:
 * the original post/page status (draft, published, pending), when cloning from the posts list
 * the original post/page excerpt
 * the original post/page attachments (actual files won't be copied)
+* all the children of the original page
 * which taxonomies and custom fields
 
 You can also set a prefix (or a suffix) to place before (or after) the title of the cloned post/page, and the roles allowed to clone posts or pages.
