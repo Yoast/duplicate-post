@@ -3,8 +3,8 @@ Contributors: lopo
 Donate link: http://lopo.it/duplicate-post-plugin/
 Tags: duplicate post, copy, clone
 Requires at least: 3.0
-Tested up to: 3.3.1
-Stable tag: 2.3
+Tested up to: 3.3.2
+Stable tag: 2.4
 
 Clone posts and pages.
 
@@ -36,7 +36,7 @@ In the Options page under Settings it is now possible to choose what to copy:
 
 You can also set a prefix (or a suffix) to place before (or after) the title of the cloned post/page, and the roles allowed to clone posts or pages.
 
-If you want to contribute to translate the plugin in languages other than English, there is a [Launchpad translation project](https://translations.launchpad.net/duplicate-post/) available (you can also send me an e-mail using the form on my website).
+If you want to contribute to translate the plugin in languages other than English, there is a [GlotPress translation project](http://lopo.it/glotpress/projects/duplicate-post) available (you can also send me an e-mail using the form on my website).
 
 **If you're a plugin developer**, I suggest to read the section made just for you under "Other Notes", to ensure compatibility between your plugin(s) and mine.
 
@@ -81,6 +81,9 @@ There is an open ticket in WordPress Trac, as other plugin developers too are in
 
 == Upgrade Notice ==
 
+= 2.4 =
+Copy child pages + a couple of bugfixes + license switch to GPLv2
+
 = 2.3 =
 Fixes a bunch of bugs + copy attachments + choose where to show the links.
 
@@ -109,6 +112,13 @@ Some users have experienced a fatal error when upgrading to v1.1: this may fix i
 New features and customization, WP 3.0 compatibility: you should upgrade if you want to copy Custom Posts with Custom Taxonomies.
 
 == Changelog ==
+
+= 2.4 =
+* New option to clone the children of the original page
+* License changed to GPLv2 or later
+* Fixed publishing dates for drafts 
+* Fixed bug with prefix/suffix
+* Translation project moved to GlotPress
 
 = 2.3 =
 * Added options to choose where to show the "Clone" links
@@ -232,6 +242,6 @@ Please refer to the [Plugin API](http://codex.wordpress.org/Plugin_API) for ever
 If you find this useful and you if you want to contribute, there are three ways:
 
    1. You can [write me](http://lopo.it/contatti/) and submit your bug reports, suggestions and requests for features;
-   2. If you want to translate it to your language (there are just a few lines of text), you can use the [Launchpad translation project](https://translations.launchpad.net/duplicate-post/), or [contact me](http://lopo.it/contatti/) and I’ll send you the .pot catalogue; your translation could be featured in next releases;
+   2. If you want to translate it to your language (there are just a few lines of text), you can use the [GlotPress translation project](http://lopo.it/glotpress/projects/duplicate-post), or [contact me](http://lopo.it/contatti/) and I’ll send you the .pot catalogue; your translation could be featured in next releases;
    3. Using the plugin is free, but if you want you can send me some money with PayPal [here](http://lopo.it/duplicate-post-plugin/)
 
