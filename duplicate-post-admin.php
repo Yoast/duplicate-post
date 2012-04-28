@@ -44,6 +44,8 @@ function duplicate_post_plugin_upgrade() {
 		}
 			
 		add_option('duplicate_post_copyexcerpt','1');
+		add_option('duplicate_post_copyattachments','0');
+		add_option('duplicate_post_copychildren','0');
 		add_option('duplicate_post_copystatus','0');
 		add_option('duplicate_post_taxonomies_blacklist',array());
 		add_option('duplicate_post_show_row','1');
@@ -87,6 +89,7 @@ function duplicate_post_plugin_upgrade() {
 
 		add_option('duplicate_post_copyexcerpt','1');
 		add_option('duplicate_post_copyattachments','0');
+		add_option('duplicate_post_copychildren','0');
 		add_option('duplicate_post_copystatus','0');
 		add_option('duplicate_post_taxonomies_blacklist',array());
 		add_option('duplicate_post_show_row','1');
@@ -255,82 +258,63 @@ add_action('dp_duplicate_page', 'duplicate_post_copy_post_meta_info', 10, 2);
  * Copy the attachments
  * It simply copies the table entries, actual file won't be duplicated
  */
-function duplicate_post_copy_attachments($new_id, $post){
-	if (get_option('duplicate_post_copyattachments') == 0) return; 
-	
-	// get old attachments
-	$attachments = get_posts(array( 'post_type' => 'attachment', 'numberposts' => -1, 'post_status' => null, 'post_parent' => $post->ID ));
+function duplicate_post_copy_children($new_id, $post){
+	$copy_attachments = get_option('duplicate_post_copyattachments');
+	$copy_children = get_option('duplicate_post_copychildren');
+
+	// get children
+	$children = get_posts(array( 'post_type' => 'any', 'numberposts' => -1, 'post_status' => 'any', 'post_parent' => $post->ID ));
 	// clone old attachments
-	foreach($attachments as $att){
-		$new_att_author = duplicate_post_get_current_user();
-
-		$new_att = array(
-			'menu_order' => $att->menu_order,
-			'comment_status' => $att->comment_status,
-			'guid' => $att->guid,
-			'ping_status' => $att->ping_status,
-			'pinged' => $att->pinged,
-			'post_author' => $new_att_author->ID,
-			'post_content' => $att->post_content,
-			'post_date' => $new_att_date = (get_option('duplicate_post_copydate') == 1) ? $att->post_date : current_time('mysql'),
-			'post_date_gmt' => get_gmt_from_date($new_att_date),
-			'post_excerpt' => $att->post_excerpt,
-			'post_mime_type' => $att->post_mime_type,
-			'post_parent' => $new_id,
-			'post_password' => $att->post_password,
-			'post_status' => $att->post_status,
-			'post_title' => $att->post_title,
-			'post_type' => $att->post_type,
-			'to_ping' => $att->to_ping 
-		);
-
-		$new_att_id = wp_insert_post($new_att);
-
-		// get and apply a unique slug
-		$att_name = wp_unique_post_slug($att->post_name, $new_att_id, $att->post_status, $att->post_type, $new_id);
-		$new_att = array();
-		$new_att['ID'] = $new_att_id;
-		$new_att['post_name'] = $att_name;
-
-		wp_update_post( $new_att );
-		
-		// call hooks to copy attachement metadata
-		do_action( 'dp_duplicate_post', $new_att_id, $att );
+	foreach($children as $child){
+		if ($copy_attachments == 0 && $child->post_type == 'attachment') continue;
+		if ($copy_children == 0 && $child->post_type != 'attachment') continue;
+		duplicate_post_create_duplicate($child, '', $new_id);
 	}
 }
 // Using our action hooks to copy attachments
-add_action('dp_duplicate_post', 'duplicate_post_copy_attachments', 10, 2);
-add_action('dp_duplicate_page', 'duplicate_post_copy_attachments', 10, 2);
+add_action('dp_duplicate_post', 'duplicate_post_copy_children', 10, 2);
+add_action('dp_duplicate_page', 'duplicate_post_copy_children', 10, 2);
 
 
 /**
  * Create a duplicate from a post
  */
-function duplicate_post_create_duplicate($post, $status = '') {
-	$prefix = get_option('duplicate_post_title_prefix');
-	$suffix = get_option('duplicate_post_title_suffix');
-	if (!empty($prefix)) $prefix.= " ";
-	if (!empty($prefix)) $suffix = " ".$suffix;
-	if (get_option('duplicate_post_copystatus') == 0) $status = 'draft';
+function duplicate_post_create_duplicate($post, $status = '', $parent_id = '') {
+
+	// We don't want to clone revisions
+	if ($post->post_type == 'revision') return;
+
+	if ($post->post_type != 'attachment'){
+		$prefix = get_option('duplicate_post_title_prefix');
+		$suffix = get_option('duplicate_post_title_suffix');
+		if (!empty($prefix)) $prefix.= " ";
+		if (!empty($suffix)) $suffix = " ".$suffix;
+		if (get_option('duplicate_post_copystatus') == 0) $status = 'draft';
+	}
 	$new_post_author = duplicate_post_get_current_user();
 
 	$new_post = array(
 	'menu_order' => $post->menu_order,
+	'guid' => $post->guid,
 	'comment_status' => $post->comment_status,
 	'ping_status' => $post->ping_status,
 	'pinged' => $post->pinged,
 	'post_author' => $new_post_author->ID,
 	'post_content' => $post->post_content,
-	'post_date' => $new_post_date = (get_option('duplicate_post_copydate') == 1) ? $post->post_date : current_time('mysql'),
-	'post_date_gmt' => get_gmt_from_date($new_post_date),
 	'post_excerpt' => (get_option('duplicate_post_copyexcerpt') == '1') ? $post->post_excerpt : "",
-	'post_parent' => $post->post_parent,
+	'post_mime_type' => $post->post_mime_type,
+	'post_parent' => $new_post_parent = empty($parent_id)? $post->post_parent : $parent_id,
 	'post_password' => $post->post_password,
 	'post_status' => $new_post_status = (empty($status))? $post->post_status: $status,
 	'post_title' => $prefix.$post->post_title.$suffix,
 	'post_type' => $post->post_type,
 	'to_ping' => $post->to_ping 
 	);
+
+	if(get_option('duplicate_post_copydate') == 1){
+		$new_post['post_date'] = $new_post_date =  $post->post_date ;
+		$new_post['post_date_gmt'] = get_gmt_from_date($new_post_date);
+	}
 
 	$new_post_id = wp_insert_post($new_post);
 
@@ -345,9 +329,9 @@ function duplicate_post_create_duplicate($post, $status = '') {
 	delete_post_meta($new_post_id, '_dp_original');
 	add_post_meta($new_post_id, '_dp_original', $post->ID);
 
-	// If the copy gets immediately published, we have to set a proper slug.
-	if ($new_post_status == 'publish' || $new_post_status == 'future'){
-		$post_name = wp_unique_post_slug($post->post_name, $new_post_id, $new_post_status, $post->post_type, $post->post_parent);
+	// If the copy is not a draft or a pending entry, we have to set a proper slug.
+	if ($new_post_status != 'draft' || $new_post_status != 'auto-draft' || $new_post_status != 'pending' ){
+		$post_name = wp_unique_post_slug($post->post_name, $new_post_id, $new_post_status, $post->post_type, $new_post_parent);
 
 		$new_post = array();
 		$new_post['ID'] = $new_post_id;
