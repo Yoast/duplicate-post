@@ -30,7 +30,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 define('DUPLICATE_POST_I18N_DOMAIN', 'duplicate-post');
 
 // Version of the plugin
-define('DUPLICATE_POST_CURRENT_VERSION', '2.3.1' );
+define('DUPLICATE_POST_CURRENT_VERSION', '2.4' );
 
 /**
  * Initialise the internationalisation domain
