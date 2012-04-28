@@ -83,7 +83,7 @@ There is an open ticket in WordPress Trac, as other plugin developers too are in
 == Upgrade Notice ==
 
 = 2.4 =
-Copy child pages + a couple of bugfixes + license switch to GPLv2
+Copy child pages + a couple of bugfixes + licence switch to GPLv2
 
 = 2.3 =
 Fixes a bunch of bugs + copy attachments + choose where to show the links.
@@ -116,7 +116,7 @@ New features and customization, WP 3.0 compatibility: you should upgrade if you 
 
 = 2.4 =
 * New option to clone the children of the original page
-* License changed to GPLv2 or later
+* Licence changed to GPLv2 or later
 * Fixed publishing dates for drafts 
 * Fixed bug with prefix/suffix
 * Translation project moved to GlotPress
