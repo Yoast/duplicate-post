@@ -37,7 +37,7 @@ In the Options page under Settings it is now possible to choose what to copy:
 
 You can also set a prefix (or a suffix) to place before (or after) the title of the cloned post/page, and the roles allowed to clone posts or pages.
 
-If you want to contribute to translate the plugin in languages other than English, there is a [GlotPress translation project](http://lopo.it/glotpress/projects/duplicate-post) available (you can also send me an e-mail using the form on my website).
+If you want to contribute to translate the plugin in languages other than English, there is a [GlotPress translation project](http://lopo.it/glotpress/projects/duplicate-post) available (no registration required! — You can also send me an e-mail using [the form on my website](http://lopo.it/contatti/)).
 
 **If you're a plugin developer**, I suggest to read the section made just for you under "Other Notes", to ensure compatibility between your plugin(s) and mine.
 
@@ -52,7 +52,7 @@ Use WordPress' Add New Plugin feature, searching "Duplicate Post", or download t
 
 1. Upload `duplicate-post` directory to the `/wp-content/plugins/` directory
 2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Go to Options -> Duplicate Post and customize behaviour as needed
+3. Go to Settings -> Duplicate Post and customize behaviour as needed
 
 == Frequently Asked Questions ==
 
@@ -64,7 +64,7 @@ Then try to deactivate and re-activate it, some user have reported that this fix
 
 Pay also attention to the new "Roles allowed to copy" option: it should convert the former "user level" option to the new standard, but unknown problems may arise. Make sure that your role is enabled.
 
-If not, maybe there is some kind of conflict with other plugins: feel free to write me and we'll try to discover a solution (it will be *really* helpful if you try to deactivate all your other plugins one by one to see which one conflicts with mine... But do it only if you know what you're doing, I will not be responsible of any problem you may experience).
+If not, maybe there is some kind of conflict with other plugins: feel free [to write me](http://lopo.it/contatti/) and we'll try to discover a solution (it will be *really* helpful if you try to deactivate all your other plugins one by one to see which one conflicts with mine... But do it only if you know what you're doing, I will not be responsible of any problem you may experience).
 
 = Can you add it to the bulk actions in the post/page list? =
 
