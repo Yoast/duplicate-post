@@ -295,7 +295,6 @@ function duplicate_post_create_duplicate($post, $status = '', $parent_id = '') {
 
 	$new_post = array(
 	'menu_order' => $post->menu_order,
-	'guid' => $post->guid,
 	'comment_status' => $post->comment_status,
 	'ping_status' => $post->ping_status,
 	'pinged' => $post->pinged,
