@@ -330,7 +330,7 @@ function duplicate_post_create_duplicate($post, $status = '', $parent_id = '') {
 	add_post_meta($new_post_id, '_dp_original', $post->ID);
 
 	// If the copy is not a draft or a pending entry, we have to set a proper slug.
-	if ($new_post_status != 'draft' || $new_post_status != 'auto-draft' || $new_post_status != 'pending' ){
+	if ($new_post_status == 'publish'){
 		$post_name = wp_unique_post_slug($post->post_name, $new_post_id, $new_post_status, $post->post_type, $new_post_parent);
 
 		$new_post = array();
