@@ -43,16 +43,14 @@ If you want to contribute to translate the plugin in languages other than Englis
 
 Thanks for all the suggestions, bug reports, translations and donations, they're frankly too many to be listed here!
 
-An example of use: I started this for a small movie theater website which I was building. Every Friday there's a new movie showing with a new timetable, and thus a new post: but sometimes a movie stays for more than a week, so I need to copy the last post and change only the dates, leaving movie title, director's and actors' names etc. unchanged.
-The website is http://www.kino-desse.org and the cinema is located in Livorno, Italy.
-
 == Installation ==
 
 Use WordPress' Add New Plugin feature, searching "Duplicate Post", or download the archive and:
 
-1. Upload `duplicate-post` directory to the `/wp-content/plugins/` directory
-2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Go to Settings -> Duplicate Post and customize behaviour as needed
+1. Unzip the archive on your computer  
+2. Upload `duplicate-post` directory to the `/wp-content/plugins/` directory
+3. Activate the plugin through the 'Plugins' menu in WordPress
+4. Go to Settings -> Duplicate Post and customize behaviour as needed
 
 == Frequently Asked Questions ==
 
@@ -81,6 +79,9 @@ There is an open ticket in WordPress Trac, as other plugin developers too are in
 5. The admin bar link. 
 
 == Upgrade Notice ==
+
+= 2.4.1 =
+Fixes a couple of bug. Recommended if you have problems with v2.4
 
 = 2.4 =
 Copy child pages + a couple of bugfixes + licence switch to GPLv2
@@ -113,6 +114,11 @@ Some users have experienced a fatal error when upgrading to v1.1: this may fix i
 New features and customization, WP 3.0 compatibility: you should upgrade if you want to copy Custom Posts with Custom Taxonomies.
 
 == Changelog ==
+
+= 2.4.1 =
+* Fixed regression about draft permalinks
+* Fixed bug with guid
+* Don't clone to_ping and pinged (maybe there will be an option about those later)
 
 = 2.4 =
 * New option to clone the children of the original page

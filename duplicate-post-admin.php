@@ -297,7 +297,6 @@ function duplicate_post_create_duplicate($post, $status = '', $parent_id = '') {
 	'menu_order' => $post->menu_order,
 	'comment_status' => $post->comment_status,
 	'ping_status' => $post->ping_status,
-	'pinged' => $post->pinged,
 	'post_author' => $new_post_author->ID,
 	'post_content' => $post->post_content,
 	'post_excerpt' => (get_option('duplicate_post_copyexcerpt') == '1') ? $post->post_excerpt : "",
@@ -307,7 +306,6 @@ function duplicate_post_create_duplicate($post, $status = '', $parent_id = '') {
 	'post_status' => $new_post_status = (empty($status))? $post->post_status: $status,
 	'post_title' => $prefix.$post->post_title.$suffix,
 	'post_type' => $post->post_type,
-	'to_ping' => $post->to_ping 
 	);
 
 	if(get_option('duplicate_post_copydate') == 1){
@@ -328,8 +326,8 @@ function duplicate_post_create_duplicate($post, $status = '', $parent_id = '') {
 	delete_post_meta($new_post_id, '_dp_original');
 	add_post_meta($new_post_id, '_dp_original', $post->ID);
 
-	// If the copy is not a draft or a pending entry, we have to set a proper slug.
-	if ($new_post_status == 'publish'){
+	// If the copy is published or scheduled, we have to set a proper slug.
+	if ($new_post_status == 'publish' || $new_post_status == 'future'){
 		$post_name = wp_unique_post_slug($post->post_name, $new_post_id, $new_post_status, $post->post_type, $new_post_parent);
 
 		$new_post = array();
