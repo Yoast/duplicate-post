@@ -28,7 +28,7 @@ function duplicate_post_get_clone_post_link( $id = 0, $context = 'display', $dra
 	if ( !duplicate_post_is_current_user_allowed_to_copy() )
 	return;
 
-	if ( !$post = &get_post( $id ) )
+	if ( !$post = get_post( $id ) )
 	return;
 
 	if ($draft)
@@ -56,7 +56,7 @@ function duplicate_post_get_clone_post_link( $id = 0, $context = 'display', $dra
  * @param int $id Optional. Post ID.
  */
 function duplicate_post_clone_post_link( $link = null, $before = '', $after = '', $id = 0 ) {
-	if ( !$post = &get_post( $id ) )
+	if ( !$post = get_post( $id ) )
 	return;
 
 	if ( !$url = duplicate_post_get_clone_post_link( $post->ID ) )
@@ -79,11 +79,11 @@ function duplicate_post_clone_post_link( $link = null, $before = '', $after = ''
  * @return mixed Post data
  */
 function duplicate_post_get_original($id = 0 , $output = OBJECT){
-	if ( !$post = &get_post( $id ) )
+	if ( !$post = get_post( $id ) )
 	return;
 	$original_ID = get_post_meta( $post->ID, '_dp_original');
 	if (empty($original_ID)) return null;
-	$original_post = &get_post($original_ID[0],  $output);
+	$original_post = get_post($original_ID[0],  $output);
 	return $original_post;
 }
 // Admin bar
