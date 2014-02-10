@@ -182,7 +182,7 @@ function duplicate_post_save_as_new_post($status = ''){
 
 	} else {
 		$post_type_obj = get_post_type_object( $post->post_type );
-		wp_die(esc_attr(__('Copy creation failed, could not find original:', DUPLICATE_POST_I18N_DOMAIN)) . ' ' . $id);
+		wp_die(esc_attr(__('Copy creation failed, could not find original:', DUPLICATE_POST_I18N_DOMAIN)) . ' ' . htmlspecialchars($id));
 	}
 }
 
@@ -198,7 +198,8 @@ function duplicate_post_get_current_user() {
 		return $userdata;
 	} else {
 		$user_login = $_COOKIE[USER_COOKIE];
-		$current_user = $wpdb->get_results("SELECT * FROM $wpdb->users WHERE user_login='$user_login'");
+		$sql = $wpdb->prepare("SELECT * FROM $wpdb->users WHERE user_login=%s", $user_login);
+		$current_user = $wpdb->get_results($sql);			
 		return $current_user;
 	}
 }
