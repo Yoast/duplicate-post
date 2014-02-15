@@ -25,7 +25,7 @@ function duplicate_post_register_settings() { // whitelist options
 
 
 function duplicate_post_menu() {
-	add_options_page(__("Duplicate Post Options", DUPLICATE_POST_I18N_DOMAIN), __("Duplicate Post", DUPLICATE_POST_I18N_DOMAIN), 'administrator', 'duplicatepost', 'duplicate_post_options');
+	add_options_page(__("Duplicate Post Options", DUPLICATE_POST_I18N_DOMAIN), __("Duplicate Post", DUPLICATE_POST_I18N_DOMAIN), 'manage_options', 'duplicatepost', 'duplicate_post_options');
 }
 
 function duplicate_post_options() {
