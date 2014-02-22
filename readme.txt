@@ -4,7 +4,7 @@ Donate link: http://lopo.it/duplicate-post-plugin/
 Tags: duplicate post, copy, clone
 Requires at least: 3.0
 Tested up to: 3.8.1
-Stable tag: 2.4.1
+Stable tag: 2.5
 License: GPLv2 or later
 
 Clone posts and pages.
