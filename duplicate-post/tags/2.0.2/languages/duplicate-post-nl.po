@@ -1,0 +1,139 @@
+# Duplicate Post plugin for WordPress
+# Copyright (C) 2009 Enrico Battocchi
+# This file is distributed under the same license as the Duplicate Post package.
+# Enrico Battocchi <enrico.battocchi@gmail.com>, 2009.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Duplicate Post 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-05-21 10:01+0000\n"
+"PO-Revision-Date: 2010-06-30 19:43+0000\n"
+"Last-Translator: Enrico Battocchi <Unknown>\n"
+"Language-Team: Enrico Battocchi / WarmStal D!sign <mail@warmstal.nl>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2010-06-30 19:44+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
+"X-Poedit-Country: NETHERLANDS\n"
+"X-Poedit-Language: Dutch\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-Basepath: ../\n"
+"X-Poedit-KeywordsList: _e;__\n"
+
+#: duplicate-post.php:39
+msgid "No post to duplicate has been supplied!"
+msgstr "Er is geen bericht  orgineel opgegeven!"
+
+#: duplicate-post.php:58 duplicate-post.php:86
+msgid "Post creation failed, could not find original post:"
+msgstr "Fout bij aanmaken bericht, orgineel bericht niet gevonden:"
+
+#: duplicate-post.php:67
+msgid "No page to duplicate has been supplied!"
+msgstr "Er is geen pagina orgineel opgegeven!"
+
+#: duplicate-post.php:164 duplicate-post.php:195
+msgid "Make a duplicate from this post"
+msgstr "Dupliceer dit bericht"
+
+#: duplicate-post.php:165 duplicate-post.php:179 duplicate-post.php:196
+#: duplicate-post.php:207
+msgid "Duplicate"
+msgstr "Dupliceren"
+
+#: duplicate-post.php:178 duplicate-post.php:206
+msgid "Make a duplicate from this page"
+msgstr "Dupliceer deze pagina"
+
+#: duplicate-post.php:225
+msgid "Copy to a new draft"
+msgstr "Kopiëren naar een nieuw concept"
+
+#: duplicate-post.php:519
+msgid "Duplicate Post Options"
+msgstr "Opties dupliceren bericht/pagina"
+
+#. #-#-#-#-#  plugin.pot (Duplicate Post 1.1)  #-#-#-#-#
+#. Plugin Name of the plugin/theme
+#: duplicate-post.php:519 duplicate-post.php:525
+msgid "Duplicate Post"
+msgstr "Dupliceren"
+
+#: duplicate-post.php:532
+msgid "Copy post/page date also"
+msgstr "Kopieer ook de publicatiedatum"
+
+#: duplicate-post.php:534
+msgid ""
+"Normally, the new draft has publication date set to current time: check the "
+"box to copy the original post/page date"
+msgstr ""
+"Normaal wordt voor een nieuw bericht of pagina het huidige tijdstip genomen "
+"voor de publicatiedatum. Selecteer om de oorspronkelijk datum mee te "
+"kopieren."
+
+#: duplicate-post.php:538
+msgid "Do not copy these fields"
+msgstr "Kopieer niet deze velden"
+
+#: duplicate-post.php:541
+msgid ""
+"Comma-separated list of meta fields that must not be copied when cloning a "
+"post/page"
+msgstr ""
+"Kommagescheiden lijst van meta-velden die niet worden meegedupliceerd."
+
+#: duplicate-post.php:545
+msgid "Title prefix"
+msgstr "Titel prefix"
+
+#: duplicate-post.php:548
+msgid ""
+"Prefix to be added before the original title when cloning a post/page, e.g. "
+"\"Copy of\" (blank for no prefix)"
+msgstr "Prefix die voor orginele titel wordt geplaatst. b.v. \"Kopie van\"."
+
+#: duplicate-post.php:552
+msgid "Minimum level to copy posts"
+msgstr "Minimum rechtenniveau om te dupliceren"
+
+#: duplicate-post.php:576
+msgid ""
+"Warning: users will be able to copy all posts, even those of higher level "
+"users"
+msgstr ""
+"Waarschuwing: gebruikers kunnen alle berichten/pagina's copieren. Ook die "
+"van gebruikers met meer rechten"
+
+#: duplicate-post.php:583
+msgid "Save Changes"
+msgstr "Opslaan"
+
+#: duplicate-post.php:595
+msgid "Donate"
+msgstr "Doneer"
+
+#: duplicate-post.php:596
+msgid "Translate"
+msgstr "Vertaal"
+
+#. Plugin URI of the plugin/theme
+msgid "http://www.lopo.it/duplicate-post-plugin/"
+msgstr "http://www.lopo.it/duplicate-post-plugin/"
+
+#. Description of the plugin/theme
+msgid "Creates a copy of a post."
+msgstr "Dupliceert bericht"
+
+#. Author of the plugin/theme
+msgid "Enrico Battocchi"
+msgstr "Enrico Battocchi"
+
+#. Author URI of the plugin/theme
+msgid "http://www.lopo.it"
+msgstr "http://www.lopo.it"
+
+#~ msgid "http://wordpress.org/extend/plugins/duplicate-post/"
+#~ msgstr "http://wordpress.org/extend/plugins/duplicate-post/"

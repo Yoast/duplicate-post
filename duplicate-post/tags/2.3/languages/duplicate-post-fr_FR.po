@@ -1,0 +1,187 @@
+# French translation for duplicate-post
+# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# This file is distributed under the same license as the duplicate-post package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: duplicate-post\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-04-02 13:27+0000\n"
+"PO-Revision-Date: 2012-02-09 12:22+0000\n"
+"Last-Translator: Wazomba <wazemba@yahoo.fr>\n"
+"Language-Team: French <fr@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2012-04-06 11:20+0000\n"
+"X-Generator: Launchpad (build 15060)\n"
+
+#: duplicate-post-admin.php:112
+msgid "Clone this item"
+msgstr "Dupliquer ce post"
+
+#: duplicate-post-admin.php:113
+msgid "Clone"
+msgstr "Dupliquer"
+
+#: duplicate-post-admin.php:115 duplicate-post-admin.php:133
+#: duplicate-post-common.php:66 duplicate-post-common.php:70
+#: duplicate-post-common.php:103
+msgid "Copy to a new draft"
+msgstr "Copier dans un nouveau brouillon"
+
+#: duplicate-post-admin.php:116
+msgid "New Draft"
+msgstr "Nouveau brouillon"
+
+#: duplicate-post-admin.php:160
+msgid "No post to duplicate has been supplied!"
+msgstr "Aucun article à copier!"
+
+#: duplicate-post-admin.php:182
+msgid "Copy creation failed, could not find original:"
+msgstr "Echec de la duplication, impossible de trouver l'original"
+
+#: duplicate-post-admin.php:368 duplicate-post-options.php:67
+msgid "Donate"
+msgstr "Faire un don"
+
+#: duplicate-post-admin.php:369 duplicate-post-options.php:68
+msgid "Translate"
+msgstr "Traduire"
+
+#: duplicate-post-options.php:27 duplicate-post-options.php:61
+msgid "Duplicate Post Options"
+msgstr "Options de Duplicate Post"
+
+#. #-#-#-#-#  plugin.pot (Duplicate Post 2.3)  #-#-#-#-#
+#. Plugin Name of the plugin/theme
+#: duplicate-post-options.php:27
+msgid "Duplicate Post"
+msgstr "Duplicate Post"
+
+#: duplicate-post-options.php:66
+msgid "Visit plugin site"
+msgstr ""
+
+#: duplicate-post-options.php:78
+msgid "Copy post/page date also"
+msgstr "Copiez également la date de l'article/de la page"
+
+#: duplicate-post-options.php:81
+msgid ""
+"Normally, the new copy has its publication date set to current time: check "
+"the box to copy the original post/page date"
+msgstr ""
+
+#: duplicate-post-options.php:86
+msgid "Copy post/page status"
+msgstr ""
+
+#: duplicate-post-options.php:90
+msgid ""
+"Copy the original post status (draft, published, pending) when cloning from "
+"the post list."
+msgstr ""
+
+#: duplicate-post-options.php:95
+msgid "Copy excerpt"
+msgstr ""
+
+#: duplicate-post-options.php:99
+msgid "Copy the excerpt from the original post/page"
+msgstr ""
+
+#: duplicate-post-options.php:104
+msgid "Copy attachments"
+msgstr ""
+
+#: duplicate-post-options.php:108
+msgid "Copy the attachments from the original post/page"
+msgstr ""
+
+#: duplicate-post-options.php:113
+msgid "Do not copy these fields"
+msgstr "Ne pas copier ces champs"
+
+#: duplicate-post-options.php:117
+msgid "Comma-separated list of meta fields that must not be copied"
+msgstr ""
+
+#: duplicate-post-options.php:122
+msgid "Do not copy these taxonomies"
+msgstr ""
+
+#: duplicate-post-options.php:136
+msgid "Select the taxonomies you don't want to be copied"
+msgstr ""
+
+#: duplicate-post-options.php:141
+msgid "Title prefix"
+msgstr "Prefixe du titre"
+
+#: duplicate-post-options.php:145
+msgid ""
+"Prefix to be added before the original title, e.g. \"Copy of\" (blank for no "
+"prefix)"
+msgstr ""
+
+#: duplicate-post-options.php:150
+msgid "Title suffix"
+msgstr ""
+
+#: duplicate-post-options.php:154
+msgid ""
+"Suffix to be added after the original title, e.g. \"(dup)\" (blank for no "
+"suffix)"
+msgstr ""
+
+#: duplicate-post-options.php:159
+msgid "Roles allowed to copy"
+msgstr ""
+
+#: duplicate-post-options.php:172
+msgid ""
+"Warning: users will be able to copy all posts, even those of other users"
+msgstr ""
+
+#: duplicate-post-options.php:177
+msgid "Show links in"
+msgstr ""
+
+#: duplicate-post-options.php:181
+msgid "Post list"
+msgstr ""
+
+#: duplicate-post-options.php:184
+msgid "Admin bar"
+msgstr ""
+
+#: duplicate-post-options.php:187
+msgid "Edit screen"
+msgstr ""
+
+#: duplicate-post-options.php:193
+msgid "Save Changes"
+msgstr "Sauver les changements"
+
+#: duplicate-post.php:44
+msgid "Settings"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "http://lopo.it/duplicate-post-plugin/"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid "Clone posts and pages."
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "Enrico Battocchi"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "http://lopo.it"
+msgstr ""

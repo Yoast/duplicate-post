@@ -1,0 +1,136 @@
+# French translation for duplicate-post
+# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# This file is distributed under the same license as the duplicate-post package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: duplicate-post\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2010-05-21 10:01+0000\n"
+"PO-Revision-Date: 2010-06-15 12:06+0000\n"
+"Last-Translator: Enrico Battocchi <Unknown>\n"
+"Language-Team: French <fr@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2010-06-23 21:48+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
+
+#: duplicate-post.php:39
+msgid "No post to duplicate has been supplied!"
+msgstr "Aucun article à copier!"
+
+#: duplicate-post.php:58 duplicate-post.php:86
+msgid "Post creation failed, could not find original post:"
+msgstr ""
+"La création de l&rsquo;article a échoué, il n&rsquo;était pas possible de "
+"trouver l&rsquo;article original"
+
+#: duplicate-post.php:67
+msgid "No page to duplicate has been supplied!"
+msgstr "Aucune page à copier!"
+
+#: duplicate-post.php:164 duplicate-post.php:195
+msgid "Make a duplicate from this post"
+msgstr "Copier cet article"
+
+#: duplicate-post.php:165 duplicate-post.php:179 duplicate-post.php:196
+#: duplicate-post.php:207
+msgid "Duplicate"
+msgstr "Copier"
+
+#: duplicate-post.php:178 duplicate-post.php:206
+msgid "Make a duplicate from this page"
+msgstr "Copier cette page"
+
+#: duplicate-post.php:225
+msgid "Copy to a new draft"
+msgstr "Copier dans un nouveau brouillon"
+
+#: duplicate-post.php:519
+msgid "Duplicate Post Options"
+msgstr "Options de Duplicate Post"
+
+#. #-#-#-#-#  plugin.pot (Duplicate Post 1.1)  #-#-#-#-#
+#. Plugin Name of the plugin/theme
+#: duplicate-post.php:519 duplicate-post.php:525
+msgid "Duplicate Post"
+msgstr "Duplicate Post"
+
+#: duplicate-post.php:532
+msgid "Copy post/page date also"
+msgstr "Copiez également la date de l'article/de la page"
+
+#: duplicate-post.php:534
+msgid ""
+"Normally, the new draft has publication date set to current time: check the "
+"box to copy the original post/page date"
+msgstr ""
+"Normalement la date de publication du nouveau brouillon est réglée sur "
+"l'heure actuelle: cochez la case pour copier la date de l'article/de la page "
+"d'origine"
+
+#: duplicate-post.php:538
+msgid "Do not copy these fields"
+msgstr "Ne pas copier ces champs"
+
+#: duplicate-post.php:541
+msgid ""
+"Comma-separated list of meta fields that must not be copied when cloning a "
+"post/page"
+msgstr ""
+"Les champs personnalisés séparés par des virgules ne doivent pas être copiés "
+"lors du clonage d'un article/d'une page"
+
+#: duplicate-post.php:545
+msgid "Title prefix"
+msgstr "Prefixe du titre"
+
+#: duplicate-post.php:548
+msgid ""
+"Prefix to be added before the original title when cloning a post/page, e.g. "
+"\"Copy of\" (blank for no prefix)"
+msgstr ""
+"Préfixe à ajouter avant le titre original lors du clonage d'un article/d'une "
+"page, par exemple : \"Copie de\" (Laisser vide pour ne pas mettre de préfixe)"
+
+#: duplicate-post.php:552
+msgid "Minimum level to copy posts"
+msgstr "Le niveau minimum pour copier les articles"
+
+#: duplicate-post.php:576
+msgid ""
+"Warning: users will be able to copy all posts, even those of higher level "
+"users"
+msgstr ""
+"Attention: les utilisateurs pourront copier tous les articles, même ceux des "
+"utilisateurs des niveaux plus élevés"
+
+#: duplicate-post.php:583
+msgid "Save Changes"
+msgstr "Sauver les changements"
+
+#: duplicate-post.php:595
+msgid "Donate"
+msgstr "Donation"
+
+#: duplicate-post.php:596
+msgid "Translate"
+msgstr "Traduire"
+
+#. Plugin URI of the plugin/theme
+msgid "http://www.lopo.it/duplicate-post-plugin/"
+msgstr "http://www.lopo.it/duplicate-post-plugin/"
+
+#. Description of the plugin/theme
+msgid "Creates a copy of a post."
+msgstr "Pour copier les articles."
+
+#. Author of the plugin/theme
+msgid "Enrico Battocchi"
+msgstr "Enrico Battocchi"
+
+#. Author URI of the plugin/theme
+msgid "http://www.lopo.it"
+msgstr "http://www.lopo.it"

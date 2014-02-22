@@ -1,0 +1,134 @@
+# Chinese (Simplified) translation for duplicate-post
+# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# This file is distributed under the same license as the duplicate-post package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: duplicate-post\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2011-11-11 13:14+0000\n"
+"PO-Revision-Date: 2011-06-24 08:18+0000\n"
+"Last-Translator: You Dang <Unknown>\n"
+"Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2011-12-07 15:04+0000\n"
+"X-Generator: Launchpad (build 14443)\n"
+
+#: duplicate-post-admin.php:78 duplicate-post-common.php:67
+msgid "Clone this item"
+msgstr ""
+
+#: duplicate-post-admin.php:79
+msgid "Duplicate"
+msgstr "复制"
+
+#: duplicate-post-admin.php:97
+msgid "Copy to a new draft"
+msgstr "复制到新草稿"
+
+#: duplicate-post-admin.php:124
+msgid "No post to duplicate has been supplied!"
+msgstr ""
+
+#: duplicate-post-admin.php:146
+msgid "Copy creation failed, could not find original:"
+msgstr ""
+
+#: duplicate-post-admin.php:293
+msgid "Donate"
+msgstr "捐赠"
+
+#: duplicate-post-admin.php:294
+msgid "Translate"
+msgstr "翻译"
+
+#: duplicate-post-options.php:22
+msgid "Duplicate Post Options"
+msgstr "文章复制选项"
+
+#. #-#-#-#-#  plugin.pot (Duplicate Post 2.0)  #-#-#-#-#
+#. Plugin Name of the plugin/theme
+#: duplicate-post-options.php:22 duplicate-post-options.php:29
+msgid "Duplicate Post"
+msgstr "文章复制"
+
+#: duplicate-post-options.php:38
+msgid "Copy post/page date also"
+msgstr "同时复制文章/页面的日期"
+
+#: duplicate-post-options.php:41
+msgid ""
+"Normally, the new draft has publication date set to current time: check the "
+"box to copy the original post/page date"
+msgstr "一般来说，新草稿会将发布日期设置成当前时间：勾选以复制原文章/页面日期"
+
+#: duplicate-post-options.php:46
+msgid "Copy excerpt"
+msgstr ""
+
+#: duplicate-post-options.php:50
+msgid "Copy the excerpt from the original post/page"
+msgstr ""
+
+#: duplicate-post-options.php:55
+msgid "Do not copy these fields"
+msgstr "不要复制这些字段"
+
+#: duplicate-post-options.php:59
+msgid ""
+"Comma-separated list of meta fields that must not be copied when cloning a "
+"post/page"
+msgstr "复制文章/页面时不应该被复制的逗号分隔的元字段列表"
+
+#: duplicate-post-options.php:64
+msgid "Do not copy these taxonomies"
+msgstr ""
+
+#: duplicate-post-options.php:78
+msgid "Select the taxonomies you don't want to be copied"
+msgstr ""
+
+#: duplicate-post-options.php:83
+msgid "Title prefix"
+msgstr "标题前缀"
+
+#: duplicate-post-options.php:87
+msgid ""
+"Prefix to be added before the original title when cloning a post/page, e.g. "
+"\"Copy of\" (blank for no prefix)"
+msgstr "复制文章/页面时前缀将被加到原标题的前面，例如“副本”（无前缀时将留白）"
+
+#: duplicate-post-options.php:92
+msgid "Title suffix"
+msgstr ""
+
+#: duplicate-post-options.php:96
+msgid ""
+"Suffix to be added after the original title when cloning a post/page, e.g. "
+"\"(dup)\" (blank for no suffix)"
+msgstr ""
+
+#: duplicate-post-options.php:101
+msgid "Minimum level to copy posts"
+msgstr ""
+
+#: duplicate-post-options.php:120
+msgid ""
+"Warning: users will be able to copy all posts, even those of higher level "
+"users"
+msgstr "警告：用户能复制所有的文章，包括那些高级别的用户"
+
+#: duplicate-post-options.php:129
+msgid "Save Changes"
+msgstr "保存变更"
+
+#: duplicate-post-common.php:63
+msgid "Clone"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid "Creates a copy of a post."
+msgstr "创建文章的副本"
