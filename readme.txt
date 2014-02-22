@@ -123,6 +123,13 @@ New features and customization, WP 3.0 compatibility: you should upgrade if you 
 
 == Changelog ==
 
+= 2.5 =
+* PHP 5.4 (Strict Standards) compatible
+* Fixed possible XSS and SQL injections
+* other bugs 
+* Updated and added translations
+* Tested up to WP 3.8.1
+
 = 2.4.1 =
 * Fixed regression about draft permalinks
 * Fixed bug with guid
