@@ -3,7 +3,7 @@ Contributors: lopo
 Donate link: http://lopo.it/duplicate-post-plugin/
 Tags: duplicate post, copy, clone
 Requires at least: 3.0
-Tested up to: 3.3.2
+Tested up to: 3.8.1
 Stable tag: 2.4.1
 License: GPLv2 or later
 
@@ -84,6 +84,9 @@ There is an open ticket in WordPress Trac, as other plugin developers too are in
 5. The admin bar link. 
 
 == Upgrade Notice ==
+
+= 2.5 =
+PHP 5.4 (Strict Standards) compatible + Fixed possible XSS and SQL injections + other bugs 
 
 = 2.4.1 =
 Fixes a couple of bug. Recommended if you have problems with v2.4
