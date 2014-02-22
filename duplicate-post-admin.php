@@ -240,6 +240,7 @@ function duplicate_post_copy_post_meta_info($new_id, $post) {
 	if (empty($post_meta_keys)) return;
 	$meta_blacklist = explode(",",get_option('duplicate_post_blacklist'));
 	if ($meta_blacklist == "") $meta_blacklist = array();
+	$meta_blacklist[] = '_wpas_done_all'; //Jetpack Publicize 
 	$meta_keys = array_diff($post_meta_keys, $meta_blacklist);
 
 	foreach ($meta_keys as $meta_key) {
