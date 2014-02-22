@@ -5,6 +5,7 @@ Tags: duplicate post, copy, clone
 Requires at least: 3.0
 Tested up to: 3.3.2
 Stable tag: 2.4.1
+License: GPLv2 or later
 
 Clone posts and pages.
 
