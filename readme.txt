@@ -11,6 +11,10 @@ Clone posts and pages.
 == Description ==
 
 This plugin allows to clone a post or page, or edit it as a new draft.
+If you find this useful, [**please consider donating**](http://wordpress.org/plugins/duplicate-post/) whatever sum you choose, **even just 10 cents**. It's been downloaded thousands of times: just a few cents from every user would help me develop the plugin and improve support.
+
+
+How it works:
 
 1. In 'Edit Posts'/'Edit Pages', you can click on 'Clone' link below the post/page title: this will immediately create a copy and return to the list.
 
