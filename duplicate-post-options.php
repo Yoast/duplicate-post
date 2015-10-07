@@ -286,15 +286,13 @@ function duplicate_post_options() {
 				<td><div
 						style="height: 100px; width: 300px; padding: 5px; overflow: auto; border: 1px solid #ccc">
 						<?php $post_types = get_post_types(array('public' => true),'objects');
-						$duplicate_post_types_enabled = get_option('duplicate_post_types_enabled');
-						if ($duplicate_post_types_enabled == "") $duplicate_post_types_enabled = array('post', 'page');
-						foreach ($post_types as $post_type ) : 
-							if ($post_type->name == 'attachment') continue; ?>
+						foreach ($post_types as $post_type_object ) : 
+							if ($post_type_object->name == 'attachment') continue; ?>
 						<label style="display: block;"> <input type="checkbox"
 							name="duplicate_post_types_enabled[]"
-							value="<?php echo $post_type->name?>"
-							<?php if(in_array($post_type->name, $duplicate_post_types_enabled)) echo 'checked="checked"'?> />
-							<?php echo $post_type->labels->name?>
+							value="<?php echo $post_type_object->name?>"
+							<?php if(duplicate_post_is_post_type_enabled($post_type_object->name)) echo 'checked="checked"'?> />
+							<?php echo $post_type_object->labels->name?>
 						</label>
 						<?php endforeach; ?>
 					</div> <span class="description"><?php _e("Select the post types you want the plugin to be enabled", 'duplicate-post'); ?>

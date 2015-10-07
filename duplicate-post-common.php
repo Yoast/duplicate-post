@@ -11,7 +11,7 @@ function duplicate_post_is_current_user_allowed_to_copy() {
  * Test if post type is enable to be copied
  */
 function duplicate_post_is_post_type_enabled($post_type){
-	$duplicate_post_types_enabled = get_option('duplicate_post_types_enabled');
+	$duplicate_post_types_enabled = get_option('duplicate_post_types_enabled', array ('post', 'page'));
 	return in_array($post_type, $duplicate_post_types_enabled);
 }
 
