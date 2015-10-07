@@ -48,6 +48,7 @@ function duplicate_post_plugin_upgrade() {
 		add_option('duplicate_post_copychildren','0');
 		add_option('duplicate_post_copystatus','0');
 		add_option('duplicate_post_taxonomies_blacklist',array());
+		add_option('duplicate_post_taxonomies_types',array());
 		add_option('duplicate_post_show_row','1');
 		add_option('duplicate_post_show_adminbar','1');
 		add_option('duplicate_post_show_submitbox','1');
@@ -92,6 +93,7 @@ function duplicate_post_plugin_upgrade() {
 		add_option('duplicate_post_copychildren','0');
 		add_option('duplicate_post_copystatus','0');
 		add_option('duplicate_post_taxonomies_blacklist',array());
+		add_option('duplicate_post_types',array());
 		add_option('duplicate_post_show_row','1');
 		add_option('duplicate_post_show_adminbar','1');
 		add_option('duplicate_post_show_submitbox','1');
@@ -110,7 +112,8 @@ if (get_option('duplicate_post_show_row') == 1){
  * Add the link to action list for post_row_actions
  */
 function duplicate_post_make_duplicate_link_row($actions, $post) {
-	if (duplicate_post_is_current_user_allowed_to_copy()) {
+	$duplicate_post_types_blacklist = get_option('duplicate_post_types_blacklist');
+	if (duplicate_post_is_current_user_allowed_to_copy() && !in_array($post->post_type, $duplicate_post_types_blacklist)) {
 		$actions['clone'] = '<a href="'.duplicate_post_get_clone_post_link( $post->ID , 'display', false).'" title="'
 		. esc_attr(__("Clone this item", DUPLICATE_POST_I18N_DOMAIN))
 		. '">' .  __('Clone', DUPLICATE_POST_I18N_DOMAIN) . '</a>';
@@ -129,14 +132,21 @@ if (get_option('duplicate_post_show_submitbox') == 1){
 }
 
 function duplicate_post_add_duplicate_post_button() {
-	if ( isset( $_GET['post'] ) && duplicate_post_is_current_user_allowed_to_copy()) {
-		?>
+	if ( isset( $_GET['post'] ))
+	{
+		$id = $_GET['post'];
+		$duplicate_post_types_blacklist = get_option('duplicate_post_types_blacklist');
+		$post = get_post($id);
+
+	 if(duplicate_post_is_current_user_allowed_to_copy() && !in_array($post->post_type, $duplicate_post_types_blacklist)) {
+	 	?>
 <div id="duplicate-action">
 	<a class="submitduplicate duplication"
 		href="<?php echo duplicate_post_get_clone_post_link( $_GET['post'] ) ?>"><?php _e('Copy to a new draft', DUPLICATE_POST_I18N_DOMAIN); ?>
 	</a>
 </div>
-		<?php
+<?php
+	 }
 	}
 }
 
@@ -288,8 +298,8 @@ function duplicate_post_create_duplicate($post, $status = '', $parent_id = '') {
 	if ($post->post_type == 'revision') return;
 
 	if ($post->post_type != 'attachment'){
-		$prefix = get_option('duplicate_post_title_prefix');
-		$suffix = get_option('duplicate_post_title_suffix');
+		$prefix = sanitize_text_field(get_option('duplicate_post_title_prefix'));
+		$suffix = sanitize_text_field(get_option('duplicate_post_title_suffix'));
 		if (!empty($prefix)) $prefix.= " ";
 		if (!empty($suffix)) $suffix = " ".$suffix;
 		if (get_option('duplicate_post_copystatus') == 0) $status = 'draft';
@@ -301,13 +311,13 @@ function duplicate_post_create_duplicate($post, $status = '', $parent_id = '') {
 	'comment_status' => $post->comment_status,
 	'ping_status' => $post->ping_status,
 	'post_author' => $new_post_author->ID,
-	'post_content' => $post->post_content,
+	'post_content' => addslashes($post->post_content),
 	'post_excerpt' => (get_option('duplicate_post_copyexcerpt') == '1') ? $post->post_excerpt : "",
 	'post_mime_type' => $post->post_mime_type,
 	'post_parent' => $new_post_parent = empty($parent_id)? $post->post_parent : $parent_id,
 	'post_password' => $post->post_password,
 	'post_status' => $new_post_status = (empty($status))? $post->post_status: $status,
-	'post_title' => $prefix.$post->post_title.$suffix,
+	'post_title' => addshleshes($prefix.$post->post_title.$suffix),
 	'post_type' => $post->post_type,
 	);
 

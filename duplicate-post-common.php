@@ -125,10 +125,12 @@ function duplicate_post_admin_bar_render() {
 	$current_object = get_queried_object();
 	if ( empty($current_object) )
 	return;
+	$duplicate_post_types_blacklist = get_option('duplicate_post_types_blacklist');
 	if ( ! empty( $current_object->post_type )
 	&& ( $post_type_object = get_post_type_object( $current_object->post_type ) )
 	&& duplicate_post_is_current_user_allowed_to_copy()
-	&& ( $post_type_object->show_ui || 'attachment' == $current_object->post_type ) )
+	&& ( $post_type_object->show_ui || 'attachment' == $current_object->post_type )
+	&& (!in_array($current_object->post_type, $duplicate_post_types_blacklist) ) )
 	{
 		$wp_admin_bar->add_menu( array(
 		'parent' => 'edit',
