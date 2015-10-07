@@ -130,7 +130,7 @@ function duplicate_post_show_update_notice() {
 		}
 
 		jQuery(document).ready(function(){
-			jQuery('.notice-dismiss').click(duplicate_post_dismiss_notice);
+			jQuery(document).click(duplicate_post_dismiss_notice, '.notice-dismiss');
 		});
 	</script>
 	<?php
