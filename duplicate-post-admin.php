@@ -114,8 +114,8 @@ function duplicate_post_show_update_notice() {
 	$class = 'notice is-dismissible';
 	$message = 'Duplicate post now has an option to choose which post types can be cloned. Please review the settings to enable it for all your desired post types.';
 	$message .= '<br/>';
-	$message .= '<a id="duplicate-post-dismiss-notice" href="javascript:duplicate_post_dismiss_notice();">Donate</a> | <a href="">Dismiss this notice</a>';
-	echo '<div id="duplicate-post-notice" class="$class"><p>$message</p></div>';
+	$message .= '<a href="">Donate</a> | <a id="duplicate-post-dismiss-notice" href="javascript:duplicate_post_dismiss_notice();">Dismiss this notice</a>';
+	echo '<div id="duplicate-post-notice" class="$class"><p>'.$message.'</p></div>';
 	?>
 	<script>
 		function duplicate_post_dismiss_notice(){
