@@ -34,10 +34,13 @@ function duplicate_post_get_copy_user_level() {
  */
 function duplicate_post_get_clone_post_link( $id = 0, $context = 'display', $draft = true ) {
 	if ( !duplicate_post_is_current_user_allowed_to_copy() )
-	return;
+		return;
 
 	if ( !$post = get_post( $id ) )
-	return;
+		return;
+	
+	if(!duplicate_post_is_post_type_enabled($post->post_type))
+		return;
 
 	if ($draft)
 	$action_name = "duplicate_post_save_as_new_post_draft";
