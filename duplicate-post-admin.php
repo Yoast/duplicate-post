@@ -142,7 +142,7 @@ if (get_option('duplicate_post_show_notice') == 1){
 	add_action( 'admin_notices', 'duplicate_post_show_update_notice' );
 }
 
-add_action( 'duplicate_post_dismiss_notice', 'duplicate_post_dismiss_notice' );
+add_action( 'wp_ajax_duplicate_post_dismiss_notice', 'duplicate_post_dismiss_notice' );
 
 function duplicate_post_dismiss_notice() {
 	update_option('duplicate_post_show_notice', 0);
