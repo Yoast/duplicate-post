@@ -97,6 +97,8 @@ function duplicate_post_plugin_upgrade() {
 		add_option('duplicate_post_show_row','1');
 		add_option('duplicate_post_show_adminbar','1');
 		add_option('duplicate_post_show_submitbox','1');
+		
+		add_option('duplicate_post_show_notice','1');
 	}
 	// Update version number
 	update_option( 'duplicate_post_version', duplicate_post_get_current_version() );
@@ -106,6 +108,15 @@ function duplicate_post_plugin_upgrade() {
 if (get_option('duplicate_post_show_row') == 1){
 	add_filter('post_row_actions', 'duplicate_post_make_duplicate_link_row',10,2);
 	add_filter('page_row_actions', 'duplicate_post_make_duplicate_link_row',10,2);
+}
+
+function duplicate_post_show_update_notice() {
+	$class = "update-nag";
+	$message = "Duplicate post now has an option to choose which post types can be cloned. Please review the settings to enable it for all your desired post types.";
+	echo"<div class=\"$class\"> <p>$message</p></div>";
+}
+if (get_option('duplicate_post_show_notice') == 1){
+	add_action( 'admin_notices', 'duplicate_post_show_update_notice' );
 }
 
 /**
