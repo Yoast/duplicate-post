@@ -116,9 +116,7 @@ function duplicate_post_show_update_notice() {
 	$message .= '<br/>';
 	$message .= '<a href="">Donate</a> | <a id="duplicate-post-dismiss-notice" href="javascript:duplicate_post_dismiss_notice();">Dismiss this notice</a>';
 	echo '<div id="duplicate-post-notice" class="'.$class.'"><p>'.$message.'</p></div>';
-	ob_start();
-	?>
-	<script>
+	echo "<script>
 		function duplicate_post_dismiss_notice(){
 				var data = {
 					'action': 'duplicate_post_dismiss_notice',
@@ -132,11 +130,7 @@ function duplicate_post_show_update_notice() {
 		jQuery(document).ready(function(){
 			jQuery(document).click(duplicate_post_dismiss_notice, '.notice-dismiss');
 		});
-	</script>
-	<?php
-	$script = ob_get_clean();
-	echo $script;
-	
+	</script>";
 }
 if (get_option('duplicate_post_show_notice') == 1){
 	add_action( 'admin_notices', 'duplicate_post_show_update_notice' );
