@@ -290,7 +290,7 @@ function duplicate_post_options() {
 						if ($duplicate_post_types == "") $duplicate_post_types = array();
 						foreach ($post_types as $post_type ) : ?>
 						<label style="display: block;"> <input type="checkbox"
-							name="duplicate_post_types[]"
+							name="duplicate_post_types_blacklist[]"
 							value="<?php echo $post_type->name?>"
 							<?php if(in_array($post_type->name, $duplicate_post_types_blacklist)) echo 'checked="checked"'?> />
 							<?php echo $post_type->labels->name?>
