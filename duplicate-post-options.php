@@ -20,7 +20,7 @@ function duplicate_post_register_settings() { // whitelist options
 	register_setting( 'duplicate_post_group', 'duplicate_post_title_prefix');
 	register_setting( 'duplicate_post_group', 'duplicate_post_title_suffix');
 	register_setting( 'duplicate_post_group', 'duplicate_post_roles');
-	register_setting( 'duplicate_post_group', 'duplicate_post_types_blacklist');
+	register_setting( 'duplicate_post_group', 'duplicate_post_types_enabled');
 	register_setting( 'duplicate_post_group', 'duplicate_post_show_row');
 	register_setting( 'duplicate_post_group', 'duplicate_post_show_adminbar');
 	register_setting( 'duplicate_post_group', 'duplicate_post_show_submitbox');
@@ -281,22 +281,23 @@ function duplicate_post_options() {
 				</td>
 			</tr>
 			<tr valign="top">
-				<th scope="row"><?php _e("Do not show for these post types", DUPLICATE_POST_I18N_DOMAIN); ?>
+				<th scope="row"><?php _e("Enable for these post types", DUPLICATE_POST_I18N_DOMAIN); ?>
 				</th>
 				<td><div
 						style="height: 100px; width: 300px; padding: 5px; overflow: auto; border: 1px solid #ccc">
 						<?php $post_types = get_post_types(array('public' => true),'objects');
-						$duplicate_post_types_blacklist = get_option('duplicate_post_types_blacklist');
-						if ($duplicate_post_types == "") $duplicate_post_types = array();
-						foreach ($post_types as $post_type ) : ?>
+						$duplicate_post_types_enabled = get_option('duplicate_post_types_enabled');
+						if ($duplicate_post_types_enabled == "") $duplicate_post_types_enabled = array('post', 'page');
+						foreach ($post_types as $post_type ) : 
+							if ($post_type->name == 'attachment') continue; ?>
 						<label style="display: block;"> <input type="checkbox"
-							name="duplicate_post_types_blacklist[]"
+							name="duplicate_post_types_enabled[]"
 							value="<?php echo $post_type->name?>"
-							<?php if(in_array($post_type->name, $duplicate_post_types_blacklist)) echo 'checked="checked"'?> />
+							<?php if(in_array($post_type->name, $duplicate_post_types_enabled)) echo 'checked="checked"'?> />
 							<?php echo $post_type->labels->name?>
 						</label>
 						<?php endforeach; ?>
-					</div> <span class="description"><?php _e("Select the post types you don't want the plugin to be enabled", DUPLICATE_POST_I18N_DOMAIN); ?>
+					</div> <span class="description"><?php _e("Select the post types you want the plugin to be enabled", DUPLICATE_POST_I18N_DOMAIN); ?>
 				</span>
 				</td>
 			</tr>

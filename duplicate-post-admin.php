@@ -48,7 +48,7 @@ function duplicate_post_plugin_upgrade() {
 		add_option('duplicate_post_copychildren','0');
 		add_option('duplicate_post_copystatus','0');
 		add_option('duplicate_post_taxonomies_blacklist',array());
-		add_option('duplicate_post_taxonomies_types_blacklist',array());
+		add_option('duplicate_post_types_enabled',array('post', 'page'));
 		add_option('duplicate_post_show_row','1');
 		add_option('duplicate_post_show_adminbar','1');
 		add_option('duplicate_post_show_submitbox','1');
@@ -93,7 +93,7 @@ function duplicate_post_plugin_upgrade() {
 		add_option('duplicate_post_copychildren','0');
 		add_option('duplicate_post_copystatus','0');
 		add_option('duplicate_post_taxonomies_blacklist',array());
-		add_option('duplicate_post_types_blacklist',array());
+		add_option('duplicate_post_types_enabled',array('post', 'page'));
 		add_option('duplicate_post_show_row','1');
 		add_option('duplicate_post_show_adminbar','1');
 		add_option('duplicate_post_show_submitbox','1');
@@ -112,8 +112,8 @@ if (get_option('duplicate_post_show_row') == 1){
  * Add the link to action list for post_row_actions
  */
 function duplicate_post_make_duplicate_link_row($actions, $post) {
-	$duplicate_post_types_blacklist = get_option('duplicate_post_types_blacklist');
-	if (duplicate_post_is_current_user_allowed_to_copy() && !in_array($post->post_type, $duplicate_post_types_blacklist)) {
+	$duplicate_post_types_enabled = get_option('duplicate_post_types_enabled');
+	if (duplicate_post_is_current_user_allowed_to_copy() && in_array($post->post_type, $duplicate_post_types_enabled)) {
 		$actions['clone'] = '<a href="'.duplicate_post_get_clone_post_link( $post->ID , 'display', false).'" title="'
 		. esc_attr(__("Clone this item", DUPLICATE_POST_I18N_DOMAIN))
 		. '">' .  __('Clone', DUPLICATE_POST_I18N_DOMAIN) . '</a>';
@@ -135,10 +135,10 @@ function duplicate_post_add_duplicate_post_button() {
 	if ( isset( $_GET['post'] ))
 	{
 		$id = $_GET['post'];
-		$duplicate_post_types_blacklist = get_option('duplicate_post_types_blacklist');
+		$duplicate_post_types_enabled = get_option('duplicate_post_types_enabled');
 		$post = get_post($id);
 
-	 if(duplicate_post_is_current_user_allowed_to_copy() && !in_array($post->post_type, $duplicate_post_types_blacklist)) {
+	 if(duplicate_post_is_current_user_allowed_to_copy() && in_array($post->post_type, $duplicate_post_types_blacklist)) {
 	 	?>
 <div id="duplicate-action">
 	<a class="submitduplicate duplication"
@@ -294,8 +294,10 @@ add_action('dp_duplicate_page', 'duplicate_post_copy_children', 10, 2);
  */
 function duplicate_post_create_duplicate($post, $status = '', $parent_id = '') {
 
+	$duplicate_post_types_enabled = get_option('duplicate_post_types_enabled');
+
 	// We don't want to clone revisions
-	if ($post->post_type == 'revision') return;
+	if (!in_array($post->post_type, $duplicate_post_types_enabled) && $post->post_type != 'attachment') return;
 
 	if ($post->post_type != 'attachment'){
 		$prefix = sanitize_text_field(get_option('duplicate_post_title_prefix'));
