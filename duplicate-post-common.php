@@ -8,6 +8,14 @@ function duplicate_post_is_current_user_allowed_to_copy() {
 }
 
 /**
+ * Test if post type is enable to be copied
+ */
+function duplicate_post_is_post_type_enabled($post_type){
+	$duplicate_post_types_enabled = get_option('duplicate_post_types_enabled');
+	return in_array($post_type, $duplicate_post_types_enabled);
+}
+
+/**
  * Wrapper for the option 'duplicate_post_create_user_level'
  */
 function duplicate_post_get_copy_user_level() {
@@ -63,11 +71,11 @@ function duplicate_post_clone_post_link( $link = null, $before = '', $after = ''
 	return;
 
 	if ( null === $link )
-	$link = __('Copy to a new draft', DUPLICATE_POST_I18N_DOMAIN);
+	$link = __('Copy to a new draft', 'duplicate-post');
 
 	$post_type_obj = get_post_type_object( $post->post_type );
 	$link = '<a class="post-clone-link" href="' . $url . '" title="'
-	. esc_attr(__("Copy to a new draft", DUPLICATE_POST_I18N_DOMAIN))
+	. esc_attr(__("Copy to a new draft", 'duplicate-post'))
 	.'">' . $link . '</a>';
 	echo $before . apply_filters( 'duplicate_post_clone_post_link', $link, $post->ID ) . $after;
 }
@@ -125,17 +133,16 @@ function duplicate_post_admin_bar_render() {
 	$current_object = get_queried_object();
 	if ( empty($current_object) )
 	return;
-	$duplicate_post_types_enabled = get_option('duplicate_post_types_enabled');
 	if ( ! empty( $current_object->post_type )
 	&& ( $post_type_object = get_post_type_object( $current_object->post_type ) )
 	&& duplicate_post_is_current_user_allowed_to_copy()
 	&& ( $post_type_object->show_ui || 'attachment' == $current_object->post_type )
-	&& (in_array($current_object->post_type, $duplicate_post_types_enabled) ) )
+	&& (duplicate_post_is_post_type_enabled($current_object->post_type) ) )
 	{
 		$wp_admin_bar->add_menu( array(
 		'parent' => 'edit',
         'id' => 'new_draft',
-        'title' => __("Copy to a new draft", DUPLICATE_POST_I18N_DOMAIN),
+        'title' => __("Copy to a new draft", 'duplicate-post'),
         'href' => duplicate_post_get_clone_post_link( $current_object->ID )
 		) );
 	}

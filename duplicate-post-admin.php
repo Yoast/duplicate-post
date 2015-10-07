@@ -1,13 +1,13 @@
 <?php
 // Added by WarmStal
 if(!is_admin())
-return;
+	return;
 
 require_once (dirname(__FILE__).'/duplicate-post-options.php');
 
 /**
  * Wrapper for the option 'duplicate_post_version'
- */
+*/
 function duplicate_post_get_installed_version() {
 	return get_option( 'duplicate_post_version' );
 }
@@ -33,8 +33,8 @@ function duplicate_post_plugin_upgrade() {
 
 		// Get default roles
 		$default_roles = array(
-		3 => 'editor',
-		8 => 'administrator',
+				3 => 'editor',
+				8 => 'administrator',
 		);
 
 		// Cycle all roles and assign capability if its level >= duplicate_post_copy_user_level
@@ -63,7 +63,7 @@ function duplicate_post_plugin_upgrade() {
 
 		/*
 		 * Convert old userlevel option to new capability scheme
-		 */
+		*/
 
 		// Get old duplicate_post_copy_user_level option
 		$min_user_level = get_option('duplicate_post_copy_user_level');
@@ -71,17 +71,17 @@ function duplicate_post_plugin_upgrade() {
 		if (!empty($min_user_level)){
 			// Get default roles
 			$default_roles = array(
-			1 => 'contributor',
-			2 => 'author',
-			3 => 'editor',
-			8 => 'administrator',
+					1 => 'contributor',
+					2 => 'author',
+					3 => 'editor',
+					8 => 'administrator',
 			);
 
 			// Cycle all roles and assign capability if its level >= duplicate_post_copy_user_level
 			foreach ($default_roles as $level => $name){
 				$role = get_role($name);
 				if ($role && $min_user_level <= $level)
-				$role->add_cap( 'copy_posts' );
+					$role->add_cap( 'copy_posts' );
 			}
 
 			// delete old option
@@ -112,14 +112,13 @@ if (get_option('duplicate_post_show_row') == 1){
  * Add the link to action list for post_row_actions
  */
 function duplicate_post_make_duplicate_link_row($actions, $post) {
-	$duplicate_post_types_enabled = get_option('duplicate_post_types_enabled');
-	if (duplicate_post_is_current_user_allowed_to_copy() && in_array($post->post_type, $duplicate_post_types_enabled)) {
+	if (duplicate_post_is_current_user_allowed_to_copy() && duplicate_post_is_post_type_enabled($post->post_type)) {
 		$actions['clone'] = '<a href="'.duplicate_post_get_clone_post_link( $post->ID , 'display', false).'" title="'
-		. esc_attr(__("Clone this item", DUPLICATE_POST_I18N_DOMAIN))
-		. '">' .  __('Clone', DUPLICATE_POST_I18N_DOMAIN) . '</a>';
+				. esc_attr(__("Clone this item", 'duplicate-post'))
+				. '">' .  __('Clone', 'duplicate-post') . '</a>';
 		$actions['edit_as_new_draft'] = '<a href="'. duplicate_post_get_clone_post_link( $post->ID ) .'" title="'
-		. esc_attr(__('Copy to a new draft', DUPLICATE_POST_I18N_DOMAIN))
-		. '">' .  __('New Draft', DUPLICATE_POST_I18N_DOMAIN) . '</a>';
+				. esc_attr(__('Copy to a new draft', 'duplicate-post'))
+				. '">' .  __('New Draft', 'duplicate-post') . '</a>';
 	}
 	return $actions;
 }
@@ -132,21 +131,18 @@ if (get_option('duplicate_post_show_submitbox') == 1){
 }
 
 function duplicate_post_add_duplicate_post_button() {
-	if ( isset( $_GET['post'] ))
-	{
+	if ( isset( $_GET['post'] )){
 		$id = $_GET['post'];
-		$duplicate_post_types_enabled = get_option('duplicate_post_types_enabled');
 		$post = get_post($id);
-
-	 if(duplicate_post_is_current_user_allowed_to_copy() && in_array($post->post_type, $duplicate_post_types_blacklist)) {
+		if(duplicate_post_is_current_user_allowed_to_copy() && duplicate_post_is_post_type_enabled($post->post_type)) {
 	 	?>
 <div id="duplicate-action">
 	<a class="submitduplicate duplication"
-		href="<?php echo duplicate_post_get_clone_post_link( $_GET['post'] ) ?>"><?php _e('Copy to a new draft', DUPLICATE_POST_I18N_DOMAIN); ?>
+		href="<?php echo duplicate_post_get_clone_post_link( $_GET['post'] ) ?>"><?php _e('Copy to a new draft', 'duplicate-post'); ?>
 	</a>
 </div>
 <?php
-	 }
+		}
 	}
 }
 
@@ -158,19 +154,19 @@ add_action('admin_action_duplicate_post_save_as_new_post_draft', 'duplicate_post
 
 /*
  * This function calls the creation of a new copy of the selected post (as a draft)
- * then redirects to the edit post screen
- */
+* then redirects to the edit post screen
+*/
 function duplicate_post_save_as_new_post_draft(){
 	duplicate_post_save_as_new_post('draft');
 }
 
 /*
  * This function calls the creation of a new copy of the selected post (by default preserving the original publish status)
- * then redirects to the post list
- */
+* then redirects to the post list
+*/
 function duplicate_post_save_as_new_post($status = ''){
 	if (! ( isset( $_GET['post']) || isset( $_POST['post'])  || ( isset($_REQUEST['action']) && 'duplicate_post_save_as_new_post' == $_REQUEST['action'] ) ) ) {
-		wp_die(__('No post to duplicate has been supplied!', DUPLICATE_POST_I18N_DOMAIN));
+		wp_die(__('No post to duplicate has been supplied!', 'duplicate-post'));
 	}
 
 	// Get the original post
@@ -192,7 +188,7 @@ function duplicate_post_save_as_new_post($status = ''){
 
 	} else {
 		$post_type_obj = get_post_type_object( $post->post_type );
-		wp_die(esc_attr(__('Copy creation failed, could not find original:', DUPLICATE_POST_I18N_DOMAIN)) . ' ' . htmlspecialchars($id));
+		wp_die(esc_attr(__('Copy creation failed, could not find original:', 'duplicate-post')) . ' ' . htmlspecialchars($id));
 	}
 }
 
@@ -209,7 +205,7 @@ function duplicate_post_get_current_user() {
 	} else {
 		$user_login = $_COOKIE[USER_COOKIE];
 		$sql = $wpdb->prepare("SELECT * FROM $wpdb->users WHERE user_login=%s", $user_login);
-		$current_user = $wpdb->get_results($sql);			
+		$current_user = $wpdb->get_results($sql);
 		return $current_user;
 	}
 }
@@ -244,7 +240,7 @@ add_action('dp_duplicate_page', 'duplicate_post_copy_post_taxonomies', 10, 2);
 
 /**
  * Copy the meta information of a post to another post
- */
+*/
 function duplicate_post_copy_post_meta_info($new_id, $post) {
 	$post_meta_keys = get_post_custom_keys($post->ID);
 	if (empty($post_meta_keys)) return;
@@ -270,7 +266,7 @@ add_action('dp_duplicate_page', 'duplicate_post_copy_post_meta_info', 10, 2);
 /**
  * Copy the attachments
  * It simply copies the table entries, actual file won't be duplicated
- */
+*/
 function duplicate_post_copy_children($new_id, $post){
 	$copy_attachments = get_option('duplicate_post_copyattachments');
 	$copy_children = get_option('duplicate_post_copychildren');
@@ -291,14 +287,14 @@ add_action('dp_duplicate_page', 'duplicate_post_copy_children', 10, 2);
 
 /**
  * Create a duplicate from a post
- */
+*/
 function duplicate_post_create_duplicate($post, $status = '', $parent_id = '') {
 
 	$duplicate_post_types_enabled = get_option('duplicate_post_types_enabled');
 
 	// We don't want to clone revisions
-	if (!in_array($post->post_type, $duplicate_post_types_enabled) && $post->post_type != 'attachment')
-		wp_die(__('Copy features for this post type are not enabled in options page', DUPLICATE_POST_I18N_DOMAIN));
+	if (!duplicate_post_is_post_type_enabled($post->post_type) && $post->post_type != 'attachment')
+		wp_die(__('Copy features for this post type are not enabled in options page', 'duplicate-post'));
 
 	if ($post->post_type != 'attachment'){
 		$prefix = sanitize_text_field(get_option('duplicate_post_title_prefix'));
@@ -346,9 +342,9 @@ function duplicate_post_create_duplicate($post, $status = '', $parent_id = '') {
 	// If you have written a plugin which uses non-WP database tables to save
 	// information about a post you can hook this action to dupe that data.
 	if ($post->post_type == 'page' || (function_exists('is_post_type_hierarchical') && is_post_type_hierarchical( $post->post_type )))
-	do_action( 'dp_duplicate_page', $new_post_id, $post );
+		do_action( 'dp_duplicate_page', $new_post_id, $post );
 	else
-	do_action( 'dp_duplicate_post', $new_post_id, $post );
+		do_action( 'dp_duplicate_post', $new_post_id, $post );
 
 	delete_post_meta($new_post_id, '_dp_original');
 	add_post_meta($new_post_id, '_dp_original', $post->ID);
@@ -361,8 +357,8 @@ add_filter('plugin_row_meta', 'duplicate_post_add_plugin_links', 10, 2);
 
 function duplicate_post_add_plugin_links($links, $file) {
 	if ( $file == plugin_basename(dirname(__FILE__).'/duplicate-post.php') ) {
-		$links[] = '<a href="http://lopo.it/duplicate-post-plugin">' . __('Donate', DUPLICATE_POST_I18N_DOMAIN) . '</a>';
-		$links[] = '<a href="http://lopo.it/duplicate-post-plugin">' . __('Translate', DUPLICATE_POST_I18N_DOMAIN) . '</a>';
+		$links[] = '<a href="http://lopo.it/duplicate-post-plugin">' . __('Donate', 'duplicate-post') . '</a>';
+		$links[] = '<a href="http://lopo.it/duplicate-post-plugin">' . __('Translate', 'duplicate-post') . '</a>';
 	}
 	return $links;
 }
