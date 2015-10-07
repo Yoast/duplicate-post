@@ -48,7 +48,7 @@ function duplicate_post_plugin_upgrade() {
 		add_option('duplicate_post_copychildren','0');
 		add_option('duplicate_post_copystatus','0');
 		add_option('duplicate_post_taxonomies_blacklist',array());
-		add_option('duplicate_post_taxonomies_types',array());
+		add_option('duplicate_post_taxonomies_types_blacklist',array());
 		add_option('duplicate_post_show_row','1');
 		add_option('duplicate_post_show_adminbar','1');
 		add_option('duplicate_post_show_submitbox','1');
@@ -93,7 +93,7 @@ function duplicate_post_plugin_upgrade() {
 		add_option('duplicate_post_copychildren','0');
 		add_option('duplicate_post_copystatus','0');
 		add_option('duplicate_post_taxonomies_blacklist',array());
-		add_option('duplicate_post_types',array());
+		add_option('duplicate_post_types_blacklist',array());
 		add_option('duplicate_post_show_row','1');
 		add_option('duplicate_post_show_adminbar','1');
 		add_option('duplicate_post_show_submitbox','1');
@@ -317,7 +317,7 @@ function duplicate_post_create_duplicate($post, $status = '', $parent_id = '') {
 	'post_parent' => $new_post_parent = empty($parent_id)? $post->post_parent : $parent_id,
 	'post_password' => $post->post_password,
 	'post_status' => $new_post_status = (empty($status))? $post->post_status: $status,
-	'post_title' => addshleshes($prefix.$post->post_title.$suffix),
+	'post_title' => addslashes($prefix.$post->post_title.$suffix),
 	'post_type' => $post->post_type,
 	);
 
