@@ -298,7 +298,7 @@ function duplicate_post_create_duplicate($post, $status = '', $parent_id = '') {
 
 	// We don't want to clone revisions
 	if (!in_array($post->post_type, $duplicate_post_types_enabled) && $post->post_type != 'attachment')
-		wp_die(__('Copy features for this post type are note enabled in options page', DUPLICATE_POST_I18N_DOMAIN));
+		wp_die(__('Copy features for this post type are not enabled in options page', DUPLICATE_POST_I18N_DOMAIN));
 
 	if ($post->post_type != 'attachment'){
 		$prefix = sanitize_text_field(get_option('duplicate_post_title_prefix'));
