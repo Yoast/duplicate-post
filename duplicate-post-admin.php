@@ -111,7 +111,7 @@ if (get_option('duplicate_post_show_row') == 1){
 }
 
 function duplicate_post_show_update_notice() {
-	$class = "update-nag";
+	$class = "notice is-dismissable";
 	$message = "Duplicate post now has an option to choose which post types can be cloned. Please review the settings to enable it for all your desired post types.";
 	echo"<div class=\"$class\"> <p>$message</p></div>";
 }
