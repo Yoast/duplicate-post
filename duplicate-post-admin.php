@@ -111,13 +111,41 @@ if (get_option('duplicate_post_show_row') == 1){
 }
 
 function duplicate_post_show_update_notice() {
-	$class = "notice is-dismissible";
-	$message = "Duplicate post now has an option to choose which post types can be cloned. Please review the settings to enable it for all your desired post types.";
-	echo"<div class=\"$class\"> <p>$message</p></div>";
+	$class = 'notice is-dismissible';
+	$message = 'Duplicate post now has an option to choose which post types can be cloned. Please review the settings to enable it for all your desired post types.';
+	$message .= '<br/>';
+	$message .= '<a id="duplicate-post-dismiss-notice" href="javascript:duplicate_post_dismiss_notice();">Donate</a> | <a href="">Dismiss this notice</a>';
+	echo '<div id="duplicate-post-notice" class="$class"><p>$message</p></div>';
+	?>
+	<script>
+		function duplicate_post_dismiss_notice(){
+				var data = {
+					'action': 'duplicate_post_dismiss_notice',
+				};
+
+				jQuery.post(ajaxurl, data, function(response) {
+					jQuery('#duplicate-post-notice').hide();
+				});
+		}
+
+		jQuery(document).ready(function(){
+			jQuery('.notice-dismiss').click(duplicate_post_dismiss_notice);
+		});
+	</script>
+	<?php 	
 }
 if (get_option('duplicate_post_show_notice') == 1){
 	add_action( 'admin_notices', 'duplicate_post_show_update_notice' );
 }
+
+add_action( 'duplicate_post_dismiss_notice', 'duplicate_post_dismiss_notice' );
+
+function duplicate_post_dismiss_notice() {
+	update_option('duplicate_post_show_notice', 0);
+
+	wp_die();
+}
+
 
 /**
  * Add the link to action list for post_row_actions
