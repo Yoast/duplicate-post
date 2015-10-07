@@ -134,7 +134,7 @@ function duplicate_post_show_update_notice() {
 		});
 	</script>
 	<?php
-	$script = ob_get_flush();
+	$script = ob_get_clean();
 	echo $script;
 	
 }
