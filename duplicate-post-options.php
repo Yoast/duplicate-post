@@ -91,6 +91,8 @@ function duplicate_post_options() {
 	jQuery(document).on( 'click', '.nav-tab-wrapper a', function() {
 		jQuery('section').hide();
 		jQuery('section').eq(jQuery(this).index()).show();
+		jQuery('.nav-tab').removeClass('nav-tab-active');
+		jQuery(this).addClass('nav-tab-active');
 		return false;
 	})
 	</script>
@@ -111,7 +113,7 @@ section {
 	display: none;
 }
 
-section:first-child {
+section:first-of-type {
 	display: block;
 }
 
