@@ -114,7 +114,43 @@ function duplicate_post_options() {
 						<h3>Post/page elements to copy</h3>
 					</td>
 				</tr>
-
+				<tr valign="top">
+					<th scope="row"><?php _e('Post/page elements to copy', 'duplicate-post'); ?>
+					</th>
+					<td><div
+							style="height: 100px; width: 300px; padding: 5px; overflow: auto; border: 1px solid #ccc">
+							<label style="display: block;">
+								<input type="checkbox" name="duplicate_post_copytitle" value="1" <?php  if(get_option('duplicate_post_copytitle') == 1) echo 'checked="checked"'; ?>"/>
+								<?php _e("Title"); ?>
+							</label>
+							<label style="display: block;">
+								<input type="checkbox" name="duplicate_post_copydate" value="1" <?php  if(get_option('duplicate_post_copydate') == 1) echo 'checked="checked"'; ?>"/>
+								<?php _e("Date"); ?>
+							</label>
+							<label style="display: block;">
+								<input type="checkbox" name="duplicate_post_copystatus" value="1" <?php  if(get_option('duplicate_post_copystatus') == 1) echo 'checked="checked"'; ?>"/>
+								<?php _e("Status"); ?>
+							</label>
+							<label style="display: block;">
+								<input type="checkbox" name="duplicate_post_copyexcerpt" value="1" <?php  if(get_option('duplicate_post_copyexcerpt') == 1) echo 'checked="checked"'; ?>"/>
+								<?php _e("Excerpt"); ?>
+							</label>
+							<label style="display: block;">
+								<input type="checkbox" name="duplicate_post_copycontent" value="1" <?php  if(get_option('duplicate_post_copycontent') == 1) echo 'checked="checked"'; ?>"/>
+								<?php _e("Content"); ?>
+							</label>
+							<label style="display: block;">
+								<input type="checkbox" name="duplicate_post_copyattachments" value="1" <?php  if(get_option('duplicate_post_copyattachments') == 1) echo 'checked="checked"'; ?>"/>
+								<?php _e("Attachments", 'duplicate-post');  ?>
+							</label>
+							<label style="display: block;">
+								<input type="checkbox" name="duplicate_post_copychildren" value="1" <?php  if(get_option('duplicate_post_copychildren') == 1) echo 'checked="checked"'; ?>"/>
+								<?php _e("Children", 'duplicate-post');  ?>
+							</label>
+						</div> <span class="description"><?php _e("Select the taxonomies you don't want to be copied", 'duplicate-post'); ?>
+					</span>
+					</td>
+				</tr>
 				<tr valign="top">
 					<th scope="row"><?php _e("Date"); ?>
 					</th>
@@ -135,8 +171,8 @@ function duplicate_post_options() {
 				<tr valign="top">
 					<th scope="row"><?php _e("Title"); ?>
 					</th>
-					<td><input type="checkbox" name="duplicate_post_copystatus"
-						value="1" <?php  if(get_option('duplicate_post_copystatus') == 1) echo 'checked="checked"'; ?>"/>
+					<td><input type="checkbox" name="duplicate_post_copytitle"
+						value="1" <?php  if(get_option('duplicate_post_copytitle') == 1) echo 'checked="checked"'; ?>"/>
 						<span class="description"><?php _e("Copy the original post title.", 'duplicate-post'); ?>
 					</span>
 					</td>
