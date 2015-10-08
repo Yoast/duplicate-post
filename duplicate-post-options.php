@@ -102,6 +102,11 @@ h2.nav-tab-wrapper {
 	margin: 22px 0 0 0;
 }
 
+h2.nav-tab:focus{
+    color: #555;
+    box-shadow: none;
+}
+
 #sections {
 	padding: 22px;
 	background: #fff;
