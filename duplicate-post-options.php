@@ -110,7 +110,7 @@ function duplicate_post_options() {
 
 			<table class="form-table">
 				<tr valign="top">
-					<td>
+					<td colspan="2">
 						<h3>Post/page elements to copy</h3>
 					</td>
 				</tr>
@@ -137,7 +137,7 @@ function duplicate_post_options() {
 					</th>
 					<td><input type="checkbox" name="duplicate_post_copystatus"
 						value="1" <?php  if(get_option('duplicate_post_copystatus') == 1) echo 'checked="checked"'; ?>"/>
-						<span class="description"><?php _e("Copy the original post status (draft, published, pending) when cloning from the post list.", 'duplicate-post'); ?>
+						<span class="description"><?php _e("Copy the original post title.", 'duplicate-post'); ?>
 					</span>
 					</td>
 				</tr>
@@ -146,7 +146,7 @@ function duplicate_post_options() {
 					</th>
 					<td><input type="text" name="duplicate_post_title_prefix"
 						value="<?php echo get_option('duplicate_post_title_prefix'); ?>" />
-						<span class="description"><?php _e("Prefix to be added before the original title, e.g. \"Copy of\" (blank for no prefix)", 'duplicate-post'); ?>
+						<span class="description"><?php _e("Prefix to be added before the title, e.g. \"Copy of\" (blank for no prefix)", 'duplicate-post'); ?>
 					</span>
 					</td>
 				</tr>
@@ -155,7 +155,7 @@ function duplicate_post_options() {
 					</th>
 					<td><input type="text" name="duplicate_post_title_suffix"
 						value="<?php echo get_option('duplicate_post_title_suffix'); ?>" />
-						<span class="description"><?php _e("Suffix to be added after the original title, e.g. \"(dup)\" (blank for no suffix)", 'duplicate-post'); ?>
+						<span class="description"><?php _e("Suffix to be added after the title, e.g. \"(dup)\" (blank for no suffix)", 'duplicate-post'); ?>
 					</span>
 					</td>
 				</tr>
@@ -169,7 +169,7 @@ function duplicate_post_options() {
 					</td>
 				</tr>
 				<tr valign="top">
-					<th scope="row"><?php _e("Attachments"); ?>
+					<th scope="row"><?php _e("Attachments", 'duplicate-post'); ?>
 					</th>
 					<td><input type="checkbox" name="duplicate_post_copyattachments"
 						value="1" <?php  if(get_option('duplicate_post_copyattachments') == 1) echo 'checked="checked"'; ?>"/>
@@ -178,11 +178,20 @@ function duplicate_post_options() {
 					</td>
 				</tr>
 				<tr valign="top">
-					<th scope="row"><?php _e("Children"); ?>
+					<th scope="row"><?php _e("Children", 'duplicate-post'); ?>
 					</th>
 					<td><input type="checkbox" name="duplicate_post_copychildren"
 						value="1" <?php  if(get_option('duplicate_post_copychildren') == 1) echo 'checked="checked"'; ?>"/>
 						<span class="description"><?php _e("Copy the children from the original post/page", 'duplicate-post'); ?>
+					</span>
+					</td>
+				</tr>
+				<tr valign="top">
+					<th scope="row"><?php _e("Comments"); ?>
+					</th>
+					<td><input type="checkbox" name="duplicate_post_copycomments"
+						value="1" <?php  if(get_option('duplicate_post_copycomments') == 1) echo 'checked="checked"'; ?>"/>
+						<span class="description"><?php _e("Copy the comments from the original post/page", 'duplicate-post'); ?>
 					</span>
 					</td>
 				</tr>
