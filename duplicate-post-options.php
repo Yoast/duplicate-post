@@ -96,7 +96,7 @@ function duplicate_post_options() {
 	</script>
 
 
-	<form method="post" action="options.php">
+	<form method="post" action="options.php" style="clear: both">
 		<?php settings_fields('duplicate_post_group'); ?>
 
 		<h2 class="nav-tab-wrapper">
@@ -109,9 +109,14 @@ function duplicate_post_options() {
 		<section>
 
 			<table class="form-table">
+				<tr valign="top">
+					<td>
+						<h3>Post/page elements to copy</h3>
+					</td>
+				</tr>
 
 				<tr valign="top">
-					<th scope="row"><?php _e("Copy post/page date also", 'duplicate-post'); ?>
+					<th scope="row"><?php _e("Date"); ?>
 					</th>
 					<td><input type="checkbox" name="duplicate_post_copydate" value="1" <?php  if(get_option('duplicate_post_copydate') == 1) echo 'checked="checked"'; ?>"/>
 						<span class="description"><?php _e("Normally, the new copy has its publication date set to current time: check the box to copy the original post/page date", 'duplicate-post'); ?>
@@ -119,7 +124,7 @@ function duplicate_post_options() {
 					</td>
 				</tr>
 				<tr valign="top">
-					<th scope="row"><?php _e("Copy post/page status", 'duplicate-post'); ?>
+					<th scope="row"><?php _e("Status"); ?>
 					</th>
 					<td><input type="checkbox" name="duplicate_post_copystatus"
 						value="1" <?php  if(get_option('duplicate_post_copystatus') == 1) echo 'checked="checked"'; ?>"/>
@@ -128,7 +133,34 @@ function duplicate_post_options() {
 					</td>
 				</tr>
 				<tr valign="top">
-					<th scope="row"><?php _e("Copy excerpt", 'duplicate-post'); ?>
+					<th scope="row"><?php _e("Title"); ?>
+					</th>
+					<td><input type="checkbox" name="duplicate_post_copystatus"
+						value="1" <?php  if(get_option('duplicate_post_copystatus') == 1) echo 'checked="checked"'; ?>"/>
+						<span class="description"><?php _e("Copy the original post status (draft, published, pending) when cloning from the post list.", 'duplicate-post'); ?>
+					</span>
+					</td>
+				</tr>
+				<tr valign="top">
+					<th scope="row"><?php _e("Title prefix", 'duplicate-post'); ?>
+					</th>
+					<td><input type="text" name="duplicate_post_title_prefix"
+						value="<?php echo get_option('duplicate_post_title_prefix'); ?>" />
+						<span class="description"><?php _e("Prefix to be added before the original title, e.g. \"Copy of\" (blank for no prefix)", 'duplicate-post'); ?>
+					</span>
+					</td>
+				</tr>
+				<tr valign="top">
+					<th scope="row"><?php _e("Title suffix", 'duplicate-post'); ?>
+					</th>
+					<td><input type="text" name="duplicate_post_title_suffix"
+						value="<?php echo get_option('duplicate_post_title_suffix'); ?>" />
+						<span class="description"><?php _e("Suffix to be added after the original title, e.g. \"(dup)\" (blank for no suffix)", 'duplicate-post'); ?>
+					</span>
+					</td>
+				</tr>
+				<tr valign="top">
+					<th scope="row"><?php _e("Excerpt"); ?>
 					</th>
 					<td><input type="checkbox" name="duplicate_post_copyexcerpt"
 						value="1" <?php  if(get_option('duplicate_post_copyexcerpt') == 1) echo 'checked="checked"'; ?>"/>
@@ -137,7 +169,7 @@ function duplicate_post_options() {
 					</td>
 				</tr>
 				<tr valign="top">
-					<th scope="row"><?php _e("Copy attachments", 'duplicate-post'); ?>
+					<th scope="row"><?php _e("Attachments"); ?>
 					</th>
 					<td><input type="checkbox" name="duplicate_post_copyattachments"
 						value="1" <?php  if(get_option('duplicate_post_copyattachments') == 1) echo 'checked="checked"'; ?>"/>
@@ -146,7 +178,7 @@ function duplicate_post_options() {
 					</td>
 				</tr>
 				<tr valign="top">
-					<th scope="row"><?php _e("Copy children", 'duplicate-post'); ?>
+					<th scope="row"><?php _e("Children"); ?>
 					</th>
 					<td><input type="checkbox" name="duplicate_post_copychildren"
 						value="1" <?php  if(get_option('duplicate_post_copychildren') == 1) echo 'checked="checked"'; ?>"/>
@@ -212,8 +244,8 @@ function duplicate_post_options() {
 						});
 					});
 				</script>
-					<th scope="row"><?php _e("Do not copy these fields", 'duplicate-post'); ?><input
-						type="button" id="toggle"
+					<th scope="row"><?php _e("Custom fields"); ?><input type="button"
+						id="toggle"
 						value="<?php _e("Toggle textfield/checkboxes",'duplicate-post')?>" />
 					</th>
 					<td id="textfield"><input type="text"
@@ -245,7 +277,7 @@ function duplicate_post_options() {
 					</td>
 				</tr>
 				<tr valign="top">
-					<th scope="row"><?php _e("Do not copy these taxonomies", 'duplicate-post'); ?>
+					<th scope="row"><?php _e("Taxonomies"); ?>
 					</th>
 					<td><div
 							style="height: 100px; width: 300px; padding: 5px; overflow: auto; border: 1px solid #ccc">
@@ -261,24 +293,6 @@ function duplicate_post_options() {
 							</label>
 							<?php endforeach; ?>
 						</div> <span class="description"><?php _e("Select the taxonomies you don't want to be copied", 'duplicate-post'); ?>
-					</span>
-					</td>
-				</tr>
-				<tr valign="top">
-					<th scope="row"><?php _e("Title prefix", 'duplicate-post'); ?>
-					</th>
-					<td><input type="text" name="duplicate_post_title_prefix"
-						value="<?php echo get_option('duplicate_post_title_prefix'); ?>" />
-						<span class="description"><?php _e("Prefix to be added before the original title, e.g. \"Copy of\" (blank for no prefix)", 'duplicate-post'); ?>
-					</span>
-					</td>
-				</tr>
-				<tr valign="top">
-					<th scope="row"><?php _e("Title suffix", 'duplicate-post'); ?>
-					</th>
-					<td><input type="text" name="duplicate_post_title_suffix"
-						value="<?php echo get_option('duplicate_post_title_suffix'); ?>" />
-						<span class="description"><?php _e("Suffix to be added after the original title, e.g. \"(dup)\" (blank for no suffix)", 'duplicate-post'); ?>
 					</span>
 					</td>
 				</tr>
