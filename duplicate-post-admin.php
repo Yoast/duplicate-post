@@ -113,7 +113,7 @@ if (get_option('duplicate_post_show_row') == 1){
 function duplicate_post_show_update_notice() {
 	if(!current_user_can( 'manage_options')) return;
 	$class = 'notice is-dismissible';
-	$message = __('<strong>Duplicate Post now has an option to choose which post types can be cloned</strong>. Please review the settings to enable it for all your desired post types.', 'duplicate-post');
+	$message = sprintf(__('<strong>Duplicate Post now has an option to choose which post types can be cloned</strong>. Please <a href="%s">review the settings</a> to enable it for all your desired post types.', 'duplicate-post'),site_url('/wp-admin/options-general.php?page=duplicatepost'));
 	$message .= '<br/>';
 	$message .= '<a href="'.DUPLICATE_POST_HOMEPAGE_URL.'">'.__('Donate', 'duplicate-post').' (10¢) </a> | <a id="duplicate-post-dismiss-notice" href="javascript:duplicate_post_dismiss_notice();">'.__('Dismiss this notice.').'</a>';
 	echo '<div id="duplicate-post-notice" class="'.$class.'"><p>'.$message.'</p></div>';
