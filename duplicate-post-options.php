@@ -264,7 +264,7 @@ function duplicate_post_options() {
 				</tr>
 			</table>
 		</section>
-		<section>
+		<section style="display: none">
 			<table class="form-table">
 				<tr valign="top">
 					<th scope="row"><?php _e("Roles allowed to copy", 'duplicate-post'); ?>
