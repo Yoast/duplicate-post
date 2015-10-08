@@ -66,9 +66,9 @@ function duplicate_post_options() {
 
 	<div
 		style="border: solid 1px #aaaaaa; background-color: #eeeeee; margin: 9px 15px 4px 0; padding: 5px; text-align: center; font-weight: bold; float: left;">
-		<a href="http://lopo.it/duplicate-post-plugin"><?php _e('Visit plugin site'); ?>
-		</a> - <a href="http://lopo.it/duplicate-post-plugin"><?php _e('Translate', 'duplicate-post'); ?>
-		</a> - <a href="http://lopo.it/duplicate-post-plugin"><?php _e('Donate', 'duplicate-post'); ?>
+		<a href="'.DUPLICATE_POST_HOMEPAGE_URL.'"><?php _e('Visit plugin site'); ?>
+		</a> - <a href="'.DUPLICATE_POST_HOMEPAGE_URL.'"><?php _e('Translate', 'duplicate-post'); ?>
+		</a> - <a href="'.DUPLICATE_POST_HOMEPAGE_URL.'"><?php _e('Donate', 'duplicate-post'); ?>
 			(10¢) </a>
 		<form style="display: inline-block; vertical-align: middle;"
 			action="https://www.paypal.com/cgi-bin/webscr" method="post"
