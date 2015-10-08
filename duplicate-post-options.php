@@ -117,36 +117,28 @@ function duplicate_post_options() {
 				<tr valign="top">
 					<th scope="row"><?php _e('Post/page elements to copy', 'duplicate-post'); ?>
 					</th>
-					<td>
-							<label style="display: block;">
-								<input type="checkbox" name="duplicate_post_copytitle" value="1" <?php  if(get_option('duplicate_post_copytitle') == 1) echo 'checked="checked"'; ?>"/>
-								<?php _e("Title"); ?>
-							</label>
-							<label style="display: block;">
-								<input type="checkbox" name="duplicate_post_copydate" value="1" <?php  if(get_option('duplicate_post_copydate') == 1) echo 'checked="checked"'; ?>"/>
-								<?php _e("Date"); ?>
-							</label>
-							<label style="display: block;">
-								<input type="checkbox" name="duplicate_post_copystatus" value="1" <?php  if(get_option('duplicate_post_copystatus') == 1) echo 'checked="checked"'; ?>"/>
-								<?php _e("Status"); ?>
-							</label>
-							<label style="display: block;">
-								<input type="checkbox" name="duplicate_post_copyexcerpt" value="1" <?php  if(get_option('duplicate_post_copyexcerpt') == 1) echo 'checked="checked"'; ?>"/>
-								<?php _e("Excerpt"); ?>
-							</label>
-							<label style="display: block;">
-								<input type="checkbox" name="duplicate_post_copycontent" value="1" <?php  if(get_option('duplicate_post_copycontent') == 1) echo 'checked="checked"'; ?>"/>
-								<?php _e("Content"); ?>
-							</label>
-							<label style="display: block;">
-								<input type="checkbox" name="duplicate_post_copyattachments" value="1" <?php  if(get_option('duplicate_post_copyattachments') == 1) echo 'checked="checked"'; ?>"/>
-								<?php _e("Attachments", 'duplicate-post');  ?>
-							</label>
-							<label style="display: block;">
-								<input type="checkbox" name="duplicate_post_copychildren" value="1" <?php  if(get_option('duplicate_post_copychildren') == 1) echo 'checked="checked"'; ?>"/>
-								<?php _e("Children", 'duplicate-post');  ?>
-							</label>
-						<span class="description"><?php _e("Select the taxonomies you don't want to be copied", 'duplicate-post'); ?>
+					<td><label style="display: block;"> <input type="checkbox"
+							name="duplicate_post_copytitle" value="1" <?php  if(get_option('duplicate_post_copytitle') == 1) echo 'checked="checked"'; ?>"/>
+							<?php _e("Title"); ?>
+					</label> <label style="display: block;"> <input type="checkbox"
+							name="duplicate_post_copydate" value="1" <?php  if(get_option('duplicate_post_copydate') == 1) echo 'checked="checked"'; ?>"/>
+							<?php _e("Date"); ?>
+					</label> <label style="display: block;"> <input type="checkbox"
+							name="duplicate_post_copystatus" value="1" <?php  if(get_option('duplicate_post_copystatus') == 1) echo 'checked="checked"'; ?>"/>
+							<?php _e("Status"); ?>
+					</label> <label style="display: block;"> <input type="checkbox"
+							name="duplicate_post_copyexcerpt" value="1" <?php  if(get_option('duplicate_post_copyexcerpt') == 1) echo 'checked="checked"'; ?>"/>
+							<?php _e("Excerpt"); ?>
+					</label> <label style="display: block;"> <input type="checkbox"
+							name="duplicate_post_copycontent" value="1" <?php  if(get_option('duplicate_post_copycontent') == 1) echo 'checked="checked"'; ?>"/>
+							<?php _e("Content"); ?>
+					</label> <label style="display: block;"> <input type="checkbox"
+							name="duplicate_post_copyattachments" value="1" <?php  if(get_option('duplicate_post_copyattachments') == 1) echo 'checked="checked"'; ?>"/>
+							<?php _e("Attachments", 'duplicate-post');  ?>
+					</label> <label style="display: block;"> <input type="checkbox"
+							name="duplicate_post_copychildren" value="1" <?php  if(get_option('duplicate_post_copychildren') == 1) echo 'checked="checked"'; ?>"/>
+							<?php _e("Children", 'duplicate-post');  ?>
+					</label> <span class="description"><?php _e("Select the taxonomies you don't want to be copied", 'duplicate-post'); ?>
 					</span>
 					</td>
 				</tr>
@@ -236,45 +228,37 @@ function duplicate_post_options() {
 						class="description"><?php _e("Comma-separated list of meta fields that must not be copied", 'duplicate-post'); ?>
 					</span>
 					</td>
-					<td id="checkboxes"><div
-							style="height: 200px; width: 600px; padding: 5px; overflow: auto; border: 1px solid #ccc">
-							<?php $customfields = duplicate_post_list_all_custom_fields();
-							$meta_blacklist = explode(",",get_option('duplicate_post_blacklist'));
-							if ($meta_blacklist == "") $meta_blacklist = array();
-						foreach ($customfields as $customfield => $value) : ?>
-							<label style="display: block;"> <input type="checkbox"
-								name="duplicate_post_checkbox_blacklist[]"
-								class="duplicate_post_checkbox_blacklist"
-								value="<?php echo $customfield; ?>"
-								<?php if(in_array($customfield,$meta_blacklist)) echo 'checked="checked"'?> />
-								<?php echo $customfield; ?>
-							</label>
-							<?php endforeach; ?>
-							<label for="duplicate_post_blacklist_plus"><input type="text"
-								name="duplicate_post_blacklist_plus" value="" /><span
-								class="description"><?php _e("Additional comma-separated list list of meta fields", 'duplicate-post');?>
-							</span> </label>
-						</div> <span class="description"><?php _e("Select the custom fields you don't want to be copied", 'duplicate-post'); ?>
+					<td id="checkboxes"><?php $customfields = duplicate_post_list_all_custom_fields();
+					$meta_blacklist = explode(",",get_option('duplicate_post_blacklist'));
+					if ($meta_blacklist == "") $meta_blacklist = array();
+					foreach ($customfields as $customfield => $value) : ?> <label
+						style="display: block;"> <input type="checkbox"
+							name="duplicate_post_checkbox_blacklist[]"
+							class="duplicate_post_checkbox_blacklist"
+							value="<?php echo $customfield; ?>"
+							<?php if(in_array($customfield,$meta_blacklist)) echo 'checked="checked"'?> />
+							<?php echo $customfield; ?>
+					</label> <?php endforeach; ?> <label
+						for="duplicate_post_blacklist_plus"><input type="text"
+							name="duplicate_post_blacklist_plus" value="" /><span
+							class="description"><?php _e("Additional comma-separated list list of meta fields", 'duplicate-post');?>
+						</span> </label> <span class="description"><?php _e("Select the custom fields you don't want to be copied", 'duplicate-post'); ?>
 					</span>
 					</td>
 				</tr>
 				<tr valign="top">
 					<th scope="row"><?php _e("Taxonomies"); ?>
 					</th>
-					<td><div
-							style="height: 100px; width: 300px; padding: 5px; overflow: auto; border: 1px solid #ccc">
-							<?php $taxonomies=get_taxonomies(array('public' => true),'objects');
-							$taxonomies_blacklist = get_option('duplicate_post_taxonomies_blacklist');
-							if ($taxonomies_blacklist == "") $taxonomies_blacklist = array();
-						foreach ($taxonomies as $taxonomy ) : ?>
-							<label style="display: block;"> <input type="checkbox"
-								name="duplicate_post_taxonomies_blacklist[]"
-								value="<?php echo $taxonomy->name?>"
-								<?php if(in_array($taxonomy->name,$taxonomies_blacklist)) echo 'checked="checked"'?> />
-								<?php echo $taxonomy->labels->name?>
-							</label>
-							<?php endforeach; ?>
-						</div> <span class="description"><?php _e("Select the taxonomies you don't want to be copied", 'duplicate-post'); ?>
+					<td><?php $taxonomies=get_taxonomies(array('public' => true),'objects');
+					$taxonomies_blacklist = get_option('duplicate_post_taxonomies_blacklist');
+					if ($taxonomies_blacklist == "") $taxonomies_blacklist = array();
+					foreach ($taxonomies as $taxonomy ) : ?> <label
+						style="display: block;"> <input type="checkbox"
+							name="duplicate_post_taxonomies_blacklist[]"
+							value="<?php echo $taxonomy->name?>"
+							<?php if(in_array($taxonomy->name,$taxonomies_blacklist)) echo 'checked="checked"'?> />
+							<?php echo $taxonomy->labels->name?>
+					</label> <?php endforeach; ?> <span class="description"><?php _e("Select the taxonomies you don't want to be copied", 'duplicate-post'); ?>
 					</span>
 					</td>
 				</tr>
@@ -285,38 +269,30 @@ function duplicate_post_options() {
 				<tr valign="top">
 					<th scope="row"><?php _e("Roles allowed to copy", 'duplicate-post'); ?>
 					</th>
-					<td><div
-							style="height: 100px; width: 300px; padding: 5px; overflow: auto; border: 1px solid #ccc">
-							<?php	global $wp_roles;
-							$roles = $wp_roles->get_names();
-							foreach ($roles as $name => $display_name): $role = get_role($name);
-						if ( !$role->has_cap('edit_posts') ) continue; ?>
-							<label style="display: block;"> <input type="checkbox"
-								name="duplicate_post_roles[]" value="<?php echo $name ?>"
-								<?php if($role->has_cap('copy_posts')) echo 'checked="checked"'?> />
-								<?php echo translate_user_role($display_name); ?>
-							</label>
-							<?php endforeach; ?>
-						</div> <span class="description"><?php _e("Warning: users will be able to copy all posts, even those of other users", 'duplicate-post'); ?>
+					<td><?php	global $wp_roles;
+					$roles = $wp_roles->get_names();
+					foreach ($roles as $name => $display_name): $role = get_role($name);
+					if ( !$role->has_cap('edit_posts') ) continue; ?> <label
+						style="display: block;"> <input type="checkbox"
+							name="duplicate_post_roles[]" value="<?php echo $name ?>"
+							<?php if($role->has_cap('copy_posts')) echo 'checked="checked"'?> />
+							<?php echo translate_user_role($display_name); ?>
+					</label> <?php endforeach; ?> <span class="description"><?php _e("Warning: users will be able to copy all posts, even those of other users", 'duplicate-post'); ?>
 					</span>
 					</td>
 				</tr>
 				<tr valign="top">
 					<th scope="row"><?php _e("Enable for these post types", 'duplicate-post'); ?>
 					</th>
-					<td><div
-							style="height: 100px; width: 300px; padding: 5px; overflow: auto; border: 1px solid #ccc">
-							<?php $post_types = get_post_types(array('public' => true),'objects');
-							foreach ($post_types as $post_type_object ) :
-							if ($post_type_object->name == 'attachment') continue; ?>
-							<label style="display: block;"> <input type="checkbox"
-								name="duplicate_post_types_enabled[]"
-								value="<?php echo $post_type_object->name?>"
-								<?php if(duplicate_post_is_post_type_enabled($post_type_object->name)) echo 'checked="checked"'?> />
-								<?php echo $post_type_object->labels->name?>
-							</label>
-							<?php endforeach; ?>
-						</div> <span class="description"><?php _e("Select the post types you want the plugin to be enabled", 'duplicate-post'); ?>
+					<td><?php $post_types = get_post_types(array('public' => true),'objects');
+					foreach ($post_types as $post_type_object ) :
+					if ($post_type_object->name == 'attachment') continue; ?> <label
+						style="display: block;"> <input type="checkbox"
+							name="duplicate_post_types_enabled[]"
+							value="<?php echo $post_type_object->name?>"
+							<?php if(duplicate_post_is_post_type_enabled($post_type_object->name)) echo 'checked="checked"'?> />
+							<?php echo $post_type_object->labels->name?>
+					</label> <?php endforeach; ?> <span class="description"><?php _e("Select the post types you want the plugin to be enabled", 'duplicate-post'); ?>
 					</span>
 					</td>
 				</tr>
