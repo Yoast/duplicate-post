@@ -95,6 +95,48 @@ function duplicate_post_options() {
 	})
 	</script>
 
+	<style>
+h2.nav-tab-wrapper {
+	margin: 22px 0 0 0;
+}
+
+#sections {
+	padding: 22px;
+	background: #fff;
+	border: 1px solid #ccc;
+	border-top: 0px;
+}
+
+section {
+	display: none;
+}
+
+section:first-child {
+	display: block;
+}
+
+.no-js h2.nav-tab-wrapper {
+	display: none;
+}
+
+.no-js #sections {
+	border-top: 1px solid #ccc;
+	margin-top: 22px;
+}
+
+.no-js section {
+	border-top: 1px dashed #aaa;
+	margin-top: 22px;
+	padding-top: 22px;
+}
+
+.no-js section:first-child {
+	margin: 0px;
+	padding: 0px;
+	border: 0px;
+}
+</style>
+
 
 	<form method="post" action="options.php" style="clear: both">
 		<?php settings_fields('duplicate_post_group'); ?>
@@ -109,11 +151,6 @@ function duplicate_post_options() {
 		<section>
 
 			<table class="form-table">
-				<tr valign="top">
-					<td colspan="2">
-						<h3>Post/page elements to copy</h3>
-					</td>
-				</tr>
 				<tr valign="top">
 					<th scope="row"><?php _e('Post/page elements to copy', 'duplicate-post'); ?>
 					</th>
@@ -256,15 +293,15 @@ function duplicate_post_options() {
 						style="display: block;"> <input type="checkbox"
 							name="duplicate_post_taxonomies_blacklist[]"
 							value="<?php echo $taxonomy->name?>"
-							<?php if(in_array($taxonomy->name,$taxonomies_blacklist)) echo 'checked="checked"'?> />
-							<?php echo $taxonomy->labels->name?>
+							<?php if(in_array($taxonomy->name, $taxonomies_blacklist)) echo 'checked="checked"'?> />
+							<?php echo $taxonomy->labels->name.' ['.$taxonomy->name.']'; ?>
 					</label> <?php endforeach; ?> <span class="description"><?php _e("Select the taxonomies you don't want to be copied", 'duplicate-post'); ?>
 					</span>
 					</td>
 				</tr>
 			</table>
 		</section>
-		<section style="display: none;">
+		<section>
 			<table class="form-table">
 				<tr valign="top">
 					<th scope="row"><?php _e("Roles allowed to copy", 'duplicate-post'); ?>
