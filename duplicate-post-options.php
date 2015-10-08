@@ -89,10 +89,10 @@ function duplicate_post_options() {
 
 	<script>
 	jQuery(document).on( 'click', '.nav-tab-wrapper a', function() {
-		jQuery('section').hide();
-		jQuery('section').eq(jQuery(this).index()).show();
 		jQuery('.nav-tab').removeClass('nav-tab-active');
 		jQuery(this).addClass('nav-tab-active');
+		jQuery('section').hide();
+		jQuery('section').eq(jQuery(this).index()).show();	
 		return false;
 	})
 	</script>
