@@ -107,7 +107,7 @@ function duplicate_post_plugin_upgrade() {
 		add_option('duplicate_post_show_row','1');
 		add_option('duplicate_post_show_adminbar','1');
 		add_option('duplicate_post_show_submitbox','1');
-		
+
 		add_option('duplicate_post_show_notice','1');
 	}
 	// Update version number
@@ -128,22 +128,22 @@ function duplicate_post_show_update_notice() {
 	$message .= '<a href="'.DUPLICATE_POST_HOMEPAGE_URL.'">'.__('Donate', 'duplicate-post').' (10¢) </a> | <a id="duplicate-post-dismiss-notice" href="javascript:duplicate_post_dismiss_notice();">'.__('Dismiss this notice.').'</a>';
 	echo '<div id="duplicate-post-notice" class="'.$class.'"><p>'.$message.'</p></div>';
 	echo "<script>
-		function duplicate_post_dismiss_notice(){
-				var data = {
-					'action': 'duplicate_post_dismiss_notice',
-				};
+			function duplicate_post_dismiss_notice(){
+			var data = {
+			'action': 'duplicate_post_dismiss_notice',
+};
 
-				jQuery.post(ajaxurl, data, function(response) {
-					jQuery('#duplicate-post-notice').hide();
-				});
-		}
+			jQuery.post(ajaxurl, data, function(response) {
+			jQuery('#duplicate-post-notice').hide();
+});
+}
 
-		jQuery(document).ready(function(){
+			jQuery(document).ready(function(){
 			jQuery('.notice-dismiss').click(function(){
-				duplicate_post_dismiss_notice();
-			});
-		});
-	</script>";
+			duplicate_post_dismiss_notice();
+});
+});
+			</script>";
 }
 if (get_option('duplicate_post_show_notice') == 1){
 	add_action( 'admin_notices', 'duplicate_post_show_update_notice' );
@@ -325,26 +325,26 @@ function duplicate_post_copy_attachments($new_id, $post){
 	foreach($children as $child){
 		if ($child->post_type != 'attachment') continue;
 		$url = wp_get_attachment_url($child->ID);
-		
+
 		$tmp = download_url( $url );
 		if( is_wp_error( $tmp ) ) {
 			@unlink($tmp);
 			continue;
 		}
-		
+
 		$desc = addslashes($child->post_content);
 
 		$file_array = array();
 		$file_array['name'] = basename($url);
 		$file_array['tmp_name'] = $tmp;
-				
+
 		$new_attachment_id = media_handle_sideload( $file_array, $new_id, $desc );
-		
+
 		if ( is_wp_error($new_attachment_id) ) {
 			@unlink($file_array['tmp_name']);
 			continue;
 		}
-		
+
 		$cloned_child = array(
 				'ID'           => $new_attachment_id,
 				'post_title'   => addslashes($child->post_title),
@@ -352,10 +352,10 @@ function duplicate_post_copy_attachments($new_id, $post){
 				'post_author'  => duplicate_post_get_current_user()
 		);
 		wp_update_post( $cloned_child );
-		
+
 		$alt_title = get_post_meta($child->ID, '_wp_attachment_image_alt', true);
-		if($alt_title) update_post_meta($new_attachment_id, $meta_key, $alt_title);	
-		
+		if($alt_title) update_post_meta($new_attachment_id, $meta_key, $alt_title);
+
 	}
 }
 
@@ -387,7 +387,7 @@ if(get_option('duplicate_post_copyattachments') == 1){
 
 /**
  * Create a duplicate from a post
-*/
+ */
 function duplicate_post_create_duplicate($post, $status = '', $parent_id = '') {
 
 	$duplicate_post_types_enabled = get_option('duplicate_post_types_enabled');
@@ -399,10 +399,14 @@ function duplicate_post_create_duplicate($post, $status = '', $parent_id = '') {
 	if ($post->post_type != 'attachment'){
 		$prefix = sanitize_text_field(get_option('duplicate_post_title_prefix'));
 		$suffix = sanitize_text_field(get_option('duplicate_post_title_suffix'));
-		if (!empty($prefix)) $prefix.= " ";
-		if (!empty($suffix)) $suffix = " ".$suffix;
-		$title = __( 'Auto Draft' );
-		if (get_option('duplicate_post_copytitle') == 1) $title = $post->post_title;
+		$title = ' ';
+		if (get_option('duplicate_post_copytitle') == 1) {
+			$title = $post->post_title;
+			if (!empty($prefix)) $prefix.= " ";
+			if (!empty($suffix)) $suffix = " ".$suffix;
+			} else {
+			$title = ' ';
+		}
 		$title = $prefix.$title.$suffix;
 		if (get_option('duplicate_post_copystatus') == 0) $status = 'draft';
 	}
@@ -441,6 +445,7 @@ function duplicate_post_create_duplicate($post, $status = '', $parent_id = '') {
 		// Update the post into the database
 		wp_update_post( $new_post );
 	}
+
 
 	// If you have written a plugin which uses non-WP database tables to save
 	// information about a post you can hook this action to dupe that data.
