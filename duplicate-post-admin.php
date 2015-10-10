@@ -401,7 +401,7 @@ function duplicate_post_create_duplicate($post, $status = '', $parent_id = '') {
 		$suffix = sanitize_text_field(get_option('duplicate_post_title_suffix'));
 		if (!empty($prefix)) $prefix.= " ";
 		if (!empty($suffix)) $suffix = " ".$suffix;
-		$title = "";
+		$title = __( 'Auto Draft' );
 		if (get_option('duplicate_post_copytitle') == 1) $title = $post->post_title;
 		$title = $prefix.$title.$suffix;
 		if (get_option('duplicate_post_copystatus') == 0) $status = 'draft';
