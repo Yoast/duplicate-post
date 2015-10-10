@@ -43,11 +43,16 @@ function duplicate_post_plugin_upgrade() {
 			if(!empty($role)) $role->add_cap( 'copy_posts' );
 		}
 			
+		add_option('duplicate_post_copytitle','1');
+		add_option('duplicate_post_copydate','0');
+		add_option('duplicate_post_copystatus','0');
 		add_option('duplicate_post_copyexcerpt','1');
+		add_option('duplicate_post_copycontent','1');
 		add_option('duplicate_post_copyattachments','0');
 		add_option('duplicate_post_copychildren','0');
-		add_option('duplicate_post_copystatus','0');
+		add_option('duplicate_post_copycomments','0');
 		add_option('duplicate_post_taxonomies_blacklist',array());
+		add_option('duplicate_post_blacklist',array());
 		add_option('duplicate_post_types_enabled',array('post', 'page'));
 		add_option('duplicate_post_show_row','1');
 		add_option('duplicate_post_show_adminbar','1');
@@ -88,11 +93,16 @@ function duplicate_post_plugin_upgrade() {
 			delete_option('duplicate_post_copy_user_level');
 		}
 
+		add_option('duplicate_post_copytitle','1');
+		add_option('duplicate_post_copydate','0');
+		add_option('duplicate_post_copystatus','0');
 		add_option('duplicate_post_copyexcerpt','1');
+		add_option('duplicate_post_copycontent','1');
 		add_option('duplicate_post_copyattachments','0');
 		add_option('duplicate_post_copychildren','0');
-		add_option('duplicate_post_copystatus','0');
+		add_option('duplicate_post_copycomments','0');
 		add_option('duplicate_post_taxonomies_blacklist',array());
+		add_option('duplicate_post_blacklist',array());
 		add_option('duplicate_post_types_enabled',array('post', 'page'));
 		add_option('duplicate_post_show_row','1');
 		add_option('duplicate_post_show_adminbar','1');
@@ -308,22 +318,71 @@ add_action('dp_duplicate_page', 'duplicate_post_copy_post_meta_info', 10, 2);
  * Copy the attachments
  * It simply copies the table entries, actual file won't be duplicated
 */
-function duplicate_post_copy_children($new_id, $post){
-	$copy_attachments = get_option('duplicate_post_copyattachments');
-	$copy_children = get_option('duplicate_post_copychildren');
-
+function duplicate_post_copy_attachments($new_id, $post){
 	// get children
 	$children = get_posts(array( 'post_type' => 'any', 'numberposts' => -1, 'post_status' => 'any', 'post_parent' => $post->ID ));
 	// clone old attachments
 	foreach($children as $child){
-		if ($copy_attachments == 0 && $child->post_type == 'attachment') continue;
-		if ($copy_children == 0 && $child->post_type != 'attachment') continue;
+		if ($child->post_type != 'attachment') continue;
+		$url = wp_get_attachment_url($child->ID);
+		
+		$tmp = download_url( $url );
+		if( is_wp_error( $tmp ) ) {
+			@unlink($tmp);
+			continue;
+		}
+		
+		$desc = addslashes($child->post_content);
+
+		$file_array = array();
+		$file_array['name'] = basename($url);
+		$file_array['tmp_name'] = $tmp;
+				
+		$new_attachment_id = media_handle_sideload( $file_array, $new_id, $desc );
+		
+		if ( is_wp_error($new_attachment_id) ) {
+			@unlink($file_array['tmp_name']);
+			continue;
+		}
+		
+		$cloned_child = array(
+				'ID'           => $new_attachment_id,
+				'post_title'   => addslashes($child->post_title),
+				'post_exceprt' => addslashes($child->post_title),
+				'post_author'  => duplicate_post_get_current_user()
+		);
+		wp_update_post( $cloned_child );
+		
+		$alt_title = get_post_meta($child->ID, '_wp_attachment_image_alt', true);
+		if($alt_title) update_post_meta($new_attachment_id, $meta_key, $alt_title);	
+		
+	}
+}
+
+/**
+ * Copy children posts
+ */
+function duplicate_post_copy_children($new_id, $post){
+	// get children
+	$children = get_posts(array( 'post_type' => 'any', 'numberposts' => -1, 'post_status' => 'any', 'post_parent' => $post->ID ));
+	// clone old attachments
+	foreach($children as $child){
+		if ($child->post_type == 'attachment') continue;
 		duplicate_post_create_duplicate($child, '', $new_id);
 	}
 }
+
+
 // Using our action hooks to copy attachments
-add_action('dp_duplicate_post', 'duplicate_post_copy_children', 10, 2);
-add_action('dp_duplicate_page', 'duplicate_post_copy_children', 10, 2);
+if(get_option('duplicate_post_copychildren') == 1){
+	add_action('dp_duplicate_post', 'duplicate_post_copy_children', 10, 2);
+	add_action('dp_duplicate_page', 'duplicate_post_copy_children', 10, 2);
+}
+
+if(get_option('duplicate_post_copyattachments') == 1){
+	add_action('dp_duplicate_post', 'duplicate_post_copy_attachments', 10, 2);
+	add_action('dp_duplicate_page', 'duplicate_post_copy_attachments', 10, 2);
+}
 
 
 /**
@@ -342,6 +401,9 @@ function duplicate_post_create_duplicate($post, $status = '', $parent_id = '') {
 		$suffix = sanitize_text_field(get_option('duplicate_post_title_suffix'));
 		if (!empty($prefix)) $prefix.= " ";
 		if (!empty($suffix)) $suffix = " ".$suffix;
+		$title = "";
+		if (get_option('duplicate_post_copytitle') == 1) $title = $post->post_title;
+		$title = $prefix.$title.$suffix;
 		if (get_option('duplicate_post_copystatus') == 0) $status = 'draft';
 	}
 	$new_post_author = duplicate_post_get_current_user();
@@ -351,13 +413,13 @@ function duplicate_post_create_duplicate($post, $status = '', $parent_id = '') {
 	'comment_status' => $post->comment_status,
 	'ping_status' => $post->ping_status,
 	'post_author' => $new_post_author->ID,
-	'post_content' => addslashes($post->post_content),
-	'post_excerpt' => (get_option('duplicate_post_copyexcerpt') == '1') ? $post->post_excerpt : "",
+	'post_content' => (get_option('duplicate_post_copycontent') == '1') ? addslashes($post->post_content) : "" ,
+	'post_excerpt' => (get_option('duplicate_post_copyexcerpt') == '1') ? addslashes($post->post_excerpt) : "",
 	'post_mime_type' => $post->post_mime_type,
 	'post_parent' => $new_post_parent = empty($parent_id)? $post->post_parent : $parent_id,
-	'post_password' => $post->post_password,
+	'post_password' => (get_option('duplicate_post_copypassword') == '1') ? $post->post_password: "",
 	'post_status' => $new_post_status = (empty($status))? $post->post_status: $status,
-	'post_title' => addslashes($prefix.$post->post_title.$suffix),
+	'post_title' => addslashes($title),
 	'post_type' => $post->post_type,
 	);
 

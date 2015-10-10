@@ -8,11 +8,15 @@ if ( is_admin() ){ // admin actions
 }
 
 function duplicate_post_register_settings() { // whitelist options
+	register_setting( 'duplicate_post_group', 'duplicate_post_copytitle');
 	register_setting( 'duplicate_post_group', 'duplicate_post_copydate');
+	register_setting( 'duplicate_post_group', 'duplicate_post_copystatus');
 	register_setting( 'duplicate_post_group', 'duplicate_post_copyexcerpt');
+	register_setting( 'duplicate_post_group', 'duplicate_post_copycontent');
+	register_setting( 'duplicate_post_group', 'duplicate_post_copypassword');
 	register_setting( 'duplicate_post_group', 'duplicate_post_copyattachments');
 	register_setting( 'duplicate_post_group', 'duplicate_post_copychildren');
-	register_setting( 'duplicate_post_group', 'duplicate_post_copystatus');
+	register_setting( 'duplicate_post_group', 'duplicate_post_copycomments');
 	register_setting( 'duplicate_post_group', 'duplicate_post_blacklist');
 	register_setting( 'duplicate_post_group', 'duplicate_post_checkbox_blacklist');
 	register_setting( 'duplicate_post_group', 'duplicate_post_blacklist_plus');
@@ -176,13 +180,18 @@ section:first-of-type {
 					</label> <label style="display: block;"> <input type="checkbox"
 							name="duplicate_post_copycontent" value="1" <?php  if(get_option('duplicate_post_copycontent') == 1) echo 'checked="checked"'; ?>"/>
 							<?php _e("Content"); ?>
+					</label>  <label style="display: block;"> <input type="checkbox"
+							name="duplicate_post_copypassword" value="1" <?php  if(get_option('duplicate_post_copypassword') == 1) echo 'checked="checked"'; ?>"/>
+							<?php _e("Password"); ?>
 					</label> <label style="display: block;"> <input type="checkbox"
 							name="duplicate_post_copyattachments" value="1" <?php  if(get_option('duplicate_post_copyattachments') == 1) echo 'checked="checked"'; ?>"/>
 							<?php _e("Attachments", 'duplicate-post');  ?>
 					</label> <label style="display: block;"> <input type="checkbox"
 							name="duplicate_post_copychildren" value="1" <?php  if(get_option('duplicate_post_copychildren') == 1) echo 'checked="checked"'; ?>"/>
 							<?php _e("Children", 'duplicate-post');  ?>
-					</label> <span class="description"><?php _e("Select the taxonomies you don't want to be copied", 'duplicate-post'); ?>
+					</label>  <label style="display: block;"> <input type="checkbox"
+							name="duplicate_post_copycomments" value="1" <?php  if(get_option('duplicate_post_copycomments') == 1) echo 'checked="checked"'; ?>"/>
+							<?php _e("Comments");  ?><span class="description"><?php _e("Select the taxonomies you don't want to be copied", 'duplicate-post'); ?>
 					</span>
 					</td>
 				</tr>
@@ -291,7 +300,7 @@ section:first-of-type {
 					</td>
 				</tr>
 				<tr valign="top">
-					<th scope="row"><?php _e("Taxonomies"); ?>
+					<th scope="row"><?php _e("Taxonomies", 'duplicate-post'); ?>
 					</th>
 					<td><?php $taxonomies=get_taxonomies(array('public' => true),'objects');
 					$taxonomies_blacklist = get_option('duplicate_post_taxonomies_blacklist');
