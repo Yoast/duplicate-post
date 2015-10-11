@@ -172,25 +172,25 @@ section:first-of-type {
 					</th>
 					<td><label style="display: block;"> <input type="checkbox"
 							name="duplicate_post_copytitle" value="1" <?php  if(get_option('duplicate_post_copytitle') == 1) echo 'checked="checked"'; ?>"/>
-							<?php _e("Title"); ?>
+							<?php _e("Title", 'default'); ?>
 					</label> <label style="display: block;"> <input type="checkbox"
 							name="duplicate_post_copydate" value="1" <?php  if(get_option('duplicate_post_copydate') == 1) echo 'checked="checked"'; ?>"/>
-							<?php _e("Date"); ?>
+							<?php _e("Date", 'default'); ?>
 					</label> <label style="display: block;"> <input type="checkbox"
 							name="duplicate_post_copystatus" value="1" <?php  if(get_option('duplicate_post_copystatus') == 1) echo 'checked="checked"'; ?>"/>
-							<?php _e("Status"); ?>
+							<?php _e("Status", 'default'); ?>
 					</label> <label style="display: block;"> <input type="checkbox"
 							name="duplicate_post_copyslug" value="1" <?php  if(get_option('duplicate_post_copyslug') == 1) echo 'checked="checked"'; ?>"/>
-							<?php _e("Slug"); ?>
+							<?php _e("Slug", 'default'); ?>
 					</label> <label style="display: block;"> <input type="checkbox"
 							name="duplicate_post_copyexcerpt" value="1" <?php  if(get_option('duplicate_post_copyexcerpt') == 1) echo 'checked="checked"'; ?>"/>
-							<?php _e("Excerpt"); ?>
+							<?php _e("Excerpt", 'default'); ?>
 					</label> <label style="display: block;"> <input type="checkbox"
 							name="duplicate_post_copycontent" value="1" <?php  if(get_option('duplicate_post_copycontent') == 1) echo 'checked="checked"'; ?>"/>
-							<?php _e("Content"); ?>
+							<?php _e("Content", 'default'); ?>
 					</label> <label style="display: block;"> <input type="checkbox"
 							name="duplicate_post_copypassword" value="1" <?php  if(get_option('duplicate_post_copypassword') == 1) echo 'checked="checked"'; ?>"/>
-							<?php _e("Password"); ?>
+							<?php _e("Password", 'default'); ?>
 					</label> <label style="display: block;"> <input type="checkbox"
 							name="duplicate_post_copyattachments" value="1" <?php  if(get_option('duplicate_post_copyattachments') == 1) echo 'checked="checked"'; ?>"/>
 							<?php _e("Attachments", 'duplicate-post');  ?>
@@ -199,7 +199,7 @@ section:first-of-type {
 							<?php _e("Children", 'duplicate-post');  ?>
 					</label> <label style="display: block;"> <input type="checkbox"
 							name="duplicate_post_copycomments" value="1" <?php  if(get_option('duplicate_post_copycomments') == 1) echo 'checked="checked"'; ?>"/>
-							<?php _e("Comments");  ?> (<?php _e("except pingbacks and trackbacks", 'duplicate-post');  ?>)
+							<?php _e("Comments", 'default');  ?> (<?php _e("except pingbacks and trackbacks", 'duplicate-post');  ?>)
 					</label> </span>
 					</td>
 				</tr>
@@ -231,7 +231,7 @@ section:first-of-type {
 					</td>
 				</tr>
 				<tr valign="top">
-					<th scope="row"><?php _e("Custom fields"); ?>
+					<th scope="row"><?php _e("Custom fields", 'default'); ?>
 					</th>
 					<td id="textfield"><input type="text"
 						name="duplicate_post_blacklist"
