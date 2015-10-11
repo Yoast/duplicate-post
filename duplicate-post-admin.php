@@ -48,6 +48,7 @@ function duplicate_post_plugin_upgrade() {
 		add_option('duplicate_post_copystatus','0');
 		add_option('duplicate_post_copyexcerpt','1');
 		add_option('duplicate_post_copycontent','1');
+		add_option('duplicate_post_copypassword','0');
 		add_option('duplicate_post_copyattachments','0');
 		add_option('duplicate_post_copychildren','0');
 		add_option('duplicate_post_copycomments','0');
@@ -98,6 +99,7 @@ function duplicate_post_plugin_upgrade() {
 		add_option('duplicate_post_copystatus','0');
 		add_option('duplicate_post_copyexcerpt','1');
 		add_option('duplicate_post_copycontent','1');
+		add_option('duplicate_post_copypassword','0');
 		add_option('duplicate_post_copyattachments','0');
 		add_option('duplicate_post_copychildren','0');
 		add_option('duplicate_post_copycomments','0');
@@ -460,9 +462,15 @@ function duplicate_post_create_duplicate($post, $status = '', $parent_id = '') {
 		if (get_option('duplicate_post_copystatus') == 0) $status = 'draft';
 	}
 	$new_post_author = duplicate_post_get_current_user();
+	
+	$menu_order = $post->menu_order;
+	$increase_menu_order_by = get_option(duplicate_post_increase_menu_order_by);
+	if(!empty($increase_menu_order_by) && is_numeric($increase_menu_order_by)){
+		$menu_order += intval($increase_menu_order_by);
+	}
 
 	$new_post = array(
-	'menu_order' => $post->menu_order,
+	'menu_order' => $menu_order,
 	'comment_status' => $post->comment_status,
 	'ping_status' => $post->ping_status,
 	'post_author' => $new_post_author->ID,

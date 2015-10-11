@@ -23,6 +23,7 @@ function duplicate_post_register_settings() { // whitelist options
 	register_setting( 'duplicate_post_group', 'duplicate_post_taxonomies_blacklist');
 	register_setting( 'duplicate_post_group', 'duplicate_post_title_prefix');
 	register_setting( 'duplicate_post_group', 'duplicate_post_title_suffix');
+	register_setting( 'duplicate_post_group', 'duplicate_post_increase_menu_order_by');
 	register_setting( 'duplicate_post_group', 'duplicate_post_roles');
 	register_setting( 'duplicate_post_group', 'duplicate_post_types_enabled');
 	register_setting( 'duplicate_post_group', 'duplicate_post_show_row');
@@ -211,6 +212,15 @@ section:first-of-type {
 					<td><input type="text" name="duplicate_post_title_suffix"
 						value="<?php echo get_option('duplicate_post_title_suffix'); ?>" />
 						<span class="description"><?php _e("Suffix to be added after the title, e.g. \"(dup)\" (blank for no suffix)", 'duplicate-post'); ?>
+					</span>
+					</td>
+				</tr>
+				<tr valign="top">
+					<th scope="row"><?php _e("Increase menu order by", 'duplicate-post'); ?>
+					</th>
+					<td><input type="text" name="duplicate_post_increase_menu_order_by"
+						value="<?php echo get_option('duplicate_post_increase_menu_order_by'); ?>" />
+						<span class="description"><?php _e("Add this number to the original menu order (empty or zero to retain the value)", 'duplicate-post'); ?>
 					</span>
 					</td>
 				</tr>
