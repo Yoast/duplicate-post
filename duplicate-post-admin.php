@@ -411,7 +411,7 @@ function duplicate_post_create_duplicate($post, $status = '', $parent_id = '') {
 
 		if ($title == ''){
 			// empty title
-			$title = __('(no title)');
+			$title = __('Untitled');
 		};
 			
 
