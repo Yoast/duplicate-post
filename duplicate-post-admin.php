@@ -376,11 +376,17 @@ function duplicate_post_copy_children($new_id, $post){
  * Copy comments
  */
 function duplicate_post_copy_comments($new_id, $post){
-	$comments = get_comments(array('post_id' => $post->ID));
+	$comments = get_comments(array(
+		'post_id' => $post->ID,
+		'order' => 'ASC',
+		'orderby' => 'comment_date_gmt'
+	));
 
+	$old_id_to_new = array();
 	foreach ($comments as $comment){
 		//do not copy pingbacks or trackbacks
 		if(!empty($comment->comment_type)) continue;
+		$parent = $old_id_to_new[$comment->comment_parent]?$old_id_to_new[$comment->comment_parent]:0;
 		$commentdata = array(
 			'comment_post_ID' => $new_id,
 			'comment_author' => $comment->comment_author,
@@ -388,7 +394,7 @@ function duplicate_post_copy_comments($new_id, $post){
 			'comment_author_url' => $comment->comment_author_url,
 			'comment_content' => $comment->comment_content,
 			'comment_type' => '', 
-			'comment_parent' => $comment->comment_parent,
+			'comment_parent' => $parent,
 			'user_id' => $comment->user_id,
 			'comment_author_IP' => $comment->comment_author_IP,
 			'comment_agent' => $comment->comment_agent,
@@ -399,7 +405,8 @@ function duplicate_post_copy_comments($new_id, $post){
 			$commentdata['comment_date'] = $comment->comment_date ;
 			$commentdata['comment_date_gmt'] = get_gmt_from_date($comment->comment_date);
 		}
-		$comment_id = wp_insert_comment($commentdata);
+		$new_comment_id = wp_insert_comment($commentdata);
+		$old_id_to_new[$comment->comment_ID] = $new_comment_id;
 	}
 }
 
