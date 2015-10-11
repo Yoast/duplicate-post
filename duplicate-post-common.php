@@ -97,38 +97,6 @@ function duplicate_post_get_original($id = 0 , $output = OBJECT){
 	$original_post = get_post($original_ID[0],  $output);
 	return $original_post;
 }
-/**
- * Lista all custom fields
- * 
- * @return multitype:number 
- */
-function duplicate_post_list_all_custom_fields() {
-	$excluded_keys = array(
-			'_wpas_done_all',
-			'_wpas_mess',
-			'_dp_original'
-	);
-	$args = array(
-			'post_status' => array('publish','draft','pending','future'),
-			'post_type' => 'any',
-			'posts_per_page' => -1,
-	);
-	$allposts = get_posts($args);
-	$customfields = array();
-	foreach ( $allposts as $post ){
-		setup_postdata($post);
-		$post_id = $post->ID;
-		$fields = get_post_custom_keys($post_id);
-		if ($fields) {
-			foreach ($fields as $key => $value) {
-				if(!in_array($value, $excluded_keys))
-					$customfields[$value] = isset($customfields[$value]) ? $customfields[$value] + 1 : 1;
-			}
-		}
-	}
-	wp_reset_postdata();
-	return $customfields;
-}
 
 // Admin bar
 function duplicate_post_admin_bar_render() {

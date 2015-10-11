@@ -71,10 +71,10 @@ function duplicate_post_options() {
 	</h2>
 
 	<div
-		style="border: solid 1px #aaaaaa; background-color: #eeeeee; margin: 9px 15px 4px 0; padding: 5px; text-align: center; font-weight: bold; float: left;">
-		<a href="'.DUPLICATE_POST_HOMEPAGE_URL.'"><?php _e('Visit plugin site'); ?>
-		</a> - <a href="'.DUPLICATE_POST_HOMEPAGE_URL.'"><?php _e('Translate', 'duplicate-post'); ?>
-		</a> - <a href="'.DUPLICATE_POST_HOMEPAGE_URL.'"><?php _e('Donate', 'duplicate-post'); ?>
+		style="margin: 9px 15px 4px 0; padding: 5px; text-align: center; font-weight: bold; float: left;">
+		<a href="http://lopo.it/duplicate-post-plugin"><?php _e('Visit plugin site'); ?>
+		</a> - <a href="http://lopo.it/duplicate-post-plugin"><?php _e('Translate', 'duplicate-post'); ?>
+		</a> - <a href="http://lopo.it/duplicate-post-plugin"><?php _e('Donate', 'duplicate-post'); ?>
 			(10¢) </a>
 		<form style="display: inline-block; vertical-align: middle;"
 			action="https://www.paypal.com/cgi-bin/webscr" method="post"
@@ -199,7 +199,7 @@ section:first-of-type {
 							<?php _e("Children", 'duplicate-post');  ?>
 					</label> <label style="display: block;"> <input type="checkbox"
 							name="duplicate_post_copycomments" value="1" <?php  if(get_option('duplicate_post_copycomments') == 1) echo 'checked="checked"'; ?>"/>
-							<?php _e("Comments");  ?>
+							<?php _e("Comments");  ?> (<?php _e("except pingbacks and trackbacks", 'duplicate-post');  ?>)
 					</label> </span>
 					</td>
 				</tr>
@@ -231,88 +231,12 @@ section:first-of-type {
 					</td>
 				</tr>
 				<tr valign="top">
-					<script>
-					jQuery(document).ready(function(){
-						jQuery('#checkboxes').hide();
-						jQuery(document).on('click', 'input#toggle', function(){
-							jQuery('#checkboxes').toggle();
-							jQuery('#textfield').toggle();
-							if (jQuery("#checkboxes").is(":hidden")){
-								blacklist = new Array();
-								checkboxes = jQuery('input.duplicate_post_checkbox_blacklist:checked').each(function(){
-									addvalue = jQuery(this).filter('input.duplicate_post_checkbox_blacklist:checked').val();
-									blacklist.push(addvalue);
-								});
-								blacklist_plus = jQuery('input[name="duplicate_post_blacklist_plus"]').val().trim().split(',');
-								jQuery(blacklist_plus).each(function(index, value){
-									if(jQuery.trim(value) != "")
-										blacklist.push(jQuery.trim(value));
-								});
-								blacklist_string = blacklist.join();			
-								jQuery('input[name="duplicate_post_blacklist"]').val(blacklist_string);
-							}
-							if (jQuery("#textfield").is(":hidden")){
-								blacklist = jQuery('input[name="duplicate_post_blacklist"]').val().trim().split(',');
-								if(blacklist.length == 1 && blacklist[0] == "") blacklist = new Array();
-								jQuery('input.duplicate_post_checkbox_blacklist:checked').each(function(){
-									jQuery(this).attr('checked', false);
-								});
-								blacklist_plus = new Array();
-								jQuery(blacklist).each(function(index, value){
-									if(jQuery.trim(value) != ""){
-										if(jQuery('input.duplicate_post_checkbox_blacklist[value="'+jQuery.trim(value)+'"]').length > 0)
-											jQuery('input.duplicate_post_checkbox_blacklist[value="'+jQuery.trim(value)+'"]').attr('checked',true);
-										else{
-											blacklist_plus.push(jQuery.trim(value));
-										}
-									}
-								});
-								jQuery('input[name="duplicate_post_blacklist_plus"]').val(blacklist_plus.join());
-							}
-						});
-						jQuery(document).on('submit','form',function(){
-							if (jQuery("#textfield").is(":hidden")){
-								blacklist = new Array();
-								checkboxes = jQuery('input.duplicate_post_checkbox_blacklist:checked').each(function(){
-									addvalue = jQuery(this).filter('input.duplicate_post_checkbox_blacklist:checked').val();
-									blacklist.push(addvalue);
-								});
-								blacklist_plus = jQuery('input[name="duplicate_post_blacklist_plus"]').val().trim().split(',');
-								jQuery(blacklist_plus).each(function(index, value){
-									if(jQuery.trim(value) != "")
-										blacklist.push(jQuery.trim(value));
-								});
-								blacklist_string = blacklist.join();			
-								jQuery('input[name="duplicate_post_blacklist"]').val(blacklist_string);
-							}
-						});
-					});
-				</script>
-					<th scope="row"><?php _e("Custom fields"); ?><input type="button"
-						id="toggle"
-						value="<?php _e("Toggle textfield/checkboxes",'duplicate-post')?>" />
+					<th scope="row"><?php _e("Custom fields"); ?>
 					</th>
 					<td id="textfield"><input type="text"
 						name="duplicate_post_blacklist"
 						value="<?php echo get_option('duplicate_post_blacklist'); ?>" /> <span
 						class="description"><?php _e("Comma-separated list of meta fields that must not be copied", 'duplicate-post'); ?>
-					</span>
-					</td>
-					<td id="checkboxes"><?php $customfields = duplicate_post_list_all_custom_fields();
-					$meta_blacklist = explode(",",get_option('duplicate_post_blacklist'));
-					if ($meta_blacklist == "") $meta_blacklist = array();
-					foreach ($customfields as $customfield => $value) : ?> <label
-						style="display: block;"> <input type="checkbox"
-							name="duplicate_post_checkbox_blacklist[]"
-							class="duplicate_post_checkbox_blacklist"
-							value="<?php echo $customfield; ?>"
-							<?php if(in_array($customfield,$meta_blacklist)) echo 'checked="checked"'?> />
-							<?php echo $customfield; ?>
-					</label> <?php endforeach; ?> <label
-						for="duplicate_post_blacklist_plus"><input type="text"
-							name="duplicate_post_blacklist_plus" value="" /><span
-							class="description"><?php _e("Additional comma-separated list list of meta fields", 'duplicate-post');?>
-						</span> </label> <span class="description"><?php _e("Select the custom fields you don't want to be copied", 'duplicate-post'); ?>
 					</span>
 					</td>
 				</tr>

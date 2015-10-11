@@ -125,11 +125,10 @@ if (get_option('duplicate_post_show_row') == 1){
 }
 
 function duplicate_post_show_update_notice() {
-	if(!current_user_can( 'manage_options')) return;
 	$class = 'notice is-dismissible';
 	$message = sprintf(__('<strong>Duplicate Post now has an option to choose which post types can be cloned</strong>. Please <a href="%s">review the settings</a> to enable it for all your desired post types.', 'duplicate-post'),site_url('/wp-admin/options-general.php?page=duplicatepost'));
 	$message .= '<br/>';
-	$message .= '<a href="'.DUPLICATE_POST_HOMEPAGE_URL.'">'.__('Donate', 'duplicate-post').' (10¢) </a> | <a id="duplicate-post-dismiss-notice" href="javascript:duplicate_post_dismiss_notice();">'.__('Dismiss this notice.').'</a>';
+	$message .= '<a href="http://lopo.it/duplicate-post-plugin">'.__('Donate', 'duplicate-post').' (10¢) </a> | <a id="duplicate-post-dismiss-notice" href="javascript:duplicate_post_dismiss_notice();">'.__('Dismiss this notice.').'</a>';
 	echo '<div id="duplicate-post-notice" class="'.$class.'"><p>'.$message.'</p></div>';
 	echo "<script>
 			function duplicate_post_dismiss_notice(){
@@ -149,7 +148,7 @@ function duplicate_post_show_update_notice() {
 });
 			</script>";
 }
-if (get_option('duplicate_post_show_notice') == 1){
+if (current_user_can( 'manage_options') && get_option('duplicate_post_show_notice') == 1){
 	add_action( 'admin_notices', 'duplicate_post_show_update_notice' );
 }
 
@@ -302,6 +301,7 @@ function duplicate_post_copy_post_meta_info($new_id, $post) {
 	$meta_blacklist = explode(",",get_option('duplicate_post_blacklist'));
 	if ($meta_blacklist == "") $meta_blacklist = array();
 	$meta_blacklist[] = '_wpas_done_all'; //Jetpack Publicize
+	$meta_blacklist[] = '_wpas_done_'; //Jetpack Publicize
 	$meta_blacklist[] = '_wpas_mess'; //Jetpack Publicize
 	$meta_keys = array_diff($post_meta_keys, $meta_blacklist);
 
