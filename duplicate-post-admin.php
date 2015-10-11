@@ -529,7 +529,7 @@ add_filter('plugin_row_meta', 'duplicate_post_add_plugin_links', 10, 2);
 function duplicate_post_add_plugin_links($links, $file) {
 	if ( $file == plugin_basename(dirname(__FILE__).'/duplicate-post.php') ) {
 		$links[] = '<a href="http://lopo.it/duplicate-post-plugin">' . __('Donate', 'duplicate-post') . '</a>';
-		$links[] = '<a href="http://lopo.it/duplicate-post-plugin">' . __('Translate', 'duplicate-post') . '</a>';
+		$links[] = '<a href="https://translate.wordpress.org/projects/wp-plugins/duplicate-post">' . __('Translate', 'duplicate-post') . '</a>';
 	}
 	return $links;
 }
