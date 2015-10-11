@@ -33,8 +33,11 @@ define('DUPLICATE_POST_CURRENT_VERSION', '2.6.1' );
 /**
  * Initialise the internationalisation domain
  */
-load_plugin_textdomain('duplicate-post',
-			'wp-content/plugins/duplicate-post/languages','duplicate-post/languages');
+function duplicate_post_load_plugin_textdomain() {
+    load_plugin_textdomain( 'duplicate-post', FALSE, basename( dirname( __FILE__ ) ) . '/languages/' );
+}
+add_action( 'plugins_loaded', 'duplicate_post_load_plugin_textdomain' );
+
 
 add_filter("plugin_action_links_".plugin_basename(__FILE__), "duplicate_post_plugin_actions", 10, 4);
 
