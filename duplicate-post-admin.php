@@ -125,6 +125,7 @@ if (get_option('duplicate_post_show_row') == 1){
 }
 
 function duplicate_post_show_update_notice() {
+	if(!current_user_can( 'manage_options')) return;
 	$class = 'notice is-dismissible';
 	$message = sprintf(__('<strong>Duplicate Post now has an option to choose which post types can be cloned</strong>. Please <a href="%s">review the settings</a> to enable it for all your desired post types.', 'duplicate-post'),site_url('/wp-admin/options-general.php?page=duplicatepost'));
 	$message .= '<br/>';
@@ -148,7 +149,7 @@ function duplicate_post_show_update_notice() {
 });
 			</script>";
 }
-if (current_user_can( 'manage_options') && get_option('duplicate_post_show_notice') == 1){
+if (get_option('duplicate_post_show_notice') == 1){
 	add_action( 'admin_notices', 'duplicate_post_show_update_notice' );
 }
 
