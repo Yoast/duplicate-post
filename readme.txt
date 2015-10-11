@@ -28,22 +28,13 @@ How it works:
 
 2, 3 and 4 will lead to the edit page for the new draft: change what you want, click on 'Publish' and you're done.
 
-**Pay attention to the new behaviour!** The first way now allows you to clone a post with a single click, speeding up your work if you have many posts to duplicate.
-
 There is also a **template tag**, so you can put it in your templates and clone your posts/pages from the front-end. Clicking on the link will lead you to the edit page for the new draft, just like the admin bar link.
 
-In the Options page under Settings it is now possible to choose what to copy:
+In the Options page under Settings it is now possible to choose what to copy, and you can also set a prefix (or a suffix) to place before (or after) the title of the cloned post/page.
 
-* the original post/page date
-* the original post/page status (draft, published, pending), when cloning from the posts list
-* the original post/page excerpt
-* the original post/page attachments (actual files won't be copied)
-* all the children of the original page
-* which taxonomies and custom fields
+You can also restrict the plugin to certain post types, and allow only some roles to clone posts or pages.
 
-You can also set a prefix (or a suffix) to place before (or after) the title of the cloned post/page, and the roles allowed to clone posts or pages.
-
-If you want to contribute to translate the plugin in languages other than English, there is a [GlotPress translation project](http://lopo.it/glotpress/projects/duplicate-post) available (no registration required! — You can also send me an e-mail using [the form on my website](http://lopo.it/contatti/)).
+If you want to contribute to translate the plugin in languages other than English, there is a [GlotPress translation project](https://translate.wordpress.org/projects/wp-plugins/duplicate-post) available.
 
 **If you're a plugin developer**, I suggest to read the section made just for you under "Other Notes", to ensure compatibility between your plugin(s) and mine.
 
@@ -68,6 +59,8 @@ Then try to deactivate and re-activate it, some user have reported that this fix
 
 Pay also attention to the new "Roles allowed to copy" option: it should convert the former "user level" option to the new standard, but unknown problems may arise. Make sure that your role is enabled.
 
+From version 3.0 onwards, post types must be enabled in the Options: check them as well.
+
 If not, maybe there is some kind of conflict with other plugins: feel free [to write me](http://lopo.it/contatti/) and we'll try to discover a solution (it will be *really* helpful if you try to deactivate all your other plugins one by one to see which one conflicts with mine... But do it only if you know what you're doing, I will not be responsible of any problem you may experience).
 
 = Can you add it to the bulk actions in the post/page list? =
@@ -85,6 +78,9 @@ There is an open ticket in WordPress Trac, as other plugin developers too are in
 5. The admin bar link. 
 
 == Upgrade Notice ==
+
+= 3.0 =
+Major redesign of the settings page + fine-tune options (what to copy, custom post types, etc.) + bugfixes and XSS prevention
 
 = 2.6 =
 PHP 5.4 (Strict Standards) compatible + Fixed possible XSS and SQL injections + other bugs 
@@ -123,6 +119,15 @@ Some users have experienced a fatal error when upgrading to v1.1: this may fix i
 New features and customization, WP 3.0 compatibility: you should upgrade if you want to copy Custom Posts with Custom Taxonomies.
 
 == Changelog ==
+
+= 3.0 =
+* Settings page redesigned
+* More options to enable/disable copy of every part of a post
+* Enable/disable cloning of every custom post type
+* Jetpack Publicize compatibility
+* Fixed a possible XSS
+* Fixed other little bugs
+* Translations removed to use WP.org's official GlotPress project
 
 = 2.6 =
 * PHP 5.4 (Strict Standards) compatible
@@ -265,6 +270,6 @@ Please refer to the [Plugin API](http://codex.wordpress.org/Plugin_API) for ever
 If you find this useful and you if you want to contribute, there are three ways:
 
    1. You can [write me](http://lopo.it/contatti/) and submit your bug reports, suggestions and requests for features;
-   2. If you want to translate it to your language (there are just a few lines of text), you can use the [GlotPress translation project](http://lopo.it/glotpress/projects/duplicate-post), or [contact me](http://lopo.it/contatti/) and I’ll send you the .pot catalogue; your translation could be featured in next releases;
-   3. Using the plugin is free, but if you want you can send me some money with PayPal [here](http://lopo.it/duplicate-post-plugin/)
+   2. If you want to translate it to your language (there are just a few lines of text), you can use the [GlotPress translation project](https://translate.wordpress.org/projects/wp-plugins/duplicate-post);
+   3. Using the plugin is free, but if you want you can support my efforts by donating with PayPal [here](http://lopo.it/duplicate-post-plugin/)
 
