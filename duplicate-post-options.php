@@ -177,7 +177,7 @@ section:first-of-type {
 							name="duplicate_post_copystatus" value="1" <?php  if(get_option('duplicate_post_copystatus') == 1) echo 'checked="checked"'; ?>"/>
 							<?php _e("Status"); ?>
 					</label> <label style="display: block;"> <input type="checkbox"
-							name="duplicate_post_copyslug" value="1" <?php  if(get_option('duplicate_post_copystatus') == 1) echo 'checked="checked"'; ?>"/>
+							name="duplicate_post_copyslug" value="1" <?php  if(get_option('duplicate_post_copyslug') == 1) echo 'checked="checked"'; ?>"/>
 							<?php _e("Slug"); ?>
 					</label> <label style="display: block;"> <input type="checkbox"
 							name="duplicate_post_copyexcerpt" value="1" <?php  if(get_option('duplicate_post_copyexcerpt') == 1) echo 'checked="checked"'; ?>"/>

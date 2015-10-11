@@ -496,7 +496,7 @@ function duplicate_post_create_duplicate($post, $status = '', $parent_id = '') {
 	// If the copy is published or scheduled, we have to set a proper slug.
 	if ($new_post_status == 'publish' || $new_post_status == 'future'){
 		$post_name = $post->post_name;
-		if($title != $post->post_title || (get_option('duplicate_post_copyslug') == '0')){
+		if(get_option('duplicate_post_copyslug') != 1){
 			$post_name = '';
 		}
 		$post_name = wp_unique_post_slug($post_name, $new_post_id, $new_post_status, $post->post_type, $new_post_parent);
