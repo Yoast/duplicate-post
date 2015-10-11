@@ -390,8 +390,12 @@ function duplicate_post_copy_comments($new_id, $post){
 			'comment_type' => '', 
 			'comment_parent' => $comment->comment_parent,
 			'user_id' => $comment->user_id,
+			'comment_author_IP' => $comment->comment_author_IP,
+			'comment_agent' => $comment->comment_agent,
+			'comment_date' => $comment->comment_date,
+			'comment_approved' => $comment->comment_approved,
 		);
-		$comment_id = wp_new_comment($commentdata);
+		$comment_id = wp_insert_comment($commentdata);
 	}
 }
 
