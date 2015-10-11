@@ -407,7 +407,15 @@ function duplicate_post_create_duplicate($post, $status = '', $parent_id = '') {
 			} else {
 			$title = ' ';
 		}
-		$title = $prefix.$title.$suffix;
+		$title = trim($prefix.$title.$suffix);
+
+		if ($title == ''){
+			// empty title will
+			$title = __('Auto Draft');
+			$restore_empty_title = true;
+		};
+			
+
 		if (get_option('duplicate_post_copystatus') == 0) $status = 'draft';
 	}
 	$new_post_author = duplicate_post_get_current_user();
@@ -442,7 +450,18 @@ function duplicate_post_create_duplicate($post, $status = '', $parent_id = '') {
 		$new_post['ID'] = $new_post_id;
 		$new_post['post_name'] = $post_name;
 
+		if($restore_empty_title){
+			$new_post['post_title'] = '';
+		}
+
 		// Update the post into the database
+		wp_update_post( $new_post );
+	} else if($restore_empty_title){
+		$new_post = array();
+		$new_post['ID'] = $new_post_id;
+		$new_post['post_title'] = '';
+
+		//Update the post into the database
 		wp_update_post( $new_post );
 	}
 
