@@ -191,7 +191,8 @@ section:first-of-type {
 							<?php _e("Children", 'duplicate-post');  ?>
 					</label>  <label style="display: block;"> <input type="checkbox"
 							name="duplicate_post_copycomments" value="1" <?php  if(get_option('duplicate_post_copycomments') == 1) echo 'checked="checked"'; ?>"/>
-							<?php _e("Comments");  ?><span class="description"><?php _e("Select the taxonomies you don't want to be copied", 'duplicate-post'); ?>
+							<?php _e("Comments");  ?>
+					</label>
 					</span>
 					</td>
 				</tr>
