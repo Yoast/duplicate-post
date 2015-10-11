@@ -410,9 +410,8 @@ function duplicate_post_create_duplicate($post, $status = '', $parent_id = '') {
 		$title = trim($prefix.$title.$suffix);
 
 		if ($title == ''){
-			// empty title will
-			$title = __('Auto Draft');
-			$restore_empty_title = true;
+			// empty title
+			$title = __('(no title)');
 		};
 			
 
@@ -450,21 +449,9 @@ function duplicate_post_create_duplicate($post, $status = '', $parent_id = '') {
 		$new_post['ID'] = $new_post_id;
 		$new_post['post_name'] = $post_name;
 
-		if($restore_empty_title){
-			$new_post['post_title'] = '';
-		}
-
 		// Update the post into the database
 		wp_update_post( $new_post );
-	} else if($restore_empty_title){
-		$new_post = array();
-		$new_post['ID'] = $new_post_id;
-		$new_post['post_title'] = '';
-
-		//Update the post into the database
-		wp_update_post( $new_post );
 	}
-
 
 	// If you have written a plugin which uses non-WP database tables to save
 	// information about a post you can hook this action to dupe that data.
