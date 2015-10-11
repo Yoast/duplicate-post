@@ -372,8 +372,30 @@ function duplicate_post_copy_children($new_id, $post){
 	}
 }
 
+/**
+ * Copy comments
+ */
+function duplicate_post_copy_comments($new_id, $post){
+	$comments = get_comments(array('post_id' => $post->ID));
 
-// Using our action hooks to copy attachments
+	foreach ($comments as $comment){
+		//do not copy pingbacks or trackbacks
+		if(!empty($comment->comment_type)) continue;
+		$commentdata = array(
+			'comment_post_ID' => $new_id,
+			'comment_author' => $comment->comment_author,
+			'comment_author_email' => $comment->comment_author_email,
+			'comment_author_url' => $comment->comment_author_url,
+			'comment_content' => $comment->comment_content,
+			'comment_type' => '', 
+			'comment_parent' => $comment->comment_parent,
+			'user_id' => $comment->user_id,
+		);
+		$comment_id = wp_new_comment($commentdata);
+	}
+}
+
+// Using our action hooks
 if(get_option('duplicate_post_copychildren') == 1){
 	add_action('dp_duplicate_post', 'duplicate_post_copy_children', 10, 2);
 	add_action('dp_duplicate_page', 'duplicate_post_copy_children', 10, 2);
@@ -382,6 +404,11 @@ if(get_option('duplicate_post_copychildren') == 1){
 if(get_option('duplicate_post_copyattachments') == 1){
 	add_action('dp_duplicate_post', 'duplicate_post_copy_attachments', 10, 2);
 	add_action('dp_duplicate_page', 'duplicate_post_copy_attachments', 10, 2);
+}
+
+if(get_option('duplicate_post_copycomments') == 1){
+	add_action('dp_duplicate_post', 'duplicate_post_copy_comments', 10, 2);
+	add_action('dp_duplicate_page', 'duplicate_post_copy_comments', 10, 2);
 }
 
 
