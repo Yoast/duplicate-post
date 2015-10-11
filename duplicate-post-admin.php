@@ -392,9 +392,13 @@ function duplicate_post_copy_comments($new_id, $post){
 			'user_id' => $comment->user_id,
 			'comment_author_IP' => $comment->comment_author_IP,
 			'comment_agent' => $comment->comment_agent,
-			'comment_date' => $comment->comment_date,
+			'comment_karma' => $comment->comment_karma,
 			'comment_approved' => $comment->comment_approved,
 		);
+		if(get_option('duplicate_post_copydate') == 1){
+			$commentdata['comment_date'] = $comment->comment_date ;
+			$commentdata['comment_date_gmt'] = get_gmt_from_date($comment->comment_date);
+		}
 		$comment_id = wp_insert_comment($commentdata);
 	}
 }
