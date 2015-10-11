@@ -271,7 +271,8 @@ section:first-of-type {
 							name="duplicate_post_roles[]" value="<?php echo $name ?>"
 							<?php if($role->has_cap('copy_posts')) echo 'checked="checked"'?> />
 							<?php echo translate_user_role($display_name); ?>
-					</label> <?php endforeach; ?> <span class="description"><?php _e("Warning: users will be able to copy all posts, even those of other users", 'duplicate-post'); ?>
+					</label> <?php endforeach; ?> <span class="description"><?php _e("Warning: users will be able to copy all posts, even those of other users", 'duplicate-post'); ?><br/>
+					<?php _e("Passwords and contents of password-protected posts may become visible to undesired users and visitors", 'duplicate-post'); ?>
 					</span>
 					</td>
 				</tr>
@@ -287,6 +288,7 @@ section:first-of-type {
 							<?php if(duplicate_post_is_post_type_enabled($post_type_object->name)) echo 'checked="checked"'?> />
 							<?php echo $post_type_object->labels->name?>
 					</label> <?php endforeach; ?> <span class="description"><?php _e("Select the post types you want the plugin to be enabled", 'duplicate-post'); ?>
+							<br /> <?php _e("Whether the links are displayed for custom post types registered by themes or plugins depends on their use of standard WordPress UI elements", 'duplicate-post'); ?>
 					</span>
 					</td>
 				</tr>
@@ -305,13 +307,12 @@ section:first-of-type {
 							<?php _e("Edit screen", 'duplicate-post'); ?> </label> <label
 						style="display: block"><input type="checkbox"
 							name="duplicate_post_show_adminbar" value="1" <?php  if(get_option('duplicate_post_show_adminbar') == 1) echo 'checked="checked"'; ?>"/>
-							<?php _e("Admin bar", 'duplicate-post'); ?> </label> <span
-						class="description"><?php _e("Whether the links are displayed for custom post types registered by themes or plugins depends on their use of standard WordPress UI elements", 'duplicate-post'); ?>
-					</span>
+							<?php _e("Admin bar", 'duplicate-post'); ?> </label>
 					</td>
 				</tr>
 				<tr valign="top">
-					<td colspan="2"><span class="description"><?php printf(__('You can also use the template tag duplicate_post_clone_post_link( $link, $before, $after, $id ). More info <a href="%s">here</a>', 'duplicate-post'), 'https://wordpress.org/plugins/duplicate-post/other_notes/'); ?>
+					<td colspan="2"><span class="description"><?php _e("Whether the links are displayed for custom post types registered by themes or plugins depends on their use of standard WordPress UI elements", 'duplicate-post'); ?>
+							<br /> <?php printf(__('You can also use the template tag duplicate_post_clone_post_link( $link, $before, $after, $id ). More info <a href="%s">here</a>', 'duplicate-post'), 'https://wordpress.org/plugins/duplicate-post/other_notes/'); ?>
 					</span>
 					</td>
 				</tr>
