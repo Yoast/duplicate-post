@@ -11,6 +11,7 @@ function duplicate_post_register_settings() { // whitelist options
 	register_setting( 'duplicate_post_group', 'duplicate_post_copytitle');
 	register_setting( 'duplicate_post_group', 'duplicate_post_copydate');
 	register_setting( 'duplicate_post_group', 'duplicate_post_copystatus');
+	register_setting( 'duplicate_post_group', 'duplicate_post_copyslug');
 	register_setting( 'duplicate_post_group', 'duplicate_post_copyexcerpt');
 	register_setting( 'duplicate_post_group', 'duplicate_post_copycontent');
 	register_setting( 'duplicate_post_group', 'duplicate_post_copypassword');
@@ -176,6 +177,9 @@ section:first-of-type {
 							name="duplicate_post_copystatus" value="1" <?php  if(get_option('duplicate_post_copystatus') == 1) echo 'checked="checked"'; ?>"/>
 							<?php _e("Status"); ?>
 					</label> <label style="display: block;"> <input type="checkbox"
+							name="duplicate_post_copyslug" value="1" <?php  if(get_option('duplicate_post_copystatus') == 1) echo 'checked="checked"'; ?>"/>
+							<?php _e("Slug"); ?>
+					</label> <label style="display: block;"> <input type="checkbox"
 							name="duplicate_post_copyexcerpt" value="1" <?php  if(get_option('duplicate_post_copyexcerpt') == 1) echo 'checked="checked"'; ?>"/>
 							<?php _e("Excerpt"); ?>
 					</label> <label style="display: block;"> <input type="checkbox"
@@ -220,7 +224,7 @@ section:first-of-type {
 					</th>
 					<td><input type="text" name="duplicate_post_increase_menu_order_by"
 						value="<?php echo get_option('duplicate_post_increase_menu_order_by'); ?>" />
-						<span class="description"><?php _e("Add this number to the original menu order (empty or zero to retain the value)", 'duplicate-post'); ?>
+						<span class="description"><?php _e("Add this number to the original menu order (blank or zero to retain the value)", 'duplicate-post'); ?>
 					</span>
 					</td>
 				</tr>

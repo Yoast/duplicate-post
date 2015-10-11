@@ -46,6 +46,7 @@ function duplicate_post_plugin_upgrade() {
 		add_option('duplicate_post_copytitle','1');
 		add_option('duplicate_post_copydate','0');
 		add_option('duplicate_post_copystatus','0');
+		add_option('duplicate_post_copyslug','1');
 		add_option('duplicate_post_copyexcerpt','1');
 		add_option('duplicate_post_copycontent','1');
 		add_option('duplicate_post_copypassword','0');
@@ -97,6 +98,7 @@ function duplicate_post_plugin_upgrade() {
 		add_option('duplicate_post_copytitle','1');
 		add_option('duplicate_post_copydate','0');
 		add_option('duplicate_post_copystatus','0');
+		add_option('duplicate_post_copyslug','1');
 		add_option('duplicate_post_copyexcerpt','1');
 		add_option('duplicate_post_copycontent','1');
 		add_option('duplicate_post_copypassword','0');
@@ -494,7 +496,7 @@ function duplicate_post_create_duplicate($post, $status = '', $parent_id = '') {
 	// If the copy is published or scheduled, we have to set a proper slug.
 	if ($new_post_status == 'publish' || $new_post_status == 'future'){
 		$post_name = $post->post_name;
-		if($title != $post->post_title){
+		if($title != $post->post_title || (get_option('duplicate_post_copyslug') == '0')){
 			$post_name = '';
 		}
 		$post_name = wp_unique_post_slug($post_name, $new_post_id, $new_post_status, $post->post_type, $new_post_parent);
