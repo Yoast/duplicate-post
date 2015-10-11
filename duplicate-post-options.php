@@ -172,7 +172,7 @@ section:first-of-type {
 					</th>
 					<td><label style="display: block;"> <input type="checkbox"
 							name="duplicate_post_copytitle" value="1" <?php  if(get_option('duplicate_post_copytitle') == 1) echo 'checked="checked"'; ?>"/>
-							<?php _e("Title", 'duplicate-post'); ?>
+							<?php _e("Title", 'default'); ?>
 					</label> <label style="display: block;"> <input type="checkbox"
 							name="duplicate_post_copydate" value="1" <?php  if(get_option('duplicate_post_copydate') == 1) echo 'checked="checked"'; ?>"/>
 							<?php _e("Date", 'default'); ?>
