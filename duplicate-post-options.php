@@ -108,9 +108,9 @@ h2.nav-tab-wrapper {
 	margin: 22px 0 0 0;
 }
 
-h2 .nav-tab:focus{
-    color: #555;
-    box-shadow: none;
+h2 .nav-tab:focus {
+	color: #555;
+	box-shadow: none;
 }
 
 #sections {
@@ -156,9 +156,12 @@ section:first-of-type {
 
 		<h2 class="nav-tab-wrapper">
 			<a class="nav-tab nav-tab-active"
-				href="<?php echo admin_url() ?>/index.php?page=duplicate-post-what">What</a>
-			<a class="nav-tab"
-				href="<?php echo admin_url() ?>/index.php?page=duplicate-post-where">Where</a>
+				href="<?php echo admin_url() ?>/index.php?page=duplicate-post-what"><?php _e('What to copy', 'duplicate-post'); ?>
+			</a> <a class="nav-tab"
+				href="<?php echo admin_url() ?>/index.php?page=duplicate-post-who"><?php _e('Permissions', 'duplicate-post'); ?>
+			</a> <a class="nav-tab"
+				href="<?php echo admin_url() ?>/index.php?page=duplicate-post-where"><?php _e('Display', 'duplicate-post'); ?>
+			</a>
 		</h2>
 
 		<section>
@@ -185,7 +188,7 @@ section:first-of-type {
 					</label> <label style="display: block;"> <input type="checkbox"
 							name="duplicate_post_copycontent" value="1" <?php  if(get_option('duplicate_post_copycontent') == 1) echo 'checked="checked"'; ?>"/>
 							<?php _e("Content"); ?>
-					</label>  <label style="display: block;"> <input type="checkbox"
+					</label> <label style="display: block;"> <input type="checkbox"
 							name="duplicate_post_copypassword" value="1" <?php  if(get_option('duplicate_post_copypassword') == 1) echo 'checked="checked"'; ?>"/>
 							<?php _e("Password"); ?>
 					</label> <label style="display: block;"> <input type="checkbox"
@@ -194,11 +197,10 @@ section:first-of-type {
 					</label> <label style="display: block;"> <input type="checkbox"
 							name="duplicate_post_copychildren" value="1" <?php  if(get_option('duplicate_post_copychildren') == 1) echo 'checked="checked"'; ?>"/>
 							<?php _e("Children", 'duplicate-post');  ?>
-					</label>  <label style="display: block;"> <input type="checkbox"
+					</label> <label style="display: block;"> <input type="checkbox"
 							name="duplicate_post_copycomments" value="1" <?php  if(get_option('duplicate_post_copycomments') == 1) echo 'checked="checked"'; ?>"/>
 							<?php _e("Comments");  ?>
-					</label>
-					</span>
+					</label> </span>
 					</td>
 				</tr>
 				<tr valign="top">
@@ -364,6 +366,10 @@ section:first-of-type {
 					</span>
 					</td>
 				</tr>
+			</table>
+		</section>
+		<section>
+			<table class="form-table">
 				<tr valign="top">
 					<th scope="row"><?php _e("Show links in", 'duplicate-post'); ?>
 					</th>
