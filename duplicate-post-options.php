@@ -101,9 +101,13 @@ function duplicate_post_options() {
 	})
 	
 	function toggle_private_taxonomies(){
-		jQuery(".taxonomy_private").toggle();
+		jQuery('.taxonomy_private').toggle();
 		return false;
 	}
+	jQuery(function(){
+		jQuery('.taxonomy_private').hide();
+	});
+	
 	</script>
 
 	<style>
@@ -154,9 +158,6 @@ section:first-of-type {
 
 label{
 	display:block;
-}
-label.taxonomy_private{
-	display: none;
 }
 </style>
 
