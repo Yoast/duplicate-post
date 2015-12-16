@@ -99,6 +99,10 @@ function duplicate_post_options() {
 		jQuery('section').eq(jQuery(this).index()).show();	
 		return false;
 	})
+	
+	function toggle_private_taxonomies(){
+		jQuery(".taxonomy_private").toggle();
+	}
 	</script>
 
 	<style>
@@ -240,6 +244,7 @@ section:first-of-type {
 				</tr>
 				<tr valign="top">
 					<th scope="row"><?php _e("Taxonomies", 'duplicate-post'); ?>
+					<button onclick="toggle_private_taxonomies()"><?php _e('Show/hide private taxonomies')?></button>
 					</th>
 					<td><?php $taxonomies=get_taxonomies(array(),'objects');
 					$taxonomies_blacklist = get_option('duplicate_post_taxonomies_blacklist');
