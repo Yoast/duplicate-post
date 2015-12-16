@@ -122,4 +122,13 @@ function duplicate_post_admin_bar_render() {
 if (get_option('duplicate_post_show_adminbar') == 1){
 	add_action( 'wp_before_admin_bar_render', 'duplicate_post_admin_bar_render' );
 }
+
+/**
+ * Sort taxonomy objects: first public, then private
+ */
+function duplicate_post_tax_obj_cmp($a, $b)
+{
+	return ($a->public < $b->public);
+}
+
 ?>

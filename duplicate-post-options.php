@@ -159,7 +159,7 @@ label{
 	display:block;
 }
 label.taxonomy_private{
-	color: #aaaaaa;
+	color: #888888;
 }
 a.toggle_link{
 	font-size: small;
@@ -258,9 +258,9 @@ a.toggle_link{
 				</tr>
 				<tr valign="top">
 					<th scope="row"><?php _e("Taxonomies", 'duplicate-post'); ?><br/>
-					<a class="toggle_link" href="#" onclick="toggle_private_taxonomies();return false;"><?php _e('Show/hide private taxonomies')?></a>
+					<a class="toggle_link" href="#" onclick="toggle_private_taxonomies();return false;"><?php _e('Show/hide private taxonomies', 'duplicate-post');?></a>
 					</th>
-					<td><?php $taxonomies=get_taxonomies(array(),'objects');
+					<td><?php $taxonomies=get_taxonomies(array(),'objects'); usort($taxonomies, 'duplicate_post_tax_obj_cmp');
 					$taxonomies_blacklist = get_option('duplicate_post_taxonomies_blacklist');
 					if ($taxonomies_blacklist == "") $taxonomies_blacklist = array();
 					foreach ($taxonomies as $taxonomy ) : ?> <label class="taxonomy_<?php echo ($taxonomy->public)?'public':'private';?>"> <input type="checkbox"
