@@ -150,6 +150,13 @@ section:first-of-type {
 	padding: 0px;
 	border: 0px;
 }
+
+label{
+	display:block;
+}
+label.taxonomy_private{
+	display: none;
+}
 </style>
 
 
@@ -172,34 +179,34 @@ section:first-of-type {
 				<tr valign="top">
 					<th scope="row"><?php _e('Post/page elements to copy', 'duplicate-post'); ?>
 					</th>
-					<td><label style="display: block;"> <input type="checkbox"
+					<td><label> <input type="checkbox"
 							name="duplicate_post_copytitle" value="1" <?php  if(get_option('duplicate_post_copytitle') == 1) echo 'checked="checked"'; ?>"/>
 							<?php _e("Title", 'default'); ?>
-					</label> <label style="display: block;"> <input type="checkbox"
+					</label> <label> <input type="checkbox"
 							name="duplicate_post_copydate" value="1" <?php  if(get_option('duplicate_post_copydate') == 1) echo 'checked="checked"'; ?>"/>
 							<?php _e("Date", 'default'); ?>
-					</label> <label style="display: block;"> <input type="checkbox"
+					</label> <label> <input type="checkbox"
 							name="duplicate_post_copystatus" value="1" <?php  if(get_option('duplicate_post_copystatus') == 1) echo 'checked="checked"'; ?>"/>
 							<?php _e("Status", 'default'); ?>
-					</label> <label style="display: block;"> <input type="checkbox"
+					</label> <label> <input type="checkbox"
 							name="duplicate_post_copyslug" value="1" <?php  if(get_option('duplicate_post_copyslug') == 1) echo 'checked="checked"'; ?>"/>
 							<?php _e("Slug", 'default'); ?>
-					</label> <label style="display: block;"> <input type="checkbox"
+					</label> <label> <input type="checkbox"
 							name="duplicate_post_copyexcerpt" value="1" <?php  if(get_option('duplicate_post_copyexcerpt') == 1) echo 'checked="checked"'; ?>"/>
 							<?php _e("Excerpt", 'default'); ?>
-					</label> <label style="display: block;"> <input type="checkbox"
+					</label> <label> <input type="checkbox"
 							name="duplicate_post_copycontent" value="1" <?php  if(get_option('duplicate_post_copycontent') == 1) echo 'checked="checked"'; ?>"/>
 							<?php _e("Content", 'default'); ?>
-					</label> <label style="display: block;"> <input type="checkbox"
+					</label> <label> <input type="checkbox"
 							name="duplicate_post_copypassword" value="1" <?php  if(get_option('duplicate_post_copypassword') == 1) echo 'checked="checked"'; ?>"/>
 							<?php _e("Password", 'default'); ?>
-					</label> <label style="display: block;"> <input type="checkbox"
+					</label> <label> <input type="checkbox"
 							name="duplicate_post_copyattachments" value="1" <?php  if(get_option('duplicate_post_copyattachments') == 1) echo 'checked="checked"'; ?>"/>
 							<?php _e("Attachments", 'duplicate-post');  ?>
-					</label> <label style="display: block;"> <input type="checkbox"
+					</label> <label> <input type="checkbox"
 							name="duplicate_post_copychildren" value="1" <?php  if(get_option('duplicate_post_copychildren') == 1) echo 'checked="checked"'; ?>"/>
 							<?php _e("Children", 'duplicate-post');  ?>
-					</label> <label style="display: block;"> <input type="checkbox"
+					</label> <label> <input type="checkbox"
 							name="duplicate_post_copycomments" value="1" <?php  if(get_option('duplicate_post_copycomments') == 1) echo 'checked="checked"'; ?>"/>
 							<?php _e("Comments", 'default');  ?> (<?php _e("except pingbacks and trackbacks", 'duplicate-post');  ?>)
 					</label> </span>
@@ -249,19 +256,13 @@ section:first-of-type {
 					<td><?php $taxonomies=get_taxonomies(array(),'objects');
 					$taxonomies_blacklist = get_option('duplicate_post_taxonomies_blacklist');
 					if ($taxonomies_blacklist == "") $taxonomies_blacklist = array();
-					foreach ($taxonomies as $taxonomy ) : ?> <label
-						style="display: block;" class="taxonomy_<?php echo ($taxonomy->public)?'public':'private';?>"> <input type="checkbox"
+					foreach ($taxonomies as $taxonomy ) : ?> <label class="taxonomy_<?php echo ($taxonomy->public)?'public':'private';?>"> <input type="checkbox"
 							name="duplicate_post_taxonomies_blacklist[]"
 							value="<?php echo $taxonomy->name?>"
 							<?php if(in_array($taxonomy->name, $taxonomies_blacklist)) echo 'checked="checked"'?> />
 							<?php echo $taxonomy->labels->name.' ['.$taxonomy->name.']'; ?>
 					</label> <?php endforeach; ?> <span class="description"><?php _e("Select the taxonomies you don't want to be copied", 'duplicate-post'); ?>
 					</span>
-					<style>
-					.taxonomy_private{
-						display: none;
-					}
-					</style>
 					</td>
 				</tr>
 			</table>
@@ -274,8 +275,7 @@ section:first-of-type {
 					<td><?php	global $wp_roles;
 					$roles = $wp_roles->get_names();
 					foreach ($roles as $name => $display_name): $role = get_role($name);
-					if ( !$role->has_cap('edit_posts') ) continue; ?> <label
-						style="display: block;"> <input type="checkbox"
+					if ( !$role->has_cap('edit_posts') ) continue; ?> <label> <input type="checkbox"
 							name="duplicate_post_roles[]" value="<?php echo $name ?>"
 							<?php if($role->has_cap('copy_posts')) echo 'checked="checked"'?> />
 							<?php echo translate_user_role($display_name); ?>
@@ -289,8 +289,7 @@ section:first-of-type {
 					</th>
 					<td><?php $post_types = get_post_types(array('public' => true),'objects');
 					foreach ($post_types as $post_type_object ) :
-					if ($post_type_object->name == 'attachment') continue; ?> <label
-						style="display: block;"> <input type="checkbox"
+					if ($post_type_object->name == 'attachment') continue; ?> <label> <input type="checkbox"
 							name="duplicate_post_types_enabled[]"
 							value="<?php echo $post_type_object->name?>"
 							<?php if(duplicate_post_is_post_type_enabled($post_type_object->name)) echo 'checked="checked"'?> />
@@ -307,13 +306,11 @@ section:first-of-type {
 				<tr valign="top">
 					<th scope="row"><?php _e("Show links in", 'duplicate-post'); ?>
 					</th>
-					<td><label style="display: block"><input type="checkbox"
+					<td><label><input type="checkbox"
 							name="duplicate_post_show_row" value="1" <?php  if(get_option('duplicate_post_show_row') == 1) echo 'checked="checked"'; ?>"/>
-							<?php _e("Post list", 'duplicate-post'); ?> </label> <label
-						style="display: block"><input type="checkbox"
+							<?php _e("Post list", 'duplicate-post'); ?> </label> <label><input type="checkbox"
 							name="duplicate_post_show_submitbox" value="1" <?php  if(get_option('duplicate_post_show_submitbox') == 1) echo 'checked="checked"'; ?>"/>
-							<?php _e("Edit screen", 'duplicate-post'); ?> </label> <label
-						style="display: block"><input type="checkbox"
+							<?php _e("Edit screen", 'duplicate-post'); ?> </label> <label><input type="checkbox"
 							name="duplicate_post_show_adminbar" value="1" <?php  if(get_option('duplicate_post_show_adminbar') == 1) echo 'checked="checked"'; ?>"/>
 							<?php _e("Admin bar", 'duplicate-post'); ?> </label>
 					</td>
