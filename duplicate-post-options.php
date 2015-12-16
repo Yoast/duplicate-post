@@ -102,7 +102,6 @@ function duplicate_post_options() {
 	
 	function toggle_private_taxonomies(){
 		jQuery('.taxonomy_private').toggle();
-		return false;
 	}
 	jQuery(function(){
 		jQuery('.taxonomy_private').hide();
@@ -252,8 +251,8 @@ label{
 					</td>
 				</tr>
 				<tr valign="top">
-					<th scope="row"><?php _e("Taxonomies", 'duplicate-post'); ?>
-					<a href="#" onclick="toggle_private_taxonomies()"><em><?php _e('Show/hide private taxonomies')?></em></a>
+					<th scope="row"><?php _e("Taxonomies", 'duplicate-post'); ?><br/>
+					<a href="#" onclick="toggle_private_taxonomies();return false;"><em><?php _e('Show/hide private taxonomies')?></em></a>
 					</th>
 					<td><?php $taxonomies=get_taxonomies(array(),'objects');
 					$taxonomies_blacklist = get_option('duplicate_post_taxonomies_blacklist');
