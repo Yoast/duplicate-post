@@ -19,8 +19,6 @@ function duplicate_post_register_settings() { // whitelist options
 	register_setting( 'duplicate_post_group', 'duplicate_post_copychildren');
 	register_setting( 'duplicate_post_group', 'duplicate_post_copycomments');
 	register_setting( 'duplicate_post_group', 'duplicate_post_blacklist');
-	register_setting( 'duplicate_post_group', 'duplicate_post_checkbox_blacklist');
-	register_setting( 'duplicate_post_group', 'duplicate_post_blacklist_plus');
 	register_setting( 'duplicate_post_group', 'duplicate_post_taxonomies_blacklist');
 	register_setting( 'duplicate_post_group', 'duplicate_post_title_prefix');
 	register_setting( 'duplicate_post_group', 'duplicate_post_title_suffix');
@@ -243,17 +241,23 @@ section:first-of-type {
 				<tr valign="top">
 					<th scope="row"><?php _e("Taxonomies", 'duplicate-post'); ?>
 					</th>
-					<td><?php $taxonomies=get_taxonomies(array('public' => true),'objects');
+					<td><?php $taxonomies=get_taxonomies(array(),'objects');
 					$taxonomies_blacklist = get_option('duplicate_post_taxonomies_blacklist');
 					if ($taxonomies_blacklist == "") $taxonomies_blacklist = array();
 					foreach ($taxonomies as $taxonomy ) : ?> <label
 						style="display: block;"> <input type="checkbox"
 							name="duplicate_post_taxonomies_blacklist[]"
 							value="<?php echo $taxonomy->name?>"
+							class="taxonomy_<?php echo ($taxonomy->public)?'public':'private';?>"
 							<?php if(in_array($taxonomy->name, $taxonomies_blacklist)) echo 'checked="checked"'?> />
 							<?php echo $taxonomy->labels->name.' ['.$taxonomy->name.']'; ?>
 					</label> <?php endforeach; ?> <span class="description"><?php _e("Select the taxonomies you don't want to be copied", 'duplicate-post'); ?>
 					</span>
+					<style>
+					input.taxonomy_private{
+						display: none;
+					}
+					</style>
 					</td>
 				</tr>
 			</table>
