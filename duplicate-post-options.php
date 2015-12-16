@@ -245,16 +245,15 @@ section:first-of-type {
 					$taxonomies_blacklist = get_option('duplicate_post_taxonomies_blacklist');
 					if ($taxonomies_blacklist == "") $taxonomies_blacklist = array();
 					foreach ($taxonomies as $taxonomy ) : ?> <label
-						style="display: block;"> <input type="checkbox"
+						style="display: block;" class="taxonomy_<?php echo ($taxonomy->public)?'public':'private';?>"> <input type="checkbox"
 							name="duplicate_post_taxonomies_blacklist[]"
 							value="<?php echo $taxonomy->name?>"
-							class="taxonomy_<?php echo ($taxonomy->public)?'public':'private';?>"
 							<?php if(in_array($taxonomy->name, $taxonomies_blacklist)) echo 'checked="checked"'?> />
 							<?php echo $taxonomy->labels->name.' ['.$taxonomy->name.']'; ?>
 					</label> <?php endforeach; ?> <span class="description"><?php _e("Select the taxonomies you don't want to be copied", 'duplicate-post'); ?>
 					</span>
 					<style>
-					input.taxonomy_private{
+					.taxonomy_private{
 						display: none;
 					}
 					</style>
