@@ -469,7 +469,7 @@ function duplicate_post_create_duplicate($post, $status = '', $parent_id = '') {
 	$new_post_author = duplicate_post_get_current_user();
 	
 	$menu_order = $post->menu_order;
-	$increase_menu_order_by = get_option(duplicate_post_increase_menu_order_by);
+	$increase_menu_order_by = get_option('duplicate_post_increase_menu_order_by');
 	if(!empty($increase_menu_order_by) && is_numeric($increase_menu_order_by)){
 		$menu_order += intval($increase_menu_order_by);
 	}
