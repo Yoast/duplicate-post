@@ -158,6 +158,12 @@ section:first-of-type {
 label{
 	display:block;
 }
+label.taxonomy_private{
+	color: #aaaaaa;
+}
+a.toggle_link{
+	font-size: small;
+}
 </style>
 
 
@@ -252,7 +258,7 @@ label{
 				</tr>
 				<tr valign="top">
 					<th scope="row"><?php _e("Taxonomies", 'duplicate-post'); ?><br/>
-					<a href="#" onclick="toggle_private_taxonomies();return false;"><em><?php _e('Show/hide private taxonomies')?></em></a>
+					<a class="toggle_link" href="#" onclick="toggle_private_taxonomies();return false;"><?php _e('Show/hide private taxonomies')?></a>
 					</th>
 					<td><?php $taxonomies=get_taxonomies(array(),'objects');
 					$taxonomies_blacklist = get_option('duplicate_post_taxonomies_blacklist');
