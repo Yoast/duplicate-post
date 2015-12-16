@@ -304,6 +304,8 @@ function duplicate_post_copy_post_meta_info($new_id, $post) {
 	$meta_blacklist[] = '_wpas_done_all'; //Jetpack Publicize
 	$meta_blacklist[] = '_wpas_done_'; //Jetpack Publicize
 	$meta_blacklist[] = '_wpas_mess'; //Jetpack Publicize
+	$meta_blacklist[] = '_edit_lock'; // edit lock
+	$meta_blacklist[] = '_edit_last'; // edit lock
 	$meta_keys = array_diff($post_meta_keys, $meta_blacklist);
 
 	foreach ($meta_keys as $meta_key) {
