@@ -351,12 +351,12 @@ function duplicate_post_copy_attachments($new_id, $post){
 			@unlink($file_array['tmp_name']);
 			continue;
 		}
-
+		$new_post_author = duplicate_post_get_current_user();
 		$cloned_child = array(
 				'ID'           => $new_attachment_id,
 				'post_title'   => addslashes($child->post_title),
 				'post_exceprt' => addslashes($child->post_title),
-				'post_author'  => duplicate_post_get_current_user()
+				'post_author'  => $new_post_author->ID
 		);
 		wp_update_post( $cloned_child );
 
