@@ -247,7 +247,7 @@ a.toggle_link{
 					</td>
 				</tr>
 				<tr valign="top">
-					<th scope="row"><?php _e("Custom fields", 'default'); ?>
+					<th scope="row"><?php _e("Do not copy these fields", 'duplicate-post'); ?>
 					</th>
 					<td id="textfield"><input type="text"
 						name="duplicate_post_blacklist"
@@ -257,7 +257,7 @@ a.toggle_link{
 					</td>
 				</tr>
 				<tr valign="top">
-					<th scope="row"><?php _e("Taxonomies", 'duplicate-post'); ?><br/>
+					<th scope="row"><?php _e("Do not copy these taxonomies", 'duplicate-post'); ?><br/>
 					<a class="toggle_link" href="#" onclick="toggle_private_taxonomies();return false;"><?php _e('Show/hide private taxonomies', 'duplicate-post');?></a>
 					</th>
 					<td><?php $taxonomies=get_taxonomies(array(),'objects'); usort($taxonomies, 'duplicate_post_tax_obj_cmp');
