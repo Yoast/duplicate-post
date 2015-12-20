@@ -127,7 +127,7 @@ if (get_option('duplicate_post_show_row') == 1){
 function duplicate_post_show_update_notice() {
 	if(!current_user_can( 'manage_options')) return;
 	$class = 'notice is-dismissible';
-	$message = sprintf(__('<strong>Duplicate Post has been greatly redesigned in its options page</strong>. Please <a href="%s">review the settings</a> to make sure it works as you expect.', 'duplicate-post'), site_url('/wp-admin/options-general.php?page=duplicatepost'));
+	$message = sprintf(__('<strong>Duplicate Post has been greatly redesigned in its options page.</strong> Please <a href="%s">review the settings</a> to make sure it works as you expect.', 'duplicate-post'), site_url('/wp-admin/options-general.php?page=duplicatepost'));
 	$message .= '<br/>';
 	$message .= '<a href="http://lopo.it/duplicate-post-plugin">'.__('Donate', 'duplicate-post').' (10¢) </a> | <a id="duplicate-post-dismiss-notice" href="javascript:duplicate_post_dismiss_notice();">'.__('Dismiss this notice.').'</a>';
 	echo '<div id="duplicate-post-notice" class="'.$class.'"><p>'.$message.'</p></div>';
