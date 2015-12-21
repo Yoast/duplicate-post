@@ -289,10 +289,6 @@ function duplicate_post_copy_post_taxonomies($new_id, $post) {
 	}
 }
 
-// Using our action hooks to copy taxonomies
-add_action('dp_duplicate_post', 'duplicate_post_copy_post_taxonomies', 10, 2);
-add_action('dp_duplicate_page', 'duplicate_post_copy_post_taxonomies', 10, 2);
-
 /**
  * Copy the meta information of a post to another post
 */
@@ -317,22 +313,20 @@ function duplicate_post_copy_post_meta_info($new_id, $post) {
 	}
 }
 
-// Using our action hooks to copy meta fields
-add_action('dp_duplicate_post', 'duplicate_post_copy_post_meta_info', 10, 2);
-add_action('dp_duplicate_page', 'duplicate_post_copy_post_meta_info', 10, 2);
-
 /**
  * Copy the attachments
  * It simply copies the table entries, actual file won't be duplicated
 */
 function duplicate_post_copy_attachments($new_id, $post){
+	// get thumbnail ID
+	$old_thumbnail_id = get_post_thumbnail_id($post->ID);
 	// get children
 	$children = get_posts(array( 'post_type' => 'any', 'numberposts' => -1, 'post_status' => 'any', 'post_parent' => $post->ID ));
 	// clone old attachments
 	foreach($children as $child){
 		if ($child->post_type != 'attachment') continue;
 		$url = wp_get_attachment_url($child->ID);
-
+		// Let's copy the actual file
 		$tmp = download_url( $url );
 		if( is_wp_error( $tmp ) ) {
 			@unlink($tmp);
@@ -344,7 +338,7 @@ function duplicate_post_copy_attachments($new_id, $post){
 		$file_array = array();
 		$file_array['name'] = basename($url);
 		$file_array['tmp_name'] = $tmp;
-
+		// "Upload" to the media collection
 		$new_attachment_id = media_handle_sideload( $file_array, $new_id, $desc );
 
 		if ( is_wp_error($new_attachment_id) ) {
@@ -363,6 +357,11 @@ function duplicate_post_copy_attachments($new_id, $post){
 		$alt_title = get_post_meta($child->ID, '_wp_attachment_image_alt', true);
 		if($alt_title) update_post_meta($new_attachment_id, $meta_key, $alt_title);
 
+		// if we have cloned the post thumbnail, set the copy as the thumbnail for the new post
+		if($old_thumbnail_id == $child->ID){
+				set_post_thumbnail($new_id, $new_attachment_id);
+		}
+		
 	}
 }
 
@@ -418,21 +417,27 @@ function duplicate_post_copy_comments($new_id, $post){
 }
 
 // Using our action hooks
+
+add_action('dp_duplicate_post', 'duplicate_post_copy_post_meta_info', 10, 2);
+add_action('dp_duplicate_page', 'duplicate_post_copy_post_meta_info', 10, 2);
+
 if(get_option('duplicate_post_copychildren') == 1){
-	add_action('dp_duplicate_post', 'duplicate_post_copy_children', 10, 2);
-	add_action('dp_duplicate_page', 'duplicate_post_copy_children', 10, 2);
+	add_action('dp_duplicate_post', 'duplicate_post_copy_children', 20, 2);
+	add_action('dp_duplicate_page', 'duplicate_post_copy_children', 20, 2);
 }
 
 if(get_option('duplicate_post_copyattachments') == 1){
-	add_action('dp_duplicate_post', 'duplicate_post_copy_attachments', 10, 2);
-	add_action('dp_duplicate_page', 'duplicate_post_copy_attachments', 10, 2);
+	add_action('dp_duplicate_post', 'duplicate_post_copy_attachments', 30, 2);
+	add_action('dp_duplicate_page', 'duplicate_post_copy_attachments', 30, 2);
 }
 
 if(get_option('duplicate_post_copycomments') == 1){
-	add_action('dp_duplicate_post', 'duplicate_post_copy_comments', 10, 2);
-	add_action('dp_duplicate_page', 'duplicate_post_copy_comments', 10, 2);
+	add_action('dp_duplicate_post', 'duplicate_post_copy_comments', 40, 2);
+	add_action('dp_duplicate_page', 'duplicate_post_copy_comments', 40, 2);
 }
 
+add_action('dp_duplicate_post', 'duplicate_post_copy_post_taxonomies', 50, 2);
+add_action('dp_duplicate_page', 'duplicate_post_copy_post_taxonomies', 50, 2);
 
 /**
  * Create a duplicate from a post
