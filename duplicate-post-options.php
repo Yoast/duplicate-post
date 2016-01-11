@@ -37,7 +37,7 @@ function duplicate_post_menu() {
 
 function duplicate_post_options() {
 
-	if ( current_user_can( 'edit_users' ) && (isset($_GET['settings-updated'])  && $_GET['settings-updated'] == true)){
+	if ( current_user_can( 'promote_users' ) && (isset($_GET['settings-updated'])  && $_GET['settings-updated'] == true)){
 		global $wp_roles;
 		$roles = $wp_roles->get_names();
 
@@ -276,6 +276,7 @@ a.toggle_link{
 		</section>
 		<section>
 			<table class="form-table">
+			<?php if ( current_user_can( 'promote_users' ) ){ ?>
 				<tr valign="top">
 					<th scope="row"><?php _e("Roles allowed to copy", 'duplicate-post'); ?>
 					</th>
@@ -291,6 +292,7 @@ a.toggle_link{
 					</span>
 					</td>
 				</tr>
+			<?php } ?>
 				<tr valign="top">
 					<th scope="row"><?php _e("Enable for these post types", 'duplicate-post'); ?>
 					</th>
