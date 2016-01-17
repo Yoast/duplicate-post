@@ -3,7 +3,7 @@ Contributors: lopo
 Donate link: http://lopo.it/duplicate-post-plugin/
 Tags: duplicate post, copy, clone
 Requires at least: 3.0
-Tested up to: 4.3.1
+Tested up to: 4.4
 Stable tag: 2.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -34,7 +34,7 @@ In the Options page under Settings it is now possible to choose what to copy, an
 
 You can also restrict the plugin to certain post types, and allow only some roles to clone posts or pages.
 
-If you want to contribute to translate the plugin in languages other than English, there is a [GlotPress translation project](https://translate.wordpress.org/projects/wp-plugins/duplicate-post) available.
+If you want to contribute to translate the plugin in languages other than English, there is a [translation project](https://translate.wordpress.org/projects/wp-plugins/duplicate-post) available: [contact me](http://lopo.it/contatti/) if you wish to become an editor for your language.
 
 **If you're a plugin developer**, I suggest to read the section made just for you under "Other Notes", to ensure compatibility between your plugin(s) and mine.
 
@@ -51,6 +51,10 @@ Use WordPress' Add New Plugin feature, searching "Duplicate Post", or download t
 
 == Frequently Asked Questions ==
 
+= How to stop copying featured images? =
+
+Add `_thumbnail_id` to "Do not copy these fields" in the Settings page.
+
 = The plugin doesn't work, why? =
 
 First, check your version of WordPress: the plugin is not supposed to work on old versions anymore. Make sure also to upgrade to the last version of the plugin!
@@ -62,6 +66,13 @@ Pay also attention to the new "Roles allowed to copy" option: it should convert 
 From version 3.0 onwards, post types must be enabled in the Options: check them as well.
 
 If not, maybe there is some kind of conflict with other plugins: feel free [to write me](http://lopo.it/contatti/) and we'll try to discover a solution (it will be *really* helpful if you try to deactivate all your other plugins one by one to see which one conflicts with mine... But do it only if you know what you're doing, I will not be responsible of any problem you may experience).
+
+= The plugin is not translated in my language! =
+
+From version 3.0 the plugin's translations are managed by the WordPress.org platform and the plugin si shipped without language files, so first of all update translations under Dashboard->Updates.
+
+If Duplicate Post is still in English, or if there are some untraslated strings, you can help traslating to your language [here](https://translate.wordpress.org/projects/wp-plugins/duplicate-post): you only need a WordPress.org account.
+[Contact me](http://lopo.it/contatti/) if you wish to become an editor for your language.
 
 = Can you add it to the bulk actions in the post/page list? =
 
@@ -127,7 +138,7 @@ New features and customization, WP 3.0 compatibility: you should upgrade if you 
 * Jetpack Publicize compatibility
 * Fixed a possible XSS
 * Fixed other little bugs
-* Translations removed to use WP.org's official GlotPress project
+* Translations removed to use WP.org's official translation project
 
 = 2.6 =
 * PHP 5.4 (Strict Standards) compatible
@@ -270,6 +281,6 @@ Please refer to the [Plugin API](http://codex.wordpress.org/Plugin_API) for ever
 If you find this useful and you if you want to contribute, there are three ways:
 
    1. You can [write me](http://lopo.it/contatti/) and submit your bug reports, suggestions and requests for features;
-   2. If you want to translate it to your language (there are just a few lines of text), you can use the [GlotPress translation project](https://translate.wordpress.org/projects/wp-plugins/duplicate-post);
+   2. If you want to translate it to your language (there are just a few lines of text), you can use the [translation project](https://translate.wordpress.org/projects/wp-plugins/duplicate-post);
    3. Using the plugin is free, but if you want you can support my efforts by donating with PayPal [here](http://lopo.it/duplicate-post-plugin/)
 
