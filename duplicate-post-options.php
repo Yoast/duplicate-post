@@ -71,7 +71,8 @@ function duplicate_post_options() {
 	<div
 		style="margin: 9px 15px 4px 0; padding: 5px; text-align: center; font-weight: bold; float: left;">
 		<a href="http://lopo.it/duplicate-post-plugin"><?php _e('Visit plugin site'); ?>
-		</a> - <a href="https://translate.wordpress.org/projects/wp-plugins/duplicate-post"><?php _e('Translate', 'duplicate-post'); ?>
+		</a> - <a
+			href="https://translate.wordpress.org/projects/wp-plugins/duplicate-post"><?php _e('Translate', 'duplicate-post'); ?>
 		</a> - <a href="https://wordpress.org/plugins/duplicate-post/faq/"><?php _e('FAQ', 'duplicate-post'); ?>
 		</a> - <a href="http://lopo.it/duplicate-post-plugin"><?php _e('Donate', 'duplicate-post'); ?>
 			(10¢) </a>
@@ -156,13 +157,15 @@ section:first-of-type {
 	border: 0px;
 }
 
-label{
-	display:block;
+label {
+	display: block;
 }
-label.taxonomy_private{
+
+label.taxonomy_private {
 	color: #888888;
 }
-a.toggle_link{
+
+a.toggle_link {
 	font-size: small;
 }
 </style>
@@ -225,7 +228,8 @@ a.toggle_link{
 					</th>
 					<td><input type="text" name="duplicate_post_title_prefix"
 						value="<?php echo get_option('duplicate_post_title_prefix'); ?>" />
-						</td><td><span class="description"><?php _e("Prefix to be added before the title, e.g. \"Copy of\" (blank for no prefix)", 'duplicate-post'); ?>
+					</td>
+					<td><span class="description"><?php _e("Prefix to be added before the title, e.g. \"Copy of\" (blank for no prefix)", 'duplicate-post'); ?>
 					</span>
 					</td>
 				</tr>
@@ -234,7 +238,8 @@ a.toggle_link{
 					</th>
 					<td><input type="text" name="duplicate_post_title_suffix"
 						value="<?php echo get_option('duplicate_post_title_suffix'); ?>" />
-						</td><td><span class="description"><?php _e("Suffix to be added after the title, e.g. \"(dup)\" (blank for no suffix)", 'duplicate-post'); ?>
+					</td>
+					<td><span class="description"><?php _e("Suffix to be added after the title, e.g. \"(dup)\" (blank for no suffix)", 'duplicate-post'); ?>
 					</span>
 					</td>
 				</tr>
@@ -243,7 +248,8 @@ a.toggle_link{
 					</th>
 					<td><input type="text" name="duplicate_post_increase_menu_order_by"
 						value="<?php echo get_option('duplicate_post_increase_menu_order_by'); ?>" />
-						</td><td><span class="description"><?php _e("Add this number to the original menu order (blank or zero to retain the value)", 'duplicate-post'); ?>
+					</td>
+					<td><span class="description"><?php _e("Add this number to the original menu order (blank or zero to retain the value)", 'duplicate-post'); ?>
 					</span>
 					</td>
 				</tr>
@@ -252,20 +258,24 @@ a.toggle_link{
 					</th>
 					<td id="textfield"><input type="text"
 						name="duplicate_post_blacklist"
-						value="<?php echo get_option('duplicate_post_blacklist'); ?>" /></td><td><span
-						class="description"><?php _e("Comma-separated list of meta fields that must not be copied", 'duplicate-post'); ?><br/>
-						<small><?php _e("Add <code>_thumbnail_id</code> to prevent featured images to be copied", 'duplicate-post'); ?></small>
-					</span>
+						value="<?php echo get_option('duplicate_post_blacklist'); ?>" /></td>
+					<td><span class="description"><?php _e("Comma-separated list of meta fields that must not be copied", 'duplicate-post'); ?><br />
+							<small><?php _e("Add <code>_thumbnail_id</code> to prevent featured images to be copied", 'duplicate-post'); ?>
+						</small> </span>
 					</td>
 				</tr>
 				<tr valign="top">
-					<th scope="row"><?php _e("Do not copy these taxonomies", 'duplicate-post'); ?><br/>
-					<a class="toggle_link" href="#" onclick="toggle_private_taxonomies();return false;"><?php _e('Show/hide private taxonomies', 'duplicate-post');?></a>
+					<th scope="row"><?php _e("Do not copy these taxonomies", 'duplicate-post'); ?><br />
+						<a class="toggle_link" href="#"
+						onclick="toggle_private_taxonomies();return false;"><?php _e('Show/hide private taxonomies', 'duplicate-post');?>
+					</a>
 					</th>
 					<td colspan="2"><?php $taxonomies=get_taxonomies(array(),'objects'); usort($taxonomies, 'duplicate_post_tax_obj_cmp');
 					$taxonomies_blacklist = get_option('duplicate_post_taxonomies_blacklist');
 					if ($taxonomies_blacklist == "") $taxonomies_blacklist = array();
-					foreach ($taxonomies as $taxonomy ) : ?> <label class="taxonomy_<?php echo ($taxonomy->public)?'public':'private';?>"> <input type="checkbox"
+					foreach ($taxonomies as $taxonomy ) : ?> <label
+						class="taxonomy_<?php echo ($taxonomy->public)?'public':'private';?>">
+							<input type="checkbox"
 							name="duplicate_post_taxonomies_blacklist[]"
 							value="<?php echo $taxonomy->name?>"
 							<?php if(in_array($taxonomy->name, $taxonomies_blacklist)) echo 'checked="checked"'?> />
@@ -278,30 +288,31 @@ a.toggle_link{
 		</section>
 		<section>
 			<table class="form-table">
-			<?php if ( current_user_can( 'promote_users' ) ){ ?>
+				<?php if ( current_user_can( 'promote_users' ) ){ ?>
 				<tr valign="top">
 					<th scope="row"><?php _e("Roles allowed to copy", 'duplicate-post'); ?>
 					</th>
 					<td><?php	global $wp_roles;
 					$roles = $wp_roles->get_names();
 					foreach ($roles as $name => $display_name): $role = get_role($name);
-					if ( !$role->has_cap('edit_posts') ) continue; ?> <label> <input type="checkbox"
-							name="duplicate_post_roles[]" value="<?php echo $name ?>"
+					if ( !$role->has_cap('edit_posts') ) continue; ?> <label> <input
+							type="checkbox" name="duplicate_post_roles[]"
+							value="<?php echo $name ?>"
 							<?php if($role->has_cap('copy_posts')) echo 'checked="checked"'?> />
 							<?php echo translate_user_role($display_name); ?>
-					</label> <?php endforeach; ?> <span class="description"><?php _e("Warning: users will be able to copy all posts, even those of other users", 'duplicate-post'); ?><br/>
-					<?php _e("Passwords and contents of password-protected posts may become visible to undesired users and visitors", 'duplicate-post'); ?>
+					</label> <?php endforeach; ?> <span class="description"><?php _e("Warning: users will be able to copy all posts, even those of other users", 'duplicate-post'); ?><br />
+							<?php _e("Passwords and contents of password-protected posts may become visible to undesired users and visitors", 'duplicate-post'); ?>
 					</span>
 					</td>
 				</tr>
-			<?php } ?>
+				<?php } ?>
 				<tr valign="top">
 					<th scope="row"><?php _e("Enable for these post types", 'duplicate-post'); ?>
 					</th>
 					<td><?php $post_types = get_post_types(array('public' => true),'objects');
 					foreach ($post_types as $post_type_object ) :
-					if ($post_type_object->name == 'attachment') continue; ?> <label> <input type="checkbox"
-							name="duplicate_post_types_enabled[]"
+					if ($post_type_object->name == 'attachment') continue; ?> <label> <input
+							type="checkbox" name="duplicate_post_types_enabled[]"
 							value="<?php echo $post_type_object->name?>"
 							<?php if(duplicate_post_is_post_type_enabled($post_type_object->name)) echo 'checked="checked"'?> />
 							<?php echo $post_type_object->labels->name?>
@@ -317,12 +328,12 @@ a.toggle_link{
 				<tr valign="top">
 					<th scope="row"><?php _e("Show links in", 'duplicate-post'); ?>
 					</th>
-					<td><label><input type="checkbox"
-							name="duplicate_post_show_row" value="1" <?php  if(get_option('duplicate_post_show_row') == 1) echo 'checked="checked"'; ?>"/>
-							<?php _e("Post list", 'duplicate-post'); ?> </label> <label><input type="checkbox"
-							name="duplicate_post_show_submitbox" value="1" <?php  if(get_option('duplicate_post_show_submitbox') == 1) echo 'checked="checked"'; ?>"/>
-							<?php _e("Edit screen", 'duplicate-post'); ?> </label> <label><input type="checkbox"
-							name="duplicate_post_show_adminbar" value="1" <?php  if(get_option('duplicate_post_show_adminbar') == 1) echo 'checked="checked"'; ?>"/>
+					<td><label><input type="checkbox" name="duplicate_post_show_row"
+							value="1" <?php  if(get_option('duplicate_post_show_row') == 1) echo 'checked="checked"'; ?>"/>
+							<?php _e("Post list", 'duplicate-post'); ?> </label> <label><input
+							type="checkbox" name="duplicate_post_show_submitbox" value="1" <?php  if(get_option('duplicate_post_show_submitbox') == 1) echo 'checked="checked"'; ?>"/>
+							<?php _e("Edit screen", 'duplicate-post'); ?> </label> <label><input
+							type="checkbox" name="duplicate_post_show_adminbar" value="1" <?php  if(get_option('duplicate_post_show_adminbar') == 1) echo 'checked="checked"'; ?>"/>
 							<?php _e("Admin bar", 'duplicate-post'); ?> </label>
 					</td>
 				</tr>
