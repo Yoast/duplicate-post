@@ -187,7 +187,7 @@ a.toggle_link{
 				<tr valign="top">
 					<th scope="row"><?php _e('Post/page elements to copy', 'duplicate-post'); ?>
 					</th>
-					<td><label> <input type="checkbox"
+					<td colspan="2"><label> <input type="checkbox"
 							name="duplicate_post_copytitle" value="1" <?php  if(get_option('duplicate_post_copytitle') == 1) echo 'checked="checked"'; ?>"/>
 							<?php _e("Title", 'default'); ?>
 					</label> <label> <input type="checkbox"
@@ -225,7 +225,7 @@ a.toggle_link{
 					</th>
 					<td><input type="text" name="duplicate_post_title_prefix"
 						value="<?php echo get_option('duplicate_post_title_prefix'); ?>" />
-						<span class="description"><?php _e("Prefix to be added before the title, e.g. \"Copy of\" (blank for no prefix)", 'duplicate-post'); ?>
+						</td><td><span class="description"><?php _e("Prefix to be added before the title, e.g. \"Copy of\" (blank for no prefix)", 'duplicate-post'); ?>
 					</span>
 					</td>
 				</tr>
@@ -234,7 +234,7 @@ a.toggle_link{
 					</th>
 					<td><input type="text" name="duplicate_post_title_suffix"
 						value="<?php echo get_option('duplicate_post_title_suffix'); ?>" />
-						<span class="description"><?php _e("Suffix to be added after the title, e.g. \"(dup)\" (blank for no suffix)", 'duplicate-post'); ?>
+						</td><td><span class="description"><?php _e("Suffix to be added after the title, e.g. \"(dup)\" (blank for no suffix)", 'duplicate-post'); ?>
 					</span>
 					</td>
 				</tr>
@@ -243,7 +243,7 @@ a.toggle_link{
 					</th>
 					<td><input type="text" name="duplicate_post_increase_menu_order_by"
 						value="<?php echo get_option('duplicate_post_increase_menu_order_by'); ?>" />
-						<span class="description"><?php _e("Add this number to the original menu order (blank or zero to retain the value)", 'duplicate-post'); ?>
+						</td><td><span class="description"><?php _e("Add this number to the original menu order (blank or zero to retain the value)", 'duplicate-post'); ?>
 					</span>
 					</td>
 				</tr>
@@ -252,8 +252,9 @@ a.toggle_link{
 					</th>
 					<td id="textfield"><input type="text"
 						name="duplicate_post_blacklist"
-						value="<?php echo get_option('duplicate_post_blacklist'); ?>" /> <span
-						class="description"><?php _e("Comma-separated list of meta fields that must not be copied", 'duplicate-post'); ?>
+						value="<?php echo get_option('duplicate_post_blacklist'); ?>" /></td><td><span
+						class="description"><?php _e("Comma-separated list of meta fields that must not be copied", 'duplicate-post'); ?><br/>
+						<small><?php _e("Add <code>_thumbnail_id</code> to prevent featured images to be copied", 'duplicate-post'); ?></small>
 					</span>
 					</td>
 				</tr>
@@ -261,7 +262,7 @@ a.toggle_link{
 					<th scope="row"><?php _e("Do not copy these taxonomies", 'duplicate-post'); ?><br/>
 					<a class="toggle_link" href="#" onclick="toggle_private_taxonomies();return false;"><?php _e('Show/hide private taxonomies', 'duplicate-post');?></a>
 					</th>
-					<td><?php $taxonomies=get_taxonomies(array(),'objects'); usort($taxonomies, 'duplicate_post_tax_obj_cmp');
+					<td colspan="2"><?php $taxonomies=get_taxonomies(array(),'objects'); usort($taxonomies, 'duplicate_post_tax_obj_cmp');
 					$taxonomies_blacklist = get_option('duplicate_post_taxonomies_blacklist');
 					if ($taxonomies_blacklist == "") $taxonomies_blacklist = array();
 					foreach ($taxonomies as $taxonomy ) : ?> <label class="taxonomy_<?php echo ($taxonomy->public)?'public':'private';?>"> <input type="checkbox"
