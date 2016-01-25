@@ -259,9 +259,9 @@ Another available template tag is `duplicate_post_get_original($id, $output)` wh
 `duplicate_post_get_original()` relies on the `_dp_original` custom field.
 
 
-== For plugin developers ==
+== Action hooks ==
 
-From version 1.0 onwards, thanks to [Simon Wheatley](http://www.simonwheatley.co.uk/)'s suggestion, Duplicate Post adds two actions (*dp_duplicate_post* and *dp_duplicate_page*) which can be used by other developers if their plugins store extra data for posts in non-standard WP tables.
+From version 1.0 onwards, thanks to [Simon Wheatley](http://www.simonwheatley.co.uk/)'s suggestion, Duplicate Post adds two action hooks (*dp_duplicate_post* and *dp_duplicate_page*) which can be used by other developers if their plugins store extra data for posts in non-standard WP tables.
 Since Duplicate Post knows only of standard WP tables, it can't copy other data relevant to the post which is being copied if this information is stored elsewhere. So, if you're a plugin developer which acts this way, and you want to ensure compatibility with Duplicate Post, you can hook your functions to those actions to make sure that they will be called when a post (or page) is cloned.
 
 It's very simple. Just write your function that copies post metadata to a new row of your table:
