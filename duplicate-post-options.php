@@ -64,9 +64,9 @@ function duplicate_post_options() {
 	<div id="icon-options-general" class="icon32">
 		<br>
 	</div>
-	<h2>
+	<h1>
 		<?php _e("Duplicate Post Options", 'duplicate-post'); ?>
-	</h2>
+	</h1>
 
 	<div
 		style="margin: 9px 15px 4px 0; padding: 5px; text-align: center; font-weight: bold; float: left;">
