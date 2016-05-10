@@ -54,7 +54,7 @@ function duplicate_post_plugin_upgrade() {
 		add_option('duplicate_post_copychildren','0');
 		add_option('duplicate_post_copycomments','0');
 		add_option('duplicate_post_taxonomies_blacklist',array());
-		add_option('duplicate_post_blacklist',array());
+		add_option('duplicate_post_blacklist','');
 		add_option('duplicate_post_types_enabled',array('post', 'page'));
 		add_option('duplicate_post_show_row','1');
 		add_option('duplicate_post_show_adminbar','1');
@@ -106,7 +106,7 @@ function duplicate_post_plugin_upgrade() {
 		add_option('duplicate_post_copychildren','0');
 		add_option('duplicate_post_copycomments','0');
 		add_option('duplicate_post_taxonomies_blacklist',array());
-		add_option('duplicate_post_blacklist',array());
+		add_option('duplicate_post_blacklist','');
 		add_option('duplicate_post_types_enabled',array('post', 'page'));
 		add_option('duplicate_post_show_row','1');
 		add_option('duplicate_post_show_adminbar','1');
@@ -279,6 +279,7 @@ function duplicate_post_copy_post_meta_info($new_id, $post) {
 	if (empty($post_meta_keys)) return;
 	$meta_blacklist = explode(",",get_option('duplicate_post_blacklist'));
 	if ($meta_blacklist == "") $meta_blacklist = array();
+	$meta_blacklist = array_map('trim', $meta_blacklist);
 	$meta_blacklist[] = '_wpas_done_all'; //Jetpack Publicize
 	$meta_blacklist[] = '_wpas_done_'; //Jetpack Publicize
 	$meta_blacklist[] = '_wpas_mess'; //Jetpack Publicize
