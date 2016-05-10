@@ -248,24 +248,6 @@ function duplicate_post_save_as_new_post($status = ''){
 }
 
 /**
- * Get the currently registered user
- */
-function duplicate_post_get_current_user() {
-	if (function_exists('wp_get_current_user')) {
-		return wp_get_current_user();
-	} else if (function_exists('get_currentuserinfo')) {
-		global $userdata;
-		get_currentuserinfo();
-		return $userdata;
-	} else {
-		$user_login = $_COOKIE[USER_COOKIE];
-		$sql = $wpdb->prepare("SELECT * FROM $wpdb->users WHERE user_login=%s", $user_login);
-		$current_user = $wpdb->get_results($sql);
-		return $current_user;
-	}
-}
-
-/**
  * Copy the taxonomies of a post to another post
  */
 function duplicate_post_copy_post_taxonomies($new_id, $post) {
@@ -345,7 +327,7 @@ function duplicate_post_copy_attachments($new_id, $post){
 			@unlink($file_array['tmp_name']);
 			continue;
 		}
-		$new_post_author = duplicate_post_get_current_user();
+		$new_post_author = wp_get_current_user();
 		$cloned_child = array(
 				'ID'           => $new_attachment_id,
 				'post_title'   => addslashes($child->post_title),
@@ -471,7 +453,7 @@ function duplicate_post_create_duplicate($post, $status = '', $parent_id = '') {
 
 		if (get_option('duplicate_post_copystatus') == 0) $status = 'draft';
 	}
-	$new_post_author = duplicate_post_get_current_user();
+	$new_post_author = wp_get_current_user();
 	
 	$menu_order = $post->menu_order;
 	$increase_menu_order_by = get_option('duplicate_post_increase_menu_order_by');
