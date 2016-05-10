@@ -220,7 +220,7 @@ a.toggle_link {
 					</label> <label> <input type="checkbox"
 							name="duplicate_post_copycomments" value="1" <?php  if(get_option('duplicate_post_copycomments') == 1) echo 'checked="checked"'; ?>"/>
 							<?php _e("Comments", 'default');  ?> (<?php _e("except pingbacks and trackbacks", 'duplicate-post');  ?>)
-					</label> </span>
+					</label>
 					</td>
 				</tr>
 				<tr valign="top">
