@@ -119,7 +119,7 @@ function duplicate_post_admin_bar_render() {
 }
 
 function duplicate_post_add_css() {
-	wp_enqueue_style ( 'duplicate-post', plugins_url('/duplicate-post.css'));
+	wp_enqueue_style ( 'duplicate-post', plugins_url('/duplicate-post.css', __FILE__));
 }
 
 if (get_option('duplicate_post_show_adminbar') == 1){
