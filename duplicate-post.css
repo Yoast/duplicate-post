@@ -1,0 +1,4 @@
+#wpadminbar #wp-admin-bar-new-draft > .ab-item::before {
+    content: "\f498\f344\f498";
+    top: 2px;
+}

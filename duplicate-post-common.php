@@ -111,7 +111,6 @@ function duplicate_post_admin_bar_render() {
 	&& (duplicate_post_is_post_type_enabled($current_object->post_type) ) )
 	{
 		$wp_admin_bar->add_menu( array(
-		'parent' => 'edit',
         'id' => 'new_draft',
         'title' => __("Copy to a new draft", 'duplicate-post'),
         'href' => duplicate_post_get_clone_post_link( $current_object->ID )
@@ -119,8 +118,13 @@ function duplicate_post_admin_bar_render() {
 	}
 }
 
+function duplicate_post_add_css() {
+	wp_enqueue_style ( 'duplicate-post-css', dirname(__FILE__).'/duplicate-post.css');
+}
+
 if (get_option('duplicate_post_show_adminbar') == 1){
 	add_action( 'wp_before_admin_bar_render', 'duplicate_post_admin_bar_render' );
+	add_action( 'wp_enqueue_scripts', 'duplicate_post_add_css');
 }
 
 /**
