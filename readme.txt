@@ -90,6 +90,9 @@ There is an open ticket in WordPress Trac, as other plugin developers too are in
 
 == Upgrade Notice ==
 
+= 3.0.1 =
+Recommended if you have 3.0: fixes the upgrade bug
+
 = 3.0 =
 Major redesign of the settings page + fine-tune options (what to copy, custom post types, etc.) + bugfixes and XSS prevention
 
@@ -130,6 +133,9 @@ Some users have experienced a fatal error when upgrading to v1.1: this may fix i
 New features and customization, WP 3.0 compatibility: you should upgrade if you want to copy Custom Posts with Custom Taxonomies.
 
 == Changelog ==
+
+= 3.0.1 =
+* Fixes the issues for people upgrading from an older version
 
 = 3.0 =
 * Settings page redesigned
