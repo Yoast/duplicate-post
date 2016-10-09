@@ -162,7 +162,7 @@ label {
 }
 
 label.taxonomy_private {
-	color: #888888;
+	font-style: italic;
 }
 
 a.toggle_link {

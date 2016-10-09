@@ -51,4 +51,6 @@ require_once (dirname(__FILE__).'/duplicate-post-common.php');
 if (is_admin()){
 	require_once (dirname(__FILE__).'/duplicate-post-admin.php');
 }
+
+register_activation_hook( __FILE__, 'duplicate_post_plugin_upgrade' );
 ?>

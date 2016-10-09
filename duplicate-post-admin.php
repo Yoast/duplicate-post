@@ -22,7 +22,7 @@ function duplicate_post_get_current_version() {
 /**
  * Plugin upgrade
  */
-add_action('admin_init','duplicate_post_plugin_upgrade');
+//add_action('admin_init','duplicate_post_plugin_upgrade');
 
 function duplicate_post_plugin_upgrade() {
 	$installed_version = duplicate_post_get_installed_version();
@@ -124,6 +124,9 @@ if (get_option('duplicate_post_show_row') == 1){
 	add_filter('page_row_actions', 'duplicate_post_make_duplicate_link_row',10,2);
 }
 
+/**
+ * Shows the update notice
+ */
 function duplicate_post_show_update_notice() {
 	if(!current_user_can( 'manage_options')) return;
 	$class = 'notice is-dismissible';
@@ -133,20 +136,20 @@ function duplicate_post_show_update_notice() {
 	echo '<div id="duplicate-post-notice" class="'.$class.'"><p>'.$message.'</p></div>';
 	echo "<script>
 			function duplicate_post_dismiss_notice(){
-			var data = {
-			'action': 'duplicate_post_dismiss_notice',
-};
+				var data = {
+				'action': 'duplicate_post_dismiss_notice',
+				};
 
-			jQuery.post(ajaxurl, data, function(response) {
-			jQuery('#duplicate-post-notice').hide();
-});
-}
+				jQuery.post(ajaxurl, data, function(response) {
+					jQuery('#duplicate-post-notice').hide();
+				});
+			}
 
 			jQuery(document).ready(function(){
-			jQuery('.notice-dismiss').click(function(){
-			duplicate_post_dismiss_notice();
-});
-});
+				jQuery('.notice-dismiss').click(function(){
+					duplicate_post_dismiss_notice();
+				});
+			});
 			</script>";
 }
 if (get_option('duplicate_post_show_notice') == 1){
@@ -429,7 +432,6 @@ function duplicate_post_create_duplicate($post, $status = '', $parent_id = '') {
 
 	$duplicate_post_types_enabled = get_option('duplicate_post_types_enabled');
 
-	// We don't want to clone revisions
 	if (!duplicate_post_is_post_type_enabled($post->post_type) && $post->post_type != 'attachment')
 		wp_die(__('Copy features for this post type are not enabled in options page', 'duplicate-post'));
 
