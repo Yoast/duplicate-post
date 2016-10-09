@@ -2,6 +2,10 @@
 /**
  * Add an option page
  */
+if ( !defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( is_admin() ){ // admin actions
 	add_action('admin_menu', 'duplicate_post_menu');
 	add_action( 'admin_init', 'duplicate_post_register_settings');

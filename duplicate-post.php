@@ -26,6 +26,10 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 // Version of the plugin
 define('DUPLICATE_POST_CURRENT_VERSION', '3.0' );
 

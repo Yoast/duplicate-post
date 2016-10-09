@@ -130,8 +130,7 @@ if (get_option('duplicate_post_show_adminbar') == 1){
 /**
  * Sort taxonomy objects: first public, then private
  */
-function duplicate_post_tax_obj_cmp($a, $b)
-{
+function duplicate_post_tax_obj_cmp($a, $b) {
 	return ($a->public < $b->public);
 }
 
