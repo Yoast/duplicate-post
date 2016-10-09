@@ -22,7 +22,7 @@ function duplicate_post_get_current_version() {
 /**
  * Plugin upgrade
  */
-//add_action('admin_init','duplicate_post_plugin_upgrade');
+add_action('admin_init','duplicate_post_plugin_upgrade');
 
 function duplicate_post_plugin_upgrade() {
 	$installed_version = duplicate_post_get_installed_version();
