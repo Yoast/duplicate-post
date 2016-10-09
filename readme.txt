@@ -134,11 +134,12 @@ New features and customization, WP 3.0 compatibility: you should upgrade if you 
 = 3.0 =
 * Settings page redesigned
 * More options to enable/disable copy of every part of a post
-* Enable/disable cloning of every custom post type
+* Enable/disable cloning for every custom post type
 * Jetpack Publicize compatibility
 * Fixed a possible XSS
 * Fixed other little bugs
 * Translations removed to use WP.org's official translation project
+* Checked PHP 7 compatibility
 
 = 2.6 =
 * PHP 5.4 (Strict Standards) compatible
