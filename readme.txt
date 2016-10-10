@@ -69,7 +69,7 @@ If not, maybe there is some kind of conflict with other plugins: feel free [to w
 
 = The plugin is not translated in my language! =
 
-From version 3.0 the plugin's translations are managed by the WordPress.org platform and the plugin si shipped without language files, so first of all update translations under Dashboard->Updates.
+From version 3.0 the plugin's translations are managed by the WordPress.org platform and the plugin is shipped without language files, so first of all update translations under Dashboard->Updates.
 
 If Duplicate Post is still in English, or if there are some untraslated strings, you can help traslating to your language [here](https://translate.wordpress.org/projects/wp-plugins/duplicate-post): you only need a WordPress.org account.
 [Contact me](http://lopo.it/contatti/) if you wish to become an editor for your language.
@@ -262,7 +262,7 @@ The parameters are:
 * *id*
     (integer) (optional) Post ID. Default: Current post ID
     
-Another available template tag is `duplicate_post_get_original($id, $output)` which returns the original post, either as a post object, an associative array or a numeric array (depending on the $output parameter), jus as [get_post()](http://codex.wordpress.org/Function_Reference/get_post) does.
+Another available template tag is `duplicate_post_get_original($id, $output)` which returns the original post, either as a post object, an associative array or a numeric array (depending on the $output parameter), just as [get_post()](http://codex.wordpress.org/Function_Reference/get_post) does.
 `duplicate_post_get_original()` relies on the `_dp_original` custom field.
 
 
@@ -285,7 +285,7 @@ Please refer to the [Plugin API](http://codex.wordpress.org/Plugin_API) for ever
 
 == Contribute ==
 
-If you find this useful and you if you want to contribute, there are three ways:
+If you find this useful and if you want to contribute, there are three ways:
 
    1. You can [write me](http://lopo.it/contatti/) and submit your bug reports, suggestions and requests for features;
    2. If you want to translate it to your language (there are just a few lines of text), you can use the [translation project](https://translate.wordpress.org/projects/wp-plugins/duplicate-post);
