@@ -74,13 +74,11 @@ function duplicate_post_options() {
 
 	<div
 		style="margin: 9px 15px 4px 0; padding: 5px; text-align: center; font-weight: bold; float: left;">
-		<a href="http://lopo.it/duplicate-post-plugin"><?php _e('Visit plugin site'); ?>
-		</a> - <a
-			href="https://translate.wordpress.org/projects/wp-plugins/duplicate-post"><?php _e('Translate', 'duplicate-post'); ?>
-		</a> - <a href="https://wordpress.org/plugins/duplicate-post/faq/"><?php _e('FAQ', 'duplicate-post'); ?>
-		</a> - <a href="http://lopo.it/duplicate-post-plugin"><?php _e('Donate', 'duplicate-post'); ?> (10¢) 
-		</a>  <a href="http://lopo.it/duplicate-post-plugin"><img id="donate-button" src="<?php echo plugins_url( 'donate.png', __FILE__ ); ?>" alt="Donate"/>
-			</a>
+		<a href="http://lopo.it/duplicate-post-plugin"><?php _e('Visit plugin site'); ?></a>
+		 - <a href="https://translate.wordpress.org/projects/wp-plugins/duplicate-post"><?php _e('Translate', 'duplicate-post'); ?></a>
+		 - <a href="https://wordpress.org/plugins/duplicate-post/faq/"><?php _e('FAQ', 'duplicate-post'); ?></a>
+		 - <a href="http://lopo.it/duplicate-post-plugin"><?php _e('Donate', 'duplicate-post'); ?> (10¢)</a>
+		   <a href="http://lopo.it/duplicate-post-plugin"><img id="donate-button" src="<?php echo plugins_url( 'donate.png', __FILE__ ); ?>" alt="Donate"/></a>
 
 
 	</div>
