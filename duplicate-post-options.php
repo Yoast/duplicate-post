@@ -78,8 +78,8 @@ function duplicate_post_options() {
 		</a> - <a
 			href="https://translate.wordpress.org/projects/wp-plugins/duplicate-post"><?php _e('Translate', 'duplicate-post'); ?>
 		</a> - <a href="https://wordpress.org/plugins/duplicate-post/faq/"><?php _e('FAQ', 'duplicate-post'); ?>
-		</a> - <a href="http://lopo.it/duplicate-post-plugin"><?php _e('Donate', 'duplicate-post'); ?>
-			(10¢) <img src="<?php echo plugins_url( 'donate.png', __FILE__ ); ?>" alt="Donate"/>
+		</a> - <a href="http://lopo.it/duplicate-post-plugin"><?php _e('Donate', 'duplicate-post'); ?> (10¢) 
+		</a>  <a href="http://lopo.it/duplicate-post-plugin"><img id="donate-button" src="<?php echo plugins_url( 'donate.png', __FILE__ ); ?>" alt="Donate"/>
 			</a>
 
 
@@ -159,6 +159,9 @@ label.taxonomy_private {
 
 a.toggle_link {
 	font-size: small;
+}
+img#donate-button{
+	vertical-align: middle;
 }
 </style>
 
