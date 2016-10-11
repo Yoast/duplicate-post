@@ -302,7 +302,7 @@ img#donate-button{
 				<tr valign="top">
 					<th scope="row"><?php _e("Enable for these post types", 'duplicate-post'); ?>
 					</th>
-					<td><?php $post_types = get_post_types(array('public' => true),'objects');
+					<td><?php $post_types = get_post_types(array('show_ui' => true),'objects');
 					foreach ($post_types as $post_type_object ) :
 					if ($post_type_object->name == 'attachment') continue; ?> <label> <input
 							type="checkbox" name="duplicate_post_types_enabled[]"
