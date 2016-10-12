@@ -115,6 +115,7 @@ function duplicate_post_admin_bar_render() {
         'title' => __("Copy to a new draft", 'duplicate-post'),
         'href' => duplicate_post_get_clone_post_link( $current_object->ID )
 		) );
+		add_action( 'wp_enqueue_scripts', 'duplicate_post_add_css');
 	}
 }
 
@@ -124,7 +125,6 @@ function duplicate_post_add_css() {
 
 if (get_option('duplicate_post_show_adminbar') == 1){
 	add_action( 'wp_before_admin_bar_render', 'duplicate_post_admin_bar_render' );
-	add_action( 'wp_enqueue_scripts', 'duplicate_post_add_css');
 }
 
 /**
