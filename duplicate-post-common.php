@@ -114,20 +114,22 @@ function duplicate_post_admin_bar_render() {
         'id' => 'new_draft',
         'title' => __("Copy to a new draft", 'duplicate-post'),
         'href' => duplicate_post_get_clone_post_link( $current_object->ID )
-		) );
-		
+		) );	
 	}
 }
 
 function duplicate_post_add_css() {
-	wp_enqueue_style ( 'duplicate-post', plugins_url('/duplicate-post.css', __FILE__));
+	$current_object = get_queried_object ();
+	if (!empty ( $current_object )){
+		if (is_admin_bar_showing () && duplicate_post_is_current_user_allowed_to_copy () && (duplicate_post_is_post_type_enabled ( $current_object->post_type ))) {
+			wp_enqueue_style ( 'duplicate-post', plugins_url('/duplicate-post.css', __FILE__));
+		}
+	}
 }
 
 if (get_option ( 'duplicate_post_show_adminbar' ) == 1) {
 	add_action ( 'wp_before_admin_bar_render', 'duplicate_post_admin_bar_render' );
-	if (is_admin_bar_showing () && duplicate_post_is_current_user_allowed_to_copy ()) {
-		add_action ( 'wp_enqueue_scripts', 'duplicate_post_add_css' );
-	}
+	add_action ( 'wp_enqueue_scripts', 'duplicate_post_add_css' );	
 }
 
 /**
