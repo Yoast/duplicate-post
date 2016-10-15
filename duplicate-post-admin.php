@@ -68,51 +68,62 @@ function duplicate_post_plugin_upgrade() {
 		delete_option('duplicate_post_view_user_level');
 		delete_option('dp_notice');
 
-		/*
-		 * Convert old userlevel option to new capability scheme
-		*/
-
-		// Get old duplicate_post_copy_user_level option
-		$min_user_level = get_option('duplicate_post_copy_user_level');
-
-		if (!empty($min_user_level)){
-			// Get default roles
-			$default_roles = array(
-					1 => 'contributor',
-					2 => 'author',
-					3 => 'editor',
-					8 => 'administrator',
-			);
-
-			// Cycle all roles and assign capability if its level >= duplicate_post_copy_user_level
-			foreach ($default_roles as $level => $name){
-				$role = get_role($name);
-				if ($role && $min_user_level <= $level)
-					$role->add_cap( 'copy_posts' );
+		$installed_version_numbers = explode('.', $installed_version);
+		
+		if($installed_version_numbers[0] == 2){ // upgrading from 2.*
+			/*
+			 * Convert old userlevel option to new capability scheme
+			 */
+			
+			// Get old duplicate_post_copy_user_level option
+			$min_user_level = get_option('duplicate_post_copy_user_level');
+			
+			if (!empty($min_user_level)){
+				// Get default roles
+				$default_roles = array(
+						1 => 'contributor',
+						2 => 'author',
+						3 => 'editor',
+						8 => 'administrator',
+				);
+			
+				// Cycle all roles and assign capability if its level >= duplicate_post_copy_user_level
+				foreach ($default_roles as $level => $name){
+					$role = get_role($name);
+					if ($role && $min_user_level <= $level)
+						$role->add_cap( 'copy_posts' );
+				}
+			
+				// delete old option
+				delete_option('duplicate_post_copy_user_level');
 			}
-
-			// delete old option
-			delete_option('duplicate_post_copy_user_level');
+			
+			add_option('duplicate_post_copytitle','1');
+			add_option('duplicate_post_copydate','0');
+			add_option('duplicate_post_copystatus','0');
+			add_option('duplicate_post_copyslug','1');
+			add_option('duplicate_post_copyexcerpt','1');
+			add_option('duplicate_post_copycontent','1');
+			add_option('duplicate_post_copypassword','0');
+			add_option('duplicate_post_copyattachments','0');
+			add_option('duplicate_post_copychildren','0');
+			add_option('duplicate_post_copycomments','0');
+			add_option('duplicate_post_taxonomies_blacklist',array());
+			add_option('duplicate_post_blacklist','');
+			add_option('duplicate_post_types_enabled',array('post', 'page'));
+			add_option('duplicate_post_show_row','1');
+			add_option('duplicate_post_show_adminbar','1');
+			add_option('duplicate_post_show_submitbox','1');
+			
+			// show notice about new features
+			add_option('duplicate_post_show_notice','1');
+			
+		} else if($installed_version_numbers[0] == 3){ // upgrading from 3.*		
+			// hide notice, we assume people already know of new features
+			update_option('duplicate_post_show_notice', 0);
 		}
-
-		add_option('duplicate_post_copytitle','1');
-		add_option('duplicate_post_copydate','0');
-		add_option('duplicate_post_copystatus','0');
-		add_option('duplicate_post_copyslug','1');
-		add_option('duplicate_post_copyexcerpt','1');
-		add_option('duplicate_post_copycontent','1');
-		add_option('duplicate_post_copypassword','0');
-		add_option('duplicate_post_copyattachments','0');
-		add_option('duplicate_post_copychildren','0');
-		add_option('duplicate_post_copycomments','0');
-		add_option('duplicate_post_taxonomies_blacklist',array());
-		add_option('duplicate_post_blacklist','');
-		add_option('duplicate_post_types_enabled',array('post', 'page'));
-		add_option('duplicate_post_show_row','1');
-		add_option('duplicate_post_show_adminbar','1');
-		add_option('duplicate_post_show_submitbox','1');
-
-		add_option('duplicate_post_show_notice','1');
+		
+		
 	}
 	// Update version number
 	update_option( 'duplicate_post_version', duplicate_post_get_current_version() );
@@ -124,47 +135,46 @@ if (get_option('duplicate_post_show_row') == 1){
 	add_filter('page_row_actions', 'duplicate_post_make_duplicate_link_row',10,2);
 }
 
-/**
- * Shows the update notice
- */
-function duplicate_post_show_update_notice() {
-	if(!current_user_can( 'manage_options')) return;
-	$class = 'notice is-dismissible';
-	$message = sprintf(__('<strong>Duplicate Post has been greatly redesigned in its options page.</strong> Please <a href="%s">review the settings</a> to make sure it works as you expect.', 'duplicate-post'), admin_url('/wp-admin/options-general.php?page=duplicatepost'));
-	$message .= '<br/>';
-	$message .= '<a href="http://lopo.it/duplicate-post-plugin">'.__('Donate', 'duplicate-post').' (10¢) </a> | <a id="duplicate-post-dismiss-notice" href="javascript:duplicate_post_dismiss_notice();">'.__('Dismiss this notice.').'</a>';
-	echo '<div id="duplicate-post-notice" class="'.$class.'"><p>'.$message.'</p></div>';
-	echo "<script>
-			function duplicate_post_dismiss_notice(){
-				var data = {
-				'action': 'duplicate_post_dismiss_notice',
-				};
 
-				jQuery.post(ajaxurl, data, function(response) {
-					jQuery('#duplicate-post-notice').hide();
-				});
-			}
-
-			jQuery(document).ready(function(){
-				jQuery('.notice-dismiss').click(function(){
-					duplicate_post_dismiss_notice();
-				});
-			});
-			</script>";
-}
 if (get_option('duplicate_post_show_notice') == 1){
+	/**
+	 * Shows the update notice
+	 */
+	function duplicate_post_show_update_notice() {
+		if(!current_user_can( 'manage_options')) return;
+		$class = 'notice is-dismissible';
+		$message = sprintf(__('<strong>Duplicate Post has been greatly redesigned in its options page.</strong> Please <a href="%s">review the settings</a> to make sure it works as you expect.', 'duplicate-post'), admin_url('/wp-admin/options-general.php?page=duplicatepost'));
+		$message .= '<br/>';
+		$message .= '<a href="http://lopo.it/duplicate-post-plugin">'.__('Donate', 'duplicate-post').' (10¢) </a> | <a id="duplicate-post-dismiss-notice" href="javascript:duplicate_post_dismiss_notice();">'.__('Dismiss this notice.').'</a>';
+		echo '<div id="duplicate-post-notice" class="'.$class.'"><p>'.$message.'</p></div>';
+		echo "<script>
+				function duplicate_post_dismiss_notice(){
+					var data = {
+					'action': 'duplicate_post_dismiss_notice',
+					};
+	
+					jQuery.post(ajaxurl, data, function(response) {
+						jQuery('#duplicate-post-notice').hide();
+					});
+				}
+	
+				jQuery(document).ready(function(){
+					jQuery('.notice-dismiss').click(function(){
+						duplicate_post_dismiss_notice();
+					});
+				});
+				</script>";
+	}
+
 	add_action( 'admin_notices', 'duplicate_post_show_update_notice' );
+	add_action( 'wp_ajax_duplicate_post_dismiss_notice', 'duplicate_post_dismiss_notice' );
+	
+	function duplicate_post_dismiss_notice() {
+		$result = update_option('duplicate_post_show_notice', 0);
+		return $result;
+		wp_die();
+	}
 }
-
-add_action( 'wp_ajax_duplicate_post_dismiss_notice', 'duplicate_post_dismiss_notice' );
-
-function duplicate_post_dismiss_notice() {
-	$result = update_option('duplicate_post_show_notice', 0);
-	return $result;
-
-	wp_die();
-}
-
 
 /**
  * Add the link to action list for post_row_actions

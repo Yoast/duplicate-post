@@ -90,6 +90,9 @@ There is an open ticket in WordPress Trac, as other plugin developers too are in
 
 == Upgrade Notice ==
 
+= 3.0.2 =
+Small bugfixes: check the changelog for more info
+
 = 3.0.1 =
 Recommended if you have 3.0: fixes the upgrade bug
 
@@ -133,6 +136,12 @@ Some users have experienced a fatal error when upgrading to v1.1: this may fix i
 New features and customization, WP 3.0 compatibility: you should upgrade if you want to copy Custom Posts with Custom Taxonomies.
 
 == Changelog ==
+
+= 3.0.2 =
+* Can now be enabled for every custom post type with visible UI (not just public ones)
+* Admin bar CSS only enqueued when needed
+* New "Donate" button
+* Fixes for minor bugs and typos
 
 = 3.0.1 =
 * Fixes the issues for people upgrading from an older version
