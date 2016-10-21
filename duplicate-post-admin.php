@@ -246,8 +246,9 @@ function duplicate_post_save_as_new_post($status = ''){
 		$new_id = duplicate_post_create_duplicate($post, $status);
 
 		if ($status == ''){
+                        $sendback = remove_query_arg( array( 'trashed', 'untrashed', 'deleted', 'cloned', 'ids'), wp_get_referer() );
 			// Redirect to the post list screen
-			wp_redirect( admin_url( 'edit.php?post_type='.$post->post_type.'&dp_copied_posts=1') );
+			wp_redirect( add_query_var( array( 'cloned' => 1, 'ids' => $post->id), $sendback ) );
 		} else {
 			// Redirect to the edit screen for the new draft post
 			wp_redirect( admin_url( 'post.php?action=edit&post=' . $new_id ) );
@@ -536,13 +537,14 @@ function duplicate_post_add_plugin_links($links, $file) {
 add_action( 'admin_notices', 'duplicate_post_action_admin_notice' );
  
 function duplicate_post_action_admin_notice() {
-  if ( ! empty( $_REQUEST['dp_copied_posts'] ) ) {
-    $copied_posts = intval( $_REQUEST['dp_copied_posts'] );
+  if ( ! empty( $_REQUEST['cloned'] ) ) {
+    $copied_posts = intval( $_REQUEST['cloned'] );
     printf( '<div id="message" class="updated fade"><p>' .
       _n( 'Copied %s post.',
         'Copied %s posts.',
         $copied_posts,
         'duplicate-post'
       ) . '</p></div>', $copied_posts );
+    remove_query_var( 'cloned' );
   }
 }
