@@ -541,7 +541,7 @@ function duplicate_post_action_admin_notice() {
     printf( '<div id="message" class="updated fade">' .
       _n( 'Copied %s post.',
         'Copied %s posts.',
-        $emailed_count,
+        $copied_posts,
         'duplicate-post'
       ) . '</div>', $copied_posts );
   }
