@@ -248,7 +248,7 @@ function duplicate_post_save_as_new_post($status = ''){
 		if ($status == ''){
                         $sendback = remove_query_arg( array( 'trashed', 'untrashed', 'deleted', 'cloned', 'ids'), wp_get_referer() );
 			// Redirect to the post list screen
-			wp_redirect( add_query_var( array( 'cloned' => 1, 'ids' => $post->id), $sendback ) );
+			wp_redirect( add_query_arg( array( 'cloned' => 1, 'ids' => $post->id), $sendback ) );
 		} else {
 			// Redirect to the edit screen for the new draft post
 			wp_redirect( admin_url( 'post.php?action=edit&post=' . $new_id ) );
@@ -545,6 +545,6 @@ function duplicate_post_action_admin_notice() {
         $copied_posts,
         'duplicate-post'
       ) . '</p></div>', $copied_posts );
-    remove_query_var( 'cloned' );
+    remove_query_arg( 'cloned' );
   }
 }
