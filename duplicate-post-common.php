@@ -76,7 +76,6 @@ function duplicate_post_clone_post_link( $link = null, $before = '', $after = ''
 	if ( null === $link )
 	$link = __('Copy to a new draft', 'duplicate-post');
 
-	$post_type_obj = get_post_type_object( $post->post_type );
 	$link = '<a class="post-clone-link" href="' . $url . '" title="'
 	. esc_attr(__("Copy to a new draft", 'duplicate-post'))
 	.'">' . $link . '</a>';
@@ -138,5 +137,3 @@ if (get_option ( 'duplicate_post_show_adminbar' ) == 1) {
 function duplicate_post_tax_obj_cmp($a, $b) {
 	return ($a->public < $b->public);
 }
-
-?>

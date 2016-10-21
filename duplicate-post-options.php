@@ -90,7 +90,7 @@ function duplicate_post_options() {
 		jQuery('section').hide();
 		jQuery('section').eq(jQuery(this).index()).show();	
 		return false;
-	})
+	});
 	
 	function toggle_private_taxonomies(){
 		jQuery('.taxonomy_private').toggle();

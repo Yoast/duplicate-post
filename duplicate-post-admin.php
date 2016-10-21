@@ -255,7 +255,6 @@ function duplicate_post_save_as_new_post($status = ''){
 		exit;
 
 	} else {
-		$post_type_obj = get_post_type_object( $post->post_type );
 		wp_die(__('Copy creation failed, could not find original:', 'duplicate-post') . ' ' . htmlspecialchars($id));
 	}
 }
@@ -351,7 +350,7 @@ function duplicate_post_copy_attachments($new_id, $post){
 		wp_update_post( $cloned_child );
 
 		$alt_title = get_post_meta($child->ID, '_wp_attachment_image_alt', true);
-		if($alt_title) update_post_meta($new_attachment_id, $meta_key, $alt_title);
+		if($alt_title) update_post_meta($new_attachment_id, '_wp_attachment_image_alt', $alt_title);
 
 		// if we have cloned the post thumbnail, set the copy as the thumbnail for the new post
 		if($old_thumbnail_id == $child->ID){
@@ -440,8 +439,6 @@ add_action('dp_duplicate_page', 'duplicate_post_copy_post_taxonomies', 50, 2);
  */
 function duplicate_post_create_duplicate($post, $status = '', $parent_id = '') {
 
-	$duplicate_post_types_enabled = get_option('duplicate_post_types_enabled');
-
 	if (!duplicate_post_is_post_type_enabled($post->post_type) && $post->post_type != 'attachment')
 		wp_die(__('Copy features for this post type are not enabled in options page', 'duplicate-post'));
 
@@ -461,7 +458,7 @@ function duplicate_post_create_duplicate($post, $status = '', $parent_id = '') {
 		if ($title == ''){
 			// empty title
 			$title = __('Untitled');
-		};
+		}
 			
 
 		if (get_option('duplicate_post_copystatus') == 0) $status = 'draft';
@@ -535,4 +532,3 @@ function duplicate_post_add_plugin_links($links, $file) {
 	}
 	return $links;
 }
-?>
