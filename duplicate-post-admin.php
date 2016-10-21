@@ -247,7 +247,7 @@ function duplicate_post_save_as_new_post($status = ''){
 
 		if ($status == ''){
 			// Redirect to the post list screen
-			wp_redirect( admin_url( 'edit.php?post_type='.$post->post_type) );
+			wp_redirect( admin_url( 'edit.php?post_type='.$post->post_type.'&dp_copied_posts=1') );
 		} else {
 			// Redirect to the edit screen for the new draft post
 			wp_redirect( admin_url( 'post.php?action=edit&post=' . $new_id ) );
@@ -531,4 +531,18 @@ function duplicate_post_add_plugin_links($links, $file) {
 		$links[] = '<a href="https://translate.wordpress.org/projects/wp-plugins/duplicate-post">' . __('Translate', 'duplicate-post') . '</a>';
 	}
 	return $links;
+}
+
+add_action( 'admin_notices', 'duplicate_post_action_admin_notice' );
+ 
+function duplicate_post_action_admin_notice() {
+  if ( ! empty( $_REQUEST['dp_copied_posts'] ) ) {
+    $copied_posts = intval( $_REQUEST['dp_copied_posts'] );
+    printf( '<div id="message" class="updated fade">' .
+      _n( 'Copied %s post.',
+        'Copied %s posts.',
+        $emailed_count,
+        'duplicate-post'
+      ) . '</div>', $copied_posts );
+  }
 }
