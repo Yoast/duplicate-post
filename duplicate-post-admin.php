@@ -538,11 +538,11 @@ add_action( 'admin_notices', 'duplicate_post_action_admin_notice' );
 function duplicate_post_action_admin_notice() {
   if ( ! empty( $_REQUEST['dp_copied_posts'] ) ) {
     $copied_posts = intval( $_REQUEST['dp_copied_posts'] );
-    printf( '<div id="message" class="updated fade">' .
+    printf( '<div id="message" class="updated fade"><p>' .
       _n( 'Copied %s post.',
         'Copied %s posts.',
         $copied_posts,
         'duplicate-post'
-      ) . '</div>', $copied_posts );
+      ) . '</p></div>', $copied_posts );
   }
 }
