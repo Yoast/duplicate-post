@@ -228,6 +228,13 @@ function duplicate_post_save_as_new_post_draft(){
 	duplicate_post_save_as_new_post('draft');
 }
 
+add_filter('removable_query_args', 'duplicate_post_add_removable_query_arg', 10, 1);
+
+function duplicate_post_add_removable_query_arg( $removable_query_args ){
+	$removable_query_args[] = 'cloned';
+	return $removable_query_args;
+}
+
 /*
  * This function calls the creation of a new copy of the selected post (by default preserving the original publish status)
 * then redirects to the post list
@@ -246,12 +253,12 @@ function duplicate_post_save_as_new_post($status = ''){
 		$new_id = duplicate_post_create_duplicate($post, $status);
 
 		if ($status == ''){
-                        $sendback = remove_query_arg( array( 'trashed', 'untrashed', 'deleted', 'cloned', 'ids'), wp_get_referer() );
+			$sendback = remove_query_arg( array( 'trashed', 'untrashed', 'deleted', 'cloned', 'ids'), wp_get_referer() );
 			// Redirect to the post list screen
-			wp_redirect( add_query_arg( array( 'cloned' => 1, 'ids' => $post->id), $sendback ) );
+			wp_redirect( add_query_arg( array( 'cloned' => 1, 'ids' => $post->ID), $sendback ) );
 		} else {
 			// Redirect to the edit screen for the new draft post
-			wp_redirect( admin_url( 'post.php?action=edit&post=' . $new_id ) );
+			wp_redirect( add_query_arg( array( 'cloned' => 1, 'ids' => $post->ID), admin_url( 'post.php?action=edit&post=' . $new_id ) ) );
 		}
 		exit;
 
@@ -478,6 +485,7 @@ function duplicate_post_create_duplicate($post, $status = '', $parent_id = '') {
 	'ping_status' => $post->ping_status,
 	'post_author' => $new_post_author->ID,
 	'post_content' => (get_option('duplicate_post_copycontent') == '1') ? addslashes($post->post_content) : "" ,
+	'post_content_filtered' => (get_option('duplicate_post_copycontent') == '1') ? addslashes($post->post_content_filtered) : "" ,			
 	'post_excerpt' => (get_option('duplicate_post_copyexcerpt') == '1') ? addslashes($post->post_excerpt) : "",
 	'post_mime_type' => $post->post_mime_type,
 	'post_parent' => $new_post_parent = empty($parent_id)? $post->post_parent : $parent_id,
@@ -540,8 +548,8 @@ function duplicate_post_action_admin_notice() {
   if ( ! empty( $_REQUEST['cloned'] ) ) {
     $copied_posts = intval( $_REQUEST['cloned'] );
     printf( '<div id="message" class="updated fade"><p>' .
-      _n( 'Copied %s post.',
-        'Copied %s posts.',
+      _n( '%s item copied.',
+        '%s items copied.',
         $copied_posts,
         'duplicate-post'
       ) . '</p></div>', $copied_posts );
