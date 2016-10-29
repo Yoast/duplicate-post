@@ -9,7 +9,7 @@ require_once (dirname(__FILE__).'/duplicate-post-options.php');
  * Wrapper for the option 'duplicate_post_version'
 */
 function duplicate_post_get_installed_version() {
-	return get_option( 'duplicate_post_version' );
+	return get_site_option( 'duplicate_post_version' );
 }
 
 /**
@@ -116,17 +116,19 @@ function duplicate_post_plugin_upgrade() {
 			add_option('duplicate_post_show_submitbox','1');
 			
 			// show notice about new features
-			add_option('duplicate_post_show_notice','1');
+			add_site_option('duplicate_post_show_notice','1');
 			
 		} else if($installed_version_numbers[0] == 3){ // upgrading from 3.*		
 			// hide notice, we assume people already know of new features
-			update_option('duplicate_post_show_notice', 0);
+			delete_option('duplicate_post_show_notice', 0);
+			update_site_option('duplicate_post_show_notice', 0);
 		}
 		
 		
 	}
 	// Update version number
-	update_option( 'duplicate_post_version', duplicate_post_get_current_version() );
+	delete_option('duplicate_post_version');
+	update_site_option( 'duplicate_post_version', duplicate_post_get_current_version() );
 
 }
 
@@ -136,7 +138,7 @@ if (get_option('duplicate_post_show_row') == 1){
 }
 
 
-if (get_option('duplicate_post_show_notice') == 1){
+if (get_site_option('duplicate_post_show_notice') == 1){
 	/**
 	 * Shows the update notice
 	 */
@@ -170,7 +172,7 @@ if (get_option('duplicate_post_show_notice') == 1){
 	add_action( 'wp_ajax_duplicate_post_dismiss_notice', 'duplicate_post_dismiss_notice' );
 	
 	function duplicate_post_dismiss_notice() {
-		$result = update_option('duplicate_post_show_notice', 0);
+		$result = update_site_option('duplicate_post_show_notice', 0);
 		return $result;
 		wp_die();
 	}
@@ -449,7 +451,7 @@ function duplicate_post_create_duplicate($post, $status = '', $parent_id = '') {
 
 	if (!duplicate_post_is_post_type_enabled($post->post_type) && $post->post_type != 'attachment')
 		wp_die(__('Copy features for this post type are not enabled in options page', 'duplicate-post'));
-
+		
 	if ($post->post_type != 'attachment'){
 		$prefix = sanitize_text_field(get_option('duplicate_post_title_prefix'));
 		$suffix = sanitize_text_field(get_option('duplicate_post_title_suffix'));
