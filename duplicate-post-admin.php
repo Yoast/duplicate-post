@@ -320,7 +320,6 @@ function duplicate_post_copy_post_meta_info($new_id, $post) {
 
 /**
  * Copy the attachments
- * It simply copies the table entries, actual file won't be duplicated
 */
 function duplicate_post_copy_attachments($new_id, $post){
 	// get thumbnail ID
