@@ -475,7 +475,7 @@ function duplicate_post_create_duplicate($post, $status = '', $parent_id = '') {
 		if (get_option('duplicate_post_copystatus') == 0){
 			$new_post_status = 'draft';
 		} else {
-			if ( 'publish' == $new_post_status ){
+			if ( 'publish' == $new_post_status || 'future' == $new_post_status ){
 				// check if the user has the right capability
 				if(is_post_type_hierarchical( $post->post_type )){
 					if(!current_user_can('publish_pages')){
