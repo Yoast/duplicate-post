@@ -18,6 +18,7 @@ function duplicate_post_register_settings() { // whitelist options
 	register_setting( 'duplicate_post_group', 'duplicate_post_copyslug');
 	register_setting( 'duplicate_post_group', 'duplicate_post_copyexcerpt');
 	register_setting( 'duplicate_post_group', 'duplicate_post_copycontent');
+	register_setting( 'duplicate_post_group', 'duplicate_post_copyauthor');
 	register_setting( 'duplicate_post_group', 'duplicate_post_copypassword');
 	register_setting( 'duplicate_post_group', 'duplicate_post_copyattachments');
 	register_setting( 'duplicate_post_group', 'duplicate_post_copychildren');
@@ -201,6 +202,9 @@ img#donate-button{
 					</label> <label> <input type="checkbox"
 							name="duplicate_post_copycontent" value="1" <?php  if(get_option('duplicate_post_copycontent') == 1) echo 'checked="checked"'; ?>"/>
 							<?php _e("Content", 'default'); ?>
+					</label> <label> <input type="checkbox"
+							name="duplicate_post_copyauthor" value="1" <?php  if(get_option('duplicate_post_copyauthor') == 1) echo 'checked="checked"'; ?>"/>
+							<?php _e("Author", 'default'); ?>
 					</label> <label> <input type="checkbox"
 							name="duplicate_post_copypassword" value="1" <?php  if(get_option('duplicate_post_copypassword') == 1) echo 'checked="checked"'; ?>"/>
 							<?php _e("Password", 'default'); ?>
