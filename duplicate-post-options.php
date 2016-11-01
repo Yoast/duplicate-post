@@ -204,7 +204,7 @@ img#donate-button{
 							<?php _e("Content", 'default'); ?>
 					</label> <label> <input type="checkbox"
 							name="duplicate_post_copyauthor" value="1" <?php  if(get_option('duplicate_post_copyauthor') == 1) echo 'checked="checked"'; ?>"/>
-							<?php _e("Author"); ?>
+							<?php _e("Author", 'default'); ?>
 					</label> <label> <input type="checkbox"
 							name="duplicate_post_copypassword" value="1" <?php  if(get_option('duplicate_post_copypassword') == 1) echo 'checked="checked"'; ?>"/>
 							<?php _e("Password", 'default'); ?>

@@ -3,7 +3,7 @@ Contributors: 		lopo
 Donate link: 		http://lopo.it/duplicate-post-plugin/
 Tags: 				duplicate post, copy, clone
 Requires at least: 	3.6
-Tested up to: 		4.6
+Tested up to: 		4.7
 Stable tag: 		3.0.3
 License: 			GPLv2 or later
 License URI: 		http://www.gnu.org/licenses/gpl-2.0.html
@@ -90,6 +90,9 @@ There is an open ticket in WordPress Trac, as other plugin developers too are in
 
 == Upgrade Notice ==
 
+= 3.0.4 =
+Copy author + minor bugfixes
+
 = 3.0.3 =
 Notices + small fixes and improvements
 
@@ -139,6 +142,11 @@ Some users have experienced a fatal error when upgrading to v1.1: this may fix i
 New features and customization, WP 3.0 compatibility: you should upgrade if you want to copy Custom Posts with Custom Taxonomies.
 
 == Changelog ==
+
+= 3.0.4 =
+* Option to copy post author (user must have edit_others_posts/edit_others_pages capability)
+* Check publish_posts/publish_pages capability to prevent Contributors from publishing by cloning
+* Using wp_slash (WP 3.6+) on the post and its meta, should also fix some compatibility issues 
 
 = 3.0.3 =
 * Notices in admin after copying
