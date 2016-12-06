@@ -46,6 +46,7 @@ function duplicate_post_plugin_upgrade() {
 		add_option('duplicate_post_copytitle','1');
 		add_option('duplicate_post_copydate','0');
 		add_option('duplicate_post_copystatus','0');
+		add_option('duplicate_post_whichstatus','0');
 		add_option('duplicate_post_copyslug','1');
 		add_option('duplicate_post_copyexcerpt','1');
 		add_option('duplicate_post_copycontent','1');
@@ -54,6 +55,7 @@ function duplicate_post_plugin_upgrade() {
 		add_option('duplicate_post_copyattachments','0');
 		add_option('duplicate_post_copychildren','0');
 		add_option('duplicate_post_copycomments','0');
+		add_option('duplicate_post_copymenuorder','1');
 		add_option('duplicate_post_taxonomies_blacklist',array());
 		add_option('duplicate_post_blacklist','');
 		add_option('duplicate_post_types_enabled',array('post', 'page'));
@@ -102,6 +104,7 @@ function duplicate_post_plugin_upgrade() {
 			add_option('duplicate_post_copytitle','1');
 			add_option('duplicate_post_copydate','0');
 			add_option('duplicate_post_copystatus','0');
+			add_option('duplicate_post_whichstatus','0');
 			add_option('duplicate_post_copyslug','1');
 			add_option('duplicate_post_copyexcerpt','1');
 			add_option('duplicate_post_copycontent','1');
@@ -110,6 +113,7 @@ function duplicate_post_plugin_upgrade() {
 			add_option('duplicate_post_copyattachments','0');
 			add_option('duplicate_post_copychildren','0');
 			add_option('duplicate_post_copycomments','0');
+			add_option('duplicate_post_copymenuorder','1');
 			add_option('duplicate_post_taxonomies_blacklist',array());
 			add_option('duplicate_post_blacklist','');
 			add_option('duplicate_post_types_enabled',array('post', 'page'));
@@ -255,9 +259,9 @@ function duplicate_post_save_as_new_post($status = ''){
 	// Copy the post and insert it
 	if (isset($post) && $post!=null) {
 		$new_id = duplicate_post_create_duplicate($post, $status);
-
+		
 		if ($status == ''){
-			$sendback = remove_query_arg( array( 'trashed', 'untrashed', 'deleted', 'cloned', 'ids'), wp_get_referer() );
+			$sendback = remove_query_arg( array( 'trashed', 'untrashed', 'deleted', 'cloned', 'ids'), admin_url( 'edit.php?post_type='.$post->post_type) );
 			// Redirect to the post list screen
 			wp_redirect( add_query_arg( array( 'cloned' => 1, 'ids' => $post->ID), $sendback ) );
 		} else {
@@ -314,12 +318,34 @@ function duplicate_post_copy_post_meta_info($new_id, $post) {
 	foreach ($meta_keys as $meta_key) {
 		$meta_values = get_post_custom_values($meta_key, $post->ID);
 		foreach ($meta_values as $meta_value) {
-			$meta_value = wp_slash(maybe_unserialize($meta_value));
-			add_post_meta($new_id, $meta_key, $meta_value);
+			$meta_value = maybe_unserialize($meta_value);
+			add_post_meta($new_id, $meta_key, duplicate_post_wp_slash($meta_value));
 		}
 	}
 }
 
+/*
+ * Workaround for inconsistent wp_slash.
+ * Works only with WP 4.4+ (map_deep)
+ */
+function duplicate_post_addslashes_deep( $value ) {
+	if (function_exists('map_deep')){
+		return map_deep( $value, 'duplicate_post_addslashes_to_strings_only' );
+	} else {
+		return wp_slash( $value );
+	}
+}
+
+function duplicate_post_addslashes_to_strings_only( $value ) {
+	return is_string( $value ) ? addslashes( $value ) : $value;
+}
+
+function duplicate_post_wp_slash( $value ) { 
+	return duplicate_post_addslashes_deep( $value ); 
+} 
+		
+		
+		
 /**
  * Copy the attachments
 */
@@ -473,7 +499,11 @@ function duplicate_post_create_duplicate($post, $status = '', $parent_id = '') {
 			$title = __('Untitled');
 		}
 		if (get_option('duplicate_post_copystatus') == 0){
-			$new_post_status = 'draft';
+			if (get_option('duplicate_post_whichstatus') == 1){
+				$new_post_status = 'pending';
+			}  else {
+				$new_post_status = 'draft';
+			}
 		} else {
 			if ( 'publish' == $new_post_status || 'future' == $new_post_status ){
 				// check if the user has the right capability
@@ -505,7 +535,7 @@ function duplicate_post_create_duplicate($post, $status = '', $parent_id = '') {
 		}
 	}
 	
-	$menu_order = $post->menu_order;
+	$menu_order = (get_option('duplicate_post_copymenuorder') == '1') ? $post->menu_order : 0;
 	$increase_menu_order_by = get_option('duplicate_post_increase_menu_order_by');
 	if(!empty($increase_menu_order_by) && is_numeric($increase_menu_order_by)){
 		$menu_order += intval($increase_menu_order_by);

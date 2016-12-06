@@ -99,6 +99,7 @@ function duplicate_post_get_original($id = 0 , $output = OBJECT){
 
 // Admin bar
 function duplicate_post_admin_bar_render() {
+	if(!is_admin_bar_showing()) return;
 	global $wp_admin_bar;
 	$current_object = get_queried_object();
 	if ( empty($current_object) )
@@ -118,6 +119,7 @@ function duplicate_post_admin_bar_render() {
 }
 
 function duplicate_post_add_css() {
+	if(!is_admin_bar_showing()) return;
 	$current_object = get_queried_object();
 	if ( empty($current_object) )
 		return;

@@ -15,6 +15,7 @@ function duplicate_post_register_settings() { // whitelist options
 	register_setting( 'duplicate_post_group', 'duplicate_post_copytitle');
 	register_setting( 'duplicate_post_group', 'duplicate_post_copydate');
 	register_setting( 'duplicate_post_group', 'duplicate_post_copystatus');
+	register_setting( 'duplicate_post_group', 'duplicate_post_whichstatus');
 	register_setting( 'duplicate_post_group', 'duplicate_post_copyslug');
 	register_setting( 'duplicate_post_group', 'duplicate_post_copyexcerpt');
 	register_setting( 'duplicate_post_group', 'duplicate_post_copycontent');
@@ -23,6 +24,7 @@ function duplicate_post_register_settings() { // whitelist options
 	register_setting( 'duplicate_post_group', 'duplicate_post_copyattachments');
 	register_setting( 'duplicate_post_group', 'duplicate_post_copychildren');
 	register_setting( 'duplicate_post_group', 'duplicate_post_copycomments');
+	register_setting( 'duplicate_post_group', 'duplicate_post_copymenuorder');
 	register_setting( 'duplicate_post_group', 'duplicate_post_blacklist');
 	register_setting( 'duplicate_post_group', 'duplicate_post_taxonomies_blacklist');
 	register_setting( 'duplicate_post_group', 'duplicate_post_title_prefix');
@@ -92,12 +94,27 @@ function duplicate_post_options() {
 		jQuery('section').eq(jQuery(this).index()).show();	
 		return false;
 	});
+
+	jQuery(document).on( 'change', 'input[name="duplicate_post_copystatus"]', function() {
+		toggle_which_status();
+	});
 	
 	function toggle_private_taxonomies(){
 		jQuery('.taxonomy_private').toggle();
 	}
+	function toggle_which_status(){
+		var is_copy_status_enabled = jQuery('input[name="duplicate_post_copystatus"]').is(':checked');
+		var label_which_status = jQuery('label#dp-whichstatus-label');
+		if(!is_copy_status_enabled){
+			label_which_status.show();
+		} else {
+			label_which_status.hide();
+		}		
+	}
+	
 	jQuery(function(){
 		jQuery('.taxonomy_private').hide();
+		toggle_which_status();
 	});
 	
 	</script>
@@ -193,6 +210,12 @@ img#donate-button{
 					</label> <label> <input type="checkbox"
 							name="duplicate_post_copystatus" value="1" <?php  if(get_option('duplicate_post_copystatus') == 1) echo 'checked="checked"'; ?>"/>
 							<?php _e("Status", 'default'); ?>
+					</label> <label id="dp-whichstatus-label"><?php _e("Which status", 'duplicate-post'); ?>				
+							<select name="duplicate_post_whichstatus">
+								<option value="0" <?php  if(get_option('duplicate_post_whichstatus') == 0) echo 'selected="selected"'; ?>><?php _e("Draft", 'default'); ?></option>
+								<option value="1" <?php  if(get_option('duplicate_post_whichstatus') == 1) echo 'selected="selected"'; ?>><?php _e("Pending", 'duplicate-post'); ?></option>
+							</select>
+										
 					</label> <label> <input type="checkbox"
 							name="duplicate_post_copyslug" value="1" <?php  if(get_option('duplicate_post_copyslug') == 1) echo 'checked="checked"'; ?>"/>
 							<?php _e("Slug", 'default'); ?>
@@ -217,6 +240,9 @@ img#donate-button{
 					</label> <label> <input type="checkbox"
 							name="duplicate_post_copycomments" value="1" <?php  if(get_option('duplicate_post_copycomments') == 1) echo 'checked="checked"'; ?>"/>
 							<?php _e("Comments", 'default');  ?> (<?php _e("except pingbacks and trackbacks", 'duplicate-post');  ?>)
+					</label> <label> <input type="checkbox"
+							name="duplicate_post_copymenuorder" value="1" <?php  if(get_option('duplicate_post_copymenuorder') == 1) echo 'checked="checked"'; ?>"/>
+							<?php _e("Menu order", 'default');  ?>
 					</label>
 					</td>
 				</tr>
