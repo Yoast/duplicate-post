@@ -20,13 +20,15 @@ How it works:
 
 1. In 'Edit Posts'/'Edit Pages', you can click on 'Clone' link below the post/page title: this will immediately create a copy and return to the list.
 
-2. In 'Edit Posts'/'Edit Pages', you can click on 'New Draft' link below the post/page title.
+2. NEW! In 'Edit Posts'/'Edit Pages', you can select one or more items, then choose 'Clone' in the 'Bulk Actions' dropdown to copy them all at once.
 
-3. On the post edit screen, you can click on 'Copy to a new draft' above "Cancel"/"Move to trash". 
+3. In 'Edit Posts'/'Edit Pages', you can click on 'New Draft' link below the post/page title.
 
-4. While viewing a post as a logged in user, you can click on 'Copy to a new draft' as a dropdown link under "Edit Post" in the admin bar.
+4. On the post edit screen, you can click on 'Copy to a new draft' above "Cancel"/"Move to trash". 
 
-2, 3 and 4 will lead to the edit page for the new draft: change what you want, click on 'Publish' and you're done.
+5. While viewing a post as a logged in user, you can click on 'Copy to a new draft' as a dropdown link under "Edit Post" in the admin bar.
+
+3, 4 and 5 will lead to the edit page for the new draft: change what you want, click on 'Publish' and you're done.
 
 There is also a **template tag**, so you can put it in your templates and clone your posts/pages from the front-end. Clicking on the link will lead you to the edit page for the new draft, just like the admin bar link.
 
@@ -74,12 +76,6 @@ From version 3.0 the plugin's translations are managed by the WordPress.org plat
 If Duplicate Post is still in English, or if there are some untraslated strings, you can help traslating to your language [here](https://translate.wordpress.org/projects/wp-plugins/duplicate-post): you only need a WordPress.org account.
 [Contact me](http://lopo.it/contatti/) if you wish to become an editor for your language.
 
-= Can you add it to the bulk actions in the post/page list? =
-
-I can't. There is no way to do it without hacking the core code of WordPress.
-There is an open ticket in WordPress Trac, as other plugin developers too are interested to this feature: we can only hope that eventually our wish will be fulfilled.
-
-
 == Screenshots ==
 
 1. Here you can copy the post you're editing to a new draft.
@@ -90,8 +86,8 @@ There is an open ticket in WordPress Trac, as other plugin developers too are in
 
 == Upgrade Notice ==
 
-= 3.0.4 =
-Copy author + minor bugfixes
+= 3.1 =
+Bulk clone + custom field wildcards + other features + bugfixes
 
 = 3.0.3 =
 Notices + small fixes and improvements
@@ -143,10 +139,16 @@ New features and customization, WP 3.0 compatibility: you should upgrade if you 
 
 == Changelog ==
 
-= 3.0.4 =
-* Option to copy post author (user must have edit_others_posts/edit_others_pages capability)
+= 3.1 =
+* Bulk clone action added
+* Wildcards enabled for custom fields to skip
+* Options to copy post author, post format (moved from taxonomies), menu order, post template
+* Added option to copy as pending review 
 * Check publish_posts/publish_pages capability to prevent Contributors from publishing by cloning
-* Using wp_slash (WP 3.6+) on the post and its meta, should also fix some compatibility issues 
+* Using wp_slash (WP 3.6+) or a better workaround (WP 4.4+) on the post and its meta, should also fix some compatibility issues
+* Check if admin bar is showing before enqueueing CSS
+* Probable fix for repeated clone bug
+* Other minor bugs fixed 
 
 = 3.0.3 =
 * Notices in admin after copying

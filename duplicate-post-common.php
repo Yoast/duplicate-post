@@ -12,6 +12,7 @@ function duplicate_post_is_current_user_allowed_to_copy() {
  */
 function duplicate_post_is_post_type_enabled($post_type){
 	$duplicate_post_types_enabled = get_option('duplicate_post_types_enabled', array ('post', 'page'));
+	if(!is_array($duplicate_post_types_enabled)) $duplicate_post_types_enabled = array($duplicate_post_types_enabled);
 	return in_array($post_type, $duplicate_post_types_enabled);
 }
 
@@ -74,10 +75,10 @@ function duplicate_post_clone_post_link( $link = null, $before = '', $after = ''
 	return;
 
 	if ( null === $link )
-	$link = __('Copy to a new draft', 'duplicate-post');
+	$link = esc_html__('Copy to a new draft', 'duplicate-post');
 
 	$link = '<a class="post-clone-link" href="' . $url . '" title="'
-	. esc_attr(__("Copy to a new draft", 'duplicate-post'))
+	. esc_attr__("Copy to a new draft", 'duplicate-post')
 	.'">' . $link . '</a>';
 	echo $before . apply_filters( 'duplicate_post_clone_post_link', $link, $post->ID ) . $after;
 }
@@ -112,7 +113,7 @@ function duplicate_post_admin_bar_render() {
 	{
 		$wp_admin_bar->add_menu( array(
         'id' => 'new_draft',
-        'title' => __("Copy to a new draft", 'duplicate-post'),
+        'title' => esc_attr__("Copy to a new draft", 'duplicate-post'),
         'href' => duplicate_post_get_clone_post_link( $current_object->ID )
 		) );	
 	}
