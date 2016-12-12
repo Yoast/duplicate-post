@@ -137,9 +137,13 @@ if (get_site_option('duplicate_post_show_notice') == 1){
 		if(!current_user_can( 'manage_options')) return;
 		$class = 'notice is-dismissible';
 		$message = '<strong>'.esc_html__('Duplicate Post has new features!', 'duplicate-post').'</strong><br/>';
-		$message .= '<em>'.esc_html__('Clone posts in bulk', 'duplicate-post').' — '.esc_html__('Wildcards in custom field names', 'duplicate-post').' — '.esc_html__('Options for thumbnail, post format, post template, author, menu order', 'duplicate-post').'</em><br/>';
+		$message .= '<em>'.esc_html__('Clone posts in bulk (WP 4.7+)', 'duplicate-post').' — '.esc_html__('Wildcards in custom field names', 'duplicate-post').' — '.esc_html__('Options for thumbnail, post format, post template, author, menu order', 'duplicate-post').'</em><br/>';
     	$message .= sprintf(__('Please <a href="%s">review the settings</a> to make sure it works as you expect.', 'duplicate-post'), admin_url('options-general.php?page=duplicatepost')).'<br/>';
 		$message .= '<strong>'.__('Help me develop the plugin and provide support by <a href="http://lopo.it/duplicate-post-plugin">donating even a small sum</a>.', 'duplicate-post').'</strong>';
+		global $wp_version;
+		if( version_compare($wp_version, '4.2') < 0 ){
+			$message .= ' | <a id="duplicate-post-dismiss-notice" href="javascript:duplicate_post_dismiss_notice();">'.__('Dismiss this notice.').'</a>';
+		}
 		echo '<div id="duplicate-post-notice" class="'.$class.'"><p>'.$message.'</p></div>';
 		echo "<script>
 				function duplicate_post_dismiss_notice(){
