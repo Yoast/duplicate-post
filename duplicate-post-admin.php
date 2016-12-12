@@ -136,9 +136,10 @@ if (get_site_option('duplicate_post_show_notice') == 1){
 	function duplicate_post_show_update_notice() {
 		if(!current_user_can( 'manage_options')) return;
 		$class = 'notice is-dismissible';
-		$message = sprintf(__('<strong>New features! Bulk clone plus new options.</strong> Please <a href="%s">review the settings</a> to make sure it works as you expect.', 'duplicate-post'), admin_url('options-general.php?page=duplicatepost'));
-		$message .= '<br/>';
-		$message .= '<a href="http://lopo.it/duplicate-post-plugin">'.esc_html__('Donate', 'duplicate-post').' (10¢) </a> | <a id="duplicate-post-dismiss-notice" href="javascript:duplicate_post_dismiss_notice();">'.esc_html__('Dismiss this notice.').'</a>';
+		$message = '<strong>'.esc_html__('Duplicate Post has new features!', 'duplicate-post').'</strong><br/>';
+		$message .= '<em>'.esc_html__('Clone posts in bulk', 'duplicate-post').' — '.esc_html__('Wildcards in custom field names', 'duplicate-post').' — '.esc_html__('Options for thumbnail, post format, post template, author, menu order', 'duplicate-post').'</em><br/>';
+    	$message .= sprintf(__('Please <a href="%s">review the settings</a> to make sure it works as you expect.', 'duplicate-post'), admin_url('options-general.php?page=duplicatepost')).'<br/>';
+		$message .= '<strong>'.__('Help me develop the plugin and provide support by <a href="http://lopo.it/duplicate-post-plugin">donating even a small sum</a>.', 'duplicate-post').'</strong>';
 		echo '<div id="duplicate-post-notice" class="'.$class.'"><p>'.$message.'</p></div>';
 		echo "<script>
 				function duplicate_post_dismiss_notice(){
@@ -274,6 +275,11 @@ function duplicate_post_copy_post_taxonomies($new_id, $post) {
 		wp_set_object_terms( $new_id, NULL, 'category' );
 
 		$post_taxonomies = get_object_taxonomies($post->post_type);
+		// severl plugins just add support to post-formats but don't register post_format taxonomy
+		if(post_type_supports($post->post_type, 'post-formats') && !in_array('post_format', $post_taxonomies)){
+			$post_taxonomies[] = 'post_format';
+		}
+		
 		$taxonomies_blacklist = get_option('duplicate_post_taxonomies_blacklist');
 		if ($taxonomies_blacklist == "") $taxonomies_blacklist = array();
 		if(get_option('duplicate_post_copyformat') == 0){
