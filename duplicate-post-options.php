@@ -282,7 +282,7 @@ img#donate-button{
 						name="duplicate_post_blacklist"
 						value="<?php echo get_option('duplicate_post_blacklist'); ?>" /></td>
 					<td><span class="description"><?php esc_html_e("Comma-separated list of meta fields that must not be copied", 'duplicate-post'); ?><br />
-							<small><?php esc_html_e("You can use * to match any alphanumeric character or the underscore: e.g. field*", 'duplicate-post'); ?>
+							<small><?php esc_html_e("You can use * to match zero or more alphanumeric characters or underscores: e.g. field*", 'duplicate-post'); ?>
 						</small> </span>
 					</td>
 				</tr>

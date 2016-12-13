@@ -140,10 +140,9 @@ New features and customization, WP 3.0 compatibility: you should upgrade if you 
 == Changelog ==
 
 = 3.1 =
-* Bulk clone action added
+* Bulk clone action added (WP 4.7+)
 * Wildcards enabled for custom fields to skip
 * Options to copy post author, post format (moved from taxonomies), menu order, post template
-* Added option to copy as pending review 
 * Check publish_posts/publish_pages capability to prevent Contributors from publishing by cloning
 * Using wp_slash (WP 3.6+) or a better workaround (WP 4.4+) on the post and its meta, should also fix some compatibility issues
 * Check if admin bar is showing before enqueueing CSS
