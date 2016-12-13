@@ -83,6 +83,7 @@ If Duplicate Post is still in English, or if there are some untraslated strings,
 3. The options page.
 4. The template tag manually added to Twenty Ten theme. Click on the "Copy to a new draft" link and you're redirected to the edit screen for a new draft copy of your post.
 5. The admin bar link. 
+6. Bulk clone action.
 
 == Upgrade Notice ==
 
