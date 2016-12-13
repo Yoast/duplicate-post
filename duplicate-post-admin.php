@@ -307,9 +307,14 @@ function duplicate_post_copy_post_taxonomies($new_id, $post) {
 function duplicate_post_copy_post_meta_info($new_id, $post) {
 	$post_meta_keys = get_post_custom_keys($post->ID);
 	if (empty($post_meta_keys)) return;
-	$meta_blacklist = explode(",",get_option('duplicate_post_blacklist'));
-	if ($meta_blacklist == "") $meta_blacklist = array();
-	$meta_blacklist = array_map('trim', $meta_blacklist);
+	$meta_blacklist = get_option('duplicate_post_blacklist');
+	if ($meta_blacklist == ""){
+		$meta_blacklist = array();
+	} else {
+		$meta_blacklist = explode(',', $meta_blacklist);
+		$meta_blacklist = array_filter($meta_blacklist);
+		$meta_blacklist = array_map('trim', $meta_blacklist);
+	}	
 	$meta_blacklist[] = '_wpas_done_all'; //Jetpack Publicize
 	$meta_blacklist[] = '_wpas_done_'; //Jetpack Publicize
 	$meta_blacklist[] = '_wpas_mess'; //Jetpack Publicize
@@ -321,17 +326,24 @@ function duplicate_post_copy_post_meta_info($new_id, $post) {
 	if(get_option('duplicate_post_copythumbnail') == 0){
 		$meta_blacklist[] = '_thumbnail_id';
 	}
-	//$meta_keys = array_diff($post_meta_keys, $meta_blacklist);
-	$meta_blacklist_string = '('.implode(')|(',$meta_blacklist).')';
-	$meta_blacklist_string = str_replace(array('*'), array('[a-zA-Z0-9_]*'), $meta_blacklist_string);
 	
-	$meta_keys = array();
-	foreach($post_meta_keys as $meta_key){
-		if(!preg_match('#^'.$meta_blacklist_string.'$#', $meta_key))
-			$meta_keys[] = $meta_key;
+	$meta_blacklist = apply_filters( 'duplicate_post_blacklist_filter' , $meta_blacklist );
+	
+	$meta_blacklist_string = '('.implode(')|(',$meta_blacklist).')';
+	if(strpos($meta_blacklist_string, '*') !== false){
+		$meta_blacklist_string = str_replace(array('*'), array('[a-zA-Z0-9_]*'), $meta_blacklist_string);
+	
+		$meta_keys = array();
+		foreach($post_meta_keys as $meta_key){
+			if(!preg_match('#^'.$meta_blacklist_string.'$#', $meta_key))
+				$meta_keys[] = $meta_key;
+		}
+	} else {
+		$meta_keys = array_diff($post_meta_keys, $meta_blacklist);
 	}
 
-	$meta_keys = apply_filters( 'dp_meta_keys', $meta_keys );
+	$meta_keys = apply_filters( 'duplicate_post_meta_keys_filter', $meta_keys );
+
 	foreach ($meta_keys as $meta_key) {
 		$meta_values = get_post_custom_values($meta_key, $post->ID);
 		foreach ($meta_values as $meta_value) {
