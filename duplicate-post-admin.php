@@ -492,6 +492,8 @@ add_action('dp_duplicate_page', 'duplicate_post_copy_post_taxonomies', 50, 2);
  * Create a duplicate from a post
  */
 function duplicate_post_create_duplicate($post, $status = '', $parent_id = '') {
+	
+	do_action('duplicate_post_pre_copy');
 
 	if (!duplicate_post_is_post_type_enabled($post->post_type) && $post->post_type != 'attachment')
 		wp_die(esc_html__('Copy features for this post type are not enabled in options page', 'duplicate-post'));
@@ -603,6 +605,8 @@ function duplicate_post_create_duplicate($post, $status = '', $parent_id = '') {
 	delete_post_meta($new_post_id, '_dp_original');
 	add_post_meta($new_post_id, '_dp_original', $post->ID);
 
+	do_action('duplicate_post_post_copy');
+	
 	return $new_post_id;
 }
 
