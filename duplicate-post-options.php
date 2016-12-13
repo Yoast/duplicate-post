@@ -382,8 +382,6 @@ img#donate-button{
 							value="1" <?php  if(get_option('duplicate_post_show_notice') == 1) echo 'checked="checked"'; ?>"/>
 					</td>
 				</tr>				
-				
-				duplicate_post_show_notice
 			</table>
 		</section>
 		<p class="submit">
