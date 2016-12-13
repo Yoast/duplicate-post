@@ -144,7 +144,7 @@ New features and customization, WP 3.0 compatibility: you should upgrade if you 
 == Changelog ==
 
 = 3.1.1 =
-* Fix for nasty udate nag (plus a failsafe checkbox)
+* Fix for nasty update nag (plus a failsafe checkbox)
 
 = 3.1 =
 * Bulk clone action added (WP 4.7+)
