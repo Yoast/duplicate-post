@@ -157,7 +157,7 @@ if (get_site_option('duplicate_post_show_notice') == 1){
 				}
 	
 				jQuery(document).ready(function(){
-					jQuery('.notice-dismiss').click(function(){
+					jQuery('body').on('click', '.notice-dismiss', function(){
 						duplicate_post_dismiss_notice();
 					});
 				});

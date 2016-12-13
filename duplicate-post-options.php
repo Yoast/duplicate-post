@@ -38,6 +38,7 @@ function duplicate_post_register_settings() { // whitelist options
 	register_setting( 'duplicate_post_group', 'duplicate_post_show_adminbar');
 	register_setting( 'duplicate_post_group', 'duplicate_post_show_submitbox');
 	register_setting( 'duplicate_post_group', 'duplicate_post_show_bulkactions');
+	register_setting( 'duplicate_post_group', 'duplicate_post_show_notice');	
 }
 
 
@@ -374,6 +375,15 @@ img#donate-button{
 					</span>
 					</td>
 				</tr>
+				<tr valign="top">
+					<th scope="row"><?php esc_html_e("Show update notice", 'duplicate-post'); ?>
+					</th>
+					<td><input type="checkbox" name="duplicate_post_show_notice"
+							value="1" <?php  if(get_option('duplicate_post_show_notice') == 1) echo 'checked="checked"'; ?>"/>
+					</td>
+				</tr>				
+				
+				duplicate_post_show_notice
 			</table>
 		</section>
 		<p class="submit">

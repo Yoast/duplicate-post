@@ -87,6 +87,9 @@ If Duplicate Post is still in English, or if there are some untraslated strings,
 
 == Upgrade Notice ==
 
+= 3.1.1 =
+Bulk clone + custom field wildcards + other features + bugfixes + fix for nasty nag
+
 = 3.1 =
 Bulk clone + custom field wildcards + other features + bugfixes
 
@@ -139,6 +142,9 @@ Some users have experienced a fatal error when upgrading to v1.1: this may fix i
 New features and customization, WP 3.0 compatibility: you should upgrade if you want to copy Custom Posts with Custom Taxonomies.
 
 == Changelog ==
+
+= 3.1.1 =
+* Fix for nasty udate nag (plus a failsafe checkbox)
 
 = 3.1 =
 * Bulk clone action added (WP 4.7+)
