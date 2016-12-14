@@ -19,11 +19,70 @@ function duplicate_post_get_current_version() {
 	return DUPLICATE_POST_CURRENT_VERSION;
 }
 
+
+add_action('admin_init','duplicate_post_admin_init');
+
+function duplicate_post_admin_init(){
+	duplicate_post_plugin_upgrade();
+	
+	if (get_option('duplicate_post_show_row') == 1){
+		add_filter('post_row_actions', 'duplicate_post_make_duplicate_link_row',10,2);
+		add_filter('page_row_actions', 'duplicate_post_make_duplicate_link_row',10,2);
+	}
+	
+	if (get_site_option('duplicate_post_show_notice') == 1){
+		if(is_multisite()){
+			add_action( 'network_admin_notices', 'duplicate_post_show_update_notice' );
+		} else {
+			add_action( 'admin_notices', 'duplicate_post_show_update_notice' );
+		}
+		add_action( 'wp_ajax_duplicate_post_dismiss_notice', 'duplicate_post_dismiss_notice' );
+	}
+	
+	if (get_option('duplicate_post_show_submitbox') == 1){
+		add_action( 'post_submitbox_start', 'duplicate_post_add_duplicate_post_button' );
+	}
+	
+	/**
+	 * Connect actions to functions
+	 */
+	add_action('admin_action_duplicate_post_save_as_new_post', 'duplicate_post_save_as_new_post');
+	add_action('admin_action_duplicate_post_save_as_new_post_draft', 'duplicate_post_save_as_new_post_draft');
+	
+	add_filter('removable_query_args', 'duplicate_post_add_removable_query_arg', 10, 1);
+	
+	// Using our action hooks
+	
+	add_action('dp_duplicate_post', 'duplicate_post_copy_post_meta_info', 10, 2);
+	add_action('dp_duplicate_page', 'duplicate_post_copy_post_meta_info', 10, 2);
+	
+	if(get_option('duplicate_post_copychildren') == 1){
+		add_action('dp_duplicate_post', 'duplicate_post_copy_children', 20, 2);
+		add_action('dp_duplicate_page', 'duplicate_post_copy_children', 20, 2);
+	}
+	
+	if(get_option('duplicate_post_copyattachments') == 1){
+		add_action('dp_duplicate_post', 'duplicate_post_copy_attachments', 30, 2);
+		add_action('dp_duplicate_page', 'duplicate_post_copy_attachments', 30, 2);
+	}
+	
+	if(get_option('duplicate_post_copycomments') == 1){
+		add_action('dp_duplicate_post', 'duplicate_post_copy_comments', 40, 2);
+		add_action('dp_duplicate_page', 'duplicate_post_copy_comments', 40, 2);
+	}
+	
+	add_action('dp_duplicate_post', 'duplicate_post_copy_post_taxonomies', 50, 2);
+	add_action('dp_duplicate_page', 'duplicate_post_copy_post_taxonomies', 50, 2);
+	
+	add_filter('plugin_row_meta', 'duplicate_post_add_plugin_links', 10, 2);
+	
+	add_action( 'admin_notices', 'duplicate_post_action_admin_notice' );
+}
+
+
 /**
  * Plugin upgrade
  */
-add_action('admin_init','duplicate_post_plugin_upgrade');
-
 function duplicate_post_plugin_upgrade() {
 	$installed_version = duplicate_post_get_installed_version();
 	
@@ -123,60 +182,46 @@ function duplicate_post_plugin_upgrade() {
 	
 }
 
-if (get_option('duplicate_post_show_row') == 1){
-	add_filter('post_row_actions', 'duplicate_post_make_duplicate_link_row',10,2);
-	add_filter('page_row_actions', 'duplicate_post_make_duplicate_link_row',10,2);
-}
+/**
+ * Shows the update notice
+ */
+function duplicate_post_show_update_notice() {
+	if(!current_user_can( 'manage_options')) return;
+	$class = 'notice is-dismissible';
+	$message = '<strong>'.esc_html__('Duplicate Post has new features!', 'duplicate-post').'</strong><br/>';
+	$message .= '<em>'.esc_html__('Clone posts in bulk (WP 4.7+)', 'duplicate-post').' — '.esc_html__('Wildcards in custom field names', 'duplicate-post').' — '.esc_html__('Options for thumbnail, post format, post template, author, menu order', 'duplicate-post').'</em><br/>';
+   	$message .= sprintf(__('Please <a href="%s">review the settings</a> to make sure it works as you expect.', 'duplicate-post'), admin_url('options-general.php?page=duplicatepost')).'<br/>';
+	$message .= '<strong>'.__('Help me develop the plugin and provide support by <a href="http://lopo.it/duplicate-post-plugin">donating even a small sum</a>.', 'duplicate-post').'</strong>';
+	global $wp_version;
+	if( version_compare($wp_version, '4.2') < 0 ){
+		$message .= ' | <a id="duplicate-post-dismiss-notice" href="javascript:duplicate_post_dismiss_notice();">'.__('Dismiss this notice.').'</a>';
+	}
+	echo '<div id="duplicate-post-notice" class="'.$class.'"><p>'.$message.'</p></div>';
+	echo "<script>
+			function duplicate_post_dismiss_notice(){
+				var data = {
+				'action': 'duplicate_post_dismiss_notice',
+				};
 
-
-if (get_site_option('duplicate_post_show_notice') == 1){
-	/**
-	 * Shows the update notice
-	 */
-	function duplicate_post_show_update_notice() {
-		if(!current_user_can( 'manage_options')) return;
-		$class = 'notice is-dismissible';
-		$message = '<strong>'.esc_html__('Duplicate Post has new features!', 'duplicate-post').'</strong><br/>';
-		$message .= '<em>'.esc_html__('Clone posts in bulk (WP 4.7+)', 'duplicate-post').' — '.esc_html__('Wildcards in custom field names', 'duplicate-post').' — '.esc_html__('Options for thumbnail, post format, post template, author, menu order', 'duplicate-post').'</em><br/>';
-    	$message .= sprintf(__('Please <a href="%s">review the settings</a> to make sure it works as you expect.', 'duplicate-post'), admin_url('options-general.php?page=duplicatepost')).'<br/>';
-		$message .= '<strong>'.__('Help me develop the plugin and provide support by <a href="http://lopo.it/duplicate-post-plugin">donating even a small sum</a>.', 'duplicate-post').'</strong>';
-		global $wp_version;
-		if( version_compare($wp_version, '4.2') < 0 ){
-			$message .= ' | <a id="duplicate-post-dismiss-notice" href="javascript:duplicate_post_dismiss_notice();">'.__('Dismiss this notice.').'</a>';
-		}
-		echo '<div id="duplicate-post-notice" class="'.$class.'"><p>'.$message.'</p></div>';
-		echo "<script>
-				function duplicate_post_dismiss_notice(){
-					var data = {
-					'action': 'duplicate_post_dismiss_notice',
-					};
-	
-					jQuery.post(ajaxurl, data, function(response) {
-						jQuery('#duplicate-post-notice').hide();
-					});
-				}
-	
-				jQuery(document).ready(function(){
-					jQuery('body').on('click', '.notice-dismiss', function(){
-						duplicate_post_dismiss_notice();
-					});
+				jQuery.post(ajaxurl, data, function(response) {
+					jQuery('#duplicate-post-notice').hide();
 				});
-				</script>";
-	}
-
-	if(is_multisite()){
-		add_action( 'network_admin_notices', 'duplicate_post_show_update_notice' );
-	} else {
-		add_action( 'admin_notices', 'duplicate_post_show_update_notice' );
-	}
-	add_action( 'wp_ajax_duplicate_post_dismiss_notice', 'duplicate_post_dismiss_notice' );
+			}
 	
-	function duplicate_post_dismiss_notice() {
-		$result = update_site_option('duplicate_post_show_notice', 0);
-		return $result;
-		wp_die();
-	}
+			jQuery(document).ready(function(){
+				jQuery('body').on('click', '.notice-dismiss', function(){
+					duplicate_post_dismiss_notice();
+				});
+			});
+			</script>";
 }
+
+function duplicate_post_dismiss_notice() {
+	$result = update_site_option('duplicate_post_show_notice', 0);
+	return $result;
+	wp_die();
+}
+
 
 /**
  * Add the link to action list for post_row_actions
@@ -196,10 +241,6 @@ function duplicate_post_make_duplicate_link_row($actions, $post) {
 /**
  * Add a button in the post/page edit screen to create a clone
  */
-if (get_option('duplicate_post_show_submitbox') == 1){
-	add_action( 'post_submitbox_start', 'duplicate_post_add_duplicate_post_button' );
-}
-
 function duplicate_post_add_duplicate_post_button() {
 	if ( isset( $_GET['post'] )){
 		$id = $_GET['post'];
@@ -216,12 +257,6 @@ function duplicate_post_add_duplicate_post_button() {
 	}
 }
 
-/**
- * Connect actions to functions
- */
-add_action('admin_action_duplicate_post_save_as_new_post', 'duplicate_post_save_as_new_post');
-add_action('admin_action_duplicate_post_save_as_new_post_draft', 'duplicate_post_save_as_new_post_draft');
-
 /*
  * This function calls the creation of a new copy of the selected post (as a draft)
 * then redirects to the edit post screen
@@ -229,8 +264,6 @@ add_action('admin_action_duplicate_post_save_as_new_post_draft', 'duplicate_post
 function duplicate_post_save_as_new_post_draft(){
 	duplicate_post_save_as_new_post('draft');
 }
-
-add_filter('removable_query_args', 'duplicate_post_add_removable_query_arg', 10, 1);
 
 function duplicate_post_add_removable_query_arg( $removable_query_args ){
 	$removable_query_args[] = 'cloned';
@@ -477,29 +510,6 @@ function duplicate_post_copy_comments($new_id, $post){
 	}
 }
 
-// Using our action hooks
-
-add_action('dp_duplicate_post', 'duplicate_post_copy_post_meta_info', 10, 2);
-add_action('dp_duplicate_page', 'duplicate_post_copy_post_meta_info', 10, 2);
-
-if(get_option('duplicate_post_copychildren') == 1){
-	add_action('dp_duplicate_post', 'duplicate_post_copy_children', 20, 2);
-	add_action('dp_duplicate_page', 'duplicate_post_copy_children', 20, 2);
-}
-
-if(get_option('duplicate_post_copyattachments') == 1){
-	add_action('dp_duplicate_post', 'duplicate_post_copy_attachments', 30, 2);
-	add_action('dp_duplicate_page', 'duplicate_post_copy_attachments', 30, 2);
-}
-
-if(get_option('duplicate_post_copycomments') == 1){
-	add_action('dp_duplicate_post', 'duplicate_post_copy_comments', 40, 2);
-	add_action('dp_duplicate_page', 'duplicate_post_copy_comments', 40, 2);
-}
-
-add_action('dp_duplicate_post', 'duplicate_post_copy_post_taxonomies', 50, 2);
-add_action('dp_duplicate_page', 'duplicate_post_copy_post_taxonomies', 50, 2);
-
 /**
  * Create a duplicate from a post
  */
@@ -623,8 +633,6 @@ function duplicate_post_create_duplicate($post, $status = '', $parent_id = '') {
 }
 
 //Add some links on the plugin page
-add_filter('plugin_row_meta', 'duplicate_post_add_plugin_links', 10, 2);
-
 function duplicate_post_add_plugin_links($links, $file) {
 	if ( $file == plugin_basename(dirname(__FILE__).'/duplicate-post.php') ) {
 		$links[] = '<a href="http://lopo.it/duplicate-post-plugin">' . esc_html__('Donate', 'duplicate-post') . '</a>';
@@ -634,9 +642,6 @@ function duplicate_post_add_plugin_links($links, $file) {
 }
 
 /*** NOTICES ***/
-
-add_action( 'admin_notices', 'duplicate_post_action_admin_notice' );
- 
 function duplicate_post_action_admin_notice() {
   if ( ! empty( $_REQUEST['cloned'] ) ) {
     $copied_posts = intval( $_REQUEST['cloned'] );
@@ -652,7 +657,6 @@ function duplicate_post_action_admin_notice() {
 
 
 /*** BULK ACTIONS ***/
-
 add_action('admin_init', 'duplicate_post_add_bulk_filters_for_enabled_post_types');
 
 function duplicate_post_add_bulk_filters_for_enabled_post_types(){

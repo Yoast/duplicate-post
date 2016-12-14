@@ -7,8 +7,8 @@ if ( !defined( 'ABSPATH' ) ) {
 }
 
 if ( is_admin() ){ // admin actions
-	add_action('admin_menu', 'duplicate_post_menu');
-	add_action( 'admin_init', 'duplicate_post_register_settings');
+	add_action( 'admin_menu', 'duplicate_post_menu' );
+	add_action( 'admin_init', 'duplicate_post_register_settings' );
 }
 
 function duplicate_post_register_settings() { // whitelist options
