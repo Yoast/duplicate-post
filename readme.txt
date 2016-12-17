@@ -53,10 +53,6 @@ Use WordPress' Add New Plugin feature, searching "Duplicate Post", or download t
 
 == Frequently Asked Questions ==
 
-= How to stop copying featured images? =
-
-Add `_thumbnail_id` to "Do not copy these fields" in the Settings page.
-
 = The plugin doesn't work, why? =
 
 First, check your version of WordPress: the plugin is not supposed to work on old versions anymore. Make sure also to upgrade to the last version of the plugin!
