@@ -1,6 +1,6 @@
 === Duplicate Post ===
 Contributors: 		lopo
-Donate link: 		http://lopo.it/duplicate-post-plugin/
+Donate link: 		https://lopo.it/duplicate-post-plugin/
 Tags: 				duplicate post, copy, clone
 Requires at least: 	3.6
 Tested up to: 		4.7
@@ -13,7 +13,7 @@ Clone posts and pages.
 == Description ==
 
 This plugin allows to clone a post or page, or edit it as a new draft.
-If you find this useful, [**please consider donating**](http://lopo.it/duplicate-post-plugin/) whatever sum you choose, **even just 10 cents**. It's been downloaded thousands of times: just a few cents from every user would help me develop the plugin and improve support.
+If you find this useful, [**please consider donating**](https://lopo.it/duplicate-post-plugin/) whatever sum you choose, **even just 10 cents**. It's been downloaded thousands of times: just a few cents from every user would help me develop the plugin and improve support.
 
 
 How it works:
@@ -36,7 +36,7 @@ In the Options page under Settings it is now possible to choose what to copy, an
 
 You can also restrict the plugin to certain post types, and allow only some roles to clone posts or pages.
 
-If you want to contribute to translate the plugin in languages other than English, there is a [translation project](https://translate.wordpress.org/projects/wp-plugins/duplicate-post) available: [contact me](http://lopo.it/contatti/) if you wish to become an editor for your language.
+If you want to contribute to translate the plugin in languages other than English, there is a [translation project](https://translate.wordpress.org/projects/wp-plugins/duplicate-post) available: [contact me](https://lopo.it/contatti/) if you wish to become an editor for your language.
 
 **If you're a plugin developer**, I suggest to read the section made just for you under "Other Notes", to ensure compatibility between your plugin(s) and mine.
 
@@ -63,14 +63,14 @@ Pay also attention to the new "Roles allowed to copy" option: it should convert 
 
 From version 3.0 onwards, post types must be enabled in the Options: check them as well.
 
-If not, maybe there is some kind of conflict with other plugins: feel free [to write me](http://lopo.it/contatti/) and we'll try to discover a solution (it will be *really* helpful if you try to deactivate all your other plugins one by one to see which one conflicts with mine... But do it only if you know what you're doing, I will not be responsible of any problem you may experience).
+If not, maybe there is some kind of conflict with other plugins: feel free [to write me](https://lopo.it/contatti/) and we'll try to discover a solution (it will be *really* helpful if you try to deactivate all your other plugins one by one to see which one conflicts with mine... But do it only if you know what you're doing, I will not be responsible of any problem you may experience).
 
 = The plugin is not translated in my language! =
 
 From version 3.0 the plugin's translations are managed by the WordPress.org platform and the plugin is shipped without language files, so first of all update translations under Dashboard->Updates.
 
 If Duplicate Post is still in English, or if there are some untraslated strings, you can help traslating to your language [here](https://translate.wordpress.org/projects/wp-plugins/duplicate-post): you only need a WordPress.org account.
-[Contact me](http://lopo.it/contatti/) if you wish to become an editor for your language.
+[Contact me](https://lopo.it/contatti/) if you wish to become an editor for your language.
 
 == Screenshots ==
 
@@ -323,7 +323,7 @@ Please refer to the [Plugin API](http://codex.wordpress.org/Plugin_API) for ever
 
 If you find this useful and if you want to contribute, there are three ways:
 
-   1. You can [write me](http://lopo.it/contatti/) and submit your bug reports, suggestions and requests for features;
+   1. You can [write me](https://lopo.it/contatti/) and submit your bug reports, suggestions and requests for features;
    2. If you want to translate it to your language (there are just a few lines of text), you can use the [translation project](https://translate.wordpress.org/projects/wp-plugins/duplicate-post);
-   3. Using the plugin is free, but if you want you can support my efforts by donating with PayPal [here](http://lopo.it/duplicate-post-plugin/)
+   3. Using the plugin is free, but if you want you can support my efforts by donating with PayPal [here](https://lopo.it/duplicate-post-plugin/)
 
