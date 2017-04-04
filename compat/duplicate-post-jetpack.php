@@ -5,9 +5,10 @@ add_action( 'admin_init', 'duplicate_post_jetpack_init' );
 function duplicate_post_jetpack_init() {
 	add_filter('duplicate_post_blacklist_filter', 'duplicate_post_jetpack_add_to_blacklist', 10, 1 );
 	
-	add_action('duplicate_post_pre_copy', 'duplicate_post_jetpack_disable_markdown', 10);
-	add_action('duplicate_post_post_copy', 'duplicate_post_jetpack_enable_markdown', 10);
-	
+	if (class_exists('WPCom_Markdown')){
+		add_action('duplicate_post_pre_copy', 'duplicate_post_jetpack_disable_markdown', 10);
+		add_action('duplicate_post_post_copy', 'duplicate_post_jetpack_enable_markdown', 10);
+	}	
 }
 
 function duplicate_post_jetpack_add_to_blacklist($meta_blacklist) {
