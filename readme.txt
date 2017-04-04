@@ -141,7 +141,7 @@ New features and customization, WP 3.0 compatibility: you should upgrade if you 
 = 3.1.2 (2017-04-04) =
 * new website with extensive documentation
 * WMPL compatibility, thanks to WMPL team
-* improved Jetpack compatibility
+* improved Jetpack compatibility (Subscriptions, Markdown)
 * small changes to hooks
 * improved security with nonces
 * various small fixes
