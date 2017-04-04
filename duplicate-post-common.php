@@ -57,7 +57,7 @@ function duplicate_post_get_clone_post_link( $id = 0, $context = 'display', $dra
 	if ( !$post_type_object )
 	return;
 
-	return apply_filters( 'duplicate_post_get_clone_post_link', admin_url( "admin.php". $action ), $post->ID, $context );
+	return wp_nonce_url(apply_filters( 'duplicate_post_get_clone_post_link', admin_url( "admin.php". $action ), $post->ID, $context ), 'duplicate-post_' . $post->ID);
 }
 /**
  * Display duplicate post link for post.
@@ -85,12 +85,12 @@ function duplicate_post_clone_post_link( $link = null, $before = '', $after = ''
 /**
  * Get original post .
  *
- * @param int $id Optional. Post ID.
+ * @param int $post Optional. Post ID or Post object.
  * @param string $output Optional, default is Object. Either OBJECT, ARRAY_A, or ARRAY_N.
  * @return mixed Post data
  */
-function duplicate_post_get_original($id = 0 , $output = OBJECT){
-	if ( !$post = get_post( $id ) )
+function duplicate_post_get_original($post = null , $output = OBJECT){
+	if ( !$post = get_post( $post ) )
 		return;
 	$original_ID = get_post_meta( $post->ID, '_dp_original');
 	if (empty($original_ID)) return null;

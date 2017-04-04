@@ -5,6 +5,9 @@ if(!is_admin())
 
 require_once (dirname(__FILE__).'/duplicate-post-options.php');
 
+require_once (dirname(__FILE__).'/compat/duplicate-post-wpml.php');
+require_once (dirname(__FILE__).'/compat/duplicate-post-jetpack.php');
+
 /**
  * Wrapper for the option 'duplicate_post_version'
 */
@@ -57,8 +60,8 @@ function duplicate_post_admin_init(){
 	add_action('dp_duplicate_page', 'duplicate_post_copy_post_meta_info', 10, 2);
 	
 	if(get_option('duplicate_post_copychildren') == 1){
-		add_action('dp_duplicate_post', 'duplicate_post_copy_children', 20, 2);
-		add_action('dp_duplicate_page', 'duplicate_post_copy_children', 20, 2);
+		add_action('dp_duplicate_post', 'duplicate_post_copy_children', 20, 3);
+		add_action('dp_duplicate_page', 'duplicate_post_copy_children', 20, 3);
 	}
 	
 	if(get_option('duplicate_post_copyattachments') == 1){
@@ -188,10 +191,9 @@ function duplicate_post_plugin_upgrade() {
 function duplicate_post_show_update_notice() {
 	if(!current_user_can( 'manage_options')) return;
 	$class = 'notice is-dismissible';
-	$message = '<strong>'.esc_html__('Duplicate Post has new features!', 'duplicate-post').'</strong><br/>';
-	$message .= '<em>'.esc_html__('Clone posts in bulk (WP 4.7+)', 'duplicate-post').' — '.esc_html__('Wildcards in custom field names', 'duplicate-post').' — '.esc_html__('Options for thumbnail, post format, post template, author, menu order', 'duplicate-post').'</em><br/>';
-   	$message .= sprintf(__('Please <a href="%s">review the settings</a> to make sure it works as you expect.', 'duplicate-post'), admin_url('options-general.php?page=duplicatepost')).'<br/>';
-	$message .= '<strong>'.__('Help me develop the plugin and provide support by <a href="http://lopo.it/duplicate-post-plugin">donating even a small sum</a>.', 'duplicate-post').'</strong>';
+	$message = '<strong><a href="https://duplicate-post.lopo.it/">'.esc_html__('Check out the new documentation for Duplicate Post!', 'duplicate-post').'</a></strong><br/>';
+	$message .= '<em>'.esc_html__('Duplicate Post is now also compatible with WPML!', 'duplicate-post').'</em><br/>';
+	$message .= '<strong>'.sprintf(wp_kses(__('Help me develop the plugin and provide support by <a href="%s">donating even a small sum</a>.', 'duplicate-post'), array( 'a' => array( 'href' => array() ) ) ), "https://duplicate-post.lopo.it/donate").'</strong>';
 	global $wp_version;
 	if( version_compare($wp_version, '4.2') < 0 ){
 		$message .= ' | <a id="duplicate-post-dismiss-notice" href="javascript:duplicate_post_dismiss_notice();">'.__('Dismiss this notice.').'</a>';
@@ -221,7 +223,6 @@ function duplicate_post_dismiss_notice() {
 	return $result;
 	wp_die();
 }
-
 
 /**
  * Add the link to action list for post_row_actions
@@ -281,14 +282,31 @@ function duplicate_post_save_as_new_post($status = ''){
 
 	// Get the original post
 	$id = (isset($_GET['post']) ? $_GET['post'] : $_POST['post']);
-	$post = get_post($id);
+	
+	check_admin_referer('duplicate-post_' . $id);
+	
+	$post = get_post($id);	
 
 	// Copy the post and insert it
 	if (isset($post) && $post!=null) {
 		$new_id = duplicate_post_create_duplicate($post, $status);
 		
 		if ($status == ''){
-			$sendback = remove_query_arg( array( 'trashed', 'untrashed', 'deleted', 'cloned', 'ids'), admin_url( 'edit.php?post_type='.$post->post_type) );
+			$sendback = wp_get_referer();
+			if ( ! $sendback ||
+					strpos( $sendback, 'post.php' ) !== false ||
+					strpos( $sendback, 'post-new.php' ) !== false ) {
+						if ( 'attachment' == $post_type ) {
+							$sendback = admin_url( 'upload.php' );
+						} else {
+							$sendback = admin_url( 'edit.php' );
+							if ( ! empty( $post_type ) ) {
+								$sendback = add_query_arg( 'post_type', $post_type, $sendback );
+							}
+						}
+					} else {
+						$sendback = remove_query_arg( array('trashed', 'untrashed', 'deleted', 'cloned', 'ids'), $sendback );
+					}
 			// Redirect to the post list screen
 			wp_redirect( add_query_arg( array( 'cloned' => 1, 'ids' => $post->ID), $sendback ) );
 		} else {
@@ -312,7 +330,7 @@ function duplicate_post_copy_post_taxonomies($new_id, $post) {
 		wp_set_object_terms( $new_id, NULL, 'category' );
 
 		$post_taxonomies = get_object_taxonomies($post->post_type);
-		// severl plugins just add support to post-formats but don't register post_format taxonomy
+		// several plugins just add support to post-formats but don't register post_format taxonomy
 		if(post_type_supports($post->post_type, 'post-formats') && !in_array('post_format', $post_taxonomies)){
 			$post_taxonomies[] = 'post_format';
 		}
@@ -348,9 +366,6 @@ function duplicate_post_copy_post_meta_info($new_id, $post) {
 		$meta_blacklist = array_filter($meta_blacklist);
 		$meta_blacklist = array_map('trim', $meta_blacklist);
 	}	
-	$meta_blacklist[] = '_wpas_done_all'; //Jetpack Publicize
-	$meta_blacklist[] = '_wpas_done_'; //Jetpack Publicize
-	$meta_blacklist[] = '_wpas_mess'; //Jetpack Publicize
 	$meta_blacklist[] = '_edit_lock'; // edit lock
 	$meta_blacklist[] = '_edit_last'; // edit lock
 	if(get_option('duplicate_post_copytemplate') == 0){
@@ -462,13 +477,13 @@ function duplicate_post_copy_attachments($new_id, $post){
 /**
  * Copy children posts
  */
-function duplicate_post_copy_children($new_id, $post){
+function duplicate_post_copy_children($new_id, $post, $status = ''){
 	// get children
 	$children = get_posts(array( 'post_type' => 'any', 'numberposts' => -1, 'post_status' => 'any', 'post_parent' => $post->ID ));
 	// clone old attachments
 	foreach($children as $child){
 		if ($child->post_type == 'attachment') continue;
-		duplicate_post_create_duplicate($child, '', $new_id);
+		duplicate_post_create_duplicate($child, $status, $new_id);
 	}
 }
 
@@ -620,9 +635,9 @@ function duplicate_post_create_duplicate($post, $status = '', $parent_id = '') {
 	// If you have written a plugin which uses non-WP database tables to save
 	// information about a post you can hook this action to dupe that data.
 	if ($post->post_type == 'page' || is_post_type_hierarchical( $post->post_type ))
-		do_action( 'dp_duplicate_page', $new_post_id, $post );
+		do_action( 'dp_duplicate_page', $new_post_id, $post, $status );
 	else
-		do_action( 'dp_duplicate_post', $new_post_id, $post );
+		do_action( 'dp_duplicate_post', $new_post_id, $post, $status );
 
 	delete_post_meta($new_post_id, '_dp_original');
 	add_post_meta($new_post_id, '_dp_original', $post->ID);
@@ -635,8 +650,8 @@ function duplicate_post_create_duplicate($post, $status = '', $parent_id = '') {
 //Add some links on the plugin page
 function duplicate_post_add_plugin_links($links, $file) {
 	if ( $file == plugin_basename(dirname(__FILE__).'/duplicate-post.php') ) {
-		$links[] = '<a href="http://lopo.it/duplicate-post-plugin">' . esc_html__('Donate', 'duplicate-post') . '</a>';
-		$links[] = '<a href="https://translate.wordpress.org/projects/wp-plugins/duplicate-post">' . esc_html__('Translate', 'duplicate-post') . '</a>';
+		$links[] = '<a href="https://duplicate-post.lopo.it/">' . esc_html__('Documentation', 'duplicate-post') . '</a>';
+		$links[] = '<a href="https://duplicate-post.lopo.it/donate">' . esc_html__('Donate', 'duplicate-post') . '</a>';
 	}
 	return $links;
 }
