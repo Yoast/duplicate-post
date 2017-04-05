@@ -31,7 +31,7 @@ How it works:
 
 There is also a **template tag**, so you can put it in your templates and clone your posts/pages from the front-end. Clicking on the link will lead you to the edit page for the new draft, just like the admin bar link.
 
-Duplicate Post has many useful setting to customize its behaviour and restrict its use to certain roles or post types. Check out the extensive documentation on [the plugin's site](https://duplicate-post.lopo.it).
+Duplicate Post has many useful settings to customize its behaviour and restrict its use to certain roles or post types. Check out the extensive documentation on [the plugin's site](https://duplicate-post.lopo.it).
 
 **If you're a plugin developer**, I suggest you to read the [Developer's Guide](https://duplicate-post.lopo.it/docs/developers-guide/) to ensure compatibility between your plugin(s) and mine. Feel free to [contact me](https://duplicate-post.lopo.it/contact) so we can keep in touch and collaborate.
 
