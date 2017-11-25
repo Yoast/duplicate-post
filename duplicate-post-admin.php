@@ -192,7 +192,7 @@ function duplicate_post_show_update_notice() {
 	if(!current_user_can( 'manage_options')) return;
 	$class = 'notice is-dismissible';
 	$message = '<strong>'.esc_html__('Duplicate Post turns 10!', 'duplicate-post').'</strong> '.esc_html__('Serving the WordPress community since November 2007.', 'duplicate-post').'<br/>';
-	$message .= '<em><a href="https://duplicate-post.lopo.it/">'.esc_html__('Check out the new documentation', 'duplicate-post').'</a></em><br/>';
+	$message .= '<em><a href="https://duplicate-post.lopo.it/">'.esc_html__('Check out the new documentation', 'duplicate-post').'</a> - '.sprintf(__('Please <a href="%s">review the settings</a> to make sure it works as you expect.', 'duplicate-post'), admin_url('options-general.php?page=duplicatepost')).'</em><br/>';
 	$message .= '<strong>'.sprintf(wp_kses(__('Help me develop the plugin and provide support by <a href="%s">donating even a small sum</a>.', 'duplicate-post'), array( 'a' => array( 'href' => array() ) ) ), "https://duplicate-post.lopo.it/donate").'</strong>';
 	global $wp_version;
 	if( version_compare($wp_version, '4.2') < 0 ){
