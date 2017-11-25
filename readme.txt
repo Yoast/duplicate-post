@@ -76,6 +76,9 @@ If Duplicate Post is still in English, or if there are some untraslated strings,
 
 == Upgrade Notice ==
 
+= 3.2.1 =
+Fixes some problems with Multisite, WPML, revisions
+
 = 3.2 =
 new website + WPML compatibility + various fixes
 
@@ -137,6 +140,12 @@ Some users have experienced a fatal error when upgrading to v1.1: this may fix i
 New features and customization, WP 3.0 compatibility: you should upgrade if you want to copy Custom Posts with Custom Taxonomies.
 
 == Changelog ==
+
+= 3.2.1 (2017-11-25) =
+* Fixing some issues of the 3.* trunk before major redesign
+* Fixes issue when upgrading on multisite
+* Improved compatibility with WPML + page builders, thanks to WPML team
+* Prevents creating a revision immediately after the cloning
 
 = 3.2 (2017-04-04) =
 * new website with extensive documentation

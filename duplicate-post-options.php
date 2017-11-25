@@ -370,7 +370,7 @@ img#donate-button{
 				</tr>
 				<tr valign="top">
 					<td colspan="2"><span class="description"><?php esc_html_e("Whether the links are displayed for custom post types registered by themes or plugins depends on their use of standard WordPress UI elements", 'duplicate-post'); ?>
-							<br /> <?php printf(__('You can also use the template tag duplicate_post_clone_post_link( $link, $before, $after, $id ). More info <a href="%s">here</a>', 'duplicate-post'), 'https://wordpress.org/plugins/duplicate-post/other_notes/'); ?>
+							<br /> <?php printf(__('You can also use the template tag duplicate_post_clone_post_link( $link, $before, $after, $id ). More info <a href="%s">here</a>', 'duplicate-post'), 'https://duplicate-post.lopo.it/docs/developers-guide/functions-template-tags/duplicate_post_clone_post_link/'); ?>
 					</span>
 					</td>
 				</tr>
