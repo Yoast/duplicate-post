@@ -19,13 +19,13 @@ How it works:
 
 1. In 'Edit Posts'/'Edit Pages', you can click on 'Clone' link below the post/page title: this will immediately create a copy and return to the list.
 
-2. NEW! In 'Edit Posts'/'Edit Pages', you can select one or more items, then choose 'Clone' in the 'Bulk Actions' dropdown to copy them all at once.
+2. In 'Edit Posts'/'Edit Pages', you can select one or more items, then choose 'Clone' in the 'Bulk Actions' dropdown to copy them all at once.
 
 3. In 'Edit Posts'/'Edit Pages', you can click on 'New Draft' link below the post/page title.
 
 4. On the post edit screen, you can click on 'Copy to a new draft' above "Cancel"/"Move to trash". 
 
-5. While viewing a post as a logged in user, you can click on 'Copy to a new draft' as a dropdown link under "Edit Post" in the admin bar.
+5. While viewing a post as a logged in user, you can click on 'Copy to a new draft' in the admin bar.
 
 3, 4 and 5 will lead to the edit page for the new draft: change what you want, click on 'Publish' and you're done.
 
