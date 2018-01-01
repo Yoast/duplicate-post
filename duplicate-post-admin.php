@@ -547,7 +547,6 @@ function duplicate_post_copy_attachments( $new_id, $post ) {
 		// Let's copy the actual file.
 		$tmp = download_url( $url );
 		if ( is_wp_error( $tmp ) ) {
-			unlink( $tmp );
 			continue;
 		}
 

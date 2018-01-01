@@ -168,11 +168,14 @@ function duplicate_post_add_css() {
 	if ( empty( $current_object ) ) {
 		return;
 	}
-	if ( ! empty( $current_object->post_type ) && ( get_post_type_object( $current_object->post_type ) === $post_type_object ) &&
-		duplicate_post_is_current_user_allowed_to_copy() &&
-		( $post_type_object->show_ui || 'attachment' === $current_object->post_type ) &&
-		( duplicate_post_is_post_type_enabled( $current_object->post_type ) ) ) {
-		wp_enqueue_style( 'duplicate-post', plugins_url( '/duplicate-post.css', __FILE__ ) );
+	if ( ! empty( $current_object->post_type ) ) {
+		$post_type_object = get_post_type_object( $current_object->post_type );
+		if ( ! empty( $post_type_object ) &&
+			duplicate_post_is_current_user_allowed_to_copy() &&
+			( $post_type_object->show_ui || 'attachment' === $current_object->post_type ) &&
+			( duplicate_post_is_post_type_enabled( $current_object->post_type ) ) ) {
+				wp_enqueue_style( 'duplicate-post', plugins_url( '/duplicate-post.css', __FILE__ ) );
+		}
 	}
 }
 
