@@ -819,13 +819,16 @@ function duplicate_post_action_admin_notice() {
 	if ( ! empty( $_REQUEST['cloned'] ) ) {
 		$copied_posts = intval( $_REQUEST['cloned'] );
 		printf(
-			/* translators: %s: Number of posts copied. */
-			'<div id="message" class="updated fade"><p>' . esc_html( _n(
-				'%s item copied.',
-				'%s items copied.',
-				$copied_posts,
-				'duplicate-post'
-			) . '</p></div>' ),
+			'<div id="message" class="updated fade"><p>' .
+				esc_html(
+					/* translators: %s: Number of posts copied. */
+					_n(
+						'%s item copied.',
+						'%s items copied.',
+						$copied_posts,
+						'duplicate-post'
+					)
+				) . '</p></div>',
 			esc_html( $copied_posts )
 		);
 		remove_query_arg( 'cloned' );
