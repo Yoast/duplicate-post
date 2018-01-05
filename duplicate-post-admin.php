@@ -139,7 +139,7 @@ function duplicate_post_plugin_upgrade() {
 	add_option( 'duplicate_post_copytitle', '1' );
 	add_option( 'duplicate_post_copydate', '0' );
 	add_option( 'duplicate_post_copystatus', '0' );
-	add_option( 'duplicate_post_copyslug', '1' );
+	add_option( 'duplicate_post_copyslug', '0' );
 	add_option( 'duplicate_post_copyexcerpt', '1' );
 	add_option( 'duplicate_post_copycontent', '1' );
 	add_option( 'duplicate_post_copythumbnail', '1' );
