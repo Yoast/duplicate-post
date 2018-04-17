@@ -494,7 +494,8 @@ img#donate-button {
 								echo 'checked="checked"';}
 ?>
 />
-							<?php esc_html_e( 'Admin bar', 'duplicate-post' ); ?> </label>
+							<?php esc_html_e( 'Admin bar', 'duplicate-post' ); ?> 
+							<small>(<?php esc_html_e( 'now works on Edit screen too — check this option to use with Gutenberg enabled', 'duplicate-post' );  ?>)</small></label> 
 							<?php
 
 							global $wp_version;

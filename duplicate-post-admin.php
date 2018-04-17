@@ -204,25 +204,26 @@ function duplicate_post_show_update_notice() {
 		return;
 	}
 	$class    = 'notice is-dismissible';
-	$message  = '<strong>' . esc_html__( 'Duplicate Post turns 10!', 'duplicate-post' ) . '</strong> ' .
-		esc_html__( 'Serving the WordPress community since November 2007.', 'duplicate-post' ) . '<br/>';
-	$message .= '<em><a href="https://duplicate-post.lopo.it/">' .
-		esc_html__( 'Check out the new documentation', 'duplicate-post' ) . '</a> - ' . sprintf(
+	$message = '<strong>' . sprintf( 
+			/* translators: %s: Duplicate Post version. */
+			__( "What's new in Duplicate Post version %s:", 'duplicate-post' ),
+			DUPLICATE_POST_CURRENT_VERSION 
+			).'</strong><br/>';
+	$message .= esc_html__( 'Simple compatibility with Gutenberg user interface: enable "Admin bar" under the Settings', 'duplicate-post' ) . ' — ' 
+			. esc_html__( '"Slug" option unset by default on new installations', 'duplicate-post' ) . '<br/>';
+	$message .= '<em><a href="https://duplicate-post.lopo.it/">' . esc_html__( 'Check out the documentation', 'duplicate-post' ) . '</a> — ' . sprintf(
 			/* translators: %s: Options page URL */
 			__( 'Please <a href="%s">review the settings</a> to make sure it works as you expect.', 'duplicate-post' ),
-			admin_url( 'options-general.php?page=duplicatepost' )
-		) . '</em><br/>';
-	$message .= '<strong>' . sprintf(
-		wp_kses(
-			/* translators: %s: Donation URL. */
-			__(
-				'Help me develop the plugin and provide support by <a href="%s">donating even a small sum</a>.',
-				'duplicate-post'
-			),
-			array( 'a' => array( 'href' => array() ) )
-		),
-		'https://duplicate-post.lopo.it/donate'
-	) . '</strong>';
+			admin_url( 'options-general.php?page=duplicatepost' ) ) . '</em><br/>';
+	$message .= esc_html__( 'Serving the WordPress community since November 2007.', 'duplicate-post' ) . ' <strong>' . sprintf( 
+			wp_kses( 
+					/* translators: %s: Donation URL. */
+					__( 'Help me develop the plugin and provide support by <a href="%s">donating even a small sum</a>.', 'duplicate-post' ),
+					array( 'a' => array( 'href' => array() ) ) 
+				),
+				"https://duplicate-post.lopo.it/donate"
+			) . '</strong>';
+	
 	global $wp_version;
 	if ( version_compare( $wp_version, '4.2' ) < 0 ) {
 		$message .= ' | <a id="duplicate-post-dismiss-notice" href="javascript:duplicate_post_dismiss_notice();">' .
@@ -502,7 +503,7 @@ function duplicate_post_addslashes_deep( $value ) {
  * @ignore
  *
  * @param mixed $value Value to slash only if string.
- * @return string|unknown
+ * @return string|mixed
  */
 function duplicate_post_addslashes_to_strings_only( $value ) {
 	return is_string( $value ) ? addslashes( $value ) : $value;
