@@ -154,15 +154,16 @@ function duplicate_post_admin_bar_render() {
 				'href'  => duplicate_post_get_clone_post_link( $current_object->ID ),
 			)
 		);
-	}  else if ( is_admin() && isset( $_GET['post'] ) ){
-		$id = $_GET['post'];
+	} elseif ( is_admin() && isset( $_GET['post'] ) ) { // Input var okay.
+		$id   = intval( wp_unslash( $_GET['post'] ) ); // Input var okay.
 		$post = get_post( $id );
-		if( duplicate_post_is_current_user_allowed_to_copy()
+		if ( duplicate_post_is_current_user_allowed_to_copy()
 				&& duplicate_post_is_post_type_enabled( $post->post_type ) ) {
-					$wp_admin_bar->add_menu( array(
-							'id' => 'new_draft',
-							'title' => esc_attr__( "Copy to a new draft", 'duplicate-post' ),
-							'href' => duplicate_post_get_clone_post_link( $id )
+					$wp_admin_bar->add_menu(
+						array(
+							'id'    => 'new_draft',
+							'title' => esc_attr__( 'Copy to a new draft', 'duplicate-post' ),
+							'href'  => duplicate_post_get_clone_post_link( $id ),
 						)
 					);
 		}
@@ -188,12 +189,12 @@ function duplicate_post_add_css() {
 			( duplicate_post_is_post_type_enabled( $current_object->post_type ) ) ) {
 				wp_enqueue_style( 'duplicate-post', plugins_url( '/duplicate-post.css', __FILE__ ) );
 		}
-	} else if ( is_admin() && isset( $_GET['post'] ) ){
-		$id = $_GET['post'];
+	} elseif ( is_admin() && isset( $_GET['post'] ) ) { // Input var okay.
+		$id   = intval( wp_unslash( $_GET['post'] ) ); // Input var okay.
 		$post = get_post( $id );
-		if( duplicate_post_is_current_user_allowed_to_copy()
+		if ( duplicate_post_is_current_user_allowed_to_copy()
 				&& duplicate_post_is_post_type_enabled( $post->post_type ) ) {
-					wp_enqueue_style ( 'duplicate-post', plugins_url( '/duplicate-post.css', __FILE__ ) );
+					wp_enqueue_style( 'duplicate-post', plugins_url( '/duplicate-post.css', __FILE__ ) );
 		}
 	}
 }
@@ -207,7 +208,7 @@ function duplicate_post_init() {
 	if ( 1 === intval( get_option( 'duplicate_post_show_adminbar' ) ) ) {
 		add_action( 'wp_before_admin_bar_render', 'duplicate_post_admin_bar_render' );
 		add_action( 'wp_enqueue_scripts', 'duplicate_post_add_css' );
-		add_action ( 'admin_enqueue_scripts', 'duplicate_post_add_css' );
+		add_action( 'admin_enqueue_scripts', 'duplicate_post_add_css' );
 	}
 }
 

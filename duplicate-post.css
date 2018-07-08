@@ -9,23 +9,23 @@
 		display: block;
 	}
 	#wpadminbar #wp-admin-bar-new_draft > .ab-item {
-    	text-indent: 100%;
-    	white-space: nowrap;
-    	overflow: hidden;
-    	width: 52px;
-    	padding: 0;
-    	color: #999;
-    	position: relative;
+		text-indent: 100%;
+		white-space: nowrap;
+		overflow: hidden;
+		width: 52px;
+		padding: 0;
+		color: #999;
+		position: relative;
 	}
 	#wpadminbar #wp-admin-bar-new_draft > .ab-item::before {
-    	display: block;
-    	text-indent: 0;
-    	font: 400 32px/1 dashicons;
-    	speak: none;
-    	top: 0px;
-    	width: 52px;
-    	text-align: center;
-    	-webkit-font-smoothing: antialiased;
-    	-moz-osx-font-smoothing: grayscale;
+		display: block;
+		text-indent: 0;
+		font: 400 32px/1 dashicons;
+		speak: none;
+		top: 0px;
+		width: 52px;
+		text-align: center;
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
 	}
 }

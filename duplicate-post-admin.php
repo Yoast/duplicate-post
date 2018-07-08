@@ -203,27 +203,25 @@ function duplicate_post_show_update_notice() {
 	if ( ! current_user_can( 'manage_options' ) ) {
 		return;
 	}
-	$class    = 'notice is-dismissible';
-	$message = '<strong>' . sprintf( 
-			/* translators: %s: Duplicate Post version. */
-			__( "What's new in Duplicate Post version %s:", 'duplicate-post' ),
-			DUPLICATE_POST_CURRENT_VERSION 
-			).'</strong><br/>';
-	$message .= esc_html__( 'Simple compatibility with Gutenberg user interface: enable "Admin bar" under the Settings', 'duplicate-post' ) . ' — ' 
+	$class   = 'notice is-dismissible';
+	$message = '<strong>' . sprintf(
+		/* translators: %s: Duplicate Post version. */
+	__( "What's new in Duplicate Post version %s:", 'duplicate-post' ), DUPLICATE_POST_CURRENT_VERSION ) . '</strong><br/>';
+	$message .= esc_html__( 'Simple compatibility with Gutenberg user interface: enable "Admin bar" under the Settings', 'duplicate-post' ) . ' — '
 			. esc_html__( '"Slug" option unset by default on new installations', 'duplicate-post' ) . '<br/>';
 	$message .= '<em><a href="https://duplicate-post.lopo.it/">' . esc_html__( 'Check out the documentation', 'duplicate-post' ) . '</a> — ' . sprintf(
-			/* translators: %s: Options page URL */
-			__( 'Please <a href="%s">review the settings</a> to make sure it works as you expect.', 'duplicate-post' ),
-			admin_url( 'options-general.php?page=duplicatepost' ) ) . '</em><br/>';
-	$message .= esc_html__( 'Serving the WordPress community since November 2007.', 'duplicate-post' ) . ' <strong>' . sprintf( 
-			wp_kses( 
-					/* translators: %s: Donation URL. */
-					__( 'Help me develop the plugin and provide support by <a href="%s">donating even a small sum</a>.', 'duplicate-post' ),
-					array( 'a' => array( 'href' => array() ) ) 
-				),
-				"https://duplicate-post.lopo.it/donate"
-			) . '</strong>';
-	
+		/* translators: %s: Options page URL */
+		__( 'Please <a href="%s">review the settings</a> to make sure it works as you expect.', 'duplicate-post' ),
+	admin_url( 'options-general.php?page=duplicatepost' ) ) . '</em><br/>';
+	$message .= esc_html__( 'Serving the WordPress community since November 2007.', 'duplicate-post' ) . ' <strong>' . sprintf(
+		wp_kses(
+			/* translators: %s: Donation URL. */
+			__( 'Help me develop the plugin and provide support by <a href="%s">donating even a small sum</a>.', 'duplicate-post' ),
+			array( 'a' => array( 'href' => array() ) )
+		),
+		'https://duplicate-post.lopo.it/donate'
+	) . '</strong>';
+
 	global $wp_version;
 	if ( version_compare( $wp_version, '4.2' ) < 0 ) {
 		$message .= ' | <a id="duplicate-post-dismiss-notice" href="javascript:duplicate_post_dismiss_notice();">' .
@@ -257,7 +255,6 @@ function duplicate_post_show_update_notice() {
 function duplicate_post_dismiss_notice() {
 	$result = update_site_option( 'duplicate_post_show_notice', 0 );
 	return $result;
-	wp_die();
 }
 
 /**
@@ -282,8 +279,8 @@ function duplicate_post_make_duplicate_link_row( $actions, $post ) {
  * Adds a button in the post/page edit screen to create a clone
  */
 function duplicate_post_add_duplicate_post_button() {
-	if ( isset( $_GET['post'] ) ) {
-		$id   = intval( wp_unslash( $_GET['post'] ) );
+	if ( isset( $_GET['post'] ) ) { // Input var okay.
+		$id   = intval( wp_unslash( $_GET['post'] ) ); // Input var okay.
 		$post = get_post( $id );
 		if ( duplicate_post_is_current_user_allowed_to_copy() && duplicate_post_is_post_type_enabled( $post->post_type ) ) {
 			?>
@@ -328,16 +325,16 @@ function duplicate_post_save_as_new_post( $status = '' ) {
 		wp_die( esc_html__( 'Current user is not allowed to copy posts.', 'duplicate-post' ) );
 	}
 
-	if ( ! ( isset( $_GET['post'] ) || isset( $_POST['post'] ) ||
-		( isset( $_REQUEST['action'] ) && 'duplicate_post_save_as_new_post' === $_REQUEST['action'] ) ) ) {
+	if ( ! ( isset( $_GET['post'] ) || isset( $_POST['post'] ) || // Input var okay.
+			( isset( $_REQUEST['action'] ) && 'duplicate_post_save_as_new_post' === $_REQUEST['action'] ) ) ) { // Input var okay.
 		wp_die( esc_html__( 'No post to duplicate has been supplied!', 'duplicate-post' ) );
 	}
 
 	// Nonce check.
-	check_admin_referer( 'duplicate-post_' . ( isset( $_GET['post'] ) ? intval( wp_unslash( $_GET['post'] ) ) : intval( wp_unslash( $_POST['post'] ) ) ) );
+	check_admin_referer( 'duplicate-post_' . ( isset( $_GET['post'] ) ? intval( wp_unslash( $_GET['post'] ) ) : intval( wp_unslash( $_POST['post'] ) ) ) ); // Input var okay.
 
 	// Get the original post.
-	$id   = ( isset( $_GET['post'] ) ? intval( wp_unslash( $_GET['post'] ) ) : intval( wp_unslash( $_POST['post'] ) ) );
+	$id   = ( isset( $_GET['post'] ) ? intval( wp_unslash( $_GET['post'] ) ) : intval( wp_unslash( $_POST['post'] ) ) ); // Input var okay.
 	$post = get_post( $id );
 
 	// Copy the post and insert it.
@@ -359,7 +356,7 @@ function duplicate_post_save_as_new_post( $status = '' ) {
 				$sendback = remove_query_arg( array( 'trashed', 'untrashed', 'deleted', 'cloned', 'ids' ), $sendback );
 			}
 			// Redirect to the post list screen.
-			wp_redirect(
+			wp_safe_redirect(
 				add_query_arg(
 					array(
 						'cloned' => 1,
@@ -369,7 +366,7 @@ function duplicate_post_save_as_new_post( $status = '' ) {
 			);
 		} else {
 			// Redirect to the edit screen for the new draft post.
-			wp_redirect(
+			wp_safe_redirect(
 				add_query_arg(
 					array(
 						'cloned' => 1,
@@ -817,8 +814,8 @@ function duplicate_post_add_plugin_links( $links, $file ) {
  * @ignore
  */
 function duplicate_post_action_admin_notice() {
-	if ( ! empty( $_REQUEST['cloned'] ) ) {
-		$copied_posts = intval( $_REQUEST['cloned'] );
+	if ( ! empty( $_REQUEST['cloned'] ) ) { // Input var okay.
+		$copied_posts = intval( $_REQUEST['cloned'] ); // Input var okay.
 		printf(
 			'<div id="message" class="updated fade"><p>' .
 				esc_html(

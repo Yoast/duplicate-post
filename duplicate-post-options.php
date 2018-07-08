@@ -65,7 +65,7 @@ function duplicate_post_menu() {
  * Show options page.
  */
 function duplicate_post_options() {
-	if ( current_user_can( 'promote_users' ) && ( isset( $_GET['settings-updated'] ) && true === $_GET['settings-updated'] ) ) {
+	if ( current_user_can( 'promote_users' ) && ( isset( $_GET['settings-updated'] ) && true === $_GET['settings-updated'] ) ) { // Input var okay.
 		global $wp_roles;
 		$roles = $wp_roles->get_names();
 
@@ -495,7 +495,7 @@ img#donate-button {
 ?>
 />
 							<?php esc_html_e( 'Admin bar', 'duplicate-post' ); ?> 
-							<small>(<?php esc_html_e( 'now works on Edit screen too — check this option to use with Gutenberg enabled', 'duplicate-post' );  ?>)</small></label> 
+							<small>(<?php esc_html_e( 'now works on Edit screen too - check this option to use with Gutenberg enabled', 'duplicate-post' ); ?>)</small></label> 
 							<?php
 
 							global $wp_version;
