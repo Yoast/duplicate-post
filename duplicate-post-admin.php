@@ -206,13 +206,15 @@ function duplicate_post_show_update_notice() {
 	$class   = 'notice is-dismissible';
 	$message = '<strong>' . sprintf(
 		/* translators: %s: Duplicate Post version. */
-	__( "What's new in Duplicate Post version %s:", 'duplicate-post' ), DUPLICATE_POST_CURRENT_VERSION ) . '</strong><br/>';
+		__( "What's new in Duplicate Post version %s:", 'duplicate-post' ), DUPLICATE_POST_CURRENT_VERSION
+	) . '</strong><br/>';
 	$message .= esc_html__( 'Simple compatibility with Gutenberg user interface: enable "Admin bar" under the Settings', 'duplicate-post' ) . ' — '
 			. esc_html__( '"Slug" option unset by default on new installations', 'duplicate-post' ) . '<br/>';
 	$message .= '<em><a href="https://duplicate-post.lopo.it/">' . esc_html__( 'Check out the documentation', 'duplicate-post' ) . '</a> — ' . sprintf(
 		/* translators: %s: Options page URL */
 		__( 'Please <a href="%s">review the settings</a> to make sure it works as you expect.', 'duplicate-post' ),
-	admin_url( 'options-general.php?page=duplicatepost' ) ) . '</em><br/>';
+		admin_url( 'options-general.php?page=duplicatepost' )
+	) . '</em><br/>';
 	$message .= esc_html__( 'Serving the WordPress community since November 2007.', 'duplicate-post' ) . ' <strong>' . sprintf(
 		wp_kses(
 			/* translators: %s: Donation URL. */
@@ -289,7 +291,7 @@ function duplicate_post_add_duplicate_post_button() {
 		href="<?php echo esc_attr( duplicate_post_get_clone_post_link( $id ) ); ?>"><?php esc_html_e( 'Copy to a new draft', 'duplicate-post' ); ?>
 	</a>
 </div>
-<?php
+			<?php
 		}
 	}
 }
@@ -379,8 +381,10 @@ function duplicate_post_save_as_new_post( $status = '' ) {
 		exit();
 	} else {
 		wp_die(
-			esc_html( __( 'Copy creation failed, could not find original:', 'duplicate-post' ) . ' '
-			. htmlspecialchars( $id ) )
+			esc_html(
+				__( 'Copy creation failed, could not find original:', 'duplicate-post' ) . ' '
+				. htmlspecialchars( $id )
+			)
 		);
 	}
 }
@@ -673,7 +677,8 @@ function duplicate_post_create_duplicate( $post, $status = '', $parent_id = '' )
 
 	if ( ! duplicate_post_is_post_type_enabled( $post->post_type ) && 'attachment' !== $post->post_type ) {
 		wp_die(
-			esc_html( __( 'Copy features for this post type are not enabled in options page', 'duplicate-post' ) . ': ' .
+			esc_html(
+				__( 'Copy features for this post type are not enabled in options page', 'duplicate-post' ) . ': ' .
 				$post->post_type
 			)
 		);

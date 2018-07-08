@@ -82,11 +82,11 @@ function duplicate_post_options() {
 				continue;
 			}
 
-			/* If the role doesn't have the capability and it was selected, add it. */
 			if ( ! $role->has_cap( 'copy_posts' ) && in_array( $name, $dp_roles, true ) ) {
+				/* If the role doesn't have the capability and it was selected, add it. */
 				$role->add_cap( 'copy_posts' );
-			} /* If the role has the capability and it wasn't selected, remove it. */
-			elseif ( $role->has_cap( 'copy_posts' ) && ! in_array( $name, $dp_roles, true ) ) {
+			} elseif ( $role->has_cap( 'copy_posts' ) && ! in_array( $name, $dp_roles, true ) ) {
+				/* If the role has the capability and it wasn't selected, remove it. */
 				$role->remove_cap( 'copy_posts' );
 			}
 		}
@@ -224,7 +224,7 @@ img#donate-button {
 							<?php
 							if ( 1 === intval( get_option( 'duplicate_post_copytitle' ) ) ) {
 								echo 'checked="checked"';}
-?>
+							?>
 />
 							<?php esc_html_e( 'Title', 'default' ); ?>
 					</label> <label> <input type="checkbox"
@@ -232,7 +232,7 @@ img#donate-button {
 							<?php
 							if ( 1 === intval( get_option( 'duplicate_post_copydate' ) ) ) {
 								echo 'checked="checked"';}
-?>
+							?>
 />
 							<?php esc_html_e( 'Date', 'default' ); ?>
 					</label> <label> <input type="checkbox"
@@ -240,7 +240,7 @@ img#donate-button {
 							<?php
 							if ( 1 === intval( get_option( 'duplicate_post_copystatus' ) ) ) {
 								echo 'checked="checked"';}
-?>
+							?>
 />
 							<?php esc_html_e( 'Status', 'default' ); ?>
 					</label> <label> <input type="checkbox"
@@ -248,7 +248,7 @@ img#donate-button {
 							<?php
 							if ( 1 === intval( get_option( 'duplicate_post_copyslug' ) ) ) {
 								echo 'checked="checked"';}
-?>
+							?>
 />
 							<?php esc_html_e( 'Slug', 'default' ); ?>
 					</label> <label> <input type="checkbox"
@@ -256,7 +256,7 @@ img#donate-button {
 							<?php
 							if ( 1 === intval( get_option( 'duplicate_post_copyexcerpt' ) ) ) {
 								echo 'checked="checked"';}
-?>
+							?>
 />
 							<?php esc_html_e( 'Excerpt', 'default' ); ?>
 					</label> <label> <input type="checkbox"
@@ -264,7 +264,7 @@ img#donate-button {
 							<?php
 							if ( 1 === intval( get_option( 'duplicate_post_copycontent' ) ) ) {
 								echo 'checked="checked"';}
-?>
+							?>
 />
 							<?php esc_html_e( 'Content', 'default' ); ?>
 					</label> <label> <input type="checkbox"
@@ -272,7 +272,7 @@ img#donate-button {
 							<?php
 							if ( 1 === intval( get_option( 'duplicate_post_copythumbnail' ) ) ) {
 								echo 'checked="checked"';}
-?>
+							?>
 />
 							<?php esc_html_e( 'Featured Image', 'default' ); ?>
 					</label> <label> <input type="checkbox"
@@ -280,7 +280,7 @@ img#donate-button {
 							<?php
 							if ( 1 === intval( get_option( 'duplicate_post_copytemplate' ) ) ) {
 								echo 'checked="checked"';}
-?>
+							?>
 />
 							<?php esc_html_e( 'Template', 'default' ); ?>
 					</label> <label> <input type="checkbox"
@@ -288,7 +288,7 @@ img#donate-button {
 							<?php
 							if ( 1 === intval( get_option( 'duplicate_post_copyformat' ) ) ) {
 								echo 'checked="checked"';}
-?>
+							?>
 />
 							<?php echo esc_html_x( 'Format', 'post format', 'default' ); ?>
 					</label> <label> <input type="checkbox"
@@ -296,7 +296,7 @@ img#donate-button {
 							<?php
 							if ( 1 === intval( get_option( 'duplicate_post_copyauthor' ) ) ) {
 								echo 'checked="checked"';}
-?>
+							?>
 />
 							<?php esc_html_e( 'Author', 'default' ); ?>
 					</label> <label> <input type="checkbox"
@@ -304,7 +304,7 @@ img#donate-button {
 							<?php
 							if ( 1 === intval( get_option( 'duplicate_post_copypassword' ) ) ) {
 								echo 'checked="checked"';}
-?>
+							?>
 />
 							<?php esc_html_e( 'Password', 'default' ); ?>
 					</label> <label> <input type="checkbox"
@@ -312,7 +312,7 @@ img#donate-button {
 							<?php
 							if ( 1 === intval( get_option( 'duplicate_post_copyattachments' ) ) ) {
 								echo 'checked="checked"';}
-?>
+							?>
 />
 							<?php esc_html_e( 'Attachments', 'duplicate-post' ); ?> <small>(<?php esc_html_e( 'you probably want this unchecked, unless you have very special requirements', 'duplicate-post' ); ?>)</small>
 					</label> <label> <input type="checkbox"
@@ -320,7 +320,7 @@ img#donate-button {
 							<?php
 							if ( 1 === intval( get_option( 'duplicate_post_copychildren' ) ) ) {
 								echo 'checked="checked"';}
-?>
+							?>
 />
 							<?php esc_html_e( 'Children', 'duplicate-post' ); ?>
 					</label> <label> <input type="checkbox"
@@ -328,7 +328,7 @@ img#donate-button {
 							<?php
 							if ( 1 === intval( get_option( 'duplicate_post_copycomments' ) ) ) {
 								echo 'checked="checked"';}
-?>
+							?>
 />
 							<?php esc_html_e( 'Comments', 'default' ); ?> <small>(<?php esc_html_e( 'except pingbacks and trackbacks', 'duplicate-post' ); ?>)</small>
 					</label> <label> <input type="checkbox"
@@ -336,7 +336,7 @@ img#donate-button {
 							<?php
 							if ( 1 === intval( get_option( 'duplicate_post_copymenuorder' ) ) ) {
 								echo 'checked="checked"';}
-?>
+							?>
 />
 							<?php esc_html_e( 'Menu order', 'default' ); ?>
 					</label></td>
@@ -404,7 +404,7 @@ img#donate-button {
 							<?php
 							if ( in_array( $taxonomy->name, $taxonomies_blacklist, true ) ) {
 								echo 'checked="checked"';}
-?>
+							?>
 />
 							<?php echo esc_html( $taxonomy->labels->name . ' [' . $taxonomy->name . ']' ); ?>
 					</label> <?php endforeach; ?> <span class="description"><?php esc_html_e( "Select the taxonomies you don't want to be copied", 'duplicate-post' ); ?>
@@ -433,7 +433,7 @@ img#donate-button {
 							<?php
 							if ( $role->has_cap( 'copy_posts' ) ) {
 								echo 'checked="checked"';}
-?>
+							?>
 />
 							<?php echo esc_html( translate_user_role( $display_name ) ); ?>
 					</label> <?php endforeach; ?> <span class="description"><?php esc_html_e( 'Warning: users will be able to copy all posts, even those of other users', 'duplicate-post' ); ?><br />
@@ -459,7 +459,7 @@ img#donate-button {
 							<?php
 							if ( duplicate_post_is_post_type_enabled( $post_type_object->name ) ) {
 								echo 'checked="checked"';}
-?>
+							?>
 />
 							<?php echo esc_html( $post_type_object->labels->name ); ?>
 					</label> <?php endforeach; ?> <span class="description"><?php esc_html_e( 'Select the post types you want the plugin to be enabled', 'duplicate-post' ); ?>
@@ -478,21 +478,21 @@ img#donate-button {
 							<?php
 							if ( 1 === intval( get_option( 'duplicate_post_show_row' ) ) ) {
 								echo 'checked="checked"';}
-?>
+							?>
 />
 							<?php esc_html_e( 'Post list', 'duplicate-post' ); ?> </label> <label><input
 							type="checkbox" name="duplicate_post_show_submitbox" value="1" 
 							<?php
 							if ( 1 === intval( get_option( 'duplicate_post_show_submitbox' ) ) ) {
 								echo 'checked="checked"';}
-?>
+							?>
 />
 							<?php esc_html_e( 'Edit screen', 'duplicate-post' ); ?> </label> <label><input
 							type="checkbox" name="duplicate_post_show_adminbar" value="1" 
 							<?php
 							if ( 1 === intval( get_option( 'duplicate_post_show_adminbar' ) ) ) {
 								echo 'checked="checked"';}
-?>
+							?>
 />
 							<?php esc_html_e( 'Admin bar', 'duplicate-post' ); ?> 
 							<small>(<?php esc_html_e( 'now works on Edit screen too - check this option to use with Gutenberg enabled', 'duplicate-post' ); ?>)</small></label> 
@@ -506,9 +506,9 @@ img#donate-button {
 													<?php
 													if ( 1 === intval( get_option( 'duplicate_post_show_bulkactions' ) ) ) {
 														echo 'checked="checked"';}
-?>
+													?>
 />
-							<?php esc_html_e( 'Bulk Actions', 'default' ); ?> </label>
+								<?php esc_html_e( 'Bulk Actions', 'default' ); ?> </label>
 							<?php } ?>
 					</td>
 				</tr>
@@ -529,7 +529,7 @@ img#donate-button {
 						<?php
 						if ( 1 === intval( get_option( 'duplicate_post_show_notice' ) ) ) {
 							echo 'checked="checked"';}
-?>
+						?>
 />
 					</td>
 				</tr>
@@ -542,6 +542,6 @@ img#donate-button {
 
 	</form>
 </div>
-<?php
+	<?php
 }
 ?>
