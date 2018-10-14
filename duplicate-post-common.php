@@ -150,7 +150,7 @@ function duplicate_post_admin_bar_render() {
 
 	// Fall back to post ID in admin screen.
 	if ( empty( $current_object ) && is_admin() && isset( $_GET['post'] ) ) {
-		$current_object = get_post( $_GET['post'] );
+		$current_object = get_post( intval( wp_unslash( $_GET['post'] ) ) );
 	}
 
 	if ( empty( $current_object ) ) {
@@ -158,22 +158,24 @@ function duplicate_post_admin_bar_render() {
 	}
 
 	/** This filter is documented in wp-content/plugins/duplicate_post/duplicate-post-admin.php */
-	if ( ! apply_filters( 'duplicate_post_show_link', duplicate_post_is_current_user_allowed_to_copy(), get_post($current_object->ID) ) ) {
+	if ( ! apply_filters( 'duplicate_post_show_link', duplicate_post_is_current_user_allowed_to_copy(), get_post( $current_object->ID ) ) ) {
 		return;
 	}
 
-	if ( ! empty( $current_object->post_type ) &&
-		( $post_type_object = get_post_type_object( $current_object->post_type ) ) &&
-		duplicate_post_is_current_user_allowed_to_copy() &&
-		( $post_type_object->show_ui || 'attachment' === $current_object->post_type ) &&
-		( duplicate_post_is_post_type_enabled( $current_object->post_type ) ) ) {
-		$wp_admin_bar->add_menu(
-			array(
-				'id'    => 'new_draft',
-				'title' => esc_attr__( 'Copy to a new draft', 'duplicate-post' ),
-				'href'  => duplicate_post_get_clone_post_link( $current_object->ID ),
-			)
-		);
+	if ( ! empty( $current_object->post_type ) ) {
+		$post_type_object = get_post_type_object( $current_object->post_type );
+		if ( ! empty( $current_object->post_type ) &&
+			duplicate_post_is_current_user_allowed_to_copy() &&
+			( $post_type_object->show_ui || 'attachment' === $current_object->post_type ) &&
+			( duplicate_post_is_post_type_enabled( $current_object->post_type ) ) ) {
+			$wp_admin_bar->add_menu(
+				array(
+					'id'    => 'new_draft',
+					'title' => esc_attr__( 'Copy to a new draft', 'duplicate-post' ),
+					'href'  => duplicate_post_get_clone_post_link( $current_object->ID ),
+				)
+			);
+		}
 	}
 }
 
@@ -188,7 +190,7 @@ function duplicate_post_add_css() {
 
 	// Fall back to post ID in admin screen.
 	if ( empty( $current_object ) && is_admin() && isset( $_GET['post'] ) ) {
-		$current_object = get_post( $_GET['post'] );
+		$current_object = get_post( intval( wp_unslash( $_GET['post'] ) ) );
 	}
 
 	if ( empty( $current_object ) ) {
@@ -196,7 +198,7 @@ function duplicate_post_add_css() {
 	}
 
 	/** This filter is documented in wp-content/plugins/duplicate_post/duplicate-post-admin.php */
-	if ( ! apply_filters( 'duplicate_post_show_link', duplicate_post_is_current_user_allowed_to_copy(), get_post($current_object->ID) ) ) {
+	if ( ! apply_filters( 'duplicate_post_show_link', duplicate_post_is_current_user_allowed_to_copy(), get_post( $current_object->ID ) ) ) {
 		return;
 	}
 
