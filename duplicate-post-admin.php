@@ -229,7 +229,7 @@ function duplicate_post_show_update_notice() {
 		$message .= ' | <a id="duplicate-post-dismiss-notice" href="javascript:duplicate_post_dismiss_notice();">' .
 			__( 'Dismiss this notice.' ) . '</a>';
 	}
-	echo '<div id="duplicate-post-notice" class="' . esc_attr( $class ) . '"><p>' . $message . '</p></div>';
+	echo '<div id="duplicate-post-notice" class="' . esc_attr( $class ) . '"><p>' . $message . '</p></div>'; // XSS okay.
 	echo "<script>
 			function duplicate_post_dismiss_notice(){
 				var data = {
@@ -275,7 +275,7 @@ function duplicate_post_make_duplicate_link_row( $actions, $post ) {
 	 *
 	 * @return boolean
 	 */
-	if( apply_filters( 'duplicate_post_show_link', duplicate_post_is_current_user_allowed_to_copy() && duplicate_post_is_post_type_enabled( $post->post_type ), $post ) ) {
+	if ( apply_filters( 'duplicate_post_show_link', duplicate_post_is_current_user_allowed_to_copy() && duplicate_post_is_post_type_enabled( $post->post_type ), $post ) ) {
 		$actions['clone']             = '<a href="' . duplicate_post_get_clone_post_link( $post->ID, 'display', false ) . '" title="' .
 			esc_attr__( 'Clone this item', 'duplicate-post' ) . '">' . esc_html__( 'Clone', 'duplicate-post' ) . '</a>';
 		$actions['edit_as_new_draft'] = '<a href="' . duplicate_post_get_clone_post_link( $post->ID ) . '" title="' .
@@ -294,7 +294,7 @@ function duplicate_post_add_duplicate_post_button() {
 		$post = get_post( $id );
 
 		/** This filter is documented in wp-content/plugins/duplicate-post/duplicate-post-admin.php */
-		if( apply_filters( 'duplicate_post_show_link', duplicate_post_is_current_user_allowed_to_copy() && duplicate_post_is_post_type_enabled( $post->post_type ), $post ) ) {
+		if ( apply_filters( 'duplicate_post_show_link', duplicate_post_is_current_user_allowed_to_copy() && duplicate_post_is_post_type_enabled( $post->post_type ), $post ) ) {
 			?>
 <div id="duplicate-action">
 	<a class="submitduplicate duplication"
@@ -713,9 +713,9 @@ function duplicate_post_create_duplicate( $post, $status = '', $parent_id = '' )
 	 *
 	 * @return boolean
 	 */
-	$can_duplicate = apply_filters('duplicate_post_allow', true, $post, $status, $parent_id );
+	$can_duplicate = apply_filters( 'duplicate_post_allow', true, $post, $status, $parent_id );
 	if ( ! $can_duplicate ) {
-		wp_die( __( 'You aren\'t allowed to duplicate this post', 'duplicate-post' ) );
+		wp_die( esc_html( __( 'You aren\'t allowed to duplicate this post', 'duplicate-post' ) ) );
 	}
 
 	if ( ! duplicate_post_is_post_type_enabled( $post->post_type ) && 'attachment' !== $post->post_type ) {
