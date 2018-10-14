@@ -362,7 +362,7 @@ img#donate-button {
 				<tr valign="top">
 					<th scope="row"><?php esc_html_e( 'Increase menu order by', 'duplicate-post' ); ?>
 					</th>
-					<td><input type="text" name="duplicate_post_increase_menu_order_by"
+					<td><input type="number" min="0" step="1" name="duplicate_post_increase_menu_order_by"
 						value="<?php echo esc_attr( get_option( 'duplicate_post_increase_menu_order_by' ) ); ?>" />
 					</td>
 					<td><span class="description"><?php esc_html_e( 'Add this number to the original menu order (blank or zero to retain the value)', 'duplicate-post' ); ?>
