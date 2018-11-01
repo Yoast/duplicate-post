@@ -208,7 +208,7 @@ function duplicate_post_add_css() {
 			duplicate_post_is_current_user_allowed_to_copy() &&
 			( $post_type_object->show_ui || 'attachment' === $current_object->post_type ) &&
 			( duplicate_post_is_post_type_enabled( $current_object->post_type ) ) ) {
-				wp_enqueue_style( 'duplicate-post', plugins_url( '/duplicate-post.css', __FILE__ ) );
+				wp_enqueue_style( 'duplicate-post', plugins_url( '/duplicate-post.css', __FILE__ ), array(), DUPLICATE_POST_CURRENT_VERSION );
 		}
 	}
 }
