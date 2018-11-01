@@ -206,7 +206,8 @@ function duplicate_post_show_update_notice() {
 	$class   = 'notice is-dismissible';
 	$message = '<strong>' . sprintf(
 		/* translators: %s: Duplicate Post version. */
-		__( "What's new in Duplicate Post version %s:", 'duplicate-post' ), DUPLICATE_POST_CURRENT_VERSION
+		__( "What's new in Duplicate Post version %s:", 'duplicate-post' ),
+		DUPLICATE_POST_CURRENT_VERSION
 	) . '</strong><br/>';
 	$message .= esc_html__( 'Simple compatibility with Gutenberg user interface: enable "Admin bar" under the Settings', 'duplicate-post' ) . ' — '
 			. esc_html__( '"Slug" option unset by default on new installations', 'duplicate-post' ) . '<br/>';
@@ -383,7 +384,8 @@ function duplicate_post_save_as_new_post( $status = '' ) {
 					array(
 						'cloned' => 1,
 						'ids'    => $post->ID,
-					), $sendback
+					),
+					$sendback
 				)
 			);
 		} else {
