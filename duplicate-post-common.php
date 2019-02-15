@@ -157,7 +157,7 @@ function duplicate_post_admin_bar_render() {
 	} elseif ( is_admin() && isset( $_GET['post'] ) ) { // Input var okay.
 		$id   = intval( wp_unslash( $_GET['post'] ) ); // Input var okay.
 		$post = get_post( $id );
-		if ( duplicate_post_is_current_user_allowed_to_copy()
+		if( ! is_null($post) && duplicate_post_is_current_user_allowed_to_copy()
 				&& duplicate_post_is_post_type_enabled( $post->post_type ) ) {
 					$wp_admin_bar->add_menu(
 						array(
@@ -192,7 +192,7 @@ function duplicate_post_add_css() {
 	} elseif ( is_admin() && isset( $_GET['post'] ) ) { // Input var okay.
 		$id   = intval( wp_unslash( $_GET['post'] ) ); // Input var okay.
 		$post = get_post( $id );
-		if ( duplicate_post_is_current_user_allowed_to_copy()
+		if( ! is_null($post) && duplicate_post_is_current_user_allowed_to_copy()
 				&& duplicate_post_is_post_type_enabled( $post->post_type ) ) {
 					wp_enqueue_style( 'duplicate-post', plugins_url( '/duplicate-post.css', __FILE__ ) );
 		}
