@@ -279,11 +279,17 @@ function duplicate_post_make_duplicate_link_row( $actions, $post ) {
 
 /**
  * Adds a button in the post/page edit screen to create a clone
+ *
+ * @param WP_Post|null $post The post object that's being edited.
  */
-function duplicate_post_add_duplicate_post_button() {
-	if ( isset( $_GET['post'] ) ) { // Input var okay.
-		$id   = intval( wp_unslash( $_GET['post'] ) ); // Input var okay.
-		$post = get_post( $id );
+function duplicate_post_add_duplicate_post_button( $post = null ) {
+	if ( is_null( $post ) ) {
+		if ( isset( $_GET['post'] ) ) { // Input var okay.
+			$id   = intval( wp_unslash( $_GET['post'] ) ); // Input var okay.
+			$post = get_post( $id );
+		}
+	}
+	if ( ! is_null( $post ) ) {
 		if ( duplicate_post_is_current_user_allowed_to_copy() && duplicate_post_is_post_type_enabled( $post->post_type ) ) {
 			?>
 <div id="duplicate-action">
@@ -327,13 +333,13 @@ function duplicate_post_save_as_new_post( $status = '' ) {
 		wp_die( esc_html__( 'Current user is not allowed to copy posts.', 'duplicate-post' ) );
 	}
 
-	if ( ! ( isset( $_GET['post'] ) || isset( $_POST['post'] ) || // Input var okay.
-			( isset( $_REQUEST['action'] ) && 'duplicate_post_save_as_new_post' === $_REQUEST['action'] ) ) ) { // Input var okay.
-		wp_die( esc_html__( 'No post to duplicate has been supplied!', 'duplicate-post' ) );
-	}
-
 	// Nonce check.
 	check_admin_referer( 'duplicate-post_' . ( isset( $_GET['post'] ) ? intval( wp_unslash( $_GET['post'] ) ) : intval( wp_unslash( $_POST['post'] ) ) ) ); // Input var okay.
+
+	if ( ! ( isset( $_GET['post'] ) || isset( $_POST['post'] ) || // Input var okay.
+	( isset( $_REQUEST['action'] ) && 'duplicate_post_save_as_new_post' === $_REQUEST['action'] ) ) ) { // Input var okay.
+		wp_die( esc_html__( 'No post to duplicate has been supplied!', 'duplicate-post' ) );
+	}
 
 	// Get the original post.
 	$id   = ( isset( $_GET['post'] ) ? intval( wp_unslash( $_GET['post'] ) ) : intval( wp_unslash( $_POST['post'] ) ) ); // Input var okay.
