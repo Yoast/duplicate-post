@@ -7,6 +7,7 @@ php:
     - '7.0'
     - '7.1'
     - '7.2'
+    - '7.3'
 
 matrix:
   include:
@@ -15,7 +16,7 @@ matrix:
     - php: 5.3
       dist: precise
     # Arbitrary PHP version to run the sniffs against.
-    - php: '7.0'
+    - php: '7.2'
       env: SNIFF=1
 
 before_install:
@@ -40,4 +41,4 @@ script:
   - if [[ "$SNIFF" == "1" ]]; then $PHPCS_DIR/bin/phpcs -p . --standard=WordPress-Core; fi
   - if [[ "$SNIFF" == "1" ]]; then $PHPCS_DIR/bin/phpcs -p . --standard=WordPress-Docs; fi
   - if [[ "$SNIFF" == "1" ]]; then $PHPCS_DIR/bin/phpcs -p . --standard=WordPress-Extra; fi
-  - if [[ "$SNIFF" == "1" ]]; then $PHPCS_DIR/bin/phpcs -p . --standard=WordPress-VIP; fi
+  #- if [[ "$SNIFF" == "1" ]]; then $PHPCS_DIR/bin/phpcs -p . --standard=WordPress-VIP; fi

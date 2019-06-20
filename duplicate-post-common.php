@@ -216,8 +216,8 @@ function duplicate_post_init() {
  * Sorts taxonomy objects: first public, then private.
  *
  * @ignore
- * @param taxonomy $a First taxonomy object.
- * @param taxonomy $b Second taxonomy object.
+ * @param WP_Taxonomy $a First taxonomy object.
+ * @param WP_Taxonomy $b Second taxonomy object.
  * @return bool
  */
 function duplicate_post_tax_obj_cmp( $a, $b ) {
