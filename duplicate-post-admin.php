@@ -131,7 +131,7 @@ function duplicate_post_plugin_upgrade() {
 	add_option('duplicate_post_copytitle','1');
 	add_option('duplicate_post_copydate','0');
 	add_option('duplicate_post_copystatus','0');
-	add_option('duplicate_post_copyslug','1');
+	add_option('duplicate_post_copyslug','0');
 	add_option('duplicate_post_copyexcerpt','1');
 	add_option('duplicate_post_copycontent','1');
 	add_option('duplicate_post_copythumbnail','1');
@@ -191,9 +191,10 @@ function duplicate_post_plugin_upgrade() {
 function duplicate_post_show_update_notice() {
 	if(!current_user_can( 'manage_options')) return;
 	$class = 'notice is-dismissible';
-	$message = '<strong>'.esc_html__('Duplicate Post turns 10!', 'duplicate-post').'</strong> '.esc_html__('Serving the WordPress community since November 2007.', 'duplicate-post').'<br/>';
-	$message .= '<em><a href="https://duplicate-post.lopo.it/">'.esc_html__('Check out the new documentation', 'duplicate-post').'</a> - '.sprintf(__('Please <a href="%s">review the settings</a> to make sure it works as you expect.', 'duplicate-post'), admin_url('options-general.php?page=duplicatepost')).'</em><br/>';
-	$message .= '<strong>'.sprintf(wp_kses(__('Help me develop the plugin and provide support by <a href="%s">donating even a small sum</a>.', 'duplicate-post'), array( 'a' => array( 'href' => array() ) ) ), "https://duplicate-post.lopo.it/donate").'</strong>';
+	$message = '<strong>'.sprintf(__("What's new in Duplicate Post version %s:", 'duplicate-post'), DUPLICATE_POST_CURRENT_VERSION).'</strong><br/>';
+	$message .= esc_html__('Simple compatibility with Gutenberg user interface: enable "Admin bar" under the Settings', 'duplicate-post').' — '.esc_html__('"Slug" option unset by default on new installations', 'duplicate-post').'<br/>';
+	$message .= '<em><a href="https://duplicate-post.lopo.it/">'.easc_html__('Check out the documentation', 'duplicate-post').'</a> — '.sprintf(__('Please <a href="%s">review the settings</a> to make sure it works as you expect.', 'duplicate-post'), admin_url('options-general.php?page=duplicatepost')).'</em><br/>';
+	$message .= esc_html__('Serving the WordPress community since November 2007.', 'duplicate-post').' <strong>'.sprintf(wp_kses(__('Help me develop the plugin and provide support by <a href="%s">donating even a small sum</a>.', 'duplicate-post'), array( 'a' => array( 'href' => array() ) ) ), "https://duplicate-post.lopo.it/donate").'</strong>';
 	global $wp_version;
 	if( version_compare($wp_version, '4.2') < 0 ){
 		$message .= ' | <a id="duplicate-post-dismiss-notice" href="javascript:duplicate_post_dismiss_notice();">'.__('Dismiss this notice.').'</a>';

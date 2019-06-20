@@ -12,7 +12,7 @@
     	text-indent: 100%;
     	white-space: nowrap;
     	overflow: hidden;
-    	width: 95px;
+    	width: 52px;
     	padding: 0;
     	color: #999;
     	position: relative;
@@ -23,8 +23,8 @@
     	text-indent: 0;
     	font: 400 32px/1 dashicons;
     	speak: none;
-    	top: 7px;
-    	width: 95px;
+    	top: 0px;
+    	width: 52px;
     	text-align: center;
     	-webkit-font-smoothing: antialiased;
     	-moz-osx-font-smoothing: grayscale;

@@ -360,7 +360,7 @@ img#donate-button{
 							<label><input type="checkbox" name="duplicate_post_show_submitbox" value="1" <?php  if(get_option('duplicate_post_show_submitbox') == 1) echo 'checked="checked"'; ?>"/>
 							<?php esc_html_e("Edit screen", 'duplicate-post'); ?> </label>
 							<label><input type="checkbox" name="duplicate_post_show_adminbar" value="1" <?php  if(get_option('duplicate_post_show_adminbar') == 1) echo 'checked="checked"'; ?>"/>
-							<?php esc_html_e("Admin bar", 'duplicate-post'); ?> </label>
+							<?php esc_html_e("Admin bar", 'duplicate-post'); ?> <small>(<?php esc_html_e("now works on Edit screen too — check this option to use with Gutenberg enabled", 'duplicate-post');  ?>)</small></label> 
 							<?php global $wp_version;
 							if( version_compare($wp_version, '4.7') >= 0 ){ ?>
 							<label><input type="checkbox" name="duplicate_post_show_bulkactions" value="1" <?php  if(get_option('duplicate_post_show_bulkactions') == 1) echo 'checked="checked"'; ?>"/>

@@ -103,34 +103,52 @@ function duplicate_post_admin_bar_render() {
 	if(!is_admin_bar_showing()) return;
 	global $wp_admin_bar;
 	$current_object = get_queried_object();
-	if ( empty($current_object) )
-		return;
-	if ( ! empty( $current_object->post_type )
-		&& ( $post_type_object = get_post_type_object( $current_object->post_type ) )
-		&& duplicate_post_is_current_user_allowed_to_copy()
-		&& ( $post_type_object->show_ui || 'attachment' == $current_object->post_type )
-		&& (duplicate_post_is_post_type_enabled($current_object->post_type) ) )
-	{
-		$wp_admin_bar->add_menu( array(
-        'id' => 'new_draft',
-        'title' => esc_attr__("Copy to a new draft", 'duplicate-post'),
-        'href' => duplicate_post_get_clone_post_link( $current_object->ID )
-		) );	
+	if ( !empty($current_object) ){
+		if ( ! empty( $current_object->post_type )
+			&& ( $post_type_object = get_post_type_object( $current_object->post_type ) )
+			&& duplicate_post_is_current_user_allowed_to_copy()
+			&& ( $post_type_object->show_ui || 'attachment' == $current_object->post_type )
+			&& (duplicate_post_is_post_type_enabled($current_object->post_type) ) )
+		{
+			$wp_admin_bar->add_menu( array(
+	        	'id' => 'new_draft',
+	        	'title' => esc_attr__("Copy to a new draft", 'duplicate-post'),
+	        	'href' => duplicate_post_get_clone_post_link( $current_object->ID )
+			) );	
+		}
+	} else if ( is_admin() && isset( $_GET['post'] )){
+		$id = $_GET['post'];
+		$post = get_post($id);
+		if( duplicate_post_is_current_user_allowed_to_copy()
+				&& duplicate_post_is_post_type_enabled($post->post_type)) {
+					$wp_admin_bar->add_menu( array(
+						'id' => 'new_draft',
+						'title' => esc_attr__("Copy to a new draft", 'duplicate-post'),
+						'href' => duplicate_post_get_clone_post_link( $id )
+					) );
+		}
 	}
 }
 
 function duplicate_post_add_css() {
 	if(!is_admin_bar_showing()) return;
 	$current_object = get_queried_object();
-	if ( empty($current_object) )
-		return;
-	if ( ! empty( $current_object->post_type )
-		&& ( $post_type_object = get_post_type_object( $current_object->post_type ) )
-		&& duplicate_post_is_current_user_allowed_to_copy()
-		&& ( $post_type_object->show_ui || 'attachment' == $current_object->post_type )
-		&& (duplicate_post_is_post_type_enabled($current_object->post_type) ) )
-	{
-		wp_enqueue_style ( 'duplicate-post', plugins_url('/duplicate-post.css', __FILE__));
+	if ( !empty($current_object) ){
+		if ( ! empty( $current_object->post_type )
+			&& ( $post_type_object = get_post_type_object( $current_object->post_type ) )
+			&& duplicate_post_is_current_user_allowed_to_copy()
+			&& ( $post_type_object->show_ui || 'attachment' == $current_object->post_type )
+			&& (duplicate_post_is_post_type_enabled($current_object->post_type) ) )
+		{
+			wp_enqueue_style ( 'duplicate-post', plugins_url('/duplicate-post.css', __FILE__));
+		}
+	} else if ( is_admin() && isset( $_GET['post'] )){
+		$id = $_GET['post'];
+		$post = get_post($id);
+		if( duplicate_post_is_current_user_allowed_to_copy()
+				&& duplicate_post_is_post_type_enabled($post->post_type)) {
+					wp_enqueue_style ( 'duplicate-post', plugins_url('/duplicate-post.css', __FILE__));
+				}
 	}
 }
 
@@ -140,7 +158,8 @@ add_action('init', 'duplicate_post_init');
 function duplicate_post_init(){
 	if (get_option ( 'duplicate_post_show_adminbar' ) == 1) {
 		add_action ( 'wp_before_admin_bar_render', 'duplicate_post_admin_bar_render' );
-		add_action ( 'wp_enqueue_scripts', 'duplicate_post_add_css' );	
+		add_action ( 'wp_enqueue_scripts', 'duplicate_post_add_css' );
+		add_action ( 'admin_enqueue_scripts', 'duplicate_post_add_css' );
 	}
 }
 
