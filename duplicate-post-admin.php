@@ -334,13 +334,13 @@ function duplicate_post_save_as_new_post( $status = '' ) {
 		wp_die( esc_html__( 'Current user is not allowed to copy posts.', 'duplicate-post' ) );
 	}
 
-	// Nonce check.
-	check_admin_referer( 'duplicate-post_' . ( isset( $_GET['post'] ) ? intval( wp_unslash( $_GET['post'] ) ) : intval( wp_unslash( $_POST['post'] ) ) ) ); // Input var okay.
-
 	if ( ! ( isset( $_GET['post'] ) || isset( $_POST['post'] ) || // Input var okay.
-	( isset( $_REQUEST['action'] ) && 'duplicate_post_save_as_new_post' === $_REQUEST['action'] ) ) ) { // Input var okay.
+			( isset( $_REQUEST['action'] ) && 'duplicate_post_save_as_new_post' === $_REQUEST['action'] ) ) ) { // Input var okay.
 		wp_die( esc_html__( 'No post to duplicate has been supplied!', 'duplicate-post' ) );
 	}
+
+	// Nonce check.
+	check_admin_referer( 'duplicate-post_' . ( isset( $_GET['post'] ) ? intval( wp_unslash( $_GET['post'] ) ) : intval( wp_unslash( $_POST['post'] ) ) ) ); // Input var okay.
 
 	// Get the original post.
 	$id   = ( isset( $_GET['post'] ) ? intval( wp_unslash( $_GET['post'] ) ) : intval( wp_unslash( $_POST['post'] ) ) ); // Input var okay.
