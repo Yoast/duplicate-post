@@ -1,0 +1,25 @@
+{
+  "name": "duplicate-post",
+  "version": "3.2.2",
+  "description": "Duplicate Post plugin for WordPress",
+  "main": "duplicate-post.php",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/enricobattocchi/duplicate-post.git"
+  },
+  "keywords": [
+    "duplicate",
+    "post",
+    "wordpress"
+  ],
+  "author": "Enrico Battocchi <enrico.battocchi@gmail.com>",
+  "license": "GPL-2.0-only",
+  "bugs": {
+    "url": "https://github.com/enricobattocchi/duplicate-post/issues"
+  },
+  "homepage": "https://github.com/enricobattocchi/duplicate-post#readme",
+  "devDependencies": {
+    "grunt": "^1.0.4",
+    "grunt-wp-readme-to-markdown": "^2.0.1"
+  }
+}
