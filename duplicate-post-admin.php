@@ -16,14 +16,14 @@ require_once dirname( __FILE__ ) . '/compat/duplicate-post-wpml.php';
 require_once dirname( __FILE__ ) . '/compat/duplicate-post-jetpack.php';
 
 /**
- * Wrapper for the option 'duplicate_post_version'
+ * Wrapper for the option 'duplicate_post_version'.
  */
 function duplicate_post_get_installed_version() {
 	return get_option( 'duplicate_post_version' );
 }
 
 /**
- * Wrapper for the defined constant DUPLICATE_POST_CURRENT_VERSION
+ * Wrapper for the defined constant DUPLICATE_POST_CURRENT_VERSION.
  */
 function duplicate_post_get_current_version() {
 	return DUPLICATE_POST_CURRENT_VERSION;
@@ -56,7 +56,7 @@ function duplicate_post_admin_init() {
 	}
 
 	/**
-	 * Connect actions to functions
+	 * Connect actions to functions.
 	 */
 	add_action( 'admin_action_duplicate_post_save_as_new_post', 'duplicate_post_save_as_new_post' );
 	add_action( 'admin_action_duplicate_post_save_as_new_post_draft', 'duplicate_post_save_as_new_post_draft' );
@@ -90,7 +90,7 @@ function duplicate_post_admin_init() {
 }
 
 /**
- * Plugin upgrade
+ * Plugin upgrade.
  */
 function duplicate_post_plugin_upgrade() {
 	$installed_version = duplicate_post_get_installed_version();
@@ -261,14 +261,22 @@ function duplicate_post_dismiss_notice() {
 }
 
 /**
- * Adds the link to action list for post_row_actions
+ * Adds the link to action list for post_row_actions.
  *
  * @param array   $actions The actions array.
  * @param WP_Post $post The post object.
  * @return string
  */
 function duplicate_post_make_duplicate_link_row( $actions, $post ) {
-	if ( duplicate_post_is_current_user_allowed_to_copy() && duplicate_post_is_post_type_enabled( $post->post_type ) ) {
+	/**
+	 * Filter allowing displaying duplicate post link for current post.
+	 *
+	 * @param boolean $show_duplicate_link When to show duplicate link.
+	 * @param WP_Post $post                The post object.
+	 *
+	 * @return boolean
+	 */
+	if ( apply_filters( 'duplicate_post_show_link', duplicate_post_is_current_user_allowed_to_copy() && duplicate_post_is_post_type_enabled( $post->post_type ), $post ) ) {
 		$actions['clone']             = '<a href="' . duplicate_post_get_clone_post_link( $post->ID, 'display', false ) . '" title="' .
 			esc_attr__( 'Clone this item', 'duplicate-post' ) . '">' . esc_html__( 'Clone', 'duplicate-post' ) . '</a>';
 		$actions['edit_as_new_draft'] = '<a href="' . duplicate_post_get_clone_post_link( $post->ID ) . '" title="' .
@@ -351,6 +359,16 @@ function duplicate_post_save_as_new_post( $status = '' ) {
 		$post_type = $post->post_type;
 		$new_id    = duplicate_post_create_duplicate( $post, $status );
 
+		// Die on insert error.
+		if ( is_wp_error( $new_id ) ) {
+			wp_die(
+				esc_html(
+					__( 'Copy creation failed, could not find original:', 'duplicate-post' ) . ' '
+					. htmlspecialchars( $id )
+				)
+			);
+		}
+
 		if ( '' === $status ) {
 			$sendback = wp_get_referer();
 			if ( ! $sendback || strpos( $sendback, 'post.php' ) !== false || strpos( $sendback, 'post-new.php' ) !== false ) {
@@ -383,7 +401,7 @@ function duplicate_post_save_as_new_post( $status = '' ) {
 						'cloned' => 1,
 						'ids'    => $post->ID,
 					),
-					admin_url( 'post.php?action=edit&post=' . $new_id )
+					admin_url( 'post.php?action=edit&post=' . $new_id . ( isset( $_GET['classic-editor'] ) ? '&classic-editor' : '' ) )
 				)
 			);
 		}
@@ -399,7 +417,7 @@ function duplicate_post_save_as_new_post( $status = '' ) {
 }
 
 /**
- * Copies the taxonomies of a post to another post
+ * Copies the taxonomies of a post to another post.
  *
  * @param integer $new_id New post ID.
  * @param WP_Post $post The original post object.
@@ -682,7 +700,28 @@ function duplicate_post_copy_comments( $new_id, $post ) {
  * @return number|WP_Error
  */
 function duplicate_post_create_duplicate( $post, $status = '', $parent_id = '' ) {
-	do_action( 'duplicate_post_pre_copy' );
+	/**
+	 * Fires before to duplicate a post.
+	 *
+	 * @param WP_Post $post      The original post object.
+	 * @param boolean $status    The intended destination status.
+	 * @param integer $parent_id The parent post ID if we are calling this recursively.
+	 */
+	do_action( 'duplicate_post_pre_copy', $post, $status, $parent_id );
+	/**
+	 * Filter allowing to copy post.
+	 *
+	 * @param boolean $can_duplicate Default to `true`.
+	 * @param WP_Post $post          The original post object.
+	 * @param boolean $status        The intended destination status.
+	 * @param integer $parent_id     The parent post ID if we are calling this recursively.
+	 *
+	 * @return boolean
+	 */
+	$can_duplicate = apply_filters( 'duplicate_post_allow', true, $post, $status, $parent_id );
+	if ( ! $can_duplicate ) {
+		wp_die( esc_html( __( 'You aren\'t allowed to duplicate this post', 'duplicate-post' ) ) );
+	}
 
 	if ( ! duplicate_post_is_post_type_enabled( $post->post_type ) && 'attachment' !== $post->post_type ) {
 		wp_die(
@@ -784,7 +823,16 @@ function duplicate_post_create_duplicate( $post, $status = '', $parent_id = '' )
 		$new_post['post_date_gmt'] = get_gmt_from_date( $new_post_date );
 	}
 
-	$new_post_id = wp_insert_post( wp_slash( $new_post ) );
+	/**
+	 * Filter new post values.
+	 *
+	 * @param array   $new_post New post values.
+	 * @param WP_Post $post     Original post object.
+	 *
+	 * @return array
+	 */
+	$new_post    = apply_filters( 'duplicate_post_new_post', $new_post, $post );
+	$new_post_id = wp_insert_post( wp_slash( $new_post ), true );
 
 	// If you have written a plugin which uses non-WP database tables to save
 	// information about a post you can hook this action to dupe that data.
@@ -799,14 +847,22 @@ function duplicate_post_create_duplicate( $post, $status = '', $parent_id = '' )
 		delete_post_meta( $new_post_id, '_dp_original' );
 		add_post_meta( $new_post_id, '_dp_original', $post->ID );
 
-		do_action( 'duplicate_post_post_copy' );
+		/**
+		 * Fires after to duplicate a post.
+		 *
+		 * @param integer|WP_Error $new_post_id The new post id or WP_Error object on error.
+		 * @param WP_Post          $post        The original post object.
+		 * @param boolean          $status      The intended destination status.
+		 * @param integer          $parent_id   The parent post ID if we are calling this recursively.
+		 */
+		do_action( 'duplicate_post_post_copy', $new_post_id, $post, $status, $parent_id );
 	}
 
 	return $new_post_id;
 }
 
 /**
- * Adds some links on the plugin page
+ * Adds some links on the plugin page.
  *
  * @param array  $links The links array.
  * @param string $file The file name.
@@ -884,7 +940,7 @@ function duplicate_post_register_bulk_action( $bulk_actions ) {
 }
 
 /**
- * Bulk action handler
+ * Bulk action handler.
  *
  * @ignore
  *
@@ -905,7 +961,7 @@ function duplicate_post_action_handler( $redirect_to, $doaction, $post_ids ) {
 					|| ! is_post_type_hierarchical( $post->post_type )
 					|| ( is_post_type_hierarchical( $post->post_type ) && ! duplicate_post_has_ancestors_marked( $post, $post_ids ) )
 				) {
-				if ( duplicate_post_create_duplicate( $post ) ) {
+				if ( ! is_wp_error( duplicate_post_create_duplicate( $post ) ) ) {
 					$counter++;
 				}
 			}
@@ -916,7 +972,7 @@ function duplicate_post_action_handler( $redirect_to, $doaction, $post_ids ) {
 }
 
 /**
- * Checks if the post has ancestors marked for copy
+ * Checks if the post has ancestors marked for copy.
  *
  * If we are copying children, and the post has already an ancestor marked for copy, we have to filter it out.
  *

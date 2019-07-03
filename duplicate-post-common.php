@@ -1,13 +1,13 @@
 <?php
 /**
- * Common functions
+ * Common functions.
  *
  * @package Duplicate Post
  * @since 2.0
  */
 
 /**
- * Tests if the user is allowed to copy posts
+ * Tests if the user is allowed to copy posts.
  *
  * @return bool
  */
@@ -16,7 +16,7 @@ function duplicate_post_is_current_user_allowed_to_copy() {
 }
 
 /**
- * Tests if post type is enable to be copied
+ * Tests if post type is enable to be copied.
  *
  * @param string $post_type The post type to check.
  * @return bool
@@ -30,7 +30,7 @@ function duplicate_post_is_post_type_enabled( $post_type ) {
 }
 
 /**
- * Wrapper for the option 'duplicate_post_create_user_level'
+ * Wrapper for the option 'duplicate_post_create_user_level'.
  *
  * @return mixed
  */
@@ -75,6 +75,13 @@ function duplicate_post_get_clone_post_link( $id = 0, $context = 'display', $dra
 	$post_type_object = get_post_type_object( $post->post_type );
 	if ( ! $post_type_object ) {
 		return;
+	}
+
+	// Classic editor legacy support.
+	if ( isset( $_GET['classic-editor'] )
+		|| ( $draft && function_exists( 'gutenberg_post_has_blocks' ) && ! gutenberg_post_has_blocks( $post ) )
+	) {
+		$action .= '&classic-editor';
 	}
 
 	return wp_nonce_url(
@@ -140,33 +147,34 @@ function duplicate_post_admin_bar_render() {
 	}
 	global $wp_admin_bar;
 	$current_object = get_queried_object();
+
+	// Fall back to post ID in admin screen.
+	if ( empty( $current_object ) && is_admin() && isset( $_GET['post'] ) ) {
+		$current_object = get_post( intval( wp_unslash( $_GET['post'] ) ) );
+	}
+
 	if ( empty( $current_object ) ) {
 		return;
 	}
-	if ( ! empty( $current_object->post_type ) && ( get_post_type_object( $current_object->post_type ) === $post_type_object ) &&
-		duplicate_post_is_current_user_allowed_to_copy() &&
-		( $post_type_object->show_ui || 'attachment' === $current_object->post_type ) &&
-		( duplicate_post_is_post_type_enabled( $current_object->post_type ) ) ) {
-		$wp_admin_bar->add_menu(
-			array(
-				'id'    => 'new_draft',
-				'title' => esc_attr__( 'Copy to a new draft', 'duplicate-post' ),
-				'href'  => duplicate_post_get_clone_post_link( $current_object->ID ),
-			)
-		);
-	} elseif ( is_admin() && isset( $_GET['post'] ) ) { // Input var okay.
-		$id   = intval( wp_unslash( $_GET['post'] ) ); // Input var okay.
-		$post = get_post( $id );
-		if ( ! is_null( $post )
-				&& duplicate_post_is_current_user_allowed_to_copy()
-				&& duplicate_post_is_post_type_enabled( $post->post_type ) ) {
-					$wp_admin_bar->add_menu(
-						array(
-							'id'    => 'new_draft',
-							'title' => esc_attr__( 'Copy to a new draft', 'duplicate-post' ),
-							'href'  => duplicate_post_get_clone_post_link( $id ),
-						)
-					);
+
+	/** This filter is documented in wp-content/plugins/duplicate_post/duplicate-post-admin.php */
+	if ( ! apply_filters( 'duplicate_post_show_link', duplicate_post_is_current_user_allowed_to_copy(), get_post( $current_object->ID ) ) ) {
+		return;
+	}
+
+	if ( ! empty( $current_object->post_type ) ) {
+		$post_type_object = get_post_type_object( $current_object->post_type );
+		if ( ! empty( $current_object->post_type ) &&
+			duplicate_post_is_current_user_allowed_to_copy() &&
+			( $post_type_object->show_ui || 'attachment' === $current_object->post_type ) &&
+			( duplicate_post_is_post_type_enabled( $current_object->post_type ) ) ) {
+				$wp_admin_bar->add_menu(
+					array(
+						'id'    => 'new_draft',
+						'title' => esc_attr__( 'Copy to a new draft', 'duplicate-post' ),
+						'href'  => duplicate_post_get_clone_post_link( $current_object->ID ),
+					)
+				);
 		}
 	}
 }
@@ -179,24 +187,28 @@ function duplicate_post_add_css() {
 		return;
 	}
 	$current_object = get_queried_object();
+
+	// Fall back to post ID in admin screen.
+	if ( empty( $current_object ) && is_admin() && isset( $_GET['post'] ) ) {
+		$current_object = get_post( intval( wp_unslash( $_GET['post'] ) ) );
+	}
+
 	if ( empty( $current_object ) ) {
 		return;
 	}
+
+	/** This filter is documented in wp-content/plugins/duplicate_post/duplicate-post-admin.php */
+	if ( ! apply_filters( 'duplicate_post_show_link', duplicate_post_is_current_user_allowed_to_copy(), get_post( $current_object->ID ) ) ) {
+		return;
+	}
+
 	if ( ! empty( $current_object->post_type ) ) {
 		$post_type_object = get_post_type_object( $current_object->post_type );
 		if ( ! empty( $post_type_object ) &&
 			duplicate_post_is_current_user_allowed_to_copy() &&
 			( $post_type_object->show_ui || 'attachment' === $current_object->post_type ) &&
 			( duplicate_post_is_post_type_enabled( $current_object->post_type ) ) ) {
-				wp_enqueue_style( 'duplicate-post', plugins_url( '/duplicate-post.css', __FILE__ ), array(), '3.2.2' );
-		}
-	} elseif ( is_admin() && isset( $_GET['post'] ) ) { // Input var okay.
-		$id   = intval( wp_unslash( $_GET['post'] ) ); // Input var okay.
-		$post = get_post( $id );
-		if ( ! is_null( $post )
-				&& duplicate_post_is_current_user_allowed_to_copy()
-				&& duplicate_post_is_post_type_enabled( $post->post_type ) ) {
-					wp_enqueue_style( 'duplicate-post', plugins_url( '/duplicate-post.css', __FILE__ ), array(), '3.2.2' );
+				wp_enqueue_style( 'duplicate-post', plugins_url( '/duplicate-post.css', __FILE__ ), array(), DUPLICATE_POST_CURRENT_VERSION );
 		}
 	}
 }
