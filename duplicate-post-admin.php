@@ -299,7 +299,8 @@ function duplicate_post_add_duplicate_post_button( $post = null ) {
 		}
 	}
 	if ( ! is_null( $post ) ) {
-		if ( duplicate_post_is_current_user_allowed_to_copy() && duplicate_post_is_post_type_enabled( $post->post_type ) ) {
+		/** This filter is documented in wp-content/plugins/duplicate-post/duplicate-post-admin.php */
+		if ( apply_filters( 'duplicate_post_show_link', duplicate_post_is_current_user_allowed_to_copy() && duplicate_post_is_post_type_enabled( $post->post_type ), $post ) ) {
 			?>
 <div id="duplicate-action">
 	<a class="submitduplicate duplication"
@@ -701,7 +702,7 @@ function duplicate_post_copy_comments( $new_id, $post ) {
  */
 function duplicate_post_create_duplicate( $post, $status = '', $parent_id = '' ) {
 	/**
-	 * Fires before to duplicate a post.
+	 * Fires before duplicating a post.
 	 *
 	 * @param WP_Post $post      The original post object.
 	 * @param boolean $status    The intended destination status.
@@ -846,17 +847,17 @@ function duplicate_post_create_duplicate( $post, $status = '', $parent_id = '' )
 
 		delete_post_meta( $new_post_id, '_dp_original' );
 		add_post_meta( $new_post_id, '_dp_original', $post->ID );
-
-		/**
-		 * Fires after to duplicate a post.
-		 *
-		 * @param integer|WP_Error $new_post_id The new post id or WP_Error object on error.
-		 * @param WP_Post          $post        The original post object.
-		 * @param boolean          $status      The intended destination status.
-		 * @param integer          $parent_id   The parent post ID if we are calling this recursively.
-		 */
-		do_action( 'duplicate_post_post_copy', $new_post_id, $post, $status, $parent_id );
 	}
+
+	/**
+	 * Fires after duplicating a post.
+	 *
+	 * @param integer|WP_Error $new_post_id The new post id or WP_Error object on error.
+	 * @param WP_Post          $post        The original post object.
+	 * @param boolean          $status      The intended destination status.
+	 * @param integer          $parent_id   The parent post ID if we are calling this recursively.
+	 */
+	do_action( 'duplicate_post_post_copy', $new_post_id, $post, $status, $parent_id );
 
 	return $new_post_id;
 }
