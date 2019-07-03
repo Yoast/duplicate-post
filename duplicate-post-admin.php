@@ -348,7 +348,8 @@ function duplicate_post_save_as_new_post( $status = '' ) {
 
 	// Copy the post and insert it.
 	if ( isset( $post ) && null !== $post ) {
-		$new_id = duplicate_post_create_duplicate( $post, $status );
+		$post_type = $post->post_type; 
+		$new_id    = duplicate_post_create_duplicate( $post, $status );
 
 		if ( '' === $status ) {
 			$sendback = wp_get_referer();
