@@ -193,7 +193,7 @@ function duplicate_post_add_css() {
 	} elseif ( is_admin() && isset( $_GET['post'] ) ) { // Input var okay.
 		$id   = intval( wp_unslash( $_GET['post'] ) ); // Input var okay.
 		$post = get_post( $id );
-		if (  ! is_null( $post )
+		if ( ! is_null( $post )
 				&& duplicate_post_is_current_user_allowed_to_copy()
 				&& duplicate_post_is_post_type_enabled( $post->post_type ) ) {
 					wp_enqueue_style( 'duplicate-post', plugins_url( '/duplicate-post.css', __FILE__ ), array(), '3.2.2' );
