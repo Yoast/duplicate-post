@@ -3,18 +3,8 @@
 /**
  * Test if the user is allowed to copy posts
  */
-function duplicate_post_is_current_user_allowed_to_copy( $post ) {
-	if( !$post->post_type) {
-		return false;
-	}
-	
-	$post_type = get_post_type_object( $post->post_type );
-	if( $post_type ) {
-		return false;
-	}
-	
-	$cap_edit = $post_type->cap->edit_posts;
-	return current_user_can('copy_posts') && current_user_can($cap_edit);
+function duplicate_post_is_current_user_allowed_to_copy() {
+	return current_user_can('copy_posts');
 }
 
 /**
@@ -44,13 +34,12 @@ function duplicate_post_get_copy_user_level() {
  * @return string
  */
 function duplicate_post_get_clone_post_link( $id = 0, $context = 'display', $draft = true ) {
+	if ( !duplicate_post_is_current_user_allowed_to_copy() )
+		return;
+
 	if ( !$post = get_post( $id ) )
 		return;
-		
-	if ( !duplicate_post_is_current_user_allowed_to_copy( $post ) )
-		return;
-			
-		
+	
 	if(!duplicate_post_is_post_type_enabled($post->post_type))
 		return;
 
@@ -117,7 +106,7 @@ function duplicate_post_admin_bar_render() {
 	if ( !empty($current_object) ){
 		if ( ! empty( $current_object->post_type )
 			&& ( $post_type_object = get_post_type_object( $current_object->post_type ) )
-				&& duplicate_post_is_current_user_allowed_to_copy( $current_object )
+			&& duplicate_post_is_current_user_allowed_to_copy()
 			&& ( $post_type_object->show_ui || 'attachment' == $current_object->post_type )
 			&& (duplicate_post_is_post_type_enabled($current_object->post_type) ) )
 		{
@@ -131,7 +120,7 @@ function duplicate_post_admin_bar_render() {
 		$id = $_GET['post'];
 		$post = get_post($id);
 		if( !is_null($post) 
-				&& duplicate_post_is_current_user_allowed_to_copy( $post )
+				&& duplicate_post_is_current_user_allowed_to_copy()
 				&& duplicate_post_is_post_type_enabled($post->post_type)) {
 					$wp_admin_bar->add_menu( array(
 						'id' => 'new_draft',
@@ -148,7 +137,7 @@ function duplicate_post_add_css() {
 	if ( !empty($current_object) ){
 		if ( ! empty( $current_object->post_type )
 			&& ( $post_type_object = get_post_type_object( $current_object->post_type ) )
-				&& duplicate_post_is_current_user_allowed_to_copy( $current_object )
+			&& duplicate_post_is_current_user_allowed_to_copy()
 			&& ( $post_type_object->show_ui || 'attachment' == $current_object->post_type )
 			&& (duplicate_post_is_post_type_enabled($current_object->post_type) ) )
 		{
@@ -158,7 +147,7 @@ function duplicate_post_add_css() {
 		$id = $_GET['post'];
 		$post = get_post($id);
 		if( !is_null($post)
-				&& duplicate_post_is_current_user_allowed_to_copy( $post )
+				&& duplicate_post_is_current_user_allowed_to_copy()
 				&& duplicate_post_is_post_type_enabled($post->post_type)) {
 					wp_enqueue_style ( 'duplicate-post', plugins_url('/duplicate-post.css', __FILE__), array(), DUPLICATE_POST_CURRENT_VERSION );
 				}

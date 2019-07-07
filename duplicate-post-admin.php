@@ -229,7 +229,7 @@ function duplicate_post_dismiss_notice() {
  * Add the link to action list for post_row_actions
  */
 function duplicate_post_make_duplicate_link_row($actions, $post) {
-	if (duplicate_post_is_current_user_allowed_to_copy($post) && duplicate_post_is_post_type_enabled($post->post_type)) {
+	if (duplicate_post_is_current_user_allowed_to_copy() && duplicate_post_is_post_type_enabled($post->post_type)) {
 		$actions['clone'] = '<a href="'.duplicate_post_get_clone_post_link( $post->ID , 'display', false).'" title="'
 				. esc_attr__("Clone this item", 'duplicate-post')
 				. '">' .  esc_html__('Clone', 'duplicate-post') . '</a>';
@@ -247,7 +247,7 @@ function duplicate_post_add_duplicate_post_button() {
 	if ( isset( $_GET['post'] )){
 		$id = $_GET['post'];
 		$post = get_post($id);
-		if(duplicate_post_is_current_user_allowed_to_copy($post) && duplicate_post_is_post_type_enabled($post->post_type)) {
+		if(duplicate_post_is_current_user_allowed_to_copy() && duplicate_post_is_post_type_enabled($post->post_type)) {
 	 	?>
 <div id="duplicate-action">
 	<a class="submitduplicate duplication"
@@ -277,6 +277,10 @@ function duplicate_post_add_removable_query_arg( $removable_query_args ){
 * then redirects to the post list
 */
 function duplicate_post_save_as_new_post($status = ''){
+	if(!duplicate_post_is_current_user_allowed_to_copy()){
+		wp_die(esc_html__('Current user is not allowed to copy posts.', 'duplicate-post'));
+	}
+	
 	if (! ( isset( $_GET['post']) || isset( $_POST['post'])  || ( isset($_REQUEST['action']) && 'duplicate_post_save_as_new_post' == $_REQUEST['action'] ) ) ) {
 		wp_die(esc_html__('No post to duplicate has been supplied!', 'duplicate-post'));
 	}
@@ -290,10 +294,6 @@ function duplicate_post_save_as_new_post($status = ''){
 
 	// Copy the post and insert it
 	if (isset($post) && $post!=null) {
-		if(!duplicate_post_is_current_user_allowed_to_copy($post)){
-			wp_die(esc_html__('Current user is not allowed to copy posts.', 'duplicate-post'));
-		}
-		
 		$post_type = $post->post_type;
 		$new_id = duplicate_post_create_duplicate($post, $status);
 		
