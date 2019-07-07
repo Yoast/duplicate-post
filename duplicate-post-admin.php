@@ -192,8 +192,8 @@ function duplicate_post_show_update_notice() {
 	if(!current_user_can( 'manage_options')) return;
 	$class = 'notice is-dismissible';
 	$message = '<strong>'.sprintf(__("What's new in Duplicate Post version %s:", 'duplicate-post'), DUPLICATE_POST_CURRENT_VERSION).'</strong><br/>';
-	$message .= esc_html__('Simple compatibility with Gutenberg user interface: enable "Admin bar" under the Settings', 'duplicate-post').' — '.esc_html__('"Slug" option unset by default on new installations', 'duplicate-post').'<br/>';
-	$message .= '<em><a href="https://duplicate-post.lopo.it/">'.easc_html__('Check out the documentation', 'duplicate-post').'</a> — '.sprintf(__('Please <a href="%s">review the settings</a> to make sure it works as you expect.', 'duplicate-post'), admin_url('options-general.php?page=duplicatepost')).'</em><br/>';
+	$message .= esc_html__('Fixes for some bugs and incompatibilities with CF7, WPML, and custom post types with custom capabilities.', 'duplicate-post').'<br/>';
+	$message .= '<em><a href="https://duplicate-post.lopo.it/">'.esc_html__('Check out the documentation', 'duplicate-post').'</a> — '.sprintf(__('Please <a href="%s">review the settings</a> to make sure it works as you expect.', 'duplicate-post'), admin_url('options-general.php?page=duplicatepost')).'</em><br/>';
 	$message .= esc_html__('Serving the WordPress community since November 2007.', 'duplicate-post').' <strong>'.sprintf(wp_kses(__('Help me develop the plugin and provide support by <a href="%s">donating even a small sum</a>.', 'duplicate-post'), array( 'a' => array( 'href' => array() ) ) ), "https://duplicate-post.lopo.it/donate").'</strong>';
 	global $wp_version;
 	if( version_compare($wp_version, '4.2') < 0 ){
@@ -229,7 +229,7 @@ function duplicate_post_dismiss_notice() {
  * Add the link to action list for post_row_actions
  */
 function duplicate_post_make_duplicate_link_row($actions, $post) {
-	if (duplicate_post_is_current_user_allowed_to_copy() && duplicate_post_is_post_type_enabled($post->post_type)) {
+	if (duplicate_post_is_current_user_allowed_to_copy($post) && duplicate_post_is_post_type_enabled($post->post_type)) {
 		$actions['clone'] = '<a href="'.duplicate_post_get_clone_post_link( $post->ID , 'display', false).'" title="'
 				. esc_attr__("Clone this item", 'duplicate-post')
 				. '">' .  esc_html__('Clone', 'duplicate-post') . '</a>';
@@ -247,7 +247,7 @@ function duplicate_post_add_duplicate_post_button() {
 	if ( isset( $_GET['post'] )){
 		$id = $_GET['post'];
 		$post = get_post($id);
-		if(duplicate_post_is_current_user_allowed_to_copy() && duplicate_post_is_post_type_enabled($post->post_type)) {
+		if(duplicate_post_is_current_user_allowed_to_copy($post) && duplicate_post_is_post_type_enabled($post->post_type)) {
 	 	?>
 <div id="duplicate-action">
 	<a class="submitduplicate duplication"
@@ -277,10 +277,6 @@ function duplicate_post_add_removable_query_arg( $removable_query_args ){
 * then redirects to the post list
 */
 function duplicate_post_save_as_new_post($status = ''){
-	if(!duplicate_post_is_current_user_allowed_to_copy()){
-		wp_die(esc_html__('Current user is not allowed to copy posts.', 'duplicate-post'));
-	}
-	
 	if (! ( isset( $_GET['post']) || isset( $_POST['post'])  || ( isset($_REQUEST['action']) && 'duplicate_post_save_as_new_post' == $_REQUEST['action'] ) ) ) {
 		wp_die(esc_html__('No post to duplicate has been supplied!', 'duplicate-post'));
 	}
@@ -294,6 +290,10 @@ function duplicate_post_save_as_new_post($status = ''){
 
 	// Copy the post and insert it
 	if (isset($post) && $post!=null) {
+		if(!duplicate_post_is_current_user_allowed_to_copy($post)){
+			wp_die(esc_html__('Current user is not allowed to copy posts.', 'duplicate-post'));
+		}
+		
 		$post_type = $post->post_type;
 		$new_id = duplicate_post_create_duplicate($post, $status);
 		

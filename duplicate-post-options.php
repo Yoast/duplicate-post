@@ -58,9 +58,6 @@ function duplicate_post_options() {
 		foreach ($roles as $name => $display_name){
 			$role = get_role($name);
 
-			// role should have at least edit_posts capability
-			if ( !$role->has_cap('edit_posts') ) continue;
-
 			/* If the role doesn't have the capability and it was selected, add it. */
 			if ( !$role->has_cap( 'copy_posts' )  && in_array($name, $dp_roles) )
 				$role->add_cap( 'copy_posts' );
@@ -320,8 +317,14 @@ img#donate-button{
 					</th>
 					<td><?php	global $wp_roles;
 					$roles = $wp_roles->get_names();
-					foreach ($roles as $name => $display_name): $role = get_role($name);
-					if ( !$role->has_cap('edit_posts') ) continue; ?> <label> <input
+					$post_types = get_post_types(array('show_ui' => true),'objects');
+					$edit_capabilities = array();
+					foreach($post_types as $post_type){
+						array_push($edit_capabilities, $post_type->cap->edit_posts);
+					}
+					$edit_capabilities = array_unique($edit_capabilities);
+					foreach ($roles as $name => $display_name): $role = get_role($name); 
+					if( count ( array_intersect( $role->capabilities, $edit_capabilities ) ) > 0 )?> <label> <input
 							type="checkbox" name="duplicate_post_roles[]"
 							value="<?php echo $name ?>"
 							<?php if($role->has_cap('copy_posts')) echo 'checked="checked"'?> />

@@ -31,7 +31,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Version of the plugin
-define('DUPLICATE_POST_CURRENT_VERSION', '3.2.2' );
+define('DUPLICATE_POST_CURRENT_VERSION', '3.2.3' );
 
 
 /**
