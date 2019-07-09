@@ -41,23 +41,23 @@ function duplicate_post_get_copy_user_level() {
 /**
  * Template tag to retrieve/display duplicate post link for post.
  *
- * @param int    $id Optional. Post ID.
- * @param string $context Optional, default to display. How to write the '&', defaults to '&amp;'.
- * @param string $draft Optional, default to true.
+ * @param int     $id Optional. Post ID.
+ * @param string  $context Optional, default to display. How to write the '&', defaults to '&amp;'.
+ * @param boolean $draft Optional, default to true.
  * @return string
  */
 function duplicate_post_get_clone_post_link( $id = 0, $context = 'display', $draft = true ) {
 	if ( ! duplicate_post_is_current_user_allowed_to_copy() ) {
-		return;
+		return '';
 	}
 
 	$post = get_post( $id );
 	if ( ! $post ) {
-		return;
+		return '';
 	}
 
 	if ( ! duplicate_post_is_post_type_enabled( $post->post_type ) ) {
-		return;
+		return '';
 	}
 
 	if ( $draft ) {
@@ -74,7 +74,7 @@ function duplicate_post_get_clone_post_link( $id = 0, $context = 'display', $dra
 
 	$post_type_object = get_post_type_object( $post->post_type );
 	if ( ! $post_type_object ) {
-		return;
+		return '';
 	}
 
 	// Classic editor legacy support.
@@ -128,7 +128,7 @@ function duplicate_post_clone_post_link( $link = null, $before = '', $after = ''
 function duplicate_post_get_original( $post = null, $output = OBJECT ) {
 	$post = get_post( $post );
 	if ( ! $post ) {
-		return;
+		return null;
 	}
 	$original_id = get_post_meta( $post->ID, '_dp_original' );
 	if ( empty( $original_id ) ) {

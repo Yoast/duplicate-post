@@ -265,7 +265,7 @@ function duplicate_post_dismiss_notice() {
  *
  * @param array   $actions The actions array.
  * @param WP_Post $post The post object.
- * @return string
+ * @return array
  */
 function duplicate_post_make_duplicate_link_row( $actions, $post ) {
 	/**
@@ -517,6 +517,7 @@ function duplicate_post_copy_post_meta_info( $new_id, $post ) {
  * @ignore
  *
  * @param mixed $value Array or object to be recursively slashed.
+ * @return string|mixed
  */
 function duplicate_post_addslashes_deep( $value ) {
 	if ( function_exists( 'map_deep' ) ) {
@@ -734,11 +735,11 @@ function duplicate_post_create_duplicate( $post, $status = '', $parent_id = '' )
 	}
 
 	$new_post_status = ( empty( $status ) ) ? $post->post_status : $status;
+	$title  = ' ';
 
 	if ( 'attachment' !== $post->post_type ) {
 		$prefix = sanitize_text_field( get_option( 'duplicate_post_title_prefix' ) );
 		$suffix = sanitize_text_field( get_option( 'duplicate_post_title_suffix' ) );
-		$title  = ' ';
 		if ( 1 === intval( get_option( 'duplicate_post_copytitle' ) ) ) {
 			$title = $post->post_title;
 			if ( ! empty( $prefix ) ) {
