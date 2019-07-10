@@ -150,7 +150,7 @@ New features and customization, WP 3.0 compatibility: you should upgrade if you 
 
 == Changelog ==
 
-= 3.2.3 (2019-07-07) =
+= 3.2.3 (2019-07-10) =
 * Fixes incompatibility with previous versions of CF7
 * Now roles without edit_posts capability but having equivalent capability for custom post types can be allowed to copy
 * Small other fixes to bugs that could lead to incompatibilities with WPML and others
