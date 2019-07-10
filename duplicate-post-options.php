@@ -47,24 +47,24 @@ function duplicate_post_menu() {
 }
 
 function duplicate_post_options() {
-	
+
 	if ( current_user_can( 'promote_users' ) && (isset($_GET['settings-updated'])  && $_GET['settings-updated'] == true)){
 		global $wp_roles;
 		$roles = $wp_roles->get_names();
-		
+
 		$dp_roles = get_option('duplicate_post_roles');
 		if ( $dp_roles == "" ) $dp_roles = array();
-		
+
 		foreach ($roles as $name => $display_name){
 			$role = get_role($name);
-			
+
 			/* If the role doesn't have the capability and it was selected, add it. */
 			if ( !$role->has_cap( 'copy_posts' )  && in_array($name, $dp_roles) )
 				$role->add_cap( 'copy_posts' );
-				
-				/* If the role has the capability and it wasn't selected, remove it. */
-				elseif ( $role->has_cap( 'copy_posts' ) && !in_array($name, $dp_roles) )
-				$role->remove_cap( 'copy_posts' );
+
+			/* If the role has the capability and it wasn't selected, remove it. */
+			elseif ( $role->has_cap( 'copy_posts' ) && !in_array($name, $dp_roles) )
+			$role->remove_cap( 'copy_posts' );
 		}
 	}
 	?>
@@ -318,12 +318,12 @@ img#donate-button{
 					<td><?php	global $wp_roles;
 					$roles = $wp_roles->get_names();
 					$post_types = get_post_types( array( 'show_ui' => true ), 'objects' );
-					$edit_capabilities = array();
+					$edit_capabilities = array('edit_posts' => true);
 					foreach( $post_types as $post_type ) {
 						$edit_capabilities[$post_type->cap->edit_posts] = true;
 					}
 					foreach ( $roles as $name => $display_name ):
-						$role = get_role( $name ); 
+						$role = get_role( $name );
 						if( count ( array_intersect_key( $role->capabilities, $edit_capabilities ) ) > 0 ): ?>
 					<label> <input
 							type="checkbox" name="duplicate_post_roles[]"
