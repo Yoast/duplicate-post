@@ -3,7 +3,7 @@ Contributors: 		lopo
 Donate link: 		https://duplicate-post.lopo.it/
 Tags: 				duplicate post, copy, clone
 Requires at least: 	3.6
-Tested up to: 		4.9
+Tested up to: 		5.2
 Stable tag: 		3.2.2
 Requires PHP:		5.2.4
 License: 			GPLv2 or later
