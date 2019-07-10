@@ -5,8 +5,8 @@ if(!is_admin())
 
 require_once (dirname(__FILE__).'/duplicate-post-options.php');
 
-require_once (dirname(__FILE__).'/compat/duplicate-post-wpml.php');
-require_once (dirname(__FILE__).'/compat/duplicate-post-jetpack.php');
+include_once (dirname(__FILE__).'/compat/duplicate-post-wpml.php');
+include_once (dirname(__FILE__).'/compat/duplicate-post-jetpack.php');
 
 /**
  * Wrapper for the option 'duplicate_post_version'
