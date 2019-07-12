@@ -77,11 +77,6 @@ function duplicate_post_options() {
 		foreach ( $roles as $name => $display_name ) {
 			$role = get_role( $name );
 
-			// role should have at least edit_posts capability.
-			if ( ! $role->has_cap( 'edit_posts' ) ) {
-				continue;
-			}
-
 			if ( ! $role->has_cap( 'copy_posts' ) && in_array( $name, $dp_roles, true ) ) {
 				/* If the role doesn't have the capability and it was selected, add it. */
 				$role->add_cap( 'copy_posts' );
@@ -107,7 +102,7 @@ function duplicate_post_options() {
 		<br />
 		<?php esc_html_e( 'Donate whatever sum you choose, even just 10¢.', 'duplicate-post' ); ?>
 		<br /> <a href="https://duplicate-post.lopo.it/donate"><img
-				id="donate-button" style="margin: 0px auto;"
+				id="donate-button" style="margin: 0 auto;"
 				src="<?php echo esc_attr( plugins_url( 'donate.png', __FILE__ ) ); ?>"
 				alt="Donate" /></a> <br /> <a href="https://duplicate-post.lopo.it/"><?php esc_html_e( 'Documentation', 'duplicate-post' ); ?></a>
 			- <a
@@ -150,7 +145,7 @@ h2 .nav-tab:focus {
 	padding: 22px;
 	background: #fff;
 	border: 1px solid #ccc;
-	border-top: 0px;
+	border-top: 0;
 }
 
 section {
@@ -177,9 +172,9 @@ section:first-of-type {
 }
 
 .no-js section:first-child {
-	margin: 0px;
-	padding: 0px;
-	border: 0px;
+	margin: 0;
+	padding: 0;
+	border: 0;
 }
 
 label {
@@ -422,13 +417,16 @@ img#donate-button {
 					<?php
 
 					global $wp_roles;
-					$roles = $wp_roles->get_names();
+					$roles             = $wp_roles->get_names();
+					$post_types        = get_post_types( array( 'show_ui' => true ), 'objects' );
+					$edit_capabilities = array( 'edit_posts' => true );
+					foreach ( $post_types as $post_type ) {
+						$edit_capabilities[ $post_type->cap->edit_posts ] = true;
+					}
 					foreach ( $roles as $name => $display_name ) :
 						$role = get_role( $name );
-						if ( ! $role->has_cap( 'edit_posts' ) ) {
-							continue;
-						}
-						?>
+						if ( count( array_intersect_key( $role->capabilities, $edit_capabilities ) ) > 0 ) :
+							?>
 			<label> <input type="checkbox"	name="duplicate_post_roles[]" value="<?php echo esc_attr( $name ); ?>"
 							<?php
 							if ( $role->has_cap( 'copy_posts' ) ) {
@@ -436,7 +434,12 @@ img#donate-button {
 							?>
 />
 							<?php echo esc_html( translate_user_role( $display_name ) ); ?>
-					</label> <?php endforeach; ?> <span class="description"><?php esc_html_e( 'Warning: users will be able to copy all posts, even those of other users', 'duplicate-post' ); ?><br />
+					</label>
+							<?php
+							endif;
+							endforeach;
+					?>
+					<span class="description"><?php esc_html_e( 'Warning: users will be able to copy all posts, even those of other users', 'duplicate-post' ); ?><br />
 							<?php esc_html_e( 'Passwords and contents of password-protected posts may become visible to undesired users and visitors', 'duplicate-post' ); ?>
 					</span></td>
 				</tr>

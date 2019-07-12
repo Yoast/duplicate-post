@@ -192,7 +192,7 @@ function duplicate_post_plugin_upgrade() {
 	delete_site_option( 'duplicate_post_version' );
 	update_option( 'duplicate_post_version', duplicate_post_get_current_version() );
 
-	delete_option( 'duplicate_post_show_notice', 0 );
+	delete_option( 'duplicate_post_show_notice' );
 	update_site_option( 'duplicate_post_show_notice', 1 );
 }
 
@@ -209,14 +209,14 @@ function duplicate_post_show_update_notice() {
 		__( "What's new in Duplicate Post version %s:", 'duplicate-post' ),
 		DUPLICATE_POST_CURRENT_VERSION
 	) . '</strong><br/>';
-	$message .= esc_html__( 'Simple compatibility with Gutenberg user interface: enable "Admin bar" under the Settings', 'duplicate-post' ) . ' — '
-			. esc_html__( '"Slug" option unset by default on new installations', 'duplicate-post' ) . '<br/>';
-	$message .= '<em><a href="https://duplicate-post.lopo.it/">' . esc_html__( 'Check out the documentation', 'duplicate-post' ) . '</a> — ' . sprintf(
+	$message .= __( 'Simple compatibility with Gutenberg user interface: enable "Admin bar" under the Settings', 'duplicate-post' ) . ' — '
+			. __( '"Slug" option unset by default on new installations', 'duplicate-post' ) . '<br/>';
+	$message .= '<em><a href="https://duplicate-post.lopo.it/" title="Duplicate Post official site">' . __( 'Check out the documentation', 'duplicate-post' ) . '</a> — ' . sprintf(
 		/* translators: %s: Options page URL */
 		__( 'Please <a href="%s">review the settings</a> to make sure it works as you expect.', 'duplicate-post' ),
 		admin_url( 'options-general.php?page=duplicatepost' )
 	) . '</em><br/>';
-	$message .= esc_html__( 'Serving the WordPress community since November 2007.', 'duplicate-post' ) . ' <strong>' . sprintf(
+	$message .= __( 'Serving the WordPress community since November 2007.', 'duplicate-post' ) . ' <strong>' . sprintf(
 		wp_kses(
 			/* translators: %s: Donation URL. */
 			__( 'Help me develop the plugin and provide support by <a href="%s">donating even a small sum</a>.', 'duplicate-post' ),
@@ -230,7 +230,16 @@ function duplicate_post_show_update_notice() {
 		$message .= ' | <a id="duplicate-post-dismiss-notice" href="javascript:duplicate_post_dismiss_notice();">' .
 			__( 'Dismiss this notice.' ) . '</a>';
 	}
-	echo '<div id="duplicate-post-notice" class="' . esc_attr( $class ) . '"><p>' . esc_html( $message ) . '</p></div>';
+	$allowed_tags = array(
+		'a'      => array(
+			'href'  => array(),
+			'title' => array(),
+		),
+		'br'     => array(),
+		'em'     => array(),
+		'strong' => array(),
+	);
+	echo '<div id="duplicate-post-notice" class="' . esc_attr( $class ) . '"><p>' . wp_kses( $message, $allowed_tags ) . '</p></div>';
 	echo "<script>
 			function duplicate_post_dismiss_notice(){
 				var data = {
@@ -299,7 +308,7 @@ function duplicate_post_add_duplicate_post_button( $post = null ) {
 		}
 	}
 	if ( ! is_null( $post ) ) {
-		/** This filter is documented in wp-content/plugins/duplicate-post/duplicate-post-admin.php */
+		/** This filter is documented in duplicate-post-admin.php */
 		if ( apply_filters( 'duplicate_post_show_link', duplicate_post_is_current_user_allowed_to_copy() && duplicate_post_is_post_type_enabled( $post->post_type ), $post ) ) {
 			?>
 <div id="duplicate-action">
@@ -735,7 +744,7 @@ function duplicate_post_create_duplicate( $post, $status = '', $parent_id = '' )
 	}
 
 	$new_post_status = ( empty( $status ) ) ? $post->post_status : $status;
-	$title  = ' ';
+	$title           = ' ';
 
 	if ( 'attachment' !== $post->post_type ) {
 		$prefix = sanitize_text_field( get_option( 'duplicate_post_title_prefix' ) );
