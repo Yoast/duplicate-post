@@ -210,6 +210,8 @@ function duplicate_post_admin_bar_render( $wp_admin_bar ) {
 
 /**
  * Links stylesheet for Toolbar link.
+ *
+ * @global WP_Query $wp_the_query
  */
 function duplicate_post_add_css() {
 	global $wp_the_query;
