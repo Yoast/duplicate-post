@@ -1,6 +1,6 @@
 <?php
 /**
- * Backend functions
+ * Backend functions.
  *
  * @package Duplicate Post
  * @since 2.0
@@ -197,9 +197,13 @@ function duplicate_post_plugin_upgrade() {
 }
 
 /**
- * Shows the update notice
+ * Shows the update notice.
+ *
+ * @global string $wp_version The WordPress version string.
  */
 function duplicate_post_show_update_notice() {
+	global $wp_version;
+
 	if ( ! current_user_can( 'manage_options' ) ) {
 		return;
 	}
@@ -225,7 +229,6 @@ function duplicate_post_show_update_notice() {
 		'https://duplicate-post.lopo.it/donate'
 	) . '</strong>';
 
-	global $wp_version;
 	if ( version_compare( $wp_version, '4.2' ) < 0 ) {
 		$message .= ' | <a id="duplicate-post-dismiss-notice" href="javascript:duplicate_post_dismiss_notice();">' .
 			__( 'Dismiss this notice.' ) . '</a>';
@@ -262,7 +265,7 @@ function duplicate_post_show_update_notice() {
 /**
  * Dismisses the notice.
  *
- * @return boolean
+ * @return boolean.
  */
 function duplicate_post_dismiss_notice() {
 	$result = update_site_option( 'duplicate_post_show_notice', 0 );
@@ -274,7 +277,7 @@ function duplicate_post_dismiss_notice() {
  *
  * @param array   $actions The actions array.
  * @param WP_Post $post The post object.
- * @return array
+ * @return array.
  */
 function duplicate_post_make_duplicate_link_row( $actions, $post ) {
 	/**
@@ -323,6 +326,8 @@ function duplicate_post_add_duplicate_post_button( $post = null ) {
 
 /**
  * Calls the creation of a new copy of the selected post (as a draft) then redirects to the edit post screen.
+ *
+ * @see duplicate_post_save_as_new_post()
  */
 function duplicate_post_save_as_new_post_draft() {
 	duplicate_post_save_as_new_post( 'draft' );
@@ -334,7 +339,7 @@ function duplicate_post_save_as_new_post_draft() {
  * @ignore
  *
  * @param array $removable_query_args Array of query args keys.
- * @return array
+ * @return array.
  */
 function duplicate_post_add_removable_query_arg( $removable_query_args ) {
 	$removable_query_args[] = 'cloned';
@@ -428,6 +433,8 @@ function duplicate_post_save_as_new_post( $status = '' ) {
 
 /**
  * Copies the taxonomies of a post to another post.
+ *
+ * @global wpdb $wpdb WordPress database abstraction object.
  *
  * @param integer $new_id New post ID.
  * @param WP_Post $post The original post object.
@@ -526,7 +533,7 @@ function duplicate_post_copy_post_meta_info( $new_id, $post ) {
  * @ignore
  *
  * @param mixed $value Array or object to be recursively slashed.
- * @return string|mixed
+ * @return string|mixed.
  */
 function duplicate_post_addslashes_deep( $value ) {
 	if ( function_exists( 'map_deep' ) ) {
@@ -542,7 +549,7 @@ function duplicate_post_addslashes_deep( $value ) {
  * @ignore
  *
  * @param mixed $value Value to slash only if string.
- * @return string|mixed
+ * @return string|mixed.
  */
 function duplicate_post_addslashes_to_strings_only( $value ) {
 	return is_string( $value ) ? addslashes( $value ) : $value;
@@ -554,7 +561,7 @@ function duplicate_post_addslashes_to_strings_only( $value ) {
  * @ignore
  *
  * @param mixed $value What to add slash to.
- * @return mixed
+ * @return mixed.
  */
 function duplicate_post_wp_slash( $value ) {
 	return duplicate_post_addslashes_deep( $value );
@@ -708,7 +715,7 @@ function duplicate_post_copy_comments( $new_id, $post ) {
  * @param WP_Post $post The original post object.
  * @param string  $status Optional. The intended destination status.
  * @param string  $parent_id Optional. The parent post ID if we are calling this recursively.
- * @return number|WP_Error
+ * @return number|WP_Error.
  */
 function duplicate_post_create_duplicate( $post, $status = '', $parent_id = '' ) {
 	/**
@@ -727,7 +734,7 @@ function duplicate_post_create_duplicate( $post, $status = '', $parent_id = '' )
 	 * @param boolean $status        The intended destination status.
 	 * @param integer $parent_id     The parent post ID if we are calling this recursively.
 	 *
-	 * @return boolean
+	 * @return boolean.
 	 */
 	$can_duplicate = apply_filters( 'duplicate_post_allow', true, $post, $status, $parent_id );
 	if ( ! $can_duplicate ) {
@@ -840,7 +847,7 @@ function duplicate_post_create_duplicate( $post, $status = '', $parent_id = '' )
 	 * @param array   $new_post New post values.
 	 * @param WP_Post $post     Original post object.
 	 *
-	 * @return array
+	 * @return array.
 	 */
 	$new_post    = apply_filters( 'duplicate_post_new_post', $new_post, $post );
 	$new_post_id = wp_insert_post( wp_slash( $new_post ), true );
@@ -877,7 +884,7 @@ function duplicate_post_create_duplicate( $post, $status = '', $parent_id = '' )
  *
  * @param array  $links The links array.
  * @param string $file The file name.
- * @return array
+ * @return array.
  */
 function duplicate_post_add_plugin_links( $links, $file ) {
 	if ( plugin_basename( dirname( __FILE__ ) . '/duplicate-post.php' ) === $file ) {
@@ -943,7 +950,7 @@ function duplicate_post_add_bulk_filters_for_enabled_post_types() {
  * @ignore
  *
  * @param array $bulk_actions The bulk actions array.
- * @return array
+ * @return array.
  */
 function duplicate_post_register_bulk_action( $bulk_actions ) {
 	$bulk_actions['duplicate_post_clone'] = esc_html__( 'Clone', 'duplicate-post' );
@@ -958,7 +965,7 @@ function duplicate_post_register_bulk_action( $bulk_actions ) {
  * @param string $redirect_to The URL to redirect to.
  * @param string $doaction The action that has been called.
  * @param array  $post_ids The array of marked post IDs.
- * @return string
+ * @return string.
  */
 function duplicate_post_action_handler( $redirect_to, $doaction, $post_ids ) {
 	if ( 'duplicate_post_clone' !== $doaction ) {
@@ -991,15 +998,16 @@ function duplicate_post_action_handler( $redirect_to, $doaction, $post_ids ) {
  *
  * @param WP_Post $post The post object.
  * @param array   $post_ids The array of marked post IDs.
- * @return boolean
+ * @return boolean.
  */
 function duplicate_post_has_ancestors_marked( $post, $post_ids ) {
 	$ancestors_in_array = 0;
-	$parent             = $post->ID;
-	while ( $parent = wp_get_post_parent_id( $parent ) ) {
+	$parent             = wp_get_post_parent_id( $post->ID );
+	while ( $parent ) {
 		if ( in_array( $parent, $post_ids, true ) ) {
 			$ancestors_in_array++;
 		}
+		$parent = wp_get_post_parent_id( $parent );
 	}
 	return ( 0 !== $ancestors_in_array );
 }
