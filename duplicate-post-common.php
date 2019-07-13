@@ -9,7 +9,7 @@
 /**
  * Tests if the user is allowed to copy posts.
  *
- * @return bool
+ * @return boolean.
  */
 function duplicate_post_is_current_user_allowed_to_copy() {
 	return current_user_can( 'copy_posts' );
@@ -19,7 +19,7 @@ function duplicate_post_is_current_user_allowed_to_copy() {
  * Tests if post type is enable to be copied.
  *
  * @param string $post_type The post type to check.
- * @return bool
+ * @return boolean.
  */
 function duplicate_post_is_post_type_enabled( $post_type ) {
 	$duplicate_post_types_enabled = get_option( 'duplicate_post_types_enabled', array( 'post', 'page' ) );
@@ -30,21 +30,12 @@ function duplicate_post_is_post_type_enabled( $post_type ) {
 }
 
 /**
- * Wrapper for the option 'duplicate_post_create_user_level'.
- *
- * @return mixed
- */
-function duplicate_post_get_copy_user_level() {
-	return get_option( 'duplicate_post_copy_user_level' );
-}
-
-/**
  * Template tag to retrieve/display duplicate post link for post.
  *
  * @param int     $id Optional. Post ID.
  * @param string  $context Optional, default to display. How to write the '&', defaults to '&amp;'.
  * @param boolean $draft Optional, default to true.
- * @return string
+ * @return string.
  */
 function duplicate_post_get_clone_post_link( $id = 0, $context = 'display', $draft = true ) {
 	if ( ! duplicate_post_is_current_user_allowed_to_copy() ) {
@@ -123,7 +114,7 @@ function duplicate_post_clone_post_link( $link = null, $before = '', $after = ''
  *
  * @param int    $post Optional. Post ID or Post object.
  * @param string $output Optional, default is Object. Either OBJECT, ARRAY_A, or ARRAY_N.
- * @return mixed Post data
+ * @return mixed Post data.
  */
 function duplicate_post_get_original( $post = null, $output = OBJECT ) {
 	$post = get_post( $post );
@@ -141,7 +132,7 @@ function duplicate_post_get_original( $post = null, $output = OBJECT ) {
 /**
  * Shows link in the Toolbar.
  *
- * @global WP_Query $wp_the_query
+ * @global WP_Query $wp_the_query.
  *
  * @param WP_Admin_Bar $wp_admin_bar WP_Admin_Bar instance.
  */
@@ -211,7 +202,7 @@ function duplicate_post_admin_bar_render( $wp_admin_bar ) {
 /**
  * Links stylesheet for Toolbar link.
  *
- * @global WP_Query $wp_the_query
+ * @global WP_Query $wp_the_query.
  */
 function duplicate_post_add_css() {
 	global $wp_the_query;
@@ -287,7 +278,7 @@ function duplicate_post_init() {
  * @ignore
  * @param WP_Taxonomy $a First taxonomy object.
  * @param WP_Taxonomy $b Second taxonomy object.
- * @return bool
+ * @return boolean.
  */
 function duplicate_post_tax_obj_cmp( $a, $b ) {
 	return ( $a->public < $b->public );

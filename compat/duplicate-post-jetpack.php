@@ -1,6 +1,6 @@
 <?php
 /**
- * JetPack compatibility functions
+ * JetPack compatibility functions.
  *
  * @package Duplicate Post
  * @since 3.2
@@ -9,7 +9,7 @@
 add_action( 'admin_init', 'duplicate_post_jetpack_init' );
 
 /**
- * Add handlers for JetPack compatibility
+ * Add handlers for JetPack compatibility.
  */
 function duplicate_post_jetpack_init() {
 	add_filter( 'duplicate_post_blacklist_filter', 'duplicate_post_jetpack_add_to_blacklist', 10, 1 );

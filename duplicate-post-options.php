@@ -63,10 +63,14 @@ function duplicate_post_menu() {
 
 /**
  * Show options page.
+ *
+ * @global WP_Roles $wp_roles WordPress User Roles.
+ * @global string $wp_version The WordPress version string.
  */
 function duplicate_post_options() {
+	global $wp_roles, $wp_version;
+
 	if ( current_user_can( 'promote_users' ) && ( isset( $_GET['settings-updated'] ) && true === $_GET['settings-updated'] ) ) { // Input var okay.
-		global $wp_roles;
 		$roles = $wp_roles->get_names();
 
 		$dp_roles = get_option( 'duplicate_post_roles' );
@@ -416,7 +420,6 @@ img#donate-button {
 					<td>
 					<?php
 
-					global $wp_roles;
 					$roles             = $wp_roles->get_names();
 					$post_types        = get_post_types( array( 'show_ui' => true ), 'objects' );
 					$edit_capabilities = array( 'edit_posts' => true );
@@ -449,7 +452,6 @@ img#donate-button {
 					</th>
 					<td>
 					<?php
-
 					$post_types = get_post_types( array( 'show_ui' => true ), 'objects' );
 					foreach ( $post_types as $post_type_object ) :
 						if ( 'attachment' === $post_type_object->name ) {
@@ -500,8 +502,6 @@ img#donate-button {
 							<?php esc_html_e( 'Admin bar', 'duplicate-post' ); ?> 
 							<small>(<?php esc_html_e( 'now works on Edit screen too - check this option to use with Gutenberg enabled', 'duplicate-post' ); ?>)</small></label> 
 							<?php
-
-							global $wp_version;
 							if ( version_compare( $wp_version, '4.7' ) >= 0 ) {
 								?>
 													<label><input type="checkbox"

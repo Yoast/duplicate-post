@@ -11,7 +11,7 @@
 add_action( 'admin_init', 'duplicate_post_wpml_init' );
 
 /**
- * Add handlers for WPML compatibility
+ * Add handlers for WPML compatibility.
  */
 function duplicate_post_wpml_init() {
 	if ( defined( 'ICL_SITEPRESS_VERSION' ) ) {
@@ -25,7 +25,10 @@ global $duplicated_posts;
 $duplicated_posts = array();
 
 /**
- * Copy post translations
+ * Copy post translations.
+ *
+ * @global SitePress() $sitepress Instance of the Main WPML class.
+ * @global array() $duplicated_posts Array of duplicated posts.
  *
  * @param integer $post_id ID of the copy.
  * @param WP_Post $post Original post object.
@@ -67,6 +70,8 @@ function duplicate_post_wpml_copy_translations( $post_id, $post, $status = '' ) 
 
 /**
  * Duplicate string packages.
+ *
+ * @global array() $duplicated_posts Array of duplicated posts.
  */
 function duplicate_wpml_string_packages() {
 	global $duplicated_posts;
