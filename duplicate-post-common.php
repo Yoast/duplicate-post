@@ -68,15 +68,8 @@ function duplicate_post_get_clone_post_link( $id = 0, $context = 'display', $dra
 		return '';
 	}
 
-	// Classic editor legacy support.
-	if ( isset( $_GET['classic-editor'] )
-		|| ( $draft && function_exists( 'gutenberg_post_has_blocks' ) && ! gutenberg_post_has_blocks( $post ) )
-	) {
-		$action .= '&classic-editor';
-	}
-
 	return wp_nonce_url(
-		apply_filters( 'duplicate_post_get_clone_post_link', admin_url( 'admin.php' . $action ), $post->ID, $context ),
+		apply_filters( 'duplicate_post_get_clone_post_link', admin_url( 'admin.php' . $action ), $post, $context, $draft ),
 		'duplicate-post_' . $post->ID
 	);
 }
