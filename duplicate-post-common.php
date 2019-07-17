@@ -69,7 +69,7 @@ function duplicate_post_get_clone_post_link( $id = 0, $context = 'display', $dra
 	}
 
 	return wp_nonce_url(
-		apply_filters( 'duplicate_post_get_clone_post_link', admin_url( 'admin.php' . $action ), $post, $context, $draft ),
+		apply_filters( 'duplicate_post_get_clone_post_link', admin_url( 'admin.php' . $action ), $post->ID, $context, $draft ),
 		'duplicate-post_' . $post->ID
 	);
 }
