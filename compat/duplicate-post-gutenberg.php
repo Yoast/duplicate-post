@@ -26,7 +26,7 @@ function duplicate_post_classic_editor_clone_link( $url, $post_id, $context, $dr
 		return $url;
 	}
 
-	if ( isset( $_GET['classic-editor'] )
+	if ( isset( $_GET['classic-editor'] ) // phpcs:ignore WordPress.Security.NonceVerification
 		|| ( $draft && function_exists( 'gutenberg_post_has_blocks' ) && ! gutenberg_post_has_blocks( $post ) )
 		|| ( $draft && function_exists( 'has_blocks' ) && ! has_blocks( $post ) ) ) {
 		if ( 'display' === $context ) {

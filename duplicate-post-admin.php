@@ -305,8 +305,8 @@ function duplicate_post_make_duplicate_link_row( $actions, $post ) {
  */
 function duplicate_post_add_duplicate_post_button( $post = null ) {
 	if ( is_null( $post ) ) {
-		if ( isset( $_GET['post'] ) ) { // Input var okay.
-			$id   = intval( wp_unslash( $_GET['post'] ) ); // Input var okay.
+		if ( isset( $_GET['post'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+			$id   = intval( wp_unslash( $_GET['post'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
 			$post = get_post( $id );
 		}
 	}
@@ -902,8 +902,8 @@ function duplicate_post_add_plugin_links( $links, $file ) {
  * @ignore
  */
 function duplicate_post_action_admin_notice() {
-	if ( ! empty( $_REQUEST['cloned'] ) ) { // Input var okay.
-		$copied_posts = intval( $_REQUEST['cloned'] ); // Input var okay.
+	if ( ! empty( $_REQUEST['cloned'] ) ) { // phpcs:ignore
+		$copied_posts = intval( $_REQUEST['cloned'] ); // phpcs:ignore
 		printf(
 			'<div id="message" class="updated fade"><p>' .
 				esc_html(

@@ -70,7 +70,7 @@ function duplicate_post_menu() {
 function duplicate_post_options() {
 	global $wp_roles, $wp_version;
 
-	if ( current_user_can( 'promote_users' ) && ( isset( $_GET['settings-updated'] ) && true === $_GET['settings-updated'] ) ) { // Input var okay.
+	if ( current_user_can( 'promote_users' ) && ( isset( $_GET['settings-updated'] ) && true === $_GET['settings-updated'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 		$roles = $wp_roles->get_names();
 
 		$dp_roles = get_option( 'duplicate_post_roles' );
