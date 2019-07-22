@@ -8,7 +8,7 @@ module.exports = function( grunt ) {
 			wp_readme_to_markdown: {
 				your_target: {
 					files: {
-						'readme.md': 'readme.txt'
+						'wp-readme.md': 'src/readme.txt'
 					},
 				},
 			},

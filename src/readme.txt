@@ -3,8 +3,8 @@ Contributors: 		lopo
 Donate link: 		https://duplicate-post.lopo.it/
 Tags: 				duplicate post, copy, clone
 Requires at least: 	3.6
-Tested up to: 		4.9
-Stable tag: 		3.2.2
+Tested up to: 		5.2
+Stable tag: 		3.2.3
 Requires PHP:		5.2.4
 License: 			GPLv2 or later
 License URI: 		http://www.gnu.org/licenses/gpl-2.0.html
@@ -79,6 +79,9 @@ If Duplicate Post is still in English, or if there are some untraslated strings,
 
 == Upgrade Notice ==
 
+= 3.2.3 =
+Fixes some bugs and incompatibilities with CF7, WPML, and custom post types with custom capabilities 
+
 = 3.2.2 =
 Adds compatibility with Gutenberg UI and fixes a problem with slugs on new installs
 
@@ -146,6 +149,11 @@ Some users have experienced a fatal error when upgrading to v1.1: this may fix i
 New features and customization, WP 3.0 compatibility: you should upgrade if you want to copy Custom Posts with Custom Taxonomies.
 
 == Changelog ==
+
+= 3.2.3 (2019-07-10) =
+* Fixes incompatibility with previous versions of CF7
+* Now roles without edit_posts capability but having equivalent capability for custom post types can be allowed to copy
+* Small other fixes to bugs that could lead to incompatibilities with WPML and others
 
 = 3.2.2 (2018-04-13) =
 * The "Admin bar" option shows the link in the post edit screen too, so you can use the plugin with Gutenberg enabled

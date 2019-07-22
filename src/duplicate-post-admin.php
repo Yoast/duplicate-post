@@ -902,8 +902,8 @@ function duplicate_post_add_plugin_links( $links, $file ) {
  * @ignore
  */
 function duplicate_post_action_admin_notice() {
-	if ( ! empty( $_REQUEST['cloned'] ) ) { // phpcs:ignore
-		$copied_posts = intval( $_REQUEST['cloned'] ); // phpcs:ignore
+	if ( ! empty( $_REQUEST['cloned'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+		$copied_posts = intval( $_REQUEST['cloned'] ); // phpcs:ignore WordPress.Security.NonceVerification
 		printf(
 			'<div id="message" class="updated fade"><p>' .
 				esc_html(
