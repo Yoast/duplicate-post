@@ -12,7 +12,7 @@ module.exports = function( grunt ) {
 					},
 				},
 				options: {
-					screenshot_url: 'assets/{screenshot}.png'
+					screenshot_url: 'assets/{screenshot}.jpg'
 				}
 			},
 		}

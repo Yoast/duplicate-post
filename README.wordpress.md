@@ -71,22 +71,22 @@ If Duplicate Post is still in English, or if there are some untraslated strings,
 ## Screenshots ##
 
 ### 1. Here you can copy the post you're editing to a new draft. ###
-![Here you can copy the post you're editing to a new draft.](assets/screenshot-1.png)
+![Here you can copy the post you're editing to a new draft.](assets/screenshot-1.jpg)
 
 ### 2. By clicking on "Clone" the post is cloned immediately. "New draft" leads to the edit screen. ###
-![By clicking on "Clone" the post is cloned immediately. "New draft" leads to the edit screen.](assets/screenshot-2.png)
+![By clicking on "Clone" the post is cloned immediately. "New draft" leads to the edit screen.](assets/screenshot-2.jpg)
 
 ### 3. The options page. ###
-![The options page.](assets/screenshot-3.png)
+![The options page.](assets/screenshot-3.jpg)
 
 ### 4. The template tag manually added to Twenty Ten theme. Click on the "Copy to a new draft" link and you're redirected to the edit screen for a new draft copy of your post. ###
-![The template tag manually added to Twenty Ten theme. Click on the "Copy to a new draft" link and you're redirected to the edit screen for a new draft copy of your post.](assets/screenshot-4.png)
+![The template tag manually added to Twenty Ten theme. Click on the "Copy to a new draft" link and you're redirected to the edit screen for a new draft copy of your post.](assets/screenshot-4.jpg)
 
 ### 5. The admin bar link.  ###
-![The admin bar link. ](assets/screenshot-5.png)
+![The admin bar link. ](assets/screenshot-5.jpg)
 
 ### 6. Bulk clone action. ###
-![Bulk clone action.](assets/screenshot-6.png)
+![Bulk clone action.](assets/screenshot-6.jpg)
 
 
 ## Upgrade Notice ##
