@@ -24,27 +24,27 @@ If you find this useful, [**please consider donating**](https://duplicate-post.l
 
 ### Automatic install from WordPress Dashboard
 
-1. Click on Plugins → Add New;
+1. Click on _Plugins_ → _Add New_;
 2. Search for "Duplicate Post" using the top right searchbox;
-3. Click on the "Install Now" button;
-4. Click on "Activate";
-5. Go to Settings → Duplicate Post and customize behaviour as needed.
+3. Click on the _Install Now_ button;
+4. Click on _Activate_;
+5. Go to _Settings_ → _Duplicate Post_ and customize behaviour as needed.
 
 ### Install using zipfile
 
 1. Download the archive from https://wordpress.org/plugins/duplicate-post/ (latest stable) or the latest snapshot build from the "build" directory;
 2. Unzip the archive on your computer;
 3. Upload the `duplicate-post` directory into the `/wp-content/plugins/` directory;
-4. Activate the plugin through the 'Plugins' page in WordPress Dashboard;
-5. Go to Settings → Duplicate Post and customize behaviour as needed.
+4. Activate the plugin through the _Plugins_ page in WordPress Dashboard;
+5. Go to _Settings_ → _Duplicate Post_ and customize behaviour as needed.
 
 ## Usage
 
-1. In 'Edit Posts'/'Edit Pages', you can click on 'Clone' link below the post/page title: this will immediately create a copy and return to the list.
-2. In 'Edit Posts'/'Edit Pages', you can select one or more items, then choose 'Clone' in the 'Bulk Actions' dropdown to copy them all at once.
-3. In 'Edit Posts'/'Edit Pages', you can click on 'New Draft' link below the post/page title.
-4. On the post edit screen, you can click on 'Copy to a new draft' above "Cancel"/"Move to trash" or in the admin bar. 
-5. While viewing a post as a logged in user, you can click on 'Copy to a new draft' in the admin bar.
+1. In _Edit Posts_/_Edit Pages_, you can click on _Clone_ link below the post/page title: this will immediately create a copy and return to the list.
+2. In _Edit Posts_/_Edit Pages_, you can select one or more items, then choose _Clone_ in the _Bulk Actions_ dropdown to copy them all at once.
+3. In _Edit Posts_/_Edit Pages_, you can click on _New Draft_ link below the post/page title.
+4. On the post edit screen, you can click on _Copy to a new draft_ above _Cancel_/_Move to trash_ or in the admin bar. 
+5. While editing a post or viewing it as a logged-in user, you can click on _Copy to a new draft_ in the admin bar.
 
 3, 4 and 5 will lead to the edit page for the new draft: change what you want, click on 'Publish' and you're done.
 
