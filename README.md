@@ -2,15 +2,15 @@
 
 ![Banner](assets/banner-772x250.png)
 
-![WordPress Plugin Version](https://img.shields.io/wordpress/plugin/v/duplicate-post.svg) ![WordPress Plugin: Tested WP Version](https://img.shields.io/wordpress/plugin/tested/duplicate-post.svg) ![WordPress Plugin Active Installs](https://img.shields.io/wordpress/plugin/installs/duplicate-post.svg) ![WordPress Plugin Downloads](https://img.shields.io/wordpress/plugin/dt/duplicate-post.svg) ![WordPress Plugin Rating](https://img.shields.io/wordpress/plugin/stars/duplicate-post.svg) ![GitHub](https://img.shields.io/github/license/enricobattocchi/duplicate-post.svg) [![Build Status](https://travis-ci.org/enricobattocchi/duplicate-post.svg?branch=master)](https://travis-ci.org/enricobattocchi/duplicate-post) [![RIPS CodeRisk](https://coderisk.com/wp/plugin/duplicate-post/badge "RIPS CodeRisk")](https://coderisk.com/wp/plugin/duplicate-post)
+[![WordPress Plugin Version](https://img.shields.io/wordpress/plugin/v/duplicate-post.svg)](https://wordpress.org/plugins/duplicate-post/) ![WordPress Plugin: Tested WP Version](https://img.shields.io/wordpress/plugin/tested/duplicate-post.svg) [![WordPress Plugin Active Installs](https://img.shields.io/wordpress/plugin/installs/duplicate-post.svg)](https://wordpress.org/plugins/duplicate-post/advanced/) [![WordPress Plugin Downloads](https://img.shields.io/wordpress/plugin/dt/duplicate-post.svg)](https://wordpress.org/plugins/duplicate-post/advanced/) [![WordPress Plugin Rating](https://img.shields.io/wordpress/plugin/stars/duplicate-post.svg)](https://wordpress.org/support/plugin/duplicate-post/reviews/) [![GitHub](https://img.shields.io/github/license/enricobattocchi/duplicate-post.svg)](https://github.com/enricobattocchi/duplicate-post/blob/master/LICENSE) [![Build Status](https://travis-ci.org/enricobattocchi/duplicate-post.svg?branch=master)](https://travis-ci.org/enricobattocchi/duplicate-post) [![RIPS CodeRisk](https://coderisk.com/wp/plugin/duplicate-post/badge "RIPS CodeRisk")](https://coderisk.com/wp/plugin/duplicate-post)
 
 > Duplicate Post plugin for WordPress https://duplicate-post.lopo.it/  
 
 This WordPress plugin allows users to clone posts of any type, or copy them to new drafts for further editing.
 
-This is the development repository: /src will be synced with the [SVN repository](https://wordpress.org/plugins/duplicate-post/) on WordPress.org only on version releases.
+This is the development repository: /src will be synced with the [SVN repository](https://plugins.svn.wordpress.org/duplicate-post/) on WordPress.org only on version releases.
 
-If you find this useful, [**please consider donating**](https://duplicate-post.lopo.it/) whatever sum you choose, **even just 10 cents**. Just a few cents from every user would help me develop the plugin and improve support.
+If you find this useful, [**please consider donating**](https://duplicate-post.lopo.it/donate/) whatever sum you choose, **even just 10 cents**. Just a few cents from every user would help me develop the plugin and improve support.
 
 - [Install](#install)
 - [Usage](#usage)
