@@ -32,7 +32,7 @@ If you find this useful, [**please consider donating**](https://duplicate-post.l
 
 ### Install using zipfile
 
-1. Download the archive from https://wordpress.org/plugins/duplicate-post/ (latest stable) or the latest snapshot build from the "build" directory;
+1. Download the archive from https://wordpress.org/plugins/duplicate-post/ (latest stable) or the latest snapshot ZIP from GitHub;
 2. Unzip the archive on your computer;
 3. Upload the `duplicate-post` directory into the `/wp-content/plugins/` directory;
 4. Activate the plugin through the _Plugins_ page in WordPress Dashboard;
