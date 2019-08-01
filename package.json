@@ -20,7 +20,6 @@
   "homepage": "https://github.com/enricobattocchi/duplicate-post#readme",
   "devDependencies": {
     "grunt": "^1.0.4",
-    "grunt-contrib-compress": "^1.5.0",
     "grunt-wp-readme-to-markdown": "^2.0.1"
   }
 }
