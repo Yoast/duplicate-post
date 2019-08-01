@@ -1,0 +1,14 @@
+/.* export-ignore
+assets export-ignore
+dist export-ignore
+CHANGELOG export-ignore
+composer.* export-ignore
+Gruntfile.js export-ignore
+LICENSE export-ignore
+package.json export-ignore
+package-lock.json export-ignore
+phpcs.xml export-ignore
+phpunit.* export-ignore
+README.md export-ignore
+README.wordpress.md export-ignore
+tests export-ignore
