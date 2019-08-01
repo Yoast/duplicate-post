@@ -38,8 +38,8 @@ script:
   # for example: `--standard=wpcs.xml`.
   # You can use any of the normal PHPCS command line arguments in the command:
   # https://github.com/squizlabs/PHP_CodeSniffer/wiki/Usage
-  - if [[ "$SNIFF" == "1" ]]; then $PHPCS_DIR/bin/phpcs -p ./*.php --standard=WordPress --runtime-set ignore_warnings_on_exit 1; fi
-  - if [[ "$SNIFF" == "1" ]]; then $PHPCS_DIR/bin/phpcs -p ./*.php --standard=WordPress-Core --runtime-set ignore_warnings_on_exit 1; fi
-  - if [[ "$SNIFF" == "1" ]]; then $PHPCS_DIR/bin/phpcs -p ./*.php --standard=WordPress-Docs --runtime-set ignore_warnings_on_exit 1; fi
-  - if [[ "$SNIFF" == "1" ]]; then $PHPCS_DIR/bin/phpcs -p ./*.php --standard=WordPress-Extra --runtime-set ignore_warnings_on_exit 1; fi
+  - if [[ "$SNIFF" == "1" ]]; then $PHPCS_DIR/bin/phpcs -p *.php compat/*.php --standard=WordPress --runtime-set ignore_warnings_on_exit 1; fi
+  - if [[ "$SNIFF" == "1" ]]; then $PHPCS_DIR/bin/phpcs -p *.php compat/*.php --standard=WordPress-Core --runtime-set ignore_warnings_on_exit 1; fi
+  - if [[ "$SNIFF" == "1" ]]; then $PHPCS_DIR/bin/phpcs -p *.php compat/*.php --standard=WordPress-Docs --runtime-set ignore_warnings_on_exit 1; fi
+  - if [[ "$SNIFF" == "1" ]]; then $PHPCS_DIR/bin/phpcs -p *.php compat/*.php --standard=WordPress-Extra --runtime-set ignore_warnings_on_exit 1; fi
   #- if [[ "$SNIFF" == "1" ]]; then $PHPCS_DIR/bin/phpcs -p . --standard=WordPress-VIP --runtime-set ignore_warnings_on_exit 1; fi
