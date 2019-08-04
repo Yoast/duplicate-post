@@ -8,9 +8,9 @@
 
 This WordPress plugin allows users to clone posts of any type, or copy them to new drafts for further editing.
 
-This is the development repository: it will be synced with the [SVN repository](https://plugins.svn.wordpress.org/duplicate-post/) on WordPress.org only before version releases.
+This is the development repository: pull requests are supposed to be based on the `develop` branch, with changes merged to `svntrunk` branch and then committed to the [SVN repository](https://plugins.svn.wordpress.org/duplicate-post/) on WordPress.org only before version releases.
 
-This document addresses the Git repository. For a readable version of the [readme.txt file](readme.txt) required by WordPress.org see [README.wordpress.md](README.wordpress.md).
+This document addresses the GitHub repository. For a readable version of the [readme.txt file](readme.txt) required by WordPress.org see [README.wordpress.md](README.wordpress.md).
 
 If you find the plugin useful, [**please consider donating**](https://duplicate-post.lopo.it/donate/) whatever sum you choose, **even just 10 cents**. Just a few cents from every user would help me develop the plugin and improve support.
 
