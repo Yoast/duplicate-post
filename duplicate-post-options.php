@@ -107,7 +107,7 @@ function duplicate_post_options() {
 		<?php esc_html_e( 'Donate whatever sum you choose, even just 10¢.', 'duplicate-post' ); ?>
 		<br /> <a href="https://duplicate-post.lopo.it/donate"><img
 				id="donate-button" style="margin: 0 auto;"
-				src="<?php echo esc_attr( plugins_url( 'donate.png', __FILE__ ) ); ?>"
+				src="<?php echo esc_url( plugins_url( 'donate.png', __FILE__ ) ); ?>"
 				alt="Donate" /></a> <br /> <a href="https://duplicate-post.lopo.it/"><?php esc_html_e( 'Documentation', 'duplicate-post' ); ?></a>
 			- <a
 				href="https://translate.wordpress.org/projects/wp-plugins/duplicate-post"><?php esc_html_e( 'Translate', 'duplicate-post' ); ?></a>

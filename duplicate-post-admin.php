@@ -316,7 +316,7 @@ function duplicate_post_add_duplicate_post_button( $post = null ) {
 			?>
 <div id="duplicate-action">
 	<a class="submitduplicate duplication"
-		href="<?php echo esc_attr( duplicate_post_get_clone_post_link( $post->id ) ); ?>"><?php esc_html_e( 'Copy to a new draft', 'duplicate-post' ); ?>
+		href="<?php echo esc_url( duplicate_post_get_clone_post_link( $post->id ) ); ?>"><?php esc_html_e( 'Copy to a new draft', 'duplicate-post' ); ?>
 	</a>
 </div>
 			<?php
