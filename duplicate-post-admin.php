@@ -408,6 +408,7 @@ function duplicate_post_save_as_new_post( $status = '' ) {
 					$sendback
 				)
 			);
+			exit();
 		} else {
 			// Redirect to the edit screen for the new draft post.
 			wp_safe_redirect(
@@ -419,8 +420,8 @@ function duplicate_post_save_as_new_post( $status = '' ) {
 					admin_url( 'post.php?action=edit&post=' . $new_id . ( isset( $_GET['classic-editor'] ) ? '&classic-editor' : '' ) )
 				)
 			);
+			exit();
 		}
-		exit();
 	} else {
 		wp_die(
 			esc_html(
