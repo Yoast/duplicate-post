@@ -344,7 +344,7 @@ img#donate-button {
 					<th scope="row"><?php esc_html_e( 'Title prefix', 'duplicate-post' ); ?>
 					</th>
 					<td><input type="text" name="duplicate_post_title_prefix"
-						value="<?php echo esc_attr( get_option( 'duplicate_post_title_prefix' ) ); ?>" />
+						value="<?php form_option( 'duplicate_post_title_prefix' ); ?>" />
 					</td>
 					<td><span class="description"><?php esc_html_e( 'Prefix to be added before the title, e.g. "Copy of" (blank for no prefix)', 'duplicate-post' ); ?>
 					</span></td>
@@ -353,7 +353,7 @@ img#donate-button {
 					<th scope="row"><?php esc_html_e( 'Title suffix', 'duplicate-post' ); ?>
 					</th>
 					<td><input type="text" name="duplicate_post_title_suffix"
-						value="<?php echo esc_attr( get_option( 'duplicate_post_title_suffix' ) ); ?>" />
+						value="<?php form_option( 'duplicate_post_title_suffix' ); ?>" />
 					</td>
 					<td><span class="description"><?php esc_html_e( 'Suffix to be added after the title, e.g. "(dup)" (blank for no suffix)', 'duplicate-post' ); ?>
 					</span></td>
@@ -362,7 +362,7 @@ img#donate-button {
 					<th scope="row"><?php esc_html_e( 'Increase menu order by', 'duplicate-post' ); ?>
 					</th>
 					<td><input type="number" min="0" step="1" name="duplicate_post_increase_menu_order_by"
-						value="<?php echo esc_attr( get_option( 'duplicate_post_increase_menu_order_by' ) ); ?>" />
+						value="<?php form_option( 'duplicate_post_increase_menu_order_by' ); ?>" />
 					</td>
 					<td><span class="description"><?php esc_html_e( 'Add this number to the original menu order (blank or zero to retain the value)', 'duplicate-post' ); ?>
 					</span></td>
@@ -372,7 +372,7 @@ img#donate-button {
 					</th>
 					<td id="textfield"><input type="text"
 						name="duplicate_post_blacklist"
-						value="<?php echo esc_attr( get_option( 'duplicate_post_blacklist' ) ); ?>" /></td>
+						value="<?php form_option( 'duplicate_post_blacklist' ); ?>" /></td>
 					<td><span class="description"><?php esc_html_e( 'Comma-separated list of meta fields that must not be copied', 'duplicate-post' ); ?><br />
 							<small><?php esc_html_e( 'You can use * to match zero or more alphanumeric characters or underscores: e.g. field*', 'duplicate-post' ); ?>
 						</small> </span></td>
