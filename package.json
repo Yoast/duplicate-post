@@ -5,7 +5,7 @@
   "main": "duplicate-post.php",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/enricobattocchi/duplicate-post.git"
+    "url": "https://github.com/enricobattocchi/duplicate-post.git"
   },
   "keywords": [
     "duplicate",
