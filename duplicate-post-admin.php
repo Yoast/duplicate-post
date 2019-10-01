@@ -316,7 +316,7 @@ function duplicate_post_add_duplicate_post_button( $post = null ) {
 			?>
 <div id="duplicate-action">
 	<a class="submitduplicate duplication"
-		href="<?php echo esc_attr( duplicate_post_get_clone_post_link( $post->id ) ); ?>"><?php esc_html_e( 'Copy to a new draft', 'duplicate-post' ); ?>
+		href="<?php echo esc_url( duplicate_post_get_clone_post_link( $post->id ) ); ?>"><?php esc_html_e( 'Copy to a new draft', 'duplicate-post' ); ?>
 	</a>
 </div>
 			<?php
@@ -408,6 +408,7 @@ function duplicate_post_save_as_new_post( $status = '' ) {
 					$sendback
 				)
 			);
+			exit();
 		} else {
 			// Redirect to the edit screen for the new draft post.
 			wp_safe_redirect(
@@ -419,8 +420,8 @@ function duplicate_post_save_as_new_post( $status = '' ) {
 					admin_url( 'post.php?action=edit&post=' . $new_id . ( isset( $_GET['classic-editor'] ) ? '&classic-editor' : '' ) )
 				)
 			);
+			exit();
 		}
-		exit();
 	} else {
 		wp_die(
 			esc_html(
