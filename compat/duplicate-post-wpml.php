@@ -54,13 +54,15 @@ function duplicate_post_wpml_copy_translations( $post_id, $post, $status = '' ) 
 						continue;
 					}
 					$new_post_id = duplicate_post_create_duplicate( $translation, $status );
-					$sitepress->set_element_language_details(
-						$new_post_id,
-						'post_' . $translation->post_type,
-						$new_trid,
-						$code,
-						$current_language
-					);
+					if ( ! is_wp_error( $new_post_id ) ) {
+						$sitepress->set_element_language_details(
+							$new_post_id,
+							'post_' . $translation->post_type,
+							$new_trid,
+							$code,
+							$current_language
+						);
+					}
 				}
 			}
 		}
