@@ -22,7 +22,7 @@ matrix:
       env: SNIFF=1
 
 before_install:
-  - if [[ "$SNIFF" == "1" ]]; then composer install
+  - if [[ "$SNIFF" == "1" ]]; then composer install; fi
 
 script:
   - find -L . compat/ -maxdepth 1 -name '*.php' -print0 | xargs -0 -n 1 -P 4 php -l
