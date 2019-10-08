@@ -36,6 +36,7 @@
         <properties>
             <property name="prefixes" type="array">
                 <element value="duplicate_post"/>
+                <element value="dp_"/>
             </property>
         </properties>
     </rule>
