@@ -60,7 +60,7 @@ add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'duplicate_pos
 function duplicate_post_plugin_actions( $actions, $plugin_file, $plugin_data, $context ) {
 	array_unshift(
 		$actions,
-		'<a href="' . menu_page_url( 'duplicatepost', false ) . '">' . esc_html__( 'Settings' ) . '</a>'
+		'<a href="' . menu_page_url( 'duplicatepost', false ) . '">' . esc_html__( 'Settings', 'default' ) . '</a>'
 	);
 	return $actions;
 }
