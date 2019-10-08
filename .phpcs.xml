@@ -16,6 +16,10 @@
     <rule ref="WordPress">
     </rule>
 
+    <!-- Include the WordPress-VIP-Go standard. -->
+    <rule ref="WordPress-VIP-Go">
+    </rule>
+
     <config name="testVersion" value="5.6-"/>
     <rule ref="PHPCompatibilityWP">
         <include-pattern>*\.php$</include-pattern>

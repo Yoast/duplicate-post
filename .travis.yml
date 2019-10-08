@@ -22,30 +22,9 @@ matrix:
       env: SNIFF=1
 
 before_install:
-  - if [[ "$SNIFF" == "1" ]]; then export PHPCS_DIR=/tmp/phpcs; fi
-  - if [[ "$SNIFF" == "1" ]]; then export SNIFFS_DIR=/tmp/wpsniffs; fi
-  - if [[ "$SNIFF" == "1" ]]; then export VIPSNIFFS_DIR=/tmp/vipsniffs; fi
-  # Install PHP_CodeSniffer.
-  - if [[ "$SNIFF" == "1" ]]; then git clone -b master --depth 1 https://github.com/squizlabs/PHP_CodeSniffer.git $PHPCS_DIR; fi
-  # Install WordPress Coding Standards.
-  - if [[ "$SNIFF" == "1" ]]; then git clone -b master --depth 1 https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards.git $SNIFFS_DIR; fi
-  # Install WordPress VIP Coding Standards.
-  - if [[ "$SNIFF" == "1" ]]; then git clone -b master --depth 1 https://github.com/Automattic/VIP-Coding-Standards.git $VIPSNIFFS_DIR; fi
-  # Set install path for WordPress Coding Standards.
-  - if [[ "$SNIFF" == "1" ]]; then $PHPCS_DIR/bin/phpcs --config-set installed_paths $SNIFFS_DIR,$VIPSNIFFS_DIR; fi
-  # After CodeSniffer install you should refresh your path.
-  - if [[ "$SNIFF" == "1" ]]; then phpenv rehash; fi
+  - if [[ "$SNIFF" == "1" ]]; then composer install
 
 script:
-  - find -L . -name '*.php' -print0 | xargs -0 -n 1 -P 4 php -l
-  # Run against WordPress Coding Standards.
-  # If you use a custom ruleset, change `--standard=WordPress` to point to your ruleset file,
-  # for example: `--standard=wpcs.xml`.
-  # You can use any of the normal PHPCS command line arguments in the command:
-  # https://github.com/squizlabs/PHP_CodeSniffer/wiki/Usage
-  - if [[ "$SNIFF" == "1" ]]; then $PHPCS_DIR/bin/phpcs -p *.php compat/*.php --standard=WordPress --runtime-set ignore_warnings_on_exit 1; fi
-  - if [[ "$SNIFF" == "1" ]]; then $PHPCS_DIR/bin/phpcs -p *.php compat/*.php --standard=WordPress-Core --runtime-set ignore_warnings_on_exit 1; fi
-  - if [[ "$SNIFF" == "1" ]]; then $PHPCS_DIR/bin/phpcs -p *.php compat/*.php --standard=WordPress-Docs --runtime-set ignore_warnings_on_exit 1; fi
-  - if [[ "$SNIFF" == "1" ]]; then $PHPCS_DIR/bin/phpcs -p *.php compat/*.php --standard=WordPress-Extra --runtime-set ignore_warnings_on_exit 1; fi
-  - if [[ "$SNIFF" == "1" ]]; then $PHPCS_DIR/bin/phpcs -p *.php compat/*.php --standard=WordPress-VIP-Go --runtime-set ignore_warnings_on_exit 1; fi
-  #- if [[ "$SNIFF" == "1" ]]; then $PHPCS_DIR/bin/phpcs -p . --standard=WordPress-VIP --runtime-set ignore_warnings_on_exit 1; fi
+  - find -L . compat/ -maxdepth 1 -name '*.php' -print0 | xargs -0 -n 1 -P 4 php -l
+  - if [[ "$SNIFF" == "1" ]]; then vendor/bin/phpcs -p *.php compat/*.php --standard=WordPress --runtime-set ignore_warnings_on_exit 1; fi
+  - if [[ "$SNIFF" == "1" ]]; then vendor/bin/phpcs -p *.php compat/*.php --standard=WordPress-VIP-Go --runtime-set ignore_warnings_on_exit 1; fi

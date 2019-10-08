@@ -3,6 +3,7 @@
         "dealerdirect/phpcodesniffer-composer-installer": "^0.5.0",
         "wp-coding-standards/wpcs": "^2.1",
         "squizlabs/php_codesniffer": "^3.5",
-        "phpcompatibility/phpcompatibility-wp": "*"
+        "phpcompatibility/phpcompatibility-wp": "*",
+        "automattic/vipwpcs": "^2.0"
     }
 }
