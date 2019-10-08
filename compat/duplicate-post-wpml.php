@@ -80,8 +80,8 @@ function duplicate_wpml_string_packages() { // phpcs:ignore WordPress.NamingConv
 
 	foreach ( $duplicated_posts as $original_post_id => $duplicate_post_id ) {
 
-		$original_string_packages = apply_filters( 'wpml_st_get_post_string_packages', false, $original_post_id );
-		$new_string_packages      = apply_filters( 'wpml_st_get_post_string_packages', false, $duplicate_post_id );
+		$original_string_packages = apply_filters( 'wpml_st_get_post_string_packages', false, $original_post_id ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals
+		$new_string_packages      = apply_filters( 'wpml_st_get_post_string_packages', false, $duplicate_post_id ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals
 		if ( is_array( $original_string_packages ) ) {
 			foreach ( $original_string_packages as $original_string_package ) {
 				$translated_original_strings = $original_string_package->get_translated_strings( array() );
