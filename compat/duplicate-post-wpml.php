@@ -20,10 +20,9 @@ function duplicate_post_wpml_init() {
 		add_action( 'shutdown', 'duplicate_wpml_string_packages', 11 );
 	}
 }
-// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals
-global $duplicated_posts;
-// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals
-$duplicated_posts = array();
+
+global $duplicated_posts;    // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals
+$duplicated_posts = array(); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals
 
 /**
  * Copy post translations.
@@ -67,8 +66,7 @@ function duplicate_post_wpml_copy_translations( $post_id, $post, $status = '' ) 
 				}
 			}
 		}
-		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals
-		$duplicated_posts[ $post->ID ] = $post_id;
+		$duplicated_posts[ $post->ID ] = $post_id; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals
 	}
 }
 
@@ -81,10 +79,8 @@ function duplicate_wpml_string_packages() { // phpcs:ignore WordPress.NamingConv
 	global $duplicated_posts;
 
 	foreach ( $duplicated_posts as $original_post_id => $duplicate_post_id ) {
-		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals
-		$original_string_packages = apply_filters( 'wpml_st_get_post_string_packages', false, $original_post_id );
-		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals
-		$new_string_packages = apply_filters( 'wpml_st_get_post_string_packages', false, $duplicate_post_id );
+		$original_string_packages = apply_filters( 'wpml_st_get_post_string_packages', false, $original_post_id ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals
+		$new_string_packages      = apply_filters( 'wpml_st_get_post_string_packages', false, $duplicate_post_id ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals
 		if ( is_array( $original_string_packages ) ) {
 			foreach ( $original_string_packages as $original_string_package ) {
 				$translated_original_strings = $original_string_package->get_translated_strings( array() );
@@ -99,8 +95,7 @@ function duplicate_wpml_string_packages() { // phpcs:ignore WordPress.NamingConv
 							foreach ( $translated_original_strings[ $new_string->name ] as $language => $translated_string ) {
 
 								do_action(
-									// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals
-									'wpml_add_string_translation',
+									'wpml_add_string_translation', // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals
 									$new_string->id,
 									$language,
 									$translated_string['value'],
