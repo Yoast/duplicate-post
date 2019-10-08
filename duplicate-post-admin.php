@@ -231,7 +231,7 @@ function duplicate_post_show_update_notice() {
 
 	if ( version_compare( $wp_version, '4.2' ) < 0 ) {
 		$message .= ' | <a id="duplicate-post-dismiss-notice" href="javascript:duplicate_post_dismiss_notice();">' .
-			__( 'Dismiss this notice.' ) . '</a>';
+			__( 'Dismiss this notice.', 'default' ) . '</a>';
 	}
 	$allowed_tags = array(
 		'a'      => array(
@@ -772,7 +772,7 @@ function duplicate_post_create_duplicate( $post, $status = '', $parent_id = '' )
 
 		if ( '' === $title ) {
 			// empty title.
-			$title = __( 'Untitled' );
+			$title = __( 'Untitled', 'default' );
 		}
 		if ( 0 === intval( get_option( 'duplicate_post_copystatus' ) ) ) {
 			$new_post_status = 'draft';
