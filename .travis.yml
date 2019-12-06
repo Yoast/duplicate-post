@@ -6,6 +6,7 @@ php:
     - '7.1'
     - '7.2'
     - '7.3'
+    - '7.4'
 
 matrix:
   include:
@@ -18,7 +19,7 @@ matrix:
     - php: '5.5'
       dist: precise
     # Arbitrary PHP version to run the sniffs against.
-    - php: '7.2'
+    - php: '7.3'
       env: SNIFF=1
 
 before_install:
