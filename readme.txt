@@ -3,9 +3,9 @@ Contributors: 		lopo
 Donate link: 		https://duplicate-post.lopo.it/
 Tags: 				duplicate post, copy, clone
 Requires at least: 	3.6
-Tested up to: 		5.2
+Tested up to: 		5.3
 Stable tag: 		3.2.3
-Requires PHP:		5.3
+Requires PHP:		5.2.4
 License: 			GPLv2 or later
 License URI: 		http://www.gnu.org/licenses/gpl-2.0.html
 
