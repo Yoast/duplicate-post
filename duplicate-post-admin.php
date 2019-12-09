@@ -298,7 +298,7 @@ function duplicate_post_quick_edit_remove_original( $column_name, $post_type ) {
 			</div>
 		</fieldset>',
 		__(
-			'Reset reference to original item: <span class="duplicate_post_original_item_title_span"></span>',
+			'Delete reference to original item: <span class="duplicate_post_original_item_title_span"></span>',
 			'duplicate-post'
 			)
 	);
@@ -353,7 +353,7 @@ function duplicate_post_custom_box_html( $post ) {
 	?>
 	<label>
 		<input type="checkbox" name="duplicate_post_remove_original" value="duplicate_post_remove_original">
-		<?php printf( __( 'Reset reference to original item: <span class="duplicate_post_original_item_title_span">%s</span>', 'duplicate-post' ), duplicate_post_get_edit_or_view_link( $original_item ) ); ?>
+		<?php printf( __( 'Delete reference to original item: <span class="duplicate_post_original_item_title_span">%s</span>', 'duplicate-post' ), duplicate_post_get_edit_or_view_link( $original_item ) ); ?>
 	</label>
 	<?php
 	} else { ?>

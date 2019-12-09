@@ -601,13 +601,13 @@ img#donate-button{
 							<input type="checkbox" name="duplicate_post_show_original_meta_box"
 							   value="1" <?php  if(get_option('duplicate_post_show_original_meta_box') == 1) echo 'checked="checked"'; ?>/>
 							<?php esc_html_e("In a metabox in the Edit screen [Classic editor]", 'duplicate-post'); ?>
-							<span class="description">(<?php esc_html_e("you'll also be able to reset the reference to the original item with a checkbox", 'duplicate-post');  ?>)</span>
+							<span class="description">(<?php esc_html_e("you'll also be able to delete the reference to the original item with a checkbox", 'duplicate-post');  ?>)</span>
 						</label>
 						<label>
 							<input type="checkbox" name="duplicate_post_show_original_column"
 							   value="1" <?php  if(get_option('duplicate_post_show_original_column') == 1) echo 'checked="checked"'; ?>/>
 							<?php esc_html_e("In a column in the Post list", 'duplicate-post'); ?>
-							<span class="description">(<?php esc_html_e("you'll also be able to reset the reference to the original item with a checkbox in Quick Edit", 'duplicate-post');  ?>)</span>
+							<span class="description">(<?php esc_html_e("you'll also be able to delete the reference to the original item with a checkbox in Quick Edit", 'duplicate-post');  ?>)</span>
 						</label>
 						<label>
 							<input type="checkbox" name="duplicate_post_show_original_in_post_states"
