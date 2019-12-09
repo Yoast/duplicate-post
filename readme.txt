@@ -79,8 +79,11 @@ If Duplicate Post is still in English, or if there are some untraslated strings,
 
 == Upgrade Notice ==
 
+= 3.2.4 =
+Options to show original post + accessibility improvements
+
 = 3.2.3 =
-Fixes some bugs and incompatibilities with CF7, WPML, and custom post types with custom capabilities 
+Fixes some bugs and incompatibilities with CF7, WPML, and custom post types with custom capabilities
 
 = 3.2.2 =
 Adds compatibility with Gutenberg UI and fixes a problem with slugs on new installs
@@ -149,6 +152,11 @@ Some users have experienced a fatal error when upgrading to v1.1: this may fix i
 New features and customization, WP 3.0 compatibility: you should upgrade if you want to copy Custom Posts with Custom Taxonomies.
 
 == Changelog ==
+
+= 3.2.4 (2019-12-10) =
+* Option to show original post in post list (in a column or alongside post states) or in a metabox
+* Accessibility improvements
+* Small other fixes
 
 = 3.2.3 (2019-07-10) =
 * Fixes incompatibility with previous versions of CF7
