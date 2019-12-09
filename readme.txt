@@ -154,7 +154,7 @@ New features and customization, WP 3.0 compatibility: you should upgrade if you 
 == Changelog ==
 
 = 3.2.4 (2019-12-10) =
-* Option to show original post in post list (in a column or alongside post states) or in a metabox
+* Options to show original item in post list (in a column or alongside post states) or in a metabox in the edit screen
 * Accessibility improvements
 * Small other fixes
 
