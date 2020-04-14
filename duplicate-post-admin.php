@@ -153,7 +153,14 @@ function duplicate_post_plugin_upgrade() {
 	add_option( 'duplicate_post_copymenuorder', '1' );
 	add_option( 'duplicate_post_taxonomies_blacklist', array() );
 	add_option( 'duplicate_post_blacklist', '' );
-	add_option( 'duplicate_post_types_enabled', array( 'post', 'page' ) );
+	/**
+	 * Filter to modify the default post types that are enabled to be copied.
+	 *
+	 * @param array $post_types List of default post types enabled to be copied
+	 *
+	 * @return array Modified list of default post types enabled to be copied
+	 */
+	add_option( 'duplicate_post_types_enabled', apply_filters( 'duplicate_post_default_post_types_enabled', array( 'post', 'page' ) ) );
 	add_option( 'duplicate_post_show_row', '1' );
 	add_option( 'duplicate_post_show_adminbar', '1' );
 	add_option( 'duplicate_post_show_submitbox', '1' );
@@ -935,7 +942,7 @@ function duplicate_post_add_bulk_filters_for_enabled_post_types() {
 	if ( 1 !== intval( get_option( 'duplicate_post_show_bulkactions' ) ) ) {
 		return;
 	}
-	$duplicate_post_types_enabled = get_option( 'duplicate_post_types_enabled', array( 'post', 'page' ) );
+	$duplicate_post_types_enabled = duplicate_post_post_types_enabled();
 	if ( ! is_array( $duplicate_post_types_enabled ) ) {
 		$duplicate_post_types_enabled = array( $duplicate_post_types_enabled );
 	}

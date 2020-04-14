@@ -22,7 +22,7 @@ function duplicate_post_is_current_user_allowed_to_copy() {
  * @return boolean.
  */
 function duplicate_post_is_post_type_enabled( $post_type ) {
-	$duplicate_post_types_enabled = get_option( 'duplicate_post_types_enabled', array( 'post', 'page' ) );
+	$duplicate_post_types_enabled = duplicate_post_post_types_enabled();
 	if ( ! is_array( $duplicate_post_types_enabled ) ) {
 		$duplicate_post_types_enabled = array( $duplicate_post_types_enabled );
 	}
@@ -275,4 +275,19 @@ function duplicate_post_init() {
  */
 function duplicate_post_tax_obj_cmp( $a, $b ) {
 	return ( $a->public < $b->public );
+}
+
+/**
+ * Returns all post types that are enabled to be copied.
+ *
+ * @return array
+ */
+function duplicate_post_post_types_enabled() {
+	/** This filter is documented in duplicate-post-admin.php */
+	$default_post_types = apply_filters(
+		'duplicate_post_default_post_types_enabled',
+		array( 'post', 'page' )
+	);
+
+	return get_option( 'duplicate_post_types_enabled', $default_post_types );
 }
