@@ -43,7 +43,7 @@ function duplicate_post_load_plugin_textdomain() {
 }
 add_action( 'plugins_loaded', 'duplicate_post_load_plugin_textdomain' );
 
-add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'duplicate_post_plugin_actions', 10, 4 );
+add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'duplicate_post_plugin_actions', 10 );
 
 /**
  * Adds 'Settings' link to plugin entry in the Plugins list.
@@ -51,17 +51,20 @@ add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'duplicate_pos
  * @ignore
  * @see 'plugin_action_links_$plugin_file'
  *
- * @param array  $actions An array of plugin action links.
- * @param string $plugin_file Path to the plugin file relative to the plugins directory.
- * @param array  $plugin_data An array of plugin data.
- * @param string $context The plugin context.
+ * @param array $actions An array of plugin action links.
  * @return array
  */
-function duplicate_post_plugin_actions( $actions, $plugin_file, $plugin_data, $context ) {
-	array_unshift(
-		$actions,
-		'<a href="' . menu_page_url( 'duplicatepost', false ) . '">' . esc_html__( 'Settings', 'default' ) . '</a>'
+function duplicate_post_plugin_actions( $actions ) {
+	$settings_action = array(
+		'settings' => sprintf(
+			'<a href="%1$s" %2$s>%3$s</a>',
+			menu_page_url( 'duplicatepost', false ),
+			'aria-label="' . __( 'Settings for Duplicate Post', 'duplicate-post' ) . '"',
+			esc_html__( 'Settings', 'default' )
+		),
 	);
+
+	$actions = $settings_action + $actions;
 	return $actions;
 }
 
