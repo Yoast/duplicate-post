@@ -197,8 +197,7 @@ img#donate-button {
 
 			<table class="form-table" role="presentation">
 				<tr>
-					<th scope="row"><?php esc_html_e( 'Post/page elements to copy', 'duplicate-post' ); ?>
-					</th>
+					<th scope="row"><?php esc_html_e( 'Post/page elements to copy', 'duplicate-post' ); ?></th>
 					<td>
 						<fieldset>
 							<legend class="screen-reader-text"><?php esc_html_e( 'Post/page elements to copy', 'duplicate-post' ); ?></legend>
@@ -341,7 +340,7 @@ img#donate-button {
 								?>
 							/>
 							<label for="duplicate-post-copymenuorder"><?php esc_html_e( 'Menu order', 'default' ); ?></label>
-						<fieldset>
+						</fieldset>
 					</td>
 				</tr>
 				<tr>
@@ -429,9 +428,7 @@ img#donate-button {
 									}
 									?>
 								/>
-								<label
-									for="duplicate-post-<?php echo esc_attr( $taxonomy->name ); ?>"
-								>
+								<label for="duplicate-post-<?php echo esc_attr( $taxonomy->name ); ?>">
 									<?php echo esc_html( $taxonomy->labels->name . ' [' . $taxonomy->name . ']' ); ?>
 								</label><br />
 							</div>
@@ -451,122 +448,165 @@ img#donate-button {
 					<th scope="row"><?php esc_html_e( 'Roles allowed to copy', 'duplicate-post' ); ?>
 					</th>
 					<td>
-					<?php
+						<fieldset>
+							<legend class="screen-reader-text"><?php esc_html_e( 'Roles allowed to copy', 'duplicate-post' ); ?></legend>
+							<?php
 
-					$roles             = $wp_roles->get_names();
-					$post_types        = get_post_types( array( 'show_ui' => true ), 'objects' );
-					$edit_capabilities = array( 'edit_posts' => true );
-					foreach ( $post_types as $post_type ) {
-						$edit_capabilities[ $post_type->cap->edit_posts ] = true;
-					}
-					foreach ( $roles as $name => $display_name ) :
-						$role = get_role( $name );
-						if ( count( array_intersect_key( $role->capabilities, $edit_capabilities ) ) > 0 ) :
-							?>
-			<label> <input type="checkbox"	name="duplicate_post_roles[]" value="<?php echo esc_attr( $name ); ?>"
-							<?php
-							if ( $role->has_cap( 'copy_posts' ) ) {
-								echo 'checked="checked"';}
-							?>
-/>
-							<?php echo esc_html( translate_user_role( $display_name ) ); ?>
-					</label>
-							<?php
-							endif;
+							$roles             = $wp_roles->get_names();
+							$post_types        = get_post_types( array( 'show_ui' => true ), 'objects' );
+							$edit_capabilities = array( 'edit_posts' => true );
+							foreach ( $post_types as $post_type ) {
+								$edit_capabilities[ $post_type->cap->edit_posts ] = true;
+							}
+							foreach ( $roles as $name => $display_name ) :
+								$role = get_role( $name );
+								if ( count( array_intersect_key( $role->capabilities, $edit_capabilities ) ) > 0 ) :
+									?>
+							<input type="checkbox"
+								name="duplicate_post_roles[]"
+								id="duplicate-post-<?php echo esc_attr( $name ); ?>"
+								value="<?php echo esc_attr( $name ); ?>"
+									<?php
+									if ( $role->has_cap( 'copy_posts' ) ) {
+										echo 'checked="checked"';}
+									?>
+							/>
+							<label for="duplicate-post-<?php echo esc_attr( $name ); ?>"><?php echo esc_html( translate_user_role( $display_name ) ); ?></label><br />
+									<?php
+								endif;
 							endforeach;
-					?>
-					<span class="description"><?php esc_html_e( 'Warning: users will be able to copy all posts, even those of other users', 'duplicate-post' ); ?><br />
-							<?php esc_html_e( 'Passwords and contents of password-protected posts may become visible to undesired users and visitors', 'duplicate-post' ); ?>
-					</span></td>
+							?>
+							<p>
+								<?php esc_html_e( 'Warning: users will be able to copy all posts, even those of other users.', 'duplicate-post' ); ?><br />
+								<?php esc_html_e( 'Passwords and contents of password-protected posts may become visible to undesired users and visitors.', 'duplicate-post' ); ?>
+							</p>
+						</fieldset>
+					</td>
 				</tr>
 				<?php } ?>
 				<tr>
 					<th scope="row"><?php esc_html_e( 'Enable for these post types', 'duplicate-post' ); ?>
 					</th>
 					<td>
-					<?php
-					$post_types = get_post_types( array( 'show_ui' => true ), 'objects' );
-					foreach ( $post_types as $post_type_object ) :
-						if ( 'attachment' === $post_type_object->name ) {
-							continue;
-						}
-						?>
-		<label> <input type="checkbox"
-							name="duplicate_post_types_enabled[]"
-							value="<?php echo esc_attr( $post_type_object->name ); ?>"
+						<fieldset>
+							<legend class="screen-reader-text"><?php esc_html_e( 'Enable for these post types', 'duplicate-post' ); ?></legend>
 							<?php
-							if ( duplicate_post_is_post_type_enabled( $post_type_object->name ) ) {
-								echo 'checked="checked"';}
-							?>
-/>
-							<?php echo esc_html( $post_type_object->labels->name ); ?>
-					</label> <?php endforeach; ?> <span class="description"><?php esc_html_e( 'Select the post types you want the plugin to be enabled', 'duplicate-post' ); ?>
-							<br /> <?php esc_html_e( 'Whether the links are displayed for custom post types registered by themes or plugins depends on their use of standard WordPress UI elements', 'duplicate-post' ); ?>
-					</span></td>
+							$post_types = get_post_types( array( 'show_ui' => true ), 'objects' );
+							foreach ( $post_types as $post_type_object ) :
+								if ( 'attachment' === $post_type_object->name ) {
+									continue;
+								}
+								?>
+							<input type="checkbox"
+								name="duplicate_post_types_enabled[]"
+								id="duplicate-post-<?php echo esc_attr( $post_type_object->name ); ?>"
+								value="<?php echo esc_attr( $post_type_object->name ); ?>"
+								<?php
+								if ( duplicate_post_is_post_type_enabled( $post_type_object->name ) ) {
+									echo 'checked="checked"';}
+								?>
+							/>
+							<label for="duplicate-post-<?php echo esc_attr( $post_type_object->name ); ?>"><?php echo esc_html( $post_type_object->labels->name ); ?></label><br />
+							<?php endforeach; ?>
+							<p>
+								<?php esc_html_e( 'Select the post types you want the plugin to be enabled for.', 'duplicate-post' ); ?><br />
+								<?php esc_html_e( 'Whether the links are displayed for custom post types registered by themes or plugins depends on their use of standard WordPress UI elements.', 'duplicate-post' ); ?>
+							</p>
+						</fieldset>
+					</td>
 				</tr>
 			</table>
 		</section>
 		<section>
 			<table class="form-table" role="presentation">
 				<tr>
-					<th scope="row"><?php esc_html_e( 'Show links in', 'duplicate-post' ); ?>
-					</th>
-					<td><label><input type="checkbox" name="duplicate_post_show_row"
-							value="1"
-							<?php
-							if ( 1 === intval( get_option( 'duplicate_post_show_row' ) ) ) {
-								echo 'checked="checked"';}
-							?>
-/>
-							<?php esc_html_e( 'Post list', 'duplicate-post' ); ?> </label> <label><input
-							type="checkbox" name="duplicate_post_show_submitbox" value="1"
-							<?php
-							if ( 1 === intval( get_option( 'duplicate_post_show_submitbox' ) ) ) {
-								echo 'checked="checked"';}
-							?>
-/>
-							<?php esc_html_e( 'Edit screen', 'duplicate-post' ); ?> </label> <label><input
-							type="checkbox" name="duplicate_post_show_adminbar" value="1"
-							<?php
-							if ( 1 === intval( get_option( 'duplicate_post_show_adminbar' ) ) ) {
-								echo 'checked="checked"';}
-							?>
-/>
-							<?php esc_html_e( 'Admin bar', 'duplicate-post' ); ?>
-							<small>(<?php esc_html_e( 'now works on Edit screen too - check this option to use with Gutenberg enabled', 'duplicate-post' ); ?>)</small></label>
+					<th scope="row"><?php esc_html_e( 'Show links in', 'duplicate-post' ); ?></th>
+					<td>
+						<fieldset>
+							<legend class="screen-reader-text"><?php esc_html_e( 'Show links in', 'duplicate-post' ); ?></legend>
+							<input
+								type="checkbox"
+								name="duplicate_post_show_row"
+								id="duplicate-post-show-row"
+								value="1"
+								<?php
+								if ( 1 === intval( get_option( 'duplicate_post_show_row' ) ) ) {
+									echo 'checked="checked"';}
+								?>
+							/>
+							<label for="duplicate-post-show-row"><?php esc_html_e( 'Post list', 'duplicate-post' ); ?></label><br />
+							<input
+								type="checkbox"
+								name="duplicate_post_show_submitbox"
+								id="duplicate-post-show-submitbox"
+								value="1"
+								<?php
+								if ( 1 === intval( get_option( 'duplicate_post_show_submitbox' ) ) ) {
+									echo 'checked="checked"';}
+								?>
+							/>
+							<label for="duplicate-post-show-submitbox"><?php esc_html_e( 'Edit screen', 'duplicate-post' ); ?></label><br />
+							<input
+								type="checkbox"
+								name="duplicate_post_show_adminbar"
+								id="duplicate-post-show-adminbar"
+								aria-describedby="duplicate-post-show-adminbar-description"
+								value="1"
+								<?php
+								if ( 1 === intval( get_option( 'duplicate_post_show_adminbar' ) ) ) {
+									echo 'checked="checked"';}
+								?>
+							/>
+							<label for="duplicate-post-show-adminbar"><?php esc_html_e( 'Admin bar', 'duplicate-post' ); ?></label>
+							<span id="duplicate-post-show-adminbar-description">(<?php esc_html_e( 'now works on Edit screen too - check this option to use with Gutenberg enabled', 'duplicate-post' ); ?>)</span><br />
 							<?php
 							if ( version_compare( $wp_version, '4.7' ) >= 0 ) {
 								?>
-													<label><input type="checkbox"
-													name="duplicate_post_show_bulkactions" value="1"
-													<?php
-													if ( 1 === intval( get_option( 'duplicate_post_show_bulkactions' ) ) ) {
-														echo 'checked="checked"';}
-													?>
-/>
-								<?php esc_html_e( 'Bulk Actions', 'default' ); ?> </label>
+								<input
+									type="checkbox"
+									name="duplicate_post_show_bulkactions"
+									id="duplicate-post-show-bulkactions"
+									value="1"
+									<?php
+									if ( 1 === intval( get_option( 'duplicate_post_show_bulkactions' ) ) ) {
+										echo 'checked="checked"';}
+									?>
+								/>
+								<label for="duplicate-post-show-bulkactions"><?php esc_html_e( 'Bulk Actions', 'default' ); ?></label>
 							<?php } ?>
+						</fieldset>
+						<p>
+							<?php esc_html_e( 'Whether the links are displayed for custom post types registered by themes or plugins depends on their use of standard WordPress UI elements.', 'duplicate-post' ); ?>
+							<br />
+							<?php
+							printf(
+								/* translators: 1: Code start tag, 2: Code closing tag, 3: Link start tag to the template tag documentation, 4: Link closing tag. */
+								esc_html__( 'You can also use the template tag %1$sduplicate_post_clone_post_link( $link, $before, $after, $id )%2$s. %3$sMore info on the template tag%4$s.', 'duplicate-post' ),
+								'<code>',
+								'</code>',
+								'<a href="' . esc_url( 'https://duplicate-post.lopo.it/docs/developers-guide/functions-template-tags/duplicate_post_clone_post_link/' ) . '">',
+								'</a>'
+							);
+							?>
+						</p>
 					</td>
 				</tr>
 				<tr>
-					<td><span class="description"><?php esc_html_e( 'Whether the links are displayed for custom post types registered by themes or plugins depends on their use of standard WordPress UI elements', 'duplicate-post' ); ?>
-							<br />
-							<?php
-							/* translators: %s: URL of the template tag documentation */
-							printf( esc_html__( 'You can also use the template tag duplicate_post_clone_post_link( $link, $before, $after, $id ). More info <a href="%s">here</a>', 'duplicate-post' ), 'https://duplicate-post.lopo.it/docs/developers-guide/functions-template-tags/duplicate_post_clone_post_link/' );
-							?>
-					</span></td>
-				</tr>
-				<tr>
-					<th scope="row"><?php esc_html_e( 'Show update notice', 'duplicate-post' ); ?>
+					<th scope="row"><?php esc_html_e( 'Update notice', 'duplicate-post' ); ?>
 					</th>
-					<td><input type="checkbox" name="duplicate_post_show_notice"
-						value="1"
-						<?php
-						if ( 1 === intval( get_option( 'duplicate_post_show_notice' ) ) ) {
-							echo 'checked="checked"';}
-						?>
-/>
+					<td>
+						<input
+							type="checkbox"
+							name="duplicate_post_show_notice"
+							id="duplicate-post-show-notice"
+							value="1"
+							<?php
+							if ( 1 === intval( get_option( 'duplicate_post_show_notice' ) ) ) {
+								echo 'checked="checked"';
+							}
+							?>
+						/>
+						<label for="duplicate-post-show-notice"><?php esc_html_e( 'Show update notice', 'duplicate-post' ); ?></label>
 					</td>
 				</tr>
 			</table>
