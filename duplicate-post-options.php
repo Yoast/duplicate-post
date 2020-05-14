@@ -121,7 +121,7 @@ function duplicate_post_options() {
 		jQuery('.nav-tab').removeClass('nav-tab-active');
 		jQuery(this).addClass('nav-tab-active');
 		jQuery('section').hide();
-		jQuery('section').eq(jQuery(this).index()).show();	
+		jQuery('section').eq(jQuery(this).index()).show();
 		return false;
 	});
 
@@ -136,37 +136,20 @@ function duplicate_post_options() {
 	</script>
 
 	<style>
-h2.nav-tab-wrapper {
+.nav-tab-wrapper {
 	margin: 22px 0 0 0;
 }
 
-h2 .nav-tab:focus {
-	color: #555;
-	box-shadow: none;
-}
-
-#sections {
-	padding: 22px;
-	background: #fff;
-	border: 1px solid #ccc;
-	border-top: 0;
-}
-
-section {
+.js section {
 	display: none;
 }
 
-section:first-of-type {
+.js section:first-of-type {
 	display: block;
 }
 
-.no-js h2.nav-tab-wrapper {
+.no-js .nav-tab-wrapper {
 	display: none;
-}
-
-.no-js #sections {
-	border-top: 1px solid #ccc;
-	margin-top: 22px;
 }
 
 .no-js section {
@@ -175,7 +158,7 @@ section:first-of-type {
 	padding-top: 22px;
 }
 
-.no-js section:first-child {
+.no-js section:first-of-type {
 	margin: 0;
 	padding: 0;
 	border: 0;
@@ -219,7 +202,7 @@ img#donate-button {
 					<th scope="row"><?php esc_html_e( 'Post/page elements to copy', 'duplicate-post' ); ?>
 					</th>
 					<td colspan="2"><label> <input type="checkbox"
-							name="duplicate_post_copytitle" value="1" 
+							name="duplicate_post_copytitle" value="1"
 							<?php
 							if ( 1 === intval( get_option( 'duplicate_post_copytitle' ) ) ) {
 								echo 'checked="checked"';}
@@ -227,7 +210,7 @@ img#donate-button {
 />
 							<?php esc_html_e( 'Title', 'default' ); ?>
 					</label> <label> <input type="checkbox"
-							name="duplicate_post_copydate" value="1" 
+							name="duplicate_post_copydate" value="1"
 							<?php
 							if ( 1 === intval( get_option( 'duplicate_post_copydate' ) ) ) {
 								echo 'checked="checked"';}
@@ -235,7 +218,7 @@ img#donate-button {
 />
 							<?php esc_html_e( 'Date', 'default' ); ?>
 					</label> <label> <input type="checkbox"
-							name="duplicate_post_copystatus" value="1" 
+							name="duplicate_post_copystatus" value="1"
 							<?php
 							if ( 1 === intval( get_option( 'duplicate_post_copystatus' ) ) ) {
 								echo 'checked="checked"';}
@@ -243,7 +226,7 @@ img#donate-button {
 />
 							<?php esc_html_e( 'Status', 'default' ); ?>
 					</label> <label> <input type="checkbox"
-							name="duplicate_post_copyslug" value="1" 
+							name="duplicate_post_copyslug" value="1"
 							<?php
 							if ( 1 === intval( get_option( 'duplicate_post_copyslug' ) ) ) {
 								echo 'checked="checked"';}
@@ -251,7 +234,7 @@ img#donate-button {
 />
 							<?php esc_html_e( 'Slug', 'default' ); ?>
 					</label> <label> <input type="checkbox"
-							name="duplicate_post_copyexcerpt" value="1" 
+							name="duplicate_post_copyexcerpt" value="1"
 							<?php
 							if ( 1 === intval( get_option( 'duplicate_post_copyexcerpt' ) ) ) {
 								echo 'checked="checked"';}
@@ -259,7 +242,7 @@ img#donate-button {
 />
 							<?php esc_html_e( 'Excerpt', 'default' ); ?>
 					</label> <label> <input type="checkbox"
-							name="duplicate_post_copycontent" value="1" 
+							name="duplicate_post_copycontent" value="1"
 							<?php
 							if ( 1 === intval( get_option( 'duplicate_post_copycontent' ) ) ) {
 								echo 'checked="checked"';}
@@ -267,7 +250,7 @@ img#donate-button {
 />
 							<?php esc_html_e( 'Content', 'default' ); ?>
 					</label> <label> <input type="checkbox"
-							name="duplicate_post_copythumbnail" value="1" 
+							name="duplicate_post_copythumbnail" value="1"
 							<?php
 							if ( 1 === intval( get_option( 'duplicate_post_copythumbnail' ) ) ) {
 								echo 'checked="checked"';}
@@ -275,7 +258,7 @@ img#donate-button {
 />
 							<?php esc_html_e( 'Featured Image', 'default' ); ?>
 					</label> <label> <input type="checkbox"
-							name="duplicate_post_copytemplate" value="1" 
+							name="duplicate_post_copytemplate" value="1"
 							<?php
 							if ( 1 === intval( get_option( 'duplicate_post_copytemplate' ) ) ) {
 								echo 'checked="checked"';}
@@ -283,7 +266,7 @@ img#donate-button {
 />
 							<?php esc_html_e( 'Template', 'default' ); ?>
 					</label> <label> <input type="checkbox"
-							name="duplicate_post_copyformat" value="1" 
+							name="duplicate_post_copyformat" value="1"
 							<?php
 							if ( 1 === intval( get_option( 'duplicate_post_copyformat' ) ) ) {
 								echo 'checked="checked"';}
@@ -291,7 +274,7 @@ img#donate-button {
 />
 							<?php echo esc_html_x( 'Format', 'post format', 'default' ); ?>
 					</label> <label> <input type="checkbox"
-							name="duplicate_post_copyauthor" value="1" 
+							name="duplicate_post_copyauthor" value="1"
 							<?php
 							if ( 1 === intval( get_option( 'duplicate_post_copyauthor' ) ) ) {
 								echo 'checked="checked"';}
@@ -299,7 +282,7 @@ img#donate-button {
 />
 							<?php esc_html_e( 'Author', 'default' ); ?>
 					</label> <label> <input type="checkbox"
-							name="duplicate_post_copypassword" value="1" 
+							name="duplicate_post_copypassword" value="1"
 							<?php
 							if ( 1 === intval( get_option( 'duplicate_post_copypassword' ) ) ) {
 								echo 'checked="checked"';}
@@ -307,7 +290,7 @@ img#donate-button {
 />
 							<?php esc_html_e( 'Password', 'default' ); ?>
 					</label> <label> <input type="checkbox"
-							name="duplicate_post_copyattachments" value="1" 
+							name="duplicate_post_copyattachments" value="1"
 							<?php
 							if ( 1 === intval( get_option( 'duplicate_post_copyattachments' ) ) ) {
 								echo 'checked="checked"';}
@@ -315,7 +298,7 @@ img#donate-button {
 />
 							<?php esc_html_e( 'Attachments', 'duplicate-post' ); ?> <small>(<?php esc_html_e( 'you probably want this unchecked, unless you have very special requirements', 'duplicate-post' ); ?>)</small>
 					</label> <label> <input type="checkbox"
-							name="duplicate_post_copychildren" value="1" 
+							name="duplicate_post_copychildren" value="1"
 							<?php
 							if ( 1 === intval( get_option( 'duplicate_post_copychildren' ) ) ) {
 								echo 'checked="checked"';}
@@ -323,7 +306,7 @@ img#donate-button {
 />
 							<?php esc_html_e( 'Children', 'duplicate-post' ); ?>
 					</label> <label> <input type="checkbox"
-							name="duplicate_post_copycomments" value="1" 
+							name="duplicate_post_copycomments" value="1"
 							<?php
 							if ( 1 === intval( get_option( 'duplicate_post_copycomments' ) ) ) {
 								echo 'checked="checked"';}
@@ -331,7 +314,7 @@ img#donate-button {
 />
 							<?php esc_html_e( 'Comments', 'default' ); ?> <small>(<?php esc_html_e( 'except pingbacks and trackbacks', 'duplicate-post' ); ?>)</small>
 					</label> <label> <input type="checkbox"
-							name="duplicate_post_copymenuorder" value="1" 
+							name="duplicate_post_copymenuorder" value="1"
 							<?php
 							if ( 1 === intval( get_option( 'duplicate_post_copymenuorder' ) ) ) {
 								echo 'checked="checked"';}
@@ -379,7 +362,7 @@ img#donate-button {
 				</tr>
 				<tr valign="top">
 					<th scope="row"><?php esc_html_e( 'Do not copy these taxonomies', 'duplicate-post' ); ?><br />
-						<a class="toggle_link" href="#"
+						<a class="toggle_link hide-if-no-js" href="#"
 						onclick="toggle_private_taxonomies();return false;"><?php esc_html_e( 'Show/hide private taxonomies', 'duplicate-post' ); ?>
 					</a></th>
 					<td colspan="2">
@@ -479,33 +462,33 @@ img#donate-button {
 					<th scope="row"><?php esc_html_e( 'Show links in', 'duplicate-post' ); ?>
 					</th>
 					<td><label><input type="checkbox" name="duplicate_post_show_row"
-							value="1" 
+							value="1"
 							<?php
 							if ( 1 === intval( get_option( 'duplicate_post_show_row' ) ) ) {
 								echo 'checked="checked"';}
 							?>
 />
 							<?php esc_html_e( 'Post list', 'duplicate-post' ); ?> </label> <label><input
-							type="checkbox" name="duplicate_post_show_submitbox" value="1" 
+							type="checkbox" name="duplicate_post_show_submitbox" value="1"
 							<?php
 							if ( 1 === intval( get_option( 'duplicate_post_show_submitbox' ) ) ) {
 								echo 'checked="checked"';}
 							?>
 />
 							<?php esc_html_e( 'Edit screen', 'duplicate-post' ); ?> </label> <label><input
-							type="checkbox" name="duplicate_post_show_adminbar" value="1" 
+							type="checkbox" name="duplicate_post_show_adminbar" value="1"
 							<?php
 							if ( 1 === intval( get_option( 'duplicate_post_show_adminbar' ) ) ) {
 								echo 'checked="checked"';}
 							?>
 />
-							<?php esc_html_e( 'Admin bar', 'duplicate-post' ); ?> 
-							<small>(<?php esc_html_e( 'now works on Edit screen too - check this option to use with Gutenberg enabled', 'duplicate-post' ); ?>)</small></label> 
+							<?php esc_html_e( 'Admin bar', 'duplicate-post' ); ?>
+							<small>(<?php esc_html_e( 'now works on Edit screen too - check this option to use with Gutenberg enabled', 'duplicate-post' ); ?>)</small></label>
 							<?php
 							if ( version_compare( $wp_version, '4.7' ) >= 0 ) {
 								?>
 													<label><input type="checkbox"
-													name="duplicate_post_show_bulkactions" value="1" 
+													name="duplicate_post_show_bulkactions" value="1"
 													<?php
 													if ( 1 === intval( get_option( 'duplicate_post_show_bulkactions' ) ) ) {
 														echo 'checked="checked"';}
@@ -528,7 +511,7 @@ img#donate-button {
 					<th scope="row"><?php esc_html_e( 'Show update notice', 'duplicate-post' ); ?>
 					</th>
 					<td><input type="checkbox" name="duplicate_post_show_notice"
-						value="1" 
+						value="1"
 						<?php
 						if ( 1 === intval( get_option( 'duplicate_post_show_notice' ) ) ) {
 							echo 'checked="checked"';}
