@@ -122,12 +122,17 @@ function duplicate_post_options() {
 		return false;
 	});
 
-	function toggle_private_taxonomies(){
-		jQuery('.taxonomy_private').toggle(300);
-	}
-
 	jQuery( function() {
 		jQuery( '.taxonomy_private' ).hide();
+
+		jQuery( '.toggle-private-taxonomies' )
+			.on( 'click', function() {
+				buttonElement = jQuery( this );
+				jQuery( '.taxonomy_private' ).toggle( 300, function() {
+					console.log( 'expanded done', buttonElement );
+					buttonElement.attr( 'aria-expanded', jQuery( this ).is( ":visible" ) );
+				} );
+			} );
 	} );
 
 	</script>
@@ -165,8 +170,8 @@ label.taxonomy_private {
 	font-style: italic;
 }
 
-a.toggle_link {
-	font-size: small;
+.toggle-private-taxonomies.button-link {
+	margin-top: 1em;
 }
 
 img#donate-button {
@@ -396,43 +401,46 @@ img#donate-button {
 				<tr>
 					<th scope="row">
 						<?php esc_html_e( 'Do not copy these taxonomies', 'duplicate-post' ); ?><br />
-						<a class="toggle_link hide-if-no-js" href="#"
-						onclick="toggle_private_taxonomies();return false;"><?php esc_html_e( 'Show/hide private taxonomies', 'duplicate-post' ); ?>
-					</a></th>
+					</th>
 					<td>
-					<?php
+						<fieldset>
+							<legend class="screen-reader-text"><?php esc_html_e( 'Do not copy these taxonomies', 'duplicate-post' ); ?></legend>
+							<?php
 
-					$taxonomies = get_taxonomies( array(), 'objects' );
-					usort( $taxonomies, 'duplicate_post_tax_obj_cmp' );
-					$taxonomies_blacklist = get_option( 'duplicate_post_taxonomies_blacklist' );
-					if ( '' === $taxonomies_blacklist ) {
-						$taxonomies_blacklist = array();
-					}
-					foreach ( $taxonomies as $taxonomy ) :
-						if ( 'post_format' === $taxonomy->name ) {
-							continue;
-						}
-						?>
-						<span class="taxonomy_<?php echo ( $taxonomy->public ) ? 'public' : 'private'; ?>">
-							<input type="checkbox"
-								name="duplicate_post_taxonomies_blacklist[]"
-								id="duplicate-post-<?php echo esc_attr( $taxonomy->name ); ?>"
-								value="<?php echo esc_attr( $taxonomy->name ); ?>"
-								<?php
-								if ( in_array( $taxonomy->name, $taxonomies_blacklist, true ) ) {
-									echo 'checked="checked"';
+							$taxonomies = get_taxonomies( array(), 'objects' );
+							usort( $taxonomies, 'duplicate_post_tax_obj_cmp' );
+							$taxonomies_blacklist = get_option( 'duplicate_post_taxonomies_blacklist' );
+							if ( '' === $taxonomies_blacklist ) {
+								$taxonomies_blacklist = array();
+							}
+							foreach ( $taxonomies as $taxonomy ) :
+								if ( 'post_format' === $taxonomy->name ) {
+									continue;
 								}
 								?>
-							/>
-							<label
-								for="duplicate-post-<?php echo esc_attr( $taxonomy->name ); ?>"
-							>
-								<?php echo esc_html( $taxonomy->labels->name . ' [' . $taxonomy->name . ']' ); ?>
-							</label>
-						</span><br />
-					<?php endforeach; ?>
-					<span class="description"><?php esc_html_e( "Select the taxonomies you don't want to be copied", 'duplicate-post' ); ?>
-					</span></td>
+							<div class="taxonomy_<?php echo ( $taxonomy->public ) ? 'public' : 'private'; ?>">
+								<input type="checkbox"
+									name="duplicate_post_taxonomies_blacklist[]"
+									id="duplicate-post-<?php echo esc_attr( $taxonomy->name ); ?>"
+									value="<?php echo esc_attr( $taxonomy->name ); ?>"
+									<?php
+									if ( in_array( $taxonomy->name, $taxonomies_blacklist, true ) ) {
+										echo 'checked="checked"';
+									}
+									?>
+								/>
+								<label
+									for="duplicate-post-<?php echo esc_attr( $taxonomy->name ); ?>"
+								>
+									<?php echo esc_html( $taxonomy->labels->name . ' [' . $taxonomy->name . ']' ); ?>
+								</label><br />
+							</div>
+							<?php endforeach; ?>
+							<button type="button" class="button-link hide-if-no-js toggle-private-taxonomies" aria-expanded="false">
+								<?php esc_html_e( 'Show/hide private taxonomies', 'duplicate-post' ); ?>
+							</button>
+						</fieldset>
+					</td>
 				</tr>
 			</table>
 		</section>
@@ -564,8 +572,8 @@ img#donate-button {
 			</table>
 		</section>
 		<p class="submit">
-			<input type="submit" class="button-primary"
-				value="<?php esc_html_e( 'Save Changes', 'duplicate-post' ); ?>" />
+			<input type="submit" class="button button-primary"
+				value="<?php esc_html_e( 'Save changes', 'duplicate-post' ); ?>" />
 		</p>
 
 	</form>
