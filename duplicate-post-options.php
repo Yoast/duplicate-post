@@ -92,9 +92,6 @@ function duplicate_post_options() {
 	}
 	?>
 <div class="wrap">
-	<div id="icon-options-general" class="icon32">
-		<br>
-	</div>
 	<h1>
 		<?php esc_html_e( 'Duplicate Post Options', 'duplicate-post' ); ?>
 	</h1>
@@ -129,9 +126,9 @@ function duplicate_post_options() {
 		jQuery('.taxonomy_private').toggle(300);
 	}
 
-	jQuery(function(){
-		jQuery('.taxonomy_private').hide(300);
-	});
+	jQuery( function() {
+		jQuery( '.taxonomy_private' ).hide();
+	} );
 
 	</script>
 
@@ -164,10 +161,6 @@ function duplicate_post_options() {
 	border: 0;
 }
 
-label {
-	display: block;
-}
-
 label.taxonomy_private {
 	font-style: italic;
 }
@@ -197,175 +190,216 @@ img#donate-button {
 
 		<section>
 
-			<table class="form-table">
-				<tr valign="top">
+			<table class="form-table" role="presentation">
+				<tr>
 					<th scope="row"><?php esc_html_e( 'Post/page elements to copy', 'duplicate-post' ); ?>
 					</th>
-					<td colspan="2"><label> <input type="checkbox"
-							name="duplicate_post_copytitle" value="1"
-							<?php
-							if ( 1 === intval( get_option( 'duplicate_post_copytitle' ) ) ) {
-								echo 'checked="checked"';}
-							?>
-/>
-							<?php esc_html_e( 'Title', 'default' ); ?>
-					</label> <label> <input type="checkbox"
-							name="duplicate_post_copydate" value="1"
-							<?php
-							if ( 1 === intval( get_option( 'duplicate_post_copydate' ) ) ) {
-								echo 'checked="checked"';}
-							?>
-/>
-							<?php esc_html_e( 'Date', 'default' ); ?>
-					</label> <label> <input type="checkbox"
-							name="duplicate_post_copystatus" value="1"
-							<?php
-							if ( 1 === intval( get_option( 'duplicate_post_copystatus' ) ) ) {
-								echo 'checked="checked"';}
-							?>
-/>
-							<?php esc_html_e( 'Status', 'default' ); ?>
-					</label> <label> <input type="checkbox"
-							name="duplicate_post_copyslug" value="1"
-							<?php
-							if ( 1 === intval( get_option( 'duplicate_post_copyslug' ) ) ) {
-								echo 'checked="checked"';}
-							?>
-/>
-							<?php esc_html_e( 'Slug', 'default' ); ?>
-					</label> <label> <input type="checkbox"
-							name="duplicate_post_copyexcerpt" value="1"
-							<?php
-							if ( 1 === intval( get_option( 'duplicate_post_copyexcerpt' ) ) ) {
-								echo 'checked="checked"';}
-							?>
-/>
-							<?php esc_html_e( 'Excerpt', 'default' ); ?>
-					</label> <label> <input type="checkbox"
-							name="duplicate_post_copycontent" value="1"
-							<?php
-							if ( 1 === intval( get_option( 'duplicate_post_copycontent' ) ) ) {
-								echo 'checked="checked"';}
-							?>
-/>
-							<?php esc_html_e( 'Content', 'default' ); ?>
-					</label> <label> <input type="checkbox"
-							name="duplicate_post_copythumbnail" value="1"
-							<?php
-							if ( 1 === intval( get_option( 'duplicate_post_copythumbnail' ) ) ) {
-								echo 'checked="checked"';}
-							?>
-/>
-							<?php esc_html_e( 'Featured Image', 'default' ); ?>
-					</label> <label> <input type="checkbox"
-							name="duplicate_post_copytemplate" value="1"
-							<?php
-							if ( 1 === intval( get_option( 'duplicate_post_copytemplate' ) ) ) {
-								echo 'checked="checked"';}
-							?>
-/>
-							<?php esc_html_e( 'Template', 'default' ); ?>
-					</label> <label> <input type="checkbox"
-							name="duplicate_post_copyformat" value="1"
-							<?php
-							if ( 1 === intval( get_option( 'duplicate_post_copyformat' ) ) ) {
-								echo 'checked="checked"';}
-							?>
-/>
-							<?php echo esc_html_x( 'Format', 'post format', 'default' ); ?>
-					</label> <label> <input type="checkbox"
-							name="duplicate_post_copyauthor" value="1"
-							<?php
-							if ( 1 === intval( get_option( 'duplicate_post_copyauthor' ) ) ) {
-								echo 'checked="checked"';}
-							?>
-/>
-							<?php esc_html_e( 'Author', 'default' ); ?>
-					</label> <label> <input type="checkbox"
-							name="duplicate_post_copypassword" value="1"
-							<?php
-							if ( 1 === intval( get_option( 'duplicate_post_copypassword' ) ) ) {
-								echo 'checked="checked"';}
-							?>
-/>
-							<?php esc_html_e( 'Password', 'default' ); ?>
-					</label> <label> <input type="checkbox"
-							name="duplicate_post_copyattachments" value="1"
-							<?php
-							if ( 1 === intval( get_option( 'duplicate_post_copyattachments' ) ) ) {
-								echo 'checked="checked"';}
-							?>
-/>
-							<?php esc_html_e( 'Attachments', 'duplicate-post' ); ?> <small>(<?php esc_html_e( 'you probably want this unchecked, unless you have very special requirements', 'duplicate-post' ); ?>)</small>
-					</label> <label> <input type="checkbox"
-							name="duplicate_post_copychildren" value="1"
-							<?php
-							if ( 1 === intval( get_option( 'duplicate_post_copychildren' ) ) ) {
-								echo 'checked="checked"';}
-							?>
-/>
-							<?php esc_html_e( 'Children', 'duplicate-post' ); ?>
-					</label> <label> <input type="checkbox"
-							name="duplicate_post_copycomments" value="1"
-							<?php
-							if ( 1 === intval( get_option( 'duplicate_post_copycomments' ) ) ) {
-								echo 'checked="checked"';}
-							?>
-/>
-							<?php esc_html_e( 'Comments', 'default' ); ?> <small>(<?php esc_html_e( 'except pingbacks and trackbacks', 'duplicate-post' ); ?>)</small>
-					</label> <label> <input type="checkbox"
-							name="duplicate_post_copymenuorder" value="1"
-							<?php
-							if ( 1 === intval( get_option( 'duplicate_post_copymenuorder' ) ) ) {
-								echo 'checked="checked"';}
-							?>
-/>
-							<?php esc_html_e( 'Menu order', 'default' ); ?>
-					</label></td>
+					<td>
+						<fieldset>
+							<legend class="screen-reader-text"><?php esc_html_e( 'Post/page elements to copy', 'duplicate-post' ); ?></legend>
+							<input type="checkbox"
+								name="duplicate_post_copytitle" value="1"
+								id="duplicate-post-copytitle"
+								<?php
+								if ( 1 === intval( get_option( 'duplicate_post_copytitle' ) ) ) {
+									echo 'checked="checked"';}
+								?>
+							/>
+							<label for="duplicate-post-copytitle"><?php esc_html_e( 'Title', 'default' ); ?></label><br />
+							<input type="checkbox"
+								name="duplicate_post_copydate" value="1"
+								id="duplicate-post-copydate"
+								<?php
+								if ( 1 === intval( get_option( 'duplicate_post_copydate' ) ) ) {
+									echo 'checked="checked"';}
+								?>
+							/>
+							<label for="duplicate-post-copydate"><?php esc_html_e( 'Date', 'default' ); ?></label><br />
+							<input type="checkbox"
+								name="duplicate_post_copystatus" value="1"
+								id="duplicate-post-copystatus"
+								<?php
+								if ( 1 === intval( get_option( 'duplicate_post_copystatus' ) ) ) {
+									echo 'checked="checked"';}
+								?>
+							/>
+							<label for="duplicate-post-copystatus"><?php esc_html_e( 'Status', 'default' ); ?></label><br />
+							<input type="checkbox"
+								name="duplicate_post_copyslug" value="1"
+								id="duplicate-post-copyslug"
+								<?php
+								if ( 1 === intval( get_option( 'duplicate_post_copyslug' ) ) ) {
+									echo 'checked="checked"';}
+								?>
+							/>
+							<label for="duplicate-post-copyslug"><?php esc_html_e( 'Slug', 'default' ); ?></label><br />
+							<input type="checkbox"
+								name="duplicate_post_copyexcerpt" value="1"
+								id="duplicate-post-copyexcerpt"
+								<?php
+								if ( 1 === intval( get_option( 'duplicate_post_copyexcerpt' ) ) ) {
+									echo 'checked="checked"';}
+								?>
+							/>
+							<label for="duplicate-post-copyexcerpt"><?php esc_html_e( 'Excerpt', 'default' ); ?></label><br />
+							<input type="checkbox"
+								name="duplicate_post_copycontent" value="1"
+								id="duplicate-post-copycontent"
+								<?php
+								if ( 1 === intval( get_option( 'duplicate_post_copycontent' ) ) ) {
+									echo 'checked="checked"';}
+								?>
+							/>
+							<label for="duplicate-post-copycontent"><?php esc_html_e( 'Content', 'default' ); ?></label><br />
+							<input type="checkbox"
+								name="duplicate_post_copythumbnail" value="1"
+								id="duplicate-post-copythumbnail"
+								<?php
+								if ( 1 === intval( get_option( 'duplicate_post_copythumbnail' ) ) ) {
+									echo 'checked="checked"';}
+								?>
+							/>
+							<label for="duplicate-post-copythumbnail"><?php esc_html_e( 'Featured Image', 'default' ); ?></label><br />
+							<input type="checkbox"
+								name="duplicate_post_copytemplate" value="1"
+								id="duplicate-post-copytemplate"
+								<?php
+								if ( 1 === intval( get_option( 'duplicate_post_copytemplate' ) ) ) {
+									echo 'checked="checked"';}
+								?>
+							/>
+							<label for="duplicate-post-copytemplate"><?php esc_html_e( 'Template', 'default' ); ?></label><br />
+							<input type="checkbox"
+								name="duplicate_post_copyformat" value="1"
+								id="duplicate-post-copyformat"
+								<?php
+								if ( 1 === intval( get_option( 'duplicate_post_copyformat' ) ) ) {
+									echo 'checked="checked"';}
+								?>
+							/>
+							<label for="duplicate-post-copyformat"><?php echo esc_html_x( 'Format', 'post format', 'default' ); ?></label><br />
+							<input type="checkbox"
+								name="duplicate_post_copyauthor" value="1"
+								id="duplicate-post-copyauthor"
+								<?php
+								if ( 1 === intval( get_option( 'duplicate_post_copyauthor' ) ) ) {
+									echo 'checked="checked"';}
+								?>
+							/>
+							<label for="duplicate-post-copyauthor"><?php esc_html_e( 'Author', 'default' ); ?></label><br />
+							<input type="checkbox"
+								name="duplicate_post_copypassword" value="1"
+								id="duplicate-post-copypassword"
+								<?php
+								if ( 1 === intval( get_option( 'duplicate_post_copypassword' ) ) ) {
+									echo 'checked="checked"';}
+								?>
+							/>
+							<label for="duplicate-post-copypassword"><?php esc_html_e( 'Password', 'default' ); ?></label><br />
+							<input type="checkbox"
+								name="duplicate_post_copyattachments" value="1"
+								id="duplicate-post-copyattachments"
+								aria-describedby="duplicate-post-copyattachments-description"
+								<?php
+								if ( 1 === intval( get_option( 'duplicate_post_copyattachments' ) ) ) {
+									echo 'checked="checked"';}
+								?>
+							/>
+							<label for="duplicate-post-copyattachments"><?php esc_html_e( 'Attachments', 'duplicate-post' ); ?></label>
+							<span id="duplicate-post-copyattachments-description">(<?php esc_html_e( 'you probably want this unchecked, unless you have very special requirements', 'duplicate-post' ); ?>)</span><br />
+							<input type="checkbox"
+								name="duplicate_post_copychildren" value="1"
+								id="duplicate-post-copychildren"
+								<?php
+								if ( 1 === intval( get_option( 'duplicate_post_copychildren' ) ) ) {
+									echo 'checked="checked"';}
+								?>
+							/>
+							<label for="duplicate-post-copychildren"><?php esc_html_e( 'Children', 'duplicate-post' ); ?></label><br />
+							<input type="checkbox"
+								name="duplicate_post_copycomments" value="1"
+								id="duplicate-post-copycomments"
+								aria-describedby="duplicate-post-copycomments-description"
+								<?php
+								if ( 1 === intval( get_option( 'duplicate_post_copycomments' ) ) ) {
+									echo 'checked="checked"';}
+								?>
+							/>
+							<label for="duplicate-post-copycomments"><?php esc_html_e( 'Comments', 'default' ); ?></label>
+							<span id="duplicate-post-copycomments-description">(<?php esc_html_e( 'except pingbacks and trackbacks', 'duplicate-post' ); ?>)</span><br />
+							<input type="checkbox"
+								name="duplicate_post_copymenuorder" value="1"
+								id="duplicate-post-copymenuorder"
+								<?php
+								if ( 1 === intval( get_option( 'duplicate_post_copymenuorder' ) ) ) {
+									echo 'checked="checked"';}
+								?>
+							/>
+							<label for="duplicate-post-copymenuorder"><?php esc_html_e( 'Menu order', 'default' ); ?></label>
+						<fieldset>
+					</td>
 				</tr>
-				<tr valign="top">
-					<th scope="row"><?php esc_html_e( 'Title prefix', 'duplicate-post' ); ?>
+				<tr>
+					<th scope="row">
+						<label for="duplicate-post-title-prefix"><?php esc_html_e( 'Title prefix', 'duplicate-post' ); ?></label>
 					</th>
 					<td><input type="text" name="duplicate_post_title_prefix"
+						id="duplicate-post-title-prefix"
+						aria-describedby="duplicate-post-title-prefix-description"
 						value="<?php form_option( 'duplicate_post_title_prefix' ); ?>" />
+						<p id="duplicate-post-title-prefix-description">
+							<?php esc_html_e( 'Prefix to be added before the title, e.g. "Copy of" (blank for no prefix)', 'duplicate-post' ); ?>
+						</p>
 					</td>
-					<td><span class="description"><?php esc_html_e( 'Prefix to be added before the title, e.g. "Copy of" (blank for no prefix)', 'duplicate-post' ); ?>
-					</span></td>
 				</tr>
-				<tr valign="top">
-					<th scope="row"><?php esc_html_e( 'Title suffix', 'duplicate-post' ); ?>
+				<tr>
+					<th scope="row">
+						<label for="duplicate-post-title-suffix"><?php esc_html_e( 'Title suffix', 'duplicate-post' ); ?></label>
 					</th>
 					<td><input type="text" name="duplicate_post_title_suffix"
+						id="duplicate-post-title-suffix"
+						aria-describedby="duplicate-post-title-suffix-description"
 						value="<?php form_option( 'duplicate_post_title_suffix' ); ?>" />
+						<p id="duplicate-post-title-suffix-description">
+							<?php esc_html_e( 'Suffix to be added after the title, e.g. "(dup)" (blank for no suffix)', 'duplicate-post' ); ?>
+						</p>
 					</td>
-					<td><span class="description"><?php esc_html_e( 'Suffix to be added after the title, e.g. "(dup)" (blank for no suffix)', 'duplicate-post' ); ?>
-					</span></td>
 				</tr>
-				<tr valign="top">
-					<th scope="row"><?php esc_html_e( 'Increase menu order by', 'duplicate-post' ); ?>
+				<tr>
+					<th scope="row">
+						<label for="duplicate-post-increase-menu-order-by"><?php esc_html_e( 'Increase menu order by', 'duplicate-post' ); ?></label>
 					</th>
 					<td><input type="number" min="0" step="1" name="duplicate_post_increase_menu_order_by"
+						id="duplicate-post-increase-menu-order-by"
+						aria-describedby="duplicate-post-increase-menu-order-by-description"
 						value="<?php form_option( 'duplicate_post_increase_menu_order_by' ); ?>" />
+						<p id="duplicate-post-increase-menu-order-by-description">
+							<?php esc_html_e( 'Add this number to the original menu order (blank or zero to retain the value)', 'duplicate-post' ); ?>
+						</p>
 					</td>
-					<td><span class="description"><?php esc_html_e( 'Add this number to the original menu order (blank or zero to retain the value)', 'duplicate-post' ); ?>
-					</span></td>
 				</tr>
-				<tr valign="top">
-					<th scope="row"><?php esc_html_e( 'Do not copy these fields', 'duplicate-post' ); ?>
+				<tr>
+					<th scope="row">
+						<label for="duplicate-post-blacklist"><?php esc_html_e( 'Do not copy these fields', 'duplicate-post' ); ?></label>
 					</th>
 					<td id="textfield"><input type="text"
 						name="duplicate_post_blacklist"
-						value="<?php form_option( 'duplicate_post_blacklist' ); ?>" /></td>
-					<td><span class="description"><?php esc_html_e( 'Comma-separated list of meta fields that must not be copied', 'duplicate-post' ); ?><br />
-							<small><?php esc_html_e( 'You can use * to match zero or more alphanumeric characters or underscores: e.g. field*', 'duplicate-post' ); ?>
-						</small> </span></td>
+						id="duplicate-post-blacklist"
+						aria-describedby="duplicate-post-blacklist-description"
+						value="<?php form_option( 'duplicate_post_blacklist' ); ?>" />
+						<p id="duplicate-post-blacklist-description">
+							<?php esc_html_e( 'Comma-separated list of meta fields that must not be copied.', 'duplicate-post' ); ?>
+							<?php esc_html_e( 'You can use * to match zero or more alphanumeric characters or underscores: e.g. field*', 'duplicate-post' ); ?>
+						</p>
+					</td>
 				</tr>
-				<tr valign="top">
-					<th scope="row"><?php esc_html_e( 'Do not copy these taxonomies', 'duplicate-post' ); ?><br />
+				<tr>
+					<th scope="row">
+						<?php esc_html_e( 'Do not copy these taxonomies', 'duplicate-post' ); ?><br />
 						<a class="toggle_link hide-if-no-js" href="#"
 						onclick="toggle_private_taxonomies();return false;"><?php esc_html_e( 'Show/hide private taxonomies', 'duplicate-post' ); ?>
 					</a></th>
-					<td colspan="2">
+					<td>
 					<?php
 
 					$taxonomies = get_taxonomies( array(), 'objects' );
@@ -379,25 +413,33 @@ img#donate-button {
 							continue;
 						}
 						?>
-					<label class="taxonomy_<?php echo ( $taxonomy->public ) ? 'public' : 'private'; ?>">
+						<span class="taxonomy_<?php echo ( $taxonomy->public ) ? 'public' : 'private'; ?>">
 							<input type="checkbox"
-							name="duplicate_post_taxonomies_blacklist[]"
-							value="<?php echo esc_attr( $taxonomy->name ); ?>"
-							<?php
-							if ( in_array( $taxonomy->name, $taxonomies_blacklist, true ) ) {
-								echo 'checked="checked"';}
-							?>
-/>
-							<?php echo esc_html( $taxonomy->labels->name . ' [' . $taxonomy->name . ']' ); ?>
-					</label> <?php endforeach; ?> <span class="description"><?php esc_html_e( "Select the taxonomies you don't want to be copied", 'duplicate-post' ); ?>
+								name="duplicate_post_taxonomies_blacklist[]"
+								id="duplicate-post-<?php echo esc_attr( $taxonomy->name ); ?>"
+								value="<?php echo esc_attr( $taxonomy->name ); ?>"
+								<?php
+								if ( in_array( $taxonomy->name, $taxonomies_blacklist, true ) ) {
+									echo 'checked="checked"';
+								}
+								?>
+							/>
+							<label
+								for="duplicate-post-<?php echo esc_attr( $taxonomy->name ); ?>"
+							>
+								<?php echo esc_html( $taxonomy->labels->name . ' [' . $taxonomy->name . ']' ); ?>
+							</label>
+						</span><br />
+					<?php endforeach; ?>
+					<span class="description"><?php esc_html_e( "Select the taxonomies you don't want to be copied", 'duplicate-post' ); ?>
 					</span></td>
 				</tr>
 			</table>
 		</section>
 		<section>
-			<table class="form-table">
+			<table class="form-table" role="presentation">
 				<?php if ( current_user_can( 'promote_users' ) ) { ?>
-				<tr valign="top">
+				<tr>
 					<th scope="row"><?php esc_html_e( 'Roles allowed to copy', 'duplicate-post' ); ?>
 					</th>
 					<td>
@@ -430,7 +472,7 @@ img#donate-button {
 					</span></td>
 				</tr>
 				<?php } ?>
-				<tr valign="top">
+				<tr>
 					<th scope="row"><?php esc_html_e( 'Enable for these post types', 'duplicate-post' ); ?>
 					</th>
 					<td>
@@ -457,8 +499,8 @@ img#donate-button {
 			</table>
 		</section>
 		<section>
-			<table class="form-table">
-				<tr valign="top">
+			<table class="form-table" role="presentation">
+				<tr>
 					<th scope="row"><?php esc_html_e( 'Show links in', 'duplicate-post' ); ?>
 					</th>
 					<td><label><input type="checkbox" name="duplicate_post_show_row"
@@ -498,8 +540,8 @@ img#donate-button {
 							<?php } ?>
 					</td>
 				</tr>
-				<tr valign="top">
-					<td colspan="2"><span class="description"><?php esc_html_e( 'Whether the links are displayed for custom post types registered by themes or plugins depends on their use of standard WordPress UI elements', 'duplicate-post' ); ?>
+				<tr>
+					<td><span class="description"><?php esc_html_e( 'Whether the links are displayed for custom post types registered by themes or plugins depends on their use of standard WordPress UI elements', 'duplicate-post' ); ?>
 							<br />
 							<?php
 							/* translators: %s: URL of the template tag documentation */
@@ -507,7 +549,7 @@ img#donate-button {
 							?>
 					</span></td>
 				</tr>
-				<tr valign="top">
+				<tr>
 					<th scope="row"><?php esc_html_e( 'Show update notice', 'duplicate-post' ); ?>
 					</th>
 					<td><input type="checkbox" name="duplicate_post_show_notice"
