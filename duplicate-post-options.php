@@ -527,7 +527,7 @@ img#donate-button{
 								?>
                             />
                             <label for="duplicate-post-copymenuorder"><?php esc_html_e( 'Menu order', 'default' ); ?></label>
-                            </fieldset>
+                        </fieldset>
                     </td>
 				</tr>
 				<tr>
@@ -594,41 +594,42 @@ img#donate-button{
 				</tr>
 				<tr>
 					<th scope="row">
-					    <label for="duplicate-post-blacklist"><?php esc_html_e( 'Do not copy these fields', 'duplicate-post' ); ?></label>
+					    <?php esc_html_e( 'Do not copy these taxonomies', 'duplicate-post' ); ?>
 					</th>
 					<td>
-                        <legend class="screen-reader-text"><?php esc_html_e( 'Do not copy these taxonomies', 'duplicate-post' ); ?></legend>
-						<?php
-						$taxonomies = get_taxonomies( array(), 'objects' );
-						usort( $taxonomies, 'duplicate_post_tax_obj_cmp' );
-						$taxonomies_blacklist = get_option( 'duplicate_post_taxonomies_blacklist' );
-						if ( '' === $taxonomies_blacklist ) {
-							$taxonomies_blacklist = array();
-						}
-						foreach ( $taxonomies as $taxonomy ) :
-							if ( 'post_format' === $taxonomy->name ) {
-								continue;
-							}
-							?>
-                            <div class="taxonomy_<?php echo ( $taxonomy->public ) ? 'public' : 'private'; ?>">
-                                <input type="checkbox"
-                                       name="duplicate_post_taxonomies_blacklist[]"
-                                       id="duplicate-post-<?php echo esc_attr( $taxonomy->name ); ?>"
-                                       value="<?php echo esc_attr( $taxonomy->name ); ?>"
-									<?php
-									if ( in_array( $taxonomy->name, $taxonomies_blacklist, true ) ) {
-										echo 'checked="checked"';
-									}
-									?>
-                                />
-                                <label for="duplicate-post-<?php echo esc_attr( $taxonomy->name ); ?>">
-									<?php echo esc_html( $taxonomy->labels->name . ' [' . $taxonomy->name . ']' ); ?>
-                                </label><br />
-                            </div>
-						<?php endforeach; ?>
-                        <button type="button" class="button-link hide-if-no-js toggle-private-taxonomies" aria-expanded="false">
-							<?php esc_html_e( 'Show/hide private taxonomies', 'duplicate-post' ); ?>
-                        </button>
+                        <fieldset>
+                            <legend class="screen-reader-text"><?php esc_html_e( 'Do not copy these taxonomies', 'duplicate-post' ); ?></legend>
+                            <?php
+                            $taxonomies = get_taxonomies( array(), 'objects' );
+                            usort( $taxonomies, 'duplicate_post_tax_obj_cmp' );
+                            $taxonomies_blacklist = get_option( 'duplicate_post_taxonomies_blacklist' );
+                            if ( '' === $taxonomies_blacklist ) {
+                                $taxonomies_blacklist = array();
+                            }
+                            foreach ( $taxonomies as $taxonomy ) :
+                                if ( 'post_format' === $taxonomy->name ) {
+                                    continue;
+                                }
+                                ?>
+                                <div class="taxonomy_<?php echo ( $taxonomy->public ) ? 'public' : 'private'; ?>">
+                                    <input type="checkbox"
+                                           name="duplicate_post_taxonomies_blacklist[]"
+                                           id="duplicate-post-<?php echo esc_attr( $taxonomy->name ); ?>"
+                                           value="<?php echo esc_attr( $taxonomy->name ); ?>"
+                                        <?php
+                                        if ( in_array( $taxonomy->name, $taxonomies_blacklist, true ) ) {
+                                            echo 'checked="checked"';
+                                        }
+                                        ?>
+                                    />
+                                    <label for="duplicate-post-<?php echo esc_attr( $taxonomy->name ); ?>">
+                                        <?php echo esc_html( $taxonomy->labels->name . ' [' . $taxonomy->name . ']' ); ?>
+                                    </label><br />
+                                </div>
+                            <?php endforeach; ?>
+                            <button type="button" class="button-link hide-if-no-js toggle-private-taxonomies" aria-expanded="false">
+                                <?php esc_html_e( 'Show/hide private taxonomies', 'duplicate-post' ); ?>
+                            </button>
                         </fieldset>
 					</td>
 				</tr>
@@ -806,7 +807,7 @@ img#donate-button{
                                     echo 'checked="checked"';
                                 } ?>/>
                         <label for="duplicate-post-show-original-meta-box"><?php esc_html_e("In a metabox in the Edit screen [Classic editor]", 'duplicate-post'); ?></label>
-                        <p id="duplicate-post-show-original-meta-box-description">(<?php esc_html_e("you'll also be able to delete the reference to the original item with a checkbox", 'duplicate-post');  ?>)</p>
+                        <p id="duplicate-post-show-original-meta-box-description">(<?php esc_html_e("you'll also be able to delete the reference to the original item with a checkbox", 'duplicate-post');  ?>)</p><br/>
                         <input
                                 type="checkbox"
                                 name="duplicate_post_show_original_column"
@@ -818,7 +819,7 @@ img#donate-button{
                                     echo 'checked="checked"';
 								} ?>/>
                         <label for="duplicate-post-show-original-column"><?php esc_html_e("In a column in the Post list", 'duplicate-post'); ?></label>
-                        <p id="duplicate-post-show-original-column-description">(<?php esc_html_e("you'll also be able to delete the reference to the original item with a checkbox in Quick Edit", 'duplicate-post');  ?>)</p>
+                        <p id="duplicate-post-show-original-column-description">(<?php esc_html_e("you'll also be able to delete the reference to the original item with a checkbox in Quick Edit", 'duplicate-post');  ?>)</p><br/>
                         <input
                                 type="checkbox"
                                 name="duplicate_post_show_original_in_post_states"
