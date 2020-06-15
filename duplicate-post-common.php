@@ -39,7 +39,7 @@ function duplicate_post_get_clone_post_link( $id = 0, $context = 'display', $dra
 
 	if ( !$post = get_post( $id ) )
 		return;
-	
+
 	if(!duplicate_post_is_post_type_enabled($post->post_type))
 		return;
 
@@ -77,9 +77,7 @@ function duplicate_post_clone_post_link( $link = null, $before = '', $after = ''
 	if ( null === $link )
 	$link = esc_html__('Copy to a new draft', 'duplicate-post');
 
-	$link = '<a class="post-clone-link" href="' . $url . '" title="'
-	. esc_attr__("Copy to a new draft", 'duplicate-post')
-	.'">' . $link . '</a>';
+	$link = '<a class="post-clone-link" href="' . $url . '">' . $link . '</a>';
 	echo $before . apply_filters( 'duplicate_post_clone_post_link', $link, $post->ID ) . $after;
 }
 /**
@@ -171,12 +169,12 @@ function duplicate_post_admin_bar_render() {
 	        	'id' => 'new_draft',
 	        	'title' => esc_attr__("Copy to a new draft", 'duplicate-post'),
 	        	'href' => duplicate_post_get_clone_post_link( $current_object->ID )
-			) );	
+			) );
 		}
 	} else if ( is_admin() && isset( $_GET['post'] )){
 		$id = $_GET['post'];
 		$post = get_post($id);
-		if( !is_null($post) 
+		if( !is_null($post)
 				&& duplicate_post_is_current_user_allowed_to_copy()
 				&& duplicate_post_is_post_type_enabled($post->post_type)) {
 					$wp_admin_bar->add_menu( array(
