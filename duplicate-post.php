@@ -1,15 +1,14 @@
 <?php
-/*
- Plugin Name: Duplicate Post
- Plugin URI: https://duplicate-post.lopo.it/
- Description: Clone posts and pages.
- Version: 3.2.4
- Author: Enrico Battocchi
- Author URI: https://lopo.it
- Text Domain: duplicate-post
+/**
+ * Plugin Name: Duplicate Post
+ * Plugin URI: https://yoast.com/wordpress/plugins/duplicate-post/  Description: Clone posts and pages.
+ * Version: 4.0alpha
+ * Author: Enrico Battocchi & Team Yoast
+ * Author URI: https://yoast.com
+ * Text Domain: duplicate-post
  */
 
-/*  Copyright 2009-2012	Enrico Battocchi  (email : enrico.battocchi@gmail.com)
+/*  Copyright 2020 Yoast BV (email : info@yoast.com)
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

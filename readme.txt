@@ -1,9 +1,9 @@
 === Duplicate Post ===
-Contributors: 		lopo
-Donate link: 		https://duplicate-post.lopo.it/
+Contributors: 		yoast, lopo
+Donate link: 		https://yoast.com/wordpress/plugins/duplicate-post/
 Tags: 				duplicate post, copy, clone
 Requires at least: 	3.6
-Tested up to: 		5.3
+Tested up to: 		5.4
 Stable tag: 		3.2.4
 Requires PHP:		5.2.4
 License: 			GPLv2 or later
@@ -14,7 +14,6 @@ Copy posts of any type with a click!
 == Description ==
 
 This plugin allows users to clone posts of any type, or copy them to new drafts for further editing.
-If you find this useful, [**please consider donating**](https://duplicate-post.lopo.it/) whatever sum you choose, **even just 10 cents**. Just a few cents from every user would help me develop the plugin and improve support.
 
 How it works:
 
@@ -24,7 +23,7 @@ How it works:
 
 3. In 'Edit Posts'/'Edit Pages', you can click on 'New Draft' link below the post/page title.
 
-4. On the post edit screen, you can click on 'Copy to a new draft' above "Cancel"/"Move to trash" or in the admin bar. 
+4. On the post edit screen, you can click on 'Copy to a new draft' above "Cancel"/"Move to trash" or in the admin bar.
 
 5. While viewing a post as a logged in user, you can click on 'Copy to a new draft' in the admin bar.
 
@@ -32,19 +31,13 @@ How it works:
 
 There is also a **template tag**, so you can put it in your templates and clone your posts/pages from the front-end. Clicking on the link will lead you to the edit page for the new draft, just like the admin bar link.
 
-Duplicate Post has many useful settings to customize its behavior and restrict its use to certain roles or post types. Check out the extensive documentation on [the plugin's site](https://duplicate-post.lopo.it).
-
-**If you're a plugin developer**, I suggest you to read the [Developer's Guide](https://duplicate-post.lopo.it/docs/developers-guide/) to ensure compatibility between your plugin(s) and mine. Feel free to [contact me](https://duplicate-post.lopo.it/contact) so we can keep in touch and collaborate.
-
-Duplicate Post does not collect any information outside your WordPress installation, therefore it's 100% GDPR compliant.
-
-Thanks for all the suggestions, bug reports, translations and donations, they're frankly too many to be listed here!
+Duplicate Post has many useful settings to customize its behavior and restrict its use to certain roles or post types. Check out the extensive documentation [on yoast.com](https://yoast.com/wordpress/plugins/duplicate-post/) and our [developer docs](https://developer.yoast.com/duplicate-post/).
 
 == Installation ==
 
 Use WordPress' Add New Plugin feature, searching "Duplicate Post", or download the archive and:
 
-1. Unzip the archive on your computer  
+1. Unzip the archive on your computer
 2. Upload `duplicate-post` directory to the `/wp-content/plugins/` directory
 3. Activate the plugin through the 'Plugins' menu in WordPress
 4. Go to Settings -> Duplicate Post and customize behaviour as needed
@@ -74,7 +67,7 @@ If Duplicate Post is still in English, or if there are some untraslated strings,
 2. By clicking on "Clone" the post is cloned immediately. "New draft" leads to the edit screen.
 3. The options page.
 4. The template tag manually added to Twenty Ten theme. Click on the "Copy to a new draft" link and you're redirected to the edit screen for a new draft copy of your post.
-5. The admin bar link. 
+5. The admin bar link.
 6. Bulk clone action.
 
 == Upgrade Notice ==
@@ -116,7 +109,7 @@ Recommended if you have 3.0: fixes the upgrade bug
 Major redesign of the settings page + fine-tune options (what to copy, custom post types, etc.) + bugfixes and XSS prevention
 
 = 2.6 =
-PHP 5.4 (Strict Standards) compatible + Fixed possible XSS and SQL injections + other bugs 
+PHP 5.4 (Strict Standards) compatible + Fixed possible XSS and SQL injections + other bugs
 
 = 2.4.1 =
 Fixes a couple of bug. Recommended if you have problems with v2.4
@@ -131,10 +124,10 @@ Fixes a bunch of bugs + copy attachments + choose where to show the links.
 VERY IMPORTANT UPGRADE to get rid of problems with complex custom fields, afflicting both 2.1.* releases.
 
 = 2.1.1 =
-Fix for upgrade problem 
+Fix for upgrade problem
 
 = 2.1 =
-Copy from admin bar + user levels out, roles and capabilities in. 
+Copy from admin bar + user levels out, roles and capabilities in.
 
 = 2.0.2 =
 Fixed permalink bug + double choice on posts list
@@ -165,7 +158,7 @@ New features and customization, WP 3.0 compatibility: you should upgrade if you 
 
 = 3.2.2 (2018-04-13) =
 * The "Admin bar" option shows the link in the post edit screen too, so you can use the plugin with Gutenberg enabled
-* Option for "Slug" not set by default on new installations 
+* Option for "Slug" not set by default on new installations
 * Better display of icon in the Admin bar on small screens
 
 = 3.2.1 (2017-11-25) =
@@ -196,13 +189,13 @@ New features and customization, WP 3.0 compatibility: you should upgrade if you 
 * Using wp_slash (WP 3.6+) or a better workaround (WP 4.4+) on the post and its meta, should also fix some compatibility issues
 * Check if admin bar is showing before enqueueing CSS
 * Probable fix for repeated clone bug
-* Other minor bugs fixed 
+* Other minor bugs fixed
 
 = 3.0.3 (2016-10-29) =
 * Notices in admin after copying
 * Fixes warning in custom post type archives
 * Uses site options for version and notice
-* Minor fixes 
+* Minor fixes
 
 = 3.0.2 (2016-10-18) =
 * Can now be enabled for every custom post type with visible UI (not just public ones)
@@ -226,7 +219,7 @@ New features and customization, WP 3.0 compatibility: you should upgrade if you 
 = 2.6 (2014-04-27) =
 * PHP 5.4 (Strict Standards) compatible
 * Fixed possible XSS and SQL injections
-* other bugs 
+* other bugs
 * Updated and added translations
 * Tested up to WP 3.8.1
 
@@ -238,13 +231,13 @@ New features and customization, WP 3.0 compatibility: you should upgrade if you 
 = 2.4 (2012-04-29) =
 * New option to clone the children of the original page
 * Licence changed to GPLv2 or later
-* Fixed publishing dates for drafts 
+* Fixed publishing dates for drafts
 * Fixed bug with prefix/suffix
 * Translation project moved to GlotPress
 
 = 2.3 (2012-04-06) =
 * Added options to choose where to show the "Clone" links
-* Clone attachments (i.e. references in the DB, not physical files) 
+* Clone attachments (i.e. references in the DB, not physical files)
 * Fix for untranslated user roles
 * Some other fixes (missing checks, PHP warnings and errors, etc.)
 
@@ -312,7 +305,7 @@ New features and customization, WP 3.0 compatibility: you should upgrade if you 
 
 = 0.5 (2009-01-09) =
 * Fix for post-meta
-* WP2.7 compatibility 
+* WP2.7 compatibility
 
 = 0.4 (2008-11-23) =
 * Support for new WP post revision feature
@@ -322,8 +315,7 @@ New features and customization, WP 3.0 compatibility: you should upgrade if you 
 
 == Contribute ==
 
-If you find this useful and if you want to contribute, there are three ways:
+If you find this useful and if you want to contribute, there are two ways:
 
-   1. You can [write me](https://duplicate-post.lopo.it/contact) and submit your bug reports, suggestions and requests for features;
+   1. Submit your bug reports, suggestions and requests for features on GitHub;
    2. If you want to translate it to your language (there are just a few lines of text), you can use the [translation project](https://translate.wordpress.org/projects/wp-plugins/duplicate-post);
-   3. Using the plugin is free, but if you want you can support my efforts by donating with PayPal [here](https://duplicate-post.lopo.it/donate)
