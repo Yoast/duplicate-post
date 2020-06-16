@@ -129,7 +129,6 @@ function duplicate_post_options() {
 			.on( 'click', function() {
 				buttonElement = jQuery( this );
 				jQuery( '.taxonomy_private' ).toggle( 300, function() {
-					console.log( 'expanded done', buttonElement );
 					buttonElement.attr( 'aria-expanded', jQuery( this ).is( ":visible" ) );
 				} );
 			} );
