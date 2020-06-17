@@ -97,8 +97,7 @@ function duplicate_post_clone_post_link( $link = null, $before = '', $after = ''
 		$link = esc_html__( 'Copy to a new draft', 'duplicate-post' );
 	}
 
-	$link = '<a class="post-clone-link" href="' . $url . '" title="' .
-		esc_attr__( 'Copy to a new draft', 'duplicate-post' ) . '">' . $link . '</a>';
+	$link = '<a class="post-clone-link" href="' . $url . '">' . $link . '</a>';
 	echo esc_html( $before . apply_filters( 'duplicate_post_clone_post_link', $link, $post->ID ) . $after );
 }
 

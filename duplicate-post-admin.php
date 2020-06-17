@@ -215,7 +215,7 @@ function duplicate_post_show_update_notice() {
 	) . '</strong><br/>';
 	$message .= __( 'Simple compatibility with Gutenberg user interface: enable "Admin bar" under the Settings', 'duplicate-post' ) . ' — '
 			. __( '"Slug" option unset by default on new installations', 'duplicate-post' ) . '<br/>';
-	$message .= '<em><a href="https://duplicate-post.lopo.it/" title="Duplicate Post official site">' . __( 'Check out the documentation', 'duplicate-post' ) . '</a> — ' . sprintf(
+	$message .= '<em><a href="https://duplicate-post.lopo.it/">' . __( 'Check out the documentation', 'duplicate-post' ) . '</a> — ' . sprintf(
 		/* translators: %s: Options page URL */
 		__( 'Please <a href="%s">review the settings</a> to make sure it works as you expect.', 'duplicate-post' ),
 		admin_url( 'options-general.php?page=duplicatepost' )
@@ -253,7 +253,7 @@ function duplicate_post_show_update_notice() {
 					jQuery('#duplicate-post-notice').hide();
 				});
 			}
-	
+
 			jQuery(document).ready(function(){
 				jQuery('body').on('click', '.notice-dismiss', function(){
 					duplicate_post_dismiss_notice();
@@ -280,6 +280,8 @@ function duplicate_post_dismiss_notice() {
  * @return array.
  */
 function duplicate_post_make_duplicate_link_row( $actions, $post ) {
+	$title = empty( $post->post_title ) ? __( '(no title)', 'duplicate-post' ) : $post->post_title;
+
 	/**
 	 * Filter allowing displaying duplicate post link for current post.
 	 *
@@ -289,10 +291,19 @@ function duplicate_post_make_duplicate_link_row( $actions, $post ) {
 	 * @return boolean
 	 */
 	if ( apply_filters( 'duplicate_post_show_link', duplicate_post_is_current_user_allowed_to_copy() && duplicate_post_is_post_type_enabled( $post->post_type ), $post ) ) {
-		$actions['clone']             = '<a href="' . duplicate_post_get_clone_post_link( $post->ID, 'display', false ) . '" title="' .
-			esc_attr__( 'Clone this item', 'duplicate-post' ) . '">' . esc_html__( 'Clone', 'duplicate-post' ) . '</a>';
-		$actions['edit_as_new_draft'] = '<a href="' . duplicate_post_get_clone_post_link( $post->ID ) . '" title="' .
-			esc_attr__( 'Copy to a new draft', 'duplicate-post' ) . '">' . esc_html__( 'New Draft', 'duplicate-post' ) .
+		$actions['clone'] = '<a href="' . duplicate_post_get_clone_post_link( $post->ID, 'display', false ) .
+			'" aria-label="' . esc_attr(
+				/* translators: %s: Post title. */
+				sprintf( __( 'Clone &#8220;%s&#8221;', 'duplicate-post' ), $title )
+			) . '">' .
+			esc_html_x( 'Clone', 'verb', 'duplicate-post' ) . '</a>';
+
+		$actions['edit_as_new_draft'] = '<a href="' . duplicate_post_get_clone_post_link( $post->ID ) .
+			'" aria-label="' . esc_attr(
+				/* translators: %s: Post title. */
+				sprintf( __( 'New draft of &#8220;%s&#8221;', 'duplicate-post' ), $title )
+			) . '">' .
+			esc_html__( 'New Draft', 'duplicate-post' ) .
 			'</a>';
 	}
 	return $actions;
@@ -770,10 +781,14 @@ function duplicate_post_create_duplicate( $post, $status = '', $parent_id = '' )
 		}
 		$title = trim( $prefix . $title . $suffix );
 
-		if ( '' === $title ) {
-			// empty title.
-			$title = __( 'Untitled', 'default' );
-		}
+		/*
+		 * Not sure we should force a title. Instead, we should respect what WP does.
+		 * if ( '' === $title ) {
+		 * 	// empty title.
+		 * 	$title = __( 'Untitled', 'default' );
+		 * }
+		 */
+
 		if ( 0 === intval( get_option( 'duplicate_post_copystatus' ) ) ) {
 			$new_post_status = 'draft';
 		} else {
@@ -906,7 +921,7 @@ function duplicate_post_action_admin_notice() {
 	if ( ! empty( $_REQUEST['cloned'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 		$copied_posts = intval( $_REQUEST['cloned'] ); // phpcs:ignore WordPress.Security.NonceVerification
 		printf(
-			'<div id="message" class="updated fade"><p>' .
+			'<div id="message" class="notice notice-success fade"><p>' .
 				esc_html(
 					/* translators: %s: Number of posts copied. */
 					_n(
