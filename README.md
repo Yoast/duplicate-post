@@ -4,7 +4,7 @@
 
 [![WordPress Plugin Version](https://img.shields.io/wordpress/plugin/v/duplicate-post.svg)](https://wordpress.org/plugins/duplicate-post/) ![WordPress Plugin: Tested WP Version](https://img.shields.io/wordpress/plugin/tested/duplicate-post.svg) [![WordPress Plugin Active Installs](https://img.shields.io/wordpress/plugin/installs/duplicate-post.svg)](https://wordpress.org/plugins/duplicate-post/advanced/) [![WordPress Plugin Downloads](https://img.shields.io/wordpress/plugin/dt/duplicate-post.svg)](https://wordpress.org/plugins/duplicate-post/advanced/) [![WordPress Plugin Rating](https://img.shields.io/wordpress/plugin/stars/duplicate-post.svg)](https://wordpress.org/support/plugin/duplicate-post/reviews/) [![GitHub](https://img.shields.io/github/license/enricobattocchi/duplicate-post.svg)](https://github.com/enricobattocchi/duplicate-post/blob/master/LICENSE) [![Build Status](https://travis-ci.org/enricobattocchi/duplicate-post.svg?branch=master)](https://travis-ci.org/enricobattocchi/duplicate-post) [![RIPS CodeRisk](https://coderisk.com/wp/plugin/duplicate-post/badge "RIPS CodeRisk")](https://coderisk.com/wp/plugin/duplicate-post)
 
-> Duplicate Post plugin for WordPress https://duplicate-post.lopo.it/  
+> Duplicate Post plugin for WordPress https://yoast.com/wordpress/plugins/duplicate-post/  
 
 This WordPress plugin allows users to clone posts of any type, or copy them to new drafts for further editing.
 
@@ -12,13 +12,10 @@ This is the development repository: pull requests are supposed to be based on th
 
 This document addresses the GitHub repository. For a readable version of the [readme.txt file](readme.txt) required by WordPress.org see [README.wordpress.md](README.wordpress.md).
 
-If you find the plugin useful, [**please consider donating**](https://duplicate-post.lopo.it/donate/) whatever sum you choose, **even just 10 cents**. Just a few cents from every user would help me develop the plugin and improve support.
-
 - [Install](#install)
 - [Usage](#usage)
 - [API](#api)
 - [Maintainer](#maintainer)
-- [Thanks](#thanks)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -54,30 +51,20 @@ There is also a **template tag**, so you can put it in your templates and clone 
 
 ## API
 
-For functions, template tags and hooks refer to the [Developer's Guide](https://duplicate-post.lopo.it/docs/developers-guide/) on the plugin's website.
+For functions, template tags and hooks refer to the [Developer's Guide](https://developer.yoast.com/duplicate-post/) on our developer site.
 
 ##  Maintainer
 
-- Enrico Battocchi (Lopo) 
-  - [Website](https://lopo.it)
-  - [WordPress.org](https://profiles.wordpress.org/lopo/)
-  - [GitHub](https://github.com/enricobattocchi)
-  - [Twitter](https://twitter.com/lopo)
-  
-## Thanks
-
-- Thanks to all the people who have supported Duplicate Post by [donating some money](https://duplicate-post.lopo.it/donate/).
-- Thanks to [JetBrains](https://www.jetbrains.com/?from=DuplicatePost) for supporting Duplicate Post with an Open Source license for their tools. 
+The Duplicate Post plugin was created by Enrico Battocchi ([Lopo](https://lopo.it)). It's maintained by Team Yoast, of which Enrico is now a part.
   
 ## Contributing
 
 If you find this useful and if you want to contribute, there are three ways:
 
-   1. You can [write me](https://duplicate-post.lopo.it/contact) and submit your bug reports, suggestions and requests for features;
-   2. You can also [submit a pull request](https://github.com/enricobattocchi/duplicate-post/pulls); 
+   1. You can submit your bug reports, suggestions and requests for features [on GitHub](https://github.com/Yoast/duplicate-post/);
+   2. You can also [submit a pull request](https://github.com/yoast/duplicate-post/pulls); 
    3. If you want to translate it to your language (there are just a few lines of text), you can use the [translation project](https://translate.wordpress.org/projects/wp-plugins/duplicate-post);
-   4. Using the plugin is free, but if you want you can support my efforts by donating [here](https://duplicate-post.lopo.it/donate).
   
 ## License
 
-[GPL v2.0 © Enrico Battocchi](LICENSE)
+[GPL v2.0 © Yoast BV](LICENSE)
