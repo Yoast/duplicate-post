@@ -814,8 +814,7 @@ function duplicate_post_create_duplicate($post, $status = '', $parent_id = '') {
 //Add some links on the plugin page
 function duplicate_post_add_plugin_links($links, $file) {
 	if ( $file == plugin_basename(dirname(__FILE__).'/duplicate-post.php') ) {
-		$links[] = '<a href="https://duplicate-post.lopo.it/" aria-label="' . esc_attr__('Documentation for Duplicate Post', 'duplicate-post') . '">' . esc_html__('Documentation', 'duplicate-post') . '</a>';
-		$links[] = '<a href="https://duplicate-post.lopo.it/donate" aria-label="' . esc_attr__('Donate to support Duplicate Post', 'duplicate-post') . '">' . esc_html__('Donate', 'duplicate-post') . '</a>';
+		$links[] = '<a href="https://yoast.com/wordpress/plugins/duplicate-post/" aria-label="' . esc_attr__('Documentation for Duplicate Post', 'duplicate-post') . '">' . esc_html__('Documentation', 'duplicate-post') . '</a>';
 	}
 	return $links;
 }
