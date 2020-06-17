@@ -76,27 +76,6 @@ function duplicate_post_options() {
 		<?php esc_html_e("Duplicate Post Options", 'duplicate-post'); ?>
 	</h1>
 
-	<div
-		style="display: flex; align-items: center; margin: 9px 15px 4px 0; padding: 5px 30px; float: left; clear:left; border: solid 3px #cccccc; width: 600px;">
-		<svg xmlns="http://www.w3.org/2000/svg" style="padding: 0; margin: 10px 20px 10px 0;"	width="80" height="80" viewBox="0 0 20 20">
-			<path d="M18.9 4.3c0.6 0 1.1 0.5 1.1 1.1v13.6c0 0.6-0.5 1.1-1.1 1.1h-10.7c-0.6 0-1.1-0.5-1.1-1.1v-3.2h-6.1c-0.6 0-1.1-0.5-1.1-1.1v-7.5c0-0.6 0.3-1.4 0.8-1.8l4.6-4.6c0.4-0.4 1.2-0.8 1.8-0.8h4.6c0.6 0 1.1 0.5 1.1 1.1v3.7c0.4-0.3 1-0.4 1.4-0.4h4.6zM12.9 6.7l-3.3 3.3h3.3v-3.3zM5.7 2.4l-3.3 3.3h3.3v-3.3zM7.9 9.6l3.5-3.5v-4.6h-4.3v4.6c0 0.6-0.5 1.1-1.1 1.1h-4.6v7.1h5.7v-2.9c0-0.6 0.3-1.4 0.8-1.8zM18.6 18.6v-12.9h-4.3v4.6c0 0.6-0.5 1.1-1.1 1.1h-4.6v7.1h10z"
-				  fill="rgba(140,140,140,1)"/>
-		</svg>
-		<div>
-		<p>
-			<?php esc_html_e('Serving the WordPress community since November 2007.', 'duplicate-post'); ?>
-			<br/>
-			<strong><a href="https://duplicate-post.lopo.it/donate/"><?php esc_html_e('Support the plugin by making a donation or becoming a patron!', 'duplicate-post'); ?></a></strong>
-		</p>
-		<p>
-			<a href="https://duplicate-post.lopo.it/" aria-label="<?php esc_attr_e('Documentation for Duplicate Post', 'duplicate-post'); ?>"><?php esc_html_e('Documentation', 'duplicate-post'); ?></a>
-			 - <a href="https://translate.wordpress.org/projects/wp-plugins/duplicate-post" aria-label="<?php esc_attr_e('Translate Duplicate Post', 'duplicate-post'); ?>"><?php esc_html_e('Translate', 'duplicate-post'); ?></a>
-			 - <a href="https://wordpress.org/support/plugin/duplicate-post" aria-label="<?php esc_attr_e('Support forum for Duplicate Post', 'duplicate-post'); ?>"><?php esc_html_e('Support Forum', 'duplicate-post'); ?></a>
-		</p>
-		</div>
-	</div>
-
-
 	<script>
 		var tablist;
 		var tabs;
