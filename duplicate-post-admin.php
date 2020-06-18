@@ -55,6 +55,19 @@ function duplicate_post_admin_init() {
 		add_action( 'post_submitbox_start', 'duplicate_post_add_duplicate_post_button' );
 	}
 
+	if ( intval( get_option( 'duplicate_post_show_original_column' ) ) === 1 ) {
+		duplicate_post_show_original_column();
+	}
+
+	if ( intval( get_option( 'duplicate_post_show_original_in_post_states' ) ) === 1 ) {
+		add_filter( 'display_post_states', 'duplicate_post_show_original_in_post_states', 10, 2 );
+	}
+
+	if ( intval( get_option( 'duplicate_post_show_original_meta_box' ) ) === 1 ) {
+		add_action( 'add_meta_boxes', 'duplicate_post_add_custom_box' );
+		add_action( 'save_post', 'duplicate_post_save_quick_edit_data' );
+	}
+
 	/**
 	 * Connect actions to functions.
 	 */
@@ -158,6 +171,9 @@ function duplicate_post_plugin_upgrade() {
 	add_option( 'duplicate_post_show_adminbar', '1' );
 	add_option( 'duplicate_post_show_submitbox', '1' );
 	add_option( 'duplicate_post_show_bulkactions', '1' );
+	add_option( 'duplicate_post_show_original_column', '0' );
+	add_option( 'duplicate_post_show_original_in_post_states', '0' );
+	add_option( 'duplicate_post_show_original_meta_box', '0' );
 
 	$taxonomies_blacklist = get_option( 'duplicate_post_taxonomies_blacklist' );
 	if ( '' === $taxonomies_blacklist ) {
@@ -273,6 +289,200 @@ function duplicate_post_dismiss_notice() {
 }
 
 /**
+ * Adds functions to columns-related hooks.
+ */
+function duplicate_post_show_original_column() {
+	$duplicate_post_types_enabled = get_option( 'duplicate_post_types_enabled', array( 'post', 'page' ) );
+	if ( ! is_array( $duplicate_post_types_enabled ) ) {
+		$duplicate_post_types_enabled = array( $duplicate_post_types_enabled );
+	}
+
+	if ( count( $duplicate_post_types_enabled ) ) {
+		foreach ( $duplicate_post_types_enabled as $enabled_post_type ) {
+			add_filter( "manage_{$enabled_post_type}_posts_columns", 'duplicate_post_add_original_column' );
+			add_action( "manage_{$enabled_post_type}_posts_custom_column", 'duplicate_post_show_original_item', 10, 2 );
+		}
+		add_action( 'quick_edit_custom_box', 'duplicate_post_quick_edit_remove_original', 10, 2 );
+		add_action( 'save_post', 'duplicate_post_save_quick_edit_data' );
+		add_action( 'admin_enqueue_scripts', 'duplicate_post_admin_enqueue_scripts' );
+	}
+}
+
+/**
+ * Adds Original item column to the post list.
+ *
+ * @ignore
+ *
+ * @param array $post_columns The post columns array.
+ * @return array.
+ */
+function duplicate_post_add_original_column( $post_columns ) {
+	$post_columns['duplicate_post_original_item'] = __( 'Original item', 'duplicate-post' );
+	return $post_columns;
+}
+
+/**
+ * Sets the text to be displayed in the Original item column for the current post.
+ *
+ * @ignore
+ *
+ * @param string  $column_name  The name for the current column.
+ * @param integer $post_id     The ID for the current post.
+ */
+function duplicate_post_show_original_item( $column_name, $post_id ) {
+	if ( 'duplicate_post_original_item' === $column_name ) {
+		$column_value  = '<span data-no_original>-</span>';
+		$original_item = duplicate_post_get_original( $post_id );
+		if ( $original_item ) {
+			$column_value = duplicate_post_get_edit_or_view_link( $original_item );
+		}
+		echo $column_value;  // phpcs:ignore WordPress.Security.EscapeOutput
+	}
+}
+
+/**
+ * Adds original item checkbox + edit link in the Quick Edit.
+ *
+ * @ignore
+ *
+ * @param string $column_name  The name for the current column.
+ * @param string $post_type    The post type for the current post.
+ */
+function duplicate_post_quick_edit_remove_original( $column_name, $post_type ) {
+	if ( 'duplicate_post_original_item' != $column_name ) {
+		return;
+	}
+	echo esc_html(
+		sprintf(
+			'<fieldset class="inline-edit-col-right" id="duplicate_post_quick_edit_fieldset">
+						<div class="inline-edit-col">
+							<label class="alignleft">
+							<input type="checkbox" name="duplicate_post_remove_original" value="duplicate_post_remove_original">
+								<span class="checkbox-title">%s</span>
+							</label>
+						</div>
+					</fieldset>',
+			__(
+				'Delete reference to original item: <span class="duplicate_post_original_item_title_span"></span>',
+				'duplicate-post'
+			)
+		)
+	);
+}
+
+/**
+ * Deletes the custom field with the ID of the original post.
+ *
+ * @ignore
+ *
+ * @param integer $post_id The current post ID.
+ * @return void
+ */
+function duplicate_post_save_quick_edit_data( $post_id ) {
+	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+		return;
+	}
+
+	if ( ! current_user_can( 'edit_post', $post_id ) ) {
+		return;
+	}
+
+	if ( ! empty( $_POST['duplicate_post_remove_original'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+		delete_post_meta( $post_id, '_dp_original' );
+	}
+}
+
+/**
+ * Shows link to original post in the post states.
+ *
+ * @ignore
+ *
+ * @param array    $post_states The array of post states.
+ * @param \WP_Post $post The current post.
+ * @return array
+ */
+function duplicate_post_show_original_in_post_states( $post_states, $post ) {
+	$original_item = duplicate_post_get_original( $post->ID );
+	if ( $original_item ) {
+		// translators: Original item link (to view or edit) or title.
+		$post_states['duplicate_post_original_item'] = sprintf( __( 'Original: %s', 'duplicate-post' ), duplicate_post_get_edit_or_view_link( $original_item ) );
+	}
+	return $post_states;
+}
+
+/**
+ * Enqueues the Javascript file to inject column data into the Quick Edit.
+ *
+ * @ignore
+ *
+ * @param string $hook The current admin page.
+ */
+function duplicate_post_admin_enqueue_scripts( $hook ) {
+	if ( 'edit.php' === $hook ) {
+		wp_enqueue_script( 'duplicate_post_admin_script', plugins_url( 'duplicate_post_admin_script.js', __FILE__ ), false, DUPLICATE_POST_CURRENT_VERSION, true );
+	}
+}
+
+/**
+ * Adds a metabox to Edit screen.
+ *
+ * @ignore
+ */
+function duplicate_post_add_custom_box() {
+	$screens = get_option( 'duplicate_post_types_enabled' );
+	if ( ! is_array( $screens ) ) {
+		$screens = array( $screens );
+	}
+	foreach ( $screens as $screen ) {
+		add_meta_box(
+			'duplicate_post_show_original',
+			'Duplicate Post',
+			'duplicate_post_custom_box_html',
+			$screen,
+			'side'
+		);
+	}
+}
+
+/**
+ * Outputs the HTML for the metabox.
+ *
+ * @ignore
+ *
+ * @param \WP_Post $post The current post.
+ */
+function duplicate_post_custom_box_html( $post ) {
+	$original_item = duplicate_post_get_original( $post->ID );
+	if ( $original_item ) {
+		?>
+	<label>
+		<input type="checkbox" name="duplicate_post_remove_original" value="duplicate_post_remove_original">
+		<?php
+		echo esc_html(
+			sprintf(
+				/* translators: %s: post title */
+				__(
+					'Delete reference to original item: <span class="duplicate_post_original_item_title_span">%s</span>',
+					'duplicate-post'
+				),
+				duplicate_post_get_edit_or_view_link( $original_item )
+			)
+		);
+		?>
+	</label>
+		<?php
+	} else {
+		?>
+		<script>
+			(function(jQuery){
+				jQuery('#duplicate_post_show_original').hide();
+			})(jQuery);
+		</script>
+		<?php
+	}
+}
+
+/**
  * Adds the link to action list for post_row_actions.
  *
  * @param array   $actions The actions array.
@@ -280,7 +490,8 @@ function duplicate_post_dismiss_notice() {
  * @return array.
  */
 function duplicate_post_make_duplicate_link_row( $actions, $post ) {
-	$title = empty( $post->post_title ) ? __( '(no title)', 'duplicate-post' ) : $post->post_title;
+	// $title = empty( $post->post_title ) ? __( '(no title)', 'duplicate-post' ) : $post->post_title;
+	$title = _draft_or_post_title( $post );
 
 	/**
 	 * Filter allowing displaying duplicate post link for current post.
@@ -904,8 +1115,7 @@ function duplicate_post_create_duplicate( $post, $status = '', $parent_id = '' )
  */
 function duplicate_post_add_plugin_links( $links, $file ) {
 	if ( plugin_basename( dirname( __FILE__ ) . '/duplicate-post.php' ) === $file ) {
-		$links[] = '<a href="https://duplicate-post.lopo.it/">' . esc_html__( 'Documentation', 'duplicate-post' ) . '</a>';
-		$links[] = '<a href="https://duplicate-post.lopo.it/donate">' . esc_html__( 'Donate', 'duplicate-post' ) . '</a>';
+		$links[] = '<a href="https://yoast.com/wordpress/plugins/duplicate-post">' . esc_html__( 'Documentation', 'duplicate-post' ) . '</a>';
 	}
 	return $links;
 }

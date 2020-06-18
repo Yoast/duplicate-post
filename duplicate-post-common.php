@@ -122,6 +122,79 @@ function duplicate_post_get_original( $post = null, $output = OBJECT ) {
 }
 
 /**
+ * Returns a link to edit, preview or view a post, in accordance to user capabilities.
+ *
+ * @ignore
+ *
+ * @param WP_Post $post Post ID or Post object.
+ * @return string
+ */
+function duplicate_post_get_edit_or_view_link( $post ) {
+	$post = get_post( $post );
+	if ( ! $post ) {
+		return null;
+	}
+
+	$can_edit_post    = current_user_can( 'edit_post', $post->ID );
+	$title            = _draft_or_post_title( $post );
+	$post_type_object = get_post_type_object( $post->post_type );
+
+	if ( $can_edit_post && 'trash' != $post->post_status ) {
+		return sprintf(
+			'<a href="%s" aria-label="%s">%s</a>',
+			get_edit_post_link( $post->ID ),
+			/* translators: %s: post title */
+			esc_attr( sprintf( __( 'Edit &#8220;%s&#8221;', 'default' ), $title ) ),
+			$title
+		);
+	} elseif ( duplicate_post_is_post_type_viewable( $post_type_object ) ) {
+		if ( in_array( $post->post_status, array( 'pending', 'draft', 'future' ) ) ) {
+			if ( $can_edit_post ) {
+				$preview_link    = get_preview_post_link( $post );
+				return sprintf(
+					'<a href="%s" rel="bookmark" aria-label="%s">%s</a>',
+					esc_url( $preview_link ),
+					/* translators: %s: post title */
+					esc_attr( sprintf( __( 'Preview &#8220;%s&#8221;', 'default' ), $title ) ),
+					$title
+				);
+			}
+		} elseif ( 'trash' != $post->post_status ) {
+			return sprintf(
+				'<a href="%s" rel="bookmark" aria-label="%s">%s</a>',
+				get_permalink( $post->ID ),
+				/* translators: %s: post title */
+				esc_attr( sprintf( __( 'View &#8220;%s&#8221;', 'default' ), $title ) ),
+				$title
+			);
+		}
+	}
+	return $title;
+}
+
+/**
+ * Workaround for is_post_type_viewable (introduced in WP 4.4).
+ *
+ * @ignore
+ *
+ * @param mixed $post_type  The post type to check.
+ * @return bool
+ */
+function duplicate_post_is_post_type_viewable( $post_type ) {
+	if ( function_exists( 'is_post_type_viewable' ) ) {
+		return is_post_type_viewable( $post_type );
+	} else {
+		if ( is_scalar( $post_type ) ) {
+			$post_type = get_post_type_object( $post_type );
+			if ( ! $post_type ) {
+				return false;
+			}
+		}
+		return $post_type->publicly_queryable || ( $post_type->_builtin && $post_type->public );
+	}
+}
+
+/**
  * Shows link in the Toolbar.
  *
  * @global WP_Query $wp_the_query.
@@ -258,7 +331,7 @@ add_action( 'init', 'duplicate_post_init' );
  */
 function duplicate_post_init() {
 	if ( 1 === intval( get_option( 'duplicate_post_show_adminbar' ) ) ) {
-		add_action( 'admin_bar_menu', 'duplicate_post_admin_bar_render', 90 );
+		add_action( 'wp_before_admin_bar_render', 'duplicate_post_admin_bar_render' );
 		add_action( 'wp_enqueue_scripts', 'duplicate_post_add_css' );
 		add_action( 'admin_enqueue_scripts', 'duplicate_post_add_css' );
 	}
