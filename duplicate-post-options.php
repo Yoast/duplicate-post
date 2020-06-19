@@ -266,33 +266,18 @@ header.nav-tab-wrapper {
 	margin: 22px 0 0 0;
 }
 
+header .nav-tab{
+    cursor: pointer;
+}
+
 header .nav-tab:focus {
 	color: #555;
 	box-shadow: none;
+	outline: 1px dotted #000000;
 }
-
-#sections {
-	padding: 22px;
-	background: #fff;
-	border: 1px solid #ccc;
-	border-top: 0px;
-}
-/*
-section {
-	display: none;
-}
-
-section:first-of-type {
-	display: block;
-}*/
 
 .no-js header.nav-tab-wrapper {
 	display: none;
-}
-
-.no-js #sections {
-	border-top: 1px solid #ccc;
-	margin-top: 22px;
 }
 
 .no-js section {
@@ -307,17 +292,17 @@ section:first-of-type {
 	border: 0px;
 }
 
+.no-js #duplicate_post_settings_form section[hidden] {
+	display: block;
+}
+
 label.taxonomy_private {
 	font-style: italic;
 }
 
 .toggle-private-taxonomies.button-link {
-    font-size: small;
-    margin-top: 1em;
-}
-
-img#donate-button{
-	vertical-align: middle;
+	font-size: small;
+	margin-top: 1em;
 }
 </style>
 
