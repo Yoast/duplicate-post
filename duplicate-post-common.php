@@ -198,11 +198,11 @@ function duplicate_post_is_post_type_viewable( $post_type ) {
  * Shows link in the Toolbar.
  *
  * @global WP_Query $wp_the_query.
- *
- * @param WP_Admin_Bar $wp_admin_bar WP_Admin_Bar instance.
+ * @global WP_Admin_Bar $wp_admin_bar WP_Admin_Bar instance.
  */
-function duplicate_post_admin_bar_render( $wp_admin_bar ) {
+function duplicate_post_admin_bar_render() {
 	global $wp_the_query;
+	global $wp_admin_bar;
 
 	if ( is_admin() ) {
 		$current_screen = get_current_screen();
@@ -265,6 +265,15 @@ function duplicate_post_admin_bar_render( $wp_admin_bar ) {
 }
 
 /**
+ * Enqueues the CSS file for Toolbar and Quick Edit display.
+ *
+ * @ignore
+ */
+function duplicate_post_enqueue_css() {
+	wp_enqueue_style( 'duplicate-post', plugins_url( '/duplicate-post.css', __FILE__ ), array(), DUPLICATE_POST_CURRENT_VERSION );
+}
+
+/**
  * Links stylesheet for Toolbar link.
  *
  * @global WP_Query $wp_the_query.
@@ -298,7 +307,7 @@ function duplicate_post_add_css() {
 			&& ( $post_type_object->public )
 			&& ( $post_type_object->show_in_admin_bar )
 			&& ( duplicate_post_is_post_type_enabled( $post->post_type ) ) ) {
-			wp_enqueue_style( 'duplicate-post', plugins_url( '/duplicate-post.css', __FILE__ ), array(), DUPLICATE_POST_CURRENT_VERSION );
+			duplicate_post_enqueue_css();
 		}
 	} else {
 		$current_object = $wp_the_query->get_queried_object();
@@ -319,7 +328,25 @@ function duplicate_post_add_css() {
 			&& duplicate_post_is_current_user_allowed_to_copy()
 			&& ( $post_type_object->show_in_admin_bar )
 			&& ( duplicate_post_is_post_type_enabled( $current_object->post_type ) ) ) {
-			wp_enqueue_style( 'duplicate-post', plugins_url( '/duplicate-post.css', __FILE__ ), array(), DUPLICATE_POST_CURRENT_VERSION );
+			duplicate_post_enqueue_css();
+		}
+	}
+}
+
+/**
+ * Links stylesheet for Quick Edit fieldset.
+ */
+function duplicate_post_add_css_to_post_list() {
+	if ( is_admin() ) {
+		$current_screen = get_current_screen();
+		if ( ! is_null( $current_screen ) ) {
+			if ( 'edit' === $current_screen->base ) {
+				$post_type = $current_screen->post_type;
+				if ( duplicate_post_is_current_user_allowed_to_copy()
+					&& duplicate_post_is_post_type_enabled( $post_type ) ) {
+					duplicate_post_enqueue_css();
+				}
+			}
 		}
 	}
 }
@@ -335,6 +362,7 @@ function duplicate_post_init() {
 		add_action( 'wp_enqueue_scripts', 'duplicate_post_add_css' );
 		add_action( 'admin_enqueue_scripts', 'duplicate_post_add_css' );
 	}
+	add_action( 'admin_enqueue_scripts', 'duplicate_post_add_css_to_post_list' );
 }
 
 /**

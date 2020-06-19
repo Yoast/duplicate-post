@@ -352,19 +352,33 @@ function duplicate_post_quick_edit_remove_original( $column_name, $post_type ) {
 	if ( 'duplicate_post_original_item' !== $column_name ) {
 		return;
 	}
-	echo esc_html(
-		sprintf(
-			'<fieldset class="inline-edit-col-right" id="duplicate_post_quick_edit_fieldset">
-						<div class="inline-edit-col">
-							<label class="alignleft">
-							<input type="checkbox" name="duplicate_post_remove_original" value="duplicate_post_remove_original">
-								<span class="checkbox-title">%s</span>
-							</label>
-						</div>
-					</fieldset>',
+	printf(
+		'<fieldset class="inline-edit-col-left" id="duplicate_post_quick_edit_fieldset">
+			<div class="inline-edit-col">
+                <input type="checkbox" 
+                name="duplicate_post_remove_original" 
+                id="duplicate-post-remove-original" 
+                value="duplicate_post_remove_original"
+                aria-describedby="duplicate-post-remove-original-description">
+                <label for="duplicate-post-remove-original">
+					<span class="checkbox-title">%s</span>
+				</label>
+				<span id="duplicate-post-remove-original-description" class="checkbox-title">%s</span>
+			</div>
+		</fieldset>',
+		esc_html__(
+			'Delete reference to original item.',
+			'duplicate-post'
+		),
+		wp_kses(
 			__(
-				'Delete reference to original item: <span class="duplicate_post_original_item_title_span"></span>',
+				'The original item this was copied from is: <span class="duplicate_post_original_item_title_span"></span>',
 				'duplicate-post'
+			),
+			array(
+				'span' => array(
+					'class' => array(),
+				),
 			)
 		)
 	);
@@ -455,21 +469,35 @@ function duplicate_post_custom_box_html( $post ) {
 	$original_item = duplicate_post_get_original( $post->ID );
 	if ( $original_item ) {
 		?>
-	<label>
-		<input type="checkbox" name="duplicate_post_remove_original" value="duplicate_post_remove_original">
+	<p>
+		<input type="checkbox"
+			name="duplicate_post_remove_original"
+			id="duplicate-post-remove-original"
+			value="duplicate_post_remove_original"
+			aria-describedby="duplicate-post-remove-original-description">
+		<label for="duplicate-post-remove-original">
+			<?php esc_html_e( 'Delete reference to original item.', 'duplicate-post' ); ?>
+		</label>
+	</p>
+	<p id="duplicate-post-remove-original-description">
 		<?php
-		echo esc_html(
-			sprintf(
+		printf(
+			wp_kses(
 				/* translators: %s: post title */
 				__(
-					'Delete reference to original item: <span class="duplicate_post_original_item_title_span">%s</span>',
+					'The original item this was copied from is: <span class="duplicate_post_original_item_title_span">%s</span>',
 					'duplicate-post'
 				),
-				duplicate_post_get_edit_or_view_link( $original_item )
-			)
+				array(
+					'span' => array(
+						'class' => array(),
+					),
+				)
+			),
+			duplicate_post_get_edit_or_view_link( $original_item )  // phpcs:ignore WordPress.Security.EscapeOutput
 		);
 		?>
-	</label>
+	</p>
 		<?php
 	} else {
 		?>
