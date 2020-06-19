@@ -349,7 +349,7 @@ function duplicate_post_show_original_item( $column_name, $post_id ) {
  * @param string $post_type    The post type for the current post.
  */
 function duplicate_post_quick_edit_remove_original( $column_name, $post_type ) {
-	if ( 'duplicate_post_original_item' != $column_name ) {
+	if ( 'duplicate_post_original_item' !== $column_name ) {
 		return;
 	}
 	echo esc_html(

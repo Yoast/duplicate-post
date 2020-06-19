@@ -55,13 +55,23 @@ function duplicate_post_register_settings() {
  * Adds options page to menu.
  */
 function duplicate_post_menu() {
-	add_options_page(
+	$page_hook = add_options_page(
 		__( 'Duplicate Post Options', 'duplicate-post' ),
 		__( 'Duplicate Post', 'duplicate-post' ),
 		'manage_options',
 		'duplicatepost',
 		'duplicate_post_options'
 	);
+	add_action( $page_hook, 'duplicate_post_add_options_page_css' );
+}
+
+/**
+ * Enqueues a CSS file with styles for the options page.
+ *
+ * @ignore
+ */
+function duplicate_post_add_options_page_css() {
+	wp_enqueue_style( 'duplicate-post-options', plugins_url( '/duplicate-post-options.css', __FILE__ ), array(), DUPLICATE_POST_CURRENT_VERSION );
 }
 
 /**
@@ -281,44 +291,7 @@ function duplicate_post_options() {
 		});
 	</script>
 
-	<style>
-		header.nav-tab-wrapper {
-			margin: 22px 0 0 0;
-		}
-
-		header .nav-tab:focus {
-			color: #555;
-			box-shadow: none;
-		}
-
-		.no-js header.nav-tab-wrapper {
-			display: none;
-		}
-
-		.no-js section {
-			border-top: 1px dashed #aaa;
-			margin-top: 22px;
-			padding-top: 22px;
-		}
-
-		.no-js section:first-of-type {
-			margin: 0;
-			padding: 0;
-			border: 0;
-		}
-
-		label.taxonomy_private {
-			font-style: italic;
-		}
-
-		.toggle-private-taxonomies.button-link {
-			font-size: small;
-			margin-top: 1em;
-		}
-	</style>
-
-
-	<form method="post" action="options.php" style="clear: both">
+	<form id="duplicate_post_settings_form" method="post" action="options.php" style="clear: both">
 		<?php settings_fields( 'duplicate_post_group' ); ?>
 
 		<header role="tablist" aria-label="<?php esc_attr_e( 'Settings sections', 'duplicate-post' ); ?>" class="nav-tab-wrapper">
@@ -355,7 +328,7 @@ function duplicate_post_options() {
 				role="tabpanel"
 				id="what-tab"
 				aria-labelledby="what">
-
+			<h2><?php esc_html_e( 'What to copy', 'duplicate-post' ); ?></h2>
 			<table class="form-table" role="presentation">
 				<tr>
 					<th scope="row"><?php esc_html_e( 'Post/page elements to copy', 'duplicate-post' ); ?></th>
@@ -608,6 +581,7 @@ function duplicate_post_options() {
 				id="who-tab"
 				aria-labelledby="who"
 				hidden="hidden">
+			<h2><?php esc_html_e( 'Permissions', 'duplicate-post' ); ?></h2>
 			<table class="form-table" role="presentation">
 				<?php if ( current_user_can( 'promote_users' ) ) { ?>
 				<tr>
@@ -688,6 +662,7 @@ function duplicate_post_options() {
 				id="where-tab"
 				aria-labelledby="where"
 				hidden="hidden">
+			<h2><?php esc_html_e( 'Display', 'duplicate-post' ); ?></h2>
 			<table class="form-table" role="presentation">
 				<tr>
 					<th scope="row"><?php esc_html_e( 'Show links in', 'duplicate-post' ); ?></th>

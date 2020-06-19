@@ -139,7 +139,7 @@ function duplicate_post_get_edit_or_view_link( $post ) {
 	$title            = _draft_or_post_title( $post );
 	$post_type_object = get_post_type_object( $post->post_type );
 
-	if ( $can_edit_post && 'trash' != $post->post_status ) {
+	if ( $can_edit_post && 'trash' !== $post->post_status ) {
 		return sprintf(
 			'<a href="%s" aria-label="%s">%s</a>',
 			get_edit_post_link( $post->ID ),
@@ -150,7 +150,7 @@ function duplicate_post_get_edit_or_view_link( $post ) {
 	} elseif ( duplicate_post_is_post_type_viewable( $post_type_object ) ) {
 		if ( in_array( $post->post_status, array( 'pending', 'draft', 'future' ) ) ) {
 			if ( $can_edit_post ) {
-				$preview_link    = get_preview_post_link( $post );
+				$preview_link = get_preview_post_link( $post );
 				return sprintf(
 					'<a href="%s" rel="bookmark" aria-label="%s">%s</a>',
 					esc_url( $preview_link ),
@@ -159,7 +159,7 @@ function duplicate_post_get_edit_or_view_link( $post ) {
 					$title
 				);
 			}
-		} elseif ( 'trash' != $post->post_status ) {
+		} elseif ( 'trash' !== $post->post_status ) {
 			return sprintf(
 				'<a href="%s" rel="bookmark" aria-label="%s">%s</a>',
 				get_permalink( $post->ID ),
