@@ -1,0 +1,41 @@
+#duplicate_post_settings_form header.nav-tab-wrapper {
+	margin: 22px 0 0 0;
+}
+
+#duplicate_post_settings_form header .nav-tab{
+	cursor: pointer;
+}
+
+#duplicate_post_settings_form header .nav-tab:focus {
+	box-shadow: none;
+	outline: 1px dotted #000000;
+}
+
+.no-js #duplicate_post_settings_form header.nav-tab-wrapper {
+	display: none;
+}
+
+.no-js #duplicate_post_settings_form section {
+	border-top: 1px dashed #aaa;
+	margin-top: 22px;
+	padding-top: 22px;
+}
+
+.no-js #duplicate_post_settings_form section:first-of-type {
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+.no-js #duplicate_post_settings_form section[hidden] {
+	display: block;
+}
+
+#duplicate_post_settings_form label.taxonomy_private {
+	font-style: italic;
+}
+
+#duplicate_post_settings_form .toggle-private-taxonomies.button-link {
+	font-size: small;
+	margin-top: 1em;
+}
