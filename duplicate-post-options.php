@@ -45,6 +45,9 @@ function duplicate_post_register_settings() {
 	register_setting( 'duplicate_post_group', 'duplicate_post_show_adminbar' );
 	register_setting( 'duplicate_post_group', 'duplicate_post_show_submitbox' );
 	register_setting( 'duplicate_post_group', 'duplicate_post_show_bulkactions' );
+	register_setting( 'duplicate_post_group', 'duplicate_post_show_original_column' );
+	register_setting( 'duplicate_post_group', 'duplicate_post_show_original_in_post_states' );
+	register_setting( 'duplicate_post_group', 'duplicate_post_show_original_meta_box' );
 	register_setting( 'duplicate_post_group', 'duplicate_post_show_notice' );
 }
 
@@ -52,13 +55,23 @@ function duplicate_post_register_settings() {
  * Adds options page to menu.
  */
 function duplicate_post_menu() {
-	add_options_page(
+	$page_hook = add_options_page(
 		__( 'Duplicate Post Options', 'duplicate-post' ),
 		__( 'Duplicate Post', 'duplicate-post' ),
 		'manage_options',
 		'duplicatepost',
 		'duplicate_post_options'
 	);
+	add_action( $page_hook, 'duplicate_post_add_options_page_css' );
+}
+
+/**
+ * Enqueues a CSS file with styles for the options page.
+ *
+ * @ignore
+ */
+function duplicate_post_add_options_page_css() {
+	wp_enqueue_style( 'duplicate-post-options', plugins_url( '/duplicate-post-options.css', __FILE__ ), array(), DUPLICATE_POST_CURRENT_VERSION );
 }
 
 /**
@@ -96,104 +109,226 @@ function duplicate_post_options() {
 		<?php esc_html_e( 'Duplicate Post Options', 'duplicate-post' ); ?>
 	</h1>
 
-	<div
-		style="margin: 9px 15px 4px 0; padding: 5px 30px; text-align: center; float: left; clear: left; border: solid 3px #cccccc; width: 600px;">
-		<p>
-		<?php esc_html_e( 'Help me develop the plugin, add new features and improve support!', 'duplicate-post' ); ?>
-		<br />
-		<?php esc_html_e( 'Donate whatever sum you choose, even just 10¢.', 'duplicate-post' ); ?>
-		<br /> <a href="https://duplicate-post.lopo.it/donate"><img
-				id="donate-button" style="margin: 0 auto;"
-				src="<?php echo esc_url( plugins_url( 'donate.png', __FILE__ ) ); ?>"
-				alt="Donate" /></a> <br /> <a href="https://duplicate-post.lopo.it/"><?php esc_html_e( 'Documentation', 'duplicate-post' ); ?></a>
-			- <a
-				href="https://translate.wordpress.org/projects/wp-plugins/duplicate-post"><?php esc_html_e( 'Translate', 'duplicate-post' ); ?></a>
-			- <a href="https://wordpress.org/support/plugin/duplicate-post"><?php esc_html_e( 'Support Forum', 'duplicate-post' ); ?></a>
-		</p>
-	</div>
-
-
 	<script>
-	jQuery(document).on( 'click', '.nav-tab-wrapper a', function() {
-		jQuery('.nav-tab').removeClass('nav-tab-active');
-		jQuery(this).addClass('nav-tab-active');
-		jQuery('section').hide();
-		jQuery('section').eq(jQuery(this).index()).show();
-		return false;
-	});
+		var tablist;
+		var tabs;
+		var panels;
 
-	jQuery( function() {
-		jQuery( '.taxonomy_private' ).hide();
+		// For easy reference
+		var keys = {
+			end: 35,
+			home: 36,
+			left: 37,
+			up: 38,
+			right: 39,
+			down: 40,
+			delete: 46
+		};
 
-		jQuery( '.toggle-private-taxonomies' )
-			.on( 'click', function() {
-				buttonElement = jQuery( this );
-				jQuery( '.taxonomy_private' ).toggle( 300, function() {
-					buttonElement.attr( 'aria-expanded', jQuery( this ).is( ":visible" ) );
+		// Add or substract depending on key pressed
+		var direction = {
+			37: -1,
+			38: -1,
+			39: 1,
+			40: 1
+		};
+
+
+		function generateArrays () {
+			tabs = document.querySelectorAll('#duplicate_post_settings_form [role="tab"]');
+			panels = document.querySelectorAll('#duplicate_post_settings_form [role="tabpanel"]');
+		}
+
+		function addListeners (index) {
+			tabs[index].addEventListener('click', function(event){
+				var tab = event.target;
+				activateTab(tab, false);
+			});
+			tabs[index].addEventListener('keydown', function(event) {
+				var key = event.keyCode;
+
+				switch (key) {
+					case keys.end:
+						event.preventDefault();
+						// Activate last tab
+						activateTab(tabs[tabs.length - 1]);
+						break;
+					case keys.home:
+						event.preventDefault();
+						// Activate first tab
+						activateTab(tabs[0]);
+						break;
+				}
+			});
+			tabs[index].addEventListener('keyup', function(event) {
+				var key = event.keyCode;
+
+				switch (key) {
+					case keys.left:
+					case keys.right:
+						switchTabOnArrowPress(event);
+						break;
+				}
+			});
+
+			// Build an array with all tabs (<button>s) in it
+			tabs[index].index = index;
+		}
+
+
+		// Either focus the next, previous, first, or last tab
+		// depening on key pressed
+		function switchTabOnArrowPress (event) {
+			var pressed = event.keyCode;
+
+			for (x = 0; x < tabs.length; x++) {
+				tabs[x].addEventListener('focus', focusEventHandler);
+			}
+
+			if (direction[pressed]) {
+				var target = event.target;
+				if (target.index !== undefined) {
+					if (tabs[target.index + direction[pressed]]) {
+						tabs[target.index + direction[pressed]].focus();
+					}
+					else if (pressed === keys.left || pressed === keys.up) {
+						focusLastTab();
+					}
+					else if (pressed === keys.right || pressed === keys.down) {
+						focusFirstTab();
+					}
+				}
+			}
+		}
+
+		// Activates any given tab panel
+		function activateTab (tab, setFocus) {
+			setFocus = setFocus || true;
+			// Deactivate all other tabs
+			deactivateTabs();
+
+			// Remove tabindex attribute
+			tab.removeAttribute('tabindex');
+
+			// Set the tab as selected
+			tab.setAttribute('aria-selected', 'true');
+
+			tab.classList.add('nav-tab-active');
+
+			// Get the value of aria-controls (which is an ID)
+			var controls = tab.getAttribute('aria-controls');
+
+			// Remove hidden attribute from tab panel to make it visible
+			document.getElementById(controls).removeAttribute('hidden');
+
+			// Set focus when required
+			if (setFocus) {
+				tab.focus();
+			}
+		}
+
+		// Deactivate all tabs and tab panels
+		function deactivateTabs () {
+			for (t = 0; t < tabs.length; t++) {
+				tabs[t].setAttribute('tabindex', '-1');
+				tabs[t].setAttribute('aria-selected', 'false');
+				tabs[t].classList.remove('nav-tab-active');
+				tabs[t].removeEventListener('focus', focusEventHandler);
+			}
+
+			for (p = 0; p < panels.length; p++) {
+				panels[p].setAttribute('hidden', 'hidden');
+			}
+		}
+
+		// Make a guess
+		function focusFirstTab () {
+			tabs[0].focus();
+		}
+
+		// Make a guess
+		function focusLastTab () {
+			tabs[tabs.length - 1].focus();
+		}
+
+		//
+		function focusEventHandler (event) {
+			var target = event.target;
+
+			checkTabFocus(target);
+		}
+
+		// Only activate tab on focus if it still has focus after the delay
+		function checkTabFocus (target) {
+			focused = document.activeElement;
+
+			if (target === focused) {
+				activateTab(target, false);
+			}
+		}
+
+		document.addEventListener("DOMContentLoaded", function () {
+			tablist = document.querySelectorAll('#duplicate_post_settings_form [role="tablist"]')[0];
+
+			generateArrays();
+
+			// Bind listeners
+			for (i = 0; i < tabs.length; ++i) {
+				addListeners(i);
+			}
+		});
+
+		jQuery(function(){
+			jQuery('.taxonomy_private').hide();
+
+			jQuery( '.toggle-private-taxonomies' )
+				.on( 'click', function() {
+					buttonElement = jQuery( this );
+					jQuery( '.taxonomy_private' ).toggle( 300, function() {
+						buttonElement.attr( 'aria-expanded', jQuery( this ).is( ":visible" ) );
+					} );
 				} );
-			} );
-	} );
-
+		});
 	</script>
 
-	<style>
-.nav-tab-wrapper {
-	margin: 22px 0 0 0;
-}
-
-.js section {
-	display: none;
-}
-
-.js section:first-of-type {
-	display: block;
-}
-
-.no-js .nav-tab-wrapper {
-	display: none;
-}
-
-.no-js section {
-	border-top: 1px dashed #aaa;
-	margin-top: 22px;
-	padding-top: 22px;
-}
-
-.no-js section:first-of-type {
-	margin: 0;
-	padding: 0;
-	border: 0;
-}
-
-label.taxonomy_private {
-	font-style: italic;
-}
-
-.toggle-private-taxonomies.button-link {
-	margin-top: 1em;
-}
-
-img#donate-button {
-	vertical-align: middle;
-}
-	</style>
-
-
-	<form method="post" action="options.php" style="clear: both">
+	<form id="duplicate_post_settings_form" method="post" action="options.php" style="clear: both">
 		<?php settings_fields( 'duplicate_post_group' ); ?>
 
-		<h2 class="nav-tab-wrapper">
-			<a class="nav-tab nav-tab-active"
-				href="<?php echo esc_url( admin_url( '/index.php?page=duplicate-post-what' ) ); ?>"><?php esc_html_e( 'What to copy', 'duplicate-post' ); ?>
-			</a> <a class="nav-tab"
-				href="<?php echo esc_url( admin_url( '/index.php?page=duplicate-post-who' ) ); ?>"><?php esc_html_e( 'Permissions', 'duplicate-post' ); ?>
-			</a> <a class="nav-tab"
-				href="<?php echo esc_url( admin_url( '/index.php?page=duplicate-post-where' ) ); ?>"><?php esc_html_e( 'Display', 'duplicate-post' ); ?>
-			</a>
-		</h2>
+		<header role="tablist" aria-label="<?php esc_attr_e( 'Settings sections', 'duplicate-post' ); ?>" class="nav-tab-wrapper">
+			<button
+					type="button"
+					role="tab"
+					class="nav-tab nav-tab-active"
+					aria-selected="true"
+					aria-controls="what-tab"
+					id="what"><?php esc_html_e( 'What to copy', 'duplicate-post' ); ?>
+			</button>
+			<button
+					type="button"
+					role="tab"
+					class="nav-tab"
+					aria-selected="false"
+					aria-controls="who-tab"
+					id="who"
+					tabindex="-1"><?php esc_html_e( 'Permissions', 'duplicate-post' ); ?>
+			</button>
+			<button
+					type="button"
+					role="tab"
+					class="nav-tab"
+					aria-selected="false"
+					aria-controls="where-tab"
+					id="where"
+					tabindex="-1"><?php esc_html_e( 'Display', 'duplicate-post' ); ?>
+			</button>
+		</header>
 
-		<section>
-
+		<section
+				tabindex="0"
+				role="tabpanel"
+				id="what-tab"
+				aria-labelledby="what">
+			<h2 class="hide-if-js"><?php esc_html_e( 'What to copy', 'duplicate-post' ); ?></h2>
 			<table class="form-table" role="presentation">
 				<tr>
 					<th scope="row"><?php esc_html_e( 'Post/page elements to copy', 'duplicate-post' ); ?></th>
@@ -440,12 +575,17 @@ img#donate-button {
 				</tr>
 			</table>
 		</section>
-		<section>
+		<section
+				tabindex="0"
+				role="tabpanel"
+				id="who-tab"
+				aria-labelledby="who"
+				hidden="hidden">
+			<h2 class="hide-if-js"><?php esc_html_e( 'Permissions', 'duplicate-post' ); ?></h2>
 			<table class="form-table" role="presentation">
 				<?php if ( current_user_can( 'promote_users' ) ) { ?>
 				<tr>
-					<th scope="row"><?php esc_html_e( 'Roles allowed to copy', 'duplicate-post' ); ?>
-					</th>
+					<th scope="row"><?php esc_html_e( 'Roles allowed to copy', 'duplicate-post' ); ?></th>
 					<td>
 						<fieldset>
 							<legend class="screen-reader-text"><?php esc_html_e( 'Roles allowed to copy', 'duplicate-post' ); ?></legend>
@@ -516,7 +656,13 @@ img#donate-button {
 				</tr>
 			</table>
 		</section>
-		<section>
+		<section
+				tabindex="0"
+				role="tabpanel"
+				id="where-tab"
+				aria-labelledby="where"
+				hidden="hidden">
+			<h2 class="hide-if-js"><?php esc_html_e( 'Display', 'duplicate-post' ); ?></h2>
 			<table class="form-table" role="presentation">
 				<tr>
 					<th scope="row"><?php esc_html_e( 'Show links in', 'duplicate-post' ); ?></th>
@@ -591,8 +737,52 @@ img#donate-button {
 					</td>
 				</tr>
 				<tr>
-					<th scope="row"><?php esc_html_e( 'Update notice', 'duplicate-post' ); ?>
-					</th>
+					<th scope="row"><?php esc_html_e( 'Show original item:', 'duplicate-post' ); ?></th>
+					<td>
+						<input
+								type="checkbox"
+								name="duplicate_post_show_original_meta_box"
+								id="duplicate-post-show-original-meta-box"
+								aria-describedby="duplicate-post-show-original-meta-box-description"
+								value="1"
+							<?php
+							if ( 1 === intval( get_option( 'duplicate_post_show_original_meta_box' ) ) ) {
+								echo 'checked="checked"';
+							}
+							?>
+								/>
+						<label for="duplicate-post-show-original-meta-box"><?php esc_html_e( 'In a metabox in the Edit screen [Classic editor]', 'duplicate-post' ); ?></label>
+						<p id="duplicate-post-show-original-meta-box-description">(<?php esc_html_e( "you'll also be able to delete the reference to the original item with a checkbox", 'duplicate-post' ); ?>)</p><br/>
+						<input
+								type="checkbox"
+								name="duplicate_post_show_original_column"
+								id="duplicate-post-show-original-column"
+								aria-describedby="duplicate-post-show-original-column-description"
+								value="1"
+							<?php
+							if ( 1 === intval( get_option( 'duplicate_post_show_original_column' ) ) ) {
+								echo 'checked="checked"';
+							}
+							?>
+								/>
+						<label for="duplicate-post-show-original-column"><?php esc_html_e( 'In a column in the Post list', 'duplicate-post' ); ?></label>
+						<p id="duplicate-post-show-original-column-description">(<?php esc_html_e( "you'll also be able to delete the reference to the original item with a checkbox in Quick Edit", 'duplicate-post' ); ?>)</p><br/>
+						<input
+								type="checkbox"
+								name="duplicate_post_show_original_in_post_states"
+								id="duplicate-post-show-original-in-post-states"
+								value="1"
+							<?php
+							if ( 1 === intval( get_option( 'duplicate_post_show_original_in_post_states' ) ) ) {
+								echo 'checked="checked"';
+							}
+							?>
+								/>
+						<label for="duplicate-post-show-original-in-post-states"><?php esc_html_e( 'After the title in the Post list', 'duplicate-post' ); ?></label>
+					</td>
+				</tr>
+				<tr>
+					<th scope="row"><?php esc_html_e( 'Update notice', 'duplicate-post' ); ?></th>
 					<td>
 						<input
 							type="checkbox"

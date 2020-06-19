@@ -29,3 +29,17 @@
 		-moz-osx-font-smoothing: grayscale;
 	}
 }
+
+fieldset#duplicate_post_quick_edit_fieldset{
+	clear: both;
+}
+
+fieldset#duplicate_post_quick_edit_fieldset label{
+	display: inline;
+	margin: 0;
+	vertical-align: unset;
+}
+
+fieldset#duplicate_post_quick_edit_fieldset a{
+	text-decoration: underline;
+}
