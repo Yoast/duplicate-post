@@ -328,7 +328,7 @@ function duplicate_post_options() {
 				role="tabpanel"
 				id="what-tab"
 				aria-labelledby="what">
-			<h2><?php esc_html_e( 'What to copy', 'duplicate-post' ); ?></h2>
+			<h2 class="hide-if-js"><?php esc_html_e( 'What to copy', 'duplicate-post' ); ?></h2>
 			<table class="form-table" role="presentation">
 				<tr>
 					<th scope="row"><?php esc_html_e( 'Post/page elements to copy', 'duplicate-post' ); ?></th>
@@ -581,7 +581,7 @@ function duplicate_post_options() {
 				id="who-tab"
 				aria-labelledby="who"
 				hidden="hidden">
-			<h2><?php esc_html_e( 'Permissions', 'duplicate-post' ); ?></h2>
+			<h2 class="hide-if-js"><?php esc_html_e( 'Permissions', 'duplicate-post' ); ?></h2>
 			<table class="form-table" role="presentation">
 				<?php if ( current_user_can( 'promote_users' ) ) { ?>
 				<tr>
@@ -662,7 +662,7 @@ function duplicate_post_options() {
 				id="where-tab"
 				aria-labelledby="where"
 				hidden="hidden">
-			<h2><?php esc_html_e( 'Display', 'duplicate-post' ); ?></h2>
+			<h2 class="hide-if-js"><?php esc_html_e( 'Display', 'duplicate-post' ); ?></h2>
 			<table class="form-table" role="presentation">
 				<tr>
 					<th scope="row"><?php esc_html_e( 'Show links in', 'duplicate-post' ); ?></th>

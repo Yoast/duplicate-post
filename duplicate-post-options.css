@@ -32,10 +32,6 @@
 	display: block;
 }
 
-.js #duplicate_post_settings_form section h2 {
-	display: none
-}
-
 #duplicate_post_settings_form label.taxonomy_private {
 	font-style: italic;
 }
