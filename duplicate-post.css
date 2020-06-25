@@ -7,7 +7,7 @@
 	#wpadminbar li#wp-admin-bar-new_draft{
 		display: block;
 	}
-	
+
 	#wpadminbar #wp-admin-bar-new_draft > .ab-item {
     	text-indent: 100%;
     	white-space: nowrap;
@@ -17,7 +17,7 @@
     	color: #999;
     	position: relative;
 	}
-	
+
 	#wpadminbar #wp-admin-bar-new_draft > .ab-item::before {
     	display: block;
     	text-indent: 0;
@@ -29,4 +29,18 @@
     	-webkit-font-smoothing: antialiased;
     	-moz-osx-font-smoothing: grayscale;
 	}
+}
+
+fieldset#duplicate_post_quick_edit_fieldset{
+	clear: both;
+}
+
+fieldset#duplicate_post_quick_edit_fieldset label{
+	display: inline;
+	margin: 0;
+	vertical-align: unset;
+}
+
+fieldset#duplicate_post_quick_edit_fieldset a{
+	text-decoration: underline;
 }
