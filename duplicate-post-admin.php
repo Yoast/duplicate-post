@@ -208,22 +208,28 @@ function duplicate_post_show_update_notice() {
 	if(!current_user_can( 'manage_options')) return;
 	$class = 'notice is-dismissible';
 	$message = '<p style="margin: 0;"><strong>'.sprintf(__("What's new in Duplicate Post version %s:", 'duplicate-post'), DUPLICATE_POST_CURRENT_VERSION).'</strong></p>';
-	$message .= '<ul style="margin: 0; list-style: inside disc;">';
-	$message .= '<li style="margin: 0;">'.esc_html__('New options to show the original in the post list or in the edit screen!', 'duplicate-post').'</li>';
-	$message .= '<li style="margin: 0;">'.esc_html__('Accessibility of the user interface has been improved', 'duplicate-post').'</li>';
-	$message .= '</ul>';
-	$message .= '<p style="margin: 0;"><em><a href="https://duplicate-post.lopo.it/">'.esc_html__('Check out the documentation', 'duplicate-post').'</a> — '.sprintf(__('Please <a href="%s">review the settings</a> to make sure it works as you expect.', 'duplicate-post'), admin_url('options-general.php?page=duplicatepost')).'</em><br/>';
-	$message .= esc_html__('Serving the WordPress community since November 2007.', 'duplicate-post').' <strong><a href="https://duplicate-post.lopo.it/donate/">'.esc_html__('Support the plugin by making a donation or becoming a patron!', 'duplicate-post').'</a></strong></p>';
+	$message .= '<p>%%SIGNUP_FORM%%</p>';
+	$message .= esc_html__('Serving the WordPress community since November 2007.', 'duplicate-post');
 	global $wp_version;
 	if( version_compare($wp_version, '4.2') < 0 ){
 		$message .= '<a id="duplicate-post-dismiss-notice" href="javascript:duplicate_post_dismiss_notice();">'.__('Dismiss this notice.', 'default').'</a>';
 	}
+	$allowed_tags = array(
+		'a'      => array(
+			'href'  => array(),
+			'title' => array(),
+		),
+		'br'     => array(),
+		'p'      => array(),
+		'em'     => array(),
+		'strong' => array(),
+	);
+
+	$sanitized_message = wp_kses( $message, $allowed_tags );
+	$sanitized_message = str_replace( '%%SIGNUP_FORM%%', duplicate_post_newsletter_signup_form(), $sanitized_message );
+
 	echo '<div id="duplicate-post-notice" class="'.$class.'" style="display: flex; align-items: center;">
-			<svg xmlns="http://www.w3.org/2000/svg"	style="padding: 0; margin: 10px 20px 10px 0;" width="80" height="80" viewBox="0 0 20 20">
-				<path d="M18.9 4.3c0.6 0 1.1 0.5 1.1 1.1v13.6c0 0.6-0.5 1.1-1.1 1.1h-10.7c-0.6 0-1.1-0.5-1.1-1.1v-3.2h-6.1c-0.6 0-1.1-0.5-1.1-1.1v-7.5c0-0.6 0.3-1.4 0.8-1.8l4.6-4.6c0.4-0.4 1.2-0.8 1.8-0.8h4.6c0.6 0 1.1 0.5 1.1 1.1v3.7c0.4-0.3 1-0.4 1.4-0.4h4.6zM12.9 6.7l-3.3 3.3h3.3v-3.3zM5.7 2.4l-3.3 3.3h3.3v-3.3zM7.9 9.6l3.5-3.5v-4.6h-4.3v4.6c0 0.6-0.5 1.1-1.1 1.1h-4.6v7.1h5.7v-2.9c0-0.6 0.3-1.4 0.8-1.8zM18.6 18.6v-12.9h-4.3v4.6c0 0.6-0.5 1.1-1.1 1.1h-4.6v7.1h10z"
-				fill="rgba(140,140,140,1)"/>
-			</svg>
-			<div style="margin: 0.5em 0">'.$message.'</div>
+			<div style="margin: 0.5em 0">'.$sanitized_message.'</div>
 		</div>';
 	echo "<script>
 			function duplicate_post_dismiss_notice(){
@@ -243,6 +249,43 @@ function duplicate_post_show_update_notice() {
 			});
 			</script>";
 }
+
+/**
+ * Renders the newsletter signup form.
+ *
+ * @return string The HTML of the newsletter signup form (escaped).
+ */
+function duplicate_post_newsletter_signup_form() {
+	$copy = sprintf( __( 'If you want to stay up to date about all the exciting developments around Duplicate Post, subscribe to the %1$s newsletter!',
+		'duplicate-post' ), 'Yoast' );
+
+	$email_label = __( 'Email Address', 'duplicate-post' );
+
+	$html = '
+<!-- Begin Mailchimp Signup Form -->
+<div id="mc_embed_signup">
+<form action="https://yoast.us1.list-manage.com/subscribe/post?u=ffa93edfe21752c921f860358&amp;id=972f1c9122" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+    <div id="mc_embed_signup_scroll">
+	' . $copy . '
+<div class="mc-field-group" style="margin-top: 8px;">
+	<label for="mce-EMAIL">' . $email_label . '</label>
+	<input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	<input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button">
+</div>
+	<div id="mce-responses" class="clear">
+		<div class="response" id="mce-error-response" style="display:none"></div>
+		<div class="response" id="mce-success-response" style="display:none"></div>
+	</div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+    <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_ffa93edfe21752c921f860358_972f1c9122" tabindex="-1" value=""></div>
+    </div>
+</form>
+</div>
+<!--End mc_embed_signup-->
+';
+
+	return $html;
+}
+
 
 function duplicate_post_dismiss_notice() {
 	$result = update_site_option('duplicate_post_show_notice', 0);
