@@ -228,8 +228,11 @@ function duplicate_post_show_update_notice() {
 	$sanitized_message = wp_kses( $message, $allowed_tags );
 	$sanitized_message = str_replace( '%%SIGNUP_FORM%%', duplicate_post_newsletter_signup_form(), $sanitized_message );
 
+	$img_path = plugins_url( '/duplicate_post_yoast_icon-125x125.png', __FILE__ );
+
 	echo '<div id="duplicate-post-notice" class="'.$class.'" style="display: flex; align-items: center;">
-			<div style="margin: 0.5em 0">'.$sanitized_message.'</div>
+            <img src="' . $img_path . '" alt=""/>
+			<div style="margin: 0.5em">'.$sanitized_message.'</div>
 		</div>';
 	echo "<script>
 			function duplicate_post_dismiss_notice(){
