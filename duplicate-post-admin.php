@@ -224,26 +224,15 @@ function duplicate_post_show_update_notice() {
 		return;
 	}
 	$class   = 'notice is-dismissible';
-	$message = '<strong>' . sprintf(
+	$message = '<p><strong>' . sprintf(
 		/* translators: %s: Duplicate Post version. */
 		__( "What's new in Duplicate Post version %s:", 'duplicate-post' ),
 		DUPLICATE_POST_CURRENT_VERSION
-	) . '</strong><br/>';
-	$message .= __( 'Simple compatibility with Gutenberg user interface: enable "Admin bar" under the Settings', 'duplicate-post' ) . ' — '
-			. __( '"Slug" option unset by default on new installations', 'duplicate-post' ) . '<br/>';
-	$message .= '<em><a href="https://duplicate-post.lopo.it/">' . __( 'Check out the documentation', 'duplicate-post' ) . '</a> — ' . sprintf(
-		/* translators: %s: Options page URL */
-		__( 'Please <a href="%s">review the settings</a> to make sure it works as you expect.', 'duplicate-post' ),
-		admin_url( 'options-general.php?page=duplicatepost' )
-	) . '</em><br/>';
-	$message .= __( 'Serving the WordPress community since November 2007.', 'duplicate-post' ) . ' <strong>' . sprintf(
-		wp_kses(
-			/* translators: %s: Donation URL. */
-			__( 'Help me develop the plugin and provide support by <a href="%s">donating even a small sum</a>.', 'duplicate-post' ),
-			array( 'a' => array( 'href' => array() ) )
-		),
-		'https://duplicate-post.lopo.it/donate'
-	) . '</strong>';
+	) . '</strong></p>';
+
+	$message .= '<p>%%SIGNUP_FORM%%</p>';
+
+	$message .= '<p>' . __( 'Serving the WordPress community since November 2007.', 'duplicate-post' ) . '</p>';
 
 	if ( version_compare( $wp_version, '4.2' ) < 0 ) {
 		$message .= ' | <a id="duplicate-post-dismiss-notice" href="javascript:duplicate_post_dismiss_notice();">' .
@@ -255,10 +244,21 @@ function duplicate_post_show_update_notice() {
 			'title' => array(),
 		),
 		'br'     => array(),
+		'p'      => array(),
 		'em'     => array(),
 		'strong' => array(),
 	);
-	echo '<div id="duplicate-post-notice" class="' . esc_attr( $class ) . '"><p>' . wp_kses( $message, $allowed_tags ) . '</p></div>';
+
+	$sanitized_message = wp_kses( $message, $allowed_tags );
+	$sanitized_message = str_replace( '%%SIGNUP_FORM%%', duplicate_post_newsletter_signup_form(), $sanitized_message );
+
+	$img_path = plugins_url( '/duplicate_post_yoast_icon-125x125.png', __FILE__ );
+
+	echo '<div id="duplicate-post-notice" class="' . esc_attr( $class ) . '" style="display: flex; align-items: center;">
+            <img src="' . esc_url( $img_path ) . '" alt=""/>
+			<div style="margin: 0.5em">' . $sanitized_message . // phpcs:ignore WordPress.Security.EscapeOutput
+			'</div></div>';
+
 	echo "<script>
 			function duplicate_post_dismiss_notice(){
 				var data = {
@@ -1264,4 +1264,46 @@ function duplicate_post_has_ancestors_marked( $post, $post_ids ) {
 		$parent = wp_get_post_parent_id( $parent );
 	}
 	return ( 0 !== $ancestors_in_array );
+}
+
+/**
+ * Renders the newsletter signup form.
+ *
+ * @return string The HTML of the newsletter signup form (escaped).
+ */
+function duplicate_post_newsletter_signup_form() {
+	$copy = sprintf(
+		/* translators: 1: Yoast */
+		__(
+			'If you want to stay up to date about all the exciting developments around duplicate post, subscribe to the %1$s newsletter!',
+			'duplicate-post'
+		),
+		'Yoast'
+	);
+
+	$email_label = __( 'Email Address', 'duplicate-post' );
+
+	$html = '
+<!-- Begin Mailchimp Signup Form -->
+<div id="mc_embed_signup">
+<form action="https://yoast.us1.list-manage.com/subscribe/post?u=ffa93edfe21752c921f860358&amp;id=972f1c9122" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+    <div id="mc_embed_signup_scroll">
+	' . $copy . '
+<div class="mc-field-group" style="margin-top: 8px;">
+	<label for="mce-EMAIL">' . $email_label . '</label>
+	<input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+	<input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button">
+</div>
+	<div id="mce-responses" class="clear">
+		<div class="response" id="mce-error-response" style="display:none"></div>
+		<div class="response" id="mce-success-response" style="display:none"></div>
+	</div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+    <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_ffa93edfe21752c921f860358_972f1c9122" tabindex="-1" value=""></div>
+    </div>
+</form>
+</div>
+<!--End mc_embed_signup-->
+';
+
+	return $html;
 }
