@@ -224,16 +224,16 @@ function duplicate_post_show_update_notice() {
 		return;
 	}
 	$class   = 'notice is-dismissible';
-	$message = '<strong>' . sprintf(
+	$message = '<p><strong>' . sprintf(
 		/* translators: %s: Duplicate Post version. */
 		__( "What's new in Duplicate Post version %s:", 'duplicate-post' ),
 		DUPLICATE_POST_CURRENT_VERSION
-	) . '</strong><br/>';
+	) . '</strong></p>';
 
 
-	$message .= '</p>%%SIGNUP_FORM%%<p>';
+	$message .= '<p>%%SIGNUP_FORM%%</p>';
 
-	$message .= __( 'Serving the WordPress community since November 2007.', 'duplicate-post' );
+	$message .= '<p>' . __( 'Serving the WordPress community since November 2007.', 'duplicate-post' ) . '</p>';
 
 	if ( version_compare( $wp_version, '4.2' ) < 0 ) {
 		$message .= ' | <a id="duplicate-post-dismiss-notice" href="javascript:duplicate_post_dismiss_notice();">' .
@@ -253,7 +253,13 @@ function duplicate_post_show_update_notice() {
 	$sanitized_message = wp_kses( $message, $allowed_tags );
 	$sanitized_message = str_replace( '%%SIGNUP_FORM%%', duplicate_post_newsletter_signup_form(), $sanitized_message );
 
-	echo '<div id="duplicate-post-notice" class="' . esc_attr( $class ) . '"><p>' . $sanitized_message . '</p></div>';
+	$img_path = plugins_url( '/duplicate_post_yoast_icon-125x125.png', __FILE__ );
+
+	echo '<div id="duplicate-post-notice" class="'.$class.'" style="display: flex; align-items: center;">
+            <img src="' . $img_path . '" alt=""/>
+			<div style="margin: 0.5em">'.$sanitized_message.'</div>
+		</div>';
+
 	echo "<script>
 			function duplicate_post_dismiss_notice(){
 				var data = {
