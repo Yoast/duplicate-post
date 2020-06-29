@@ -230,7 +230,6 @@ function duplicate_post_show_update_notice() {
 		DUPLICATE_POST_CURRENT_VERSION
 	) . '</strong></p>';
 
-
 	$message .= '<p>%%SIGNUP_FORM%%</p>';
 
 	$message .= '<p>' . __( 'Serving the WordPress community since November 2007.', 'duplicate-post' ) . '</p>';
@@ -255,10 +254,10 @@ function duplicate_post_show_update_notice() {
 
 	$img_path = plugins_url( '/duplicate_post_yoast_icon-125x125.png', __FILE__ );
 
-	echo '<div id="duplicate-post-notice" class="'.$class.'" style="display: flex; align-items: center;">
-            <img src="' . $img_path . '" alt=""/>
-			<div style="margin: 0.5em">'.$sanitized_message.'</div>
-		</div>';
+	echo '<div id="duplicate-post-notice" class="' . esc_attr( $class ) . '" style="display: flex; align-items: center;">
+            <img src="' . esc_url( $img_path ) . '" alt=""/>
+			<div style="margin: 0.5em">' . $sanitized_message . // phpcs:ignore WordPress.Security.EscapeOutput
+			'</div></div>';
 
 	echo "<script>
 			function duplicate_post_dismiss_notice(){
@@ -1273,8 +1272,14 @@ function duplicate_post_has_ancestors_marked( $post, $post_ids ) {
  * @return string The HTML of the newsletter signup form (escaped).
  */
 function duplicate_post_newsletter_signup_form() {
-	$copy = sprintf( __( 'If you want to stay up to date about all the exciting developments around duplicate post, subscribe to the %1$s newsletter!',
-		'duplicate-post' ), 'Yoast' );
+	$copy = sprintf(
+		/* translators: 1: Yoast */
+		__(
+			'If you want to stay up to date about all the exciting developments around duplicate post, subscribe to the %1$s newsletter!',
+			'duplicate-post'
+		),
+		'Yoast'
+	);
 
 	$email_label = __( 'Email Address', 'duplicate-post' );
 
