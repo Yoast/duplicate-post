@@ -207,7 +207,8 @@ function duplicate_post_plugin_upgrade() {
 function duplicate_post_show_update_notice() {
 	if(!current_user_can( 'manage_options')) return;
 	$class = 'notice is-dismissible';
-	$message = '<p style="margin: 0;"><strong>'.sprintf(__("What's new in Yoast Duplicate Post version %s:", 'duplicate-post'), DUPLICATE_POST_CURRENT_VERSION).'</strong></p>';
+	/* translators: %1$s: Yoast, %2$s: version number */
+	$message = '<p style="margin: 0;"><strong>' . sprintf( __( 'What\'s new in %1$s Duplicate Post version %2$s:', 'duplicate-post' ), 'Yoast', DUPLICATE_POST_CURRENT_VERSION ) . '</strong></p>';
 	$message .= '<p>%%SIGNUP_FORM%%</p>';
 	$message .= esc_html__('Serving the WordPress community since November 2007.', 'duplicate-post');
 	global $wp_version;
@@ -259,6 +260,7 @@ function duplicate_post_show_update_notice() {
  * @return string The HTML of the newsletter signup form (escaped).
  */
 function duplicate_post_newsletter_signup_form() {
+	/* translators: %1$s: Yoast */
 	$copy = sprintf( __( 'If you want to stay up to date about all the exciting developments around Duplicate Post, subscribe to the %1$s newsletter!',
 		'duplicate-post' ), 'Yoast' );
 

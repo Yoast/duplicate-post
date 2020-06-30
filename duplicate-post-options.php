@@ -47,7 +47,8 @@ function duplicate_post_register_settings() { // whitelist options
 
 function duplicate_post_menu() {
 	$page_hook = add_options_page(
-		__( 'Yoast Duplicate Post Options', 'duplicate-post' ),
+        /* translators: %s: Yoast */
+		sprintf( __( '%s Duplicate Post settings', 'duplicate-post' ), 'Yoast' ),
 		__( 'Duplicate Post', 'duplicate-post' ),
 		'manage_options',
 		'duplicatepost',
@@ -89,7 +90,10 @@ function duplicate_post_options() {
 	?>
 <div class="wrap">
 	<h1>
-		<?php esc_html_e("Yoast Duplicate Post settings", 'duplicate-post'); ?>
+		<?php
+		/* translators: %s: Yoast */
+		echo esc_html(sprintf( __( '%s Duplicate Post settings', 'duplicate-post'), 'Yoast' ) );
+		?>
 	</h1>
 
 	<script>
