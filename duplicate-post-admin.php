@@ -207,7 +207,7 @@ function duplicate_post_plugin_upgrade() {
 function duplicate_post_show_update_notice() {
 	if(!current_user_can( 'manage_options')) return;
 	$class = 'notice is-dismissible';
-	$message = '<p style="margin: 0;"><strong>'.sprintf(__("What's new in Duplicate Post version %s:", 'duplicate-post'), DUPLICATE_POST_CURRENT_VERSION).'</strong></p>';
+	$message = '<p style="margin: 0;"><strong>'.sprintf(__("What's new in Yoast Duplicate Post version %s:", 'duplicate-post'), DUPLICATE_POST_CURRENT_VERSION).'</strong></p>';
 	$message .= '<p>%%SIGNUP_FORM%%</p>';
 	$message .= esc_html__('Serving the WordPress community since November 2007.', 'duplicate-post');
 	global $wp_version;

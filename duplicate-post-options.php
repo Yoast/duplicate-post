@@ -47,7 +47,7 @@ function duplicate_post_register_settings() { // whitelist options
 
 function duplicate_post_menu() {
 	$page_hook = add_options_page(
-		__( 'Duplicate Post Options', 'duplicate-post' ),
+		__( 'Yoast Duplicate Post Options', 'duplicate-post' ),
 		__( 'Duplicate Post', 'duplicate-post' ),
 		'manage_options',
 		'duplicatepost',
@@ -89,7 +89,7 @@ function duplicate_post_options() {
 	?>
 <div class="wrap">
 	<h1>
-		<?php esc_html_e("Duplicate Post Options", 'duplicate-post'); ?>
+		<?php esc_html_e("Yoast Duplicate Post settings", 'duplicate-post'); ?>
 	</h1>
 
 	<script>
