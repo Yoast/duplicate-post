@@ -419,7 +419,10 @@ function duplicate_post_custom_box_html( $post ) {
         </label>
     </p>
     <p id="duplicate-post-remove-original-description">
-        <?php printf( __( 'The original item this was copied from is: <span class="duplicate_post_original_item_title_span">%s</span>', 'duplicate-post' ), duplicate_post_get_edit_or_view_link( $original_item ) ); ?>
+        <?php
+        /* translators: $s: link to edit or view the original item */
+        printf( __( 'The original item this was copied from is: <span class="duplicate_post_original_item_title_span">%s</span>', 'duplicate-post' ), duplicate_post_get_edit_or_view_link( $original_item ) );
+        ?>
     </p>
 
 	<?php
@@ -891,6 +894,7 @@ function duplicate_post_action_admin_notice() {
   if ( ! empty( $_REQUEST['cloned'] ) ) {
     $copied_posts = intval( $_REQUEST['cloned'] );
     printf( '<div id="message" class="notice notice-success fade"><p>' .
+        /* translators: %s: number */
       _n( '%s item copied.',
         '%s items copied.',
         $copied_posts,
