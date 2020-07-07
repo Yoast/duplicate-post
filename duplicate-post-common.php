@@ -39,7 +39,7 @@ function duplicate_post_get_clone_post_link( $id = 0, $context = 'display', $dra
 
 	if ( !$post = get_post( $id ) )
 		return;
-	
+
 	if(!duplicate_post_is_post_type_enabled($post->post_type))
 		return;
 
@@ -77,9 +77,7 @@ function duplicate_post_clone_post_link( $link = null, $before = '', $after = ''
 	if ( null === $link )
 	$link = esc_html__('Copy to a new draft', 'duplicate-post');
 
-	$link = '<a class="post-clone-link" href="' . $url . '" title="'
-	. esc_attr__("Copy to a new draft", 'duplicate-post')
-	.'">' . $link . '</a>';
+	$link = '<a class="post-clone-link" href="' . $url . '">' . $link . '</a>';
 	echo $before . apply_filters( 'duplicate_post_clone_post_link', $link, $post->ID ) . $after;
 }
 /**
@@ -171,12 +169,12 @@ function duplicate_post_admin_bar_render() {
 	        	'id' => 'new_draft',
 	        	'title' => esc_attr__("Copy to a new draft", 'duplicate-post'),
 	        	'href' => duplicate_post_get_clone_post_link( $current_object->ID )
-			) );	
+			) );
 		}
 	} else if ( is_admin() && isset( $_GET['post'] )){
 		$id = $_GET['post'];
 		$post = get_post($id);
-		if( !is_null($post) 
+		if( !is_null($post)
 				&& duplicate_post_is_current_user_allowed_to_copy()
 				&& duplicate_post_is_post_type_enabled($post->post_type)) {
 					$wp_admin_bar->add_menu( array(
@@ -186,6 +184,10 @@ function duplicate_post_admin_bar_render() {
 					) );
 		}
 	}
+}
+
+function duplicate_post_enqueue_css() {
+	wp_enqueue_style ( 'duplicate-post', plugins_url('/duplicate-post.css', __FILE__), array(), DUPLICATE_POST_CURRENT_VERSION );
 }
 
 function duplicate_post_add_css() {
@@ -198,7 +200,7 @@ function duplicate_post_add_css() {
 			&& ( $post_type_object->show_ui || 'attachment' == $current_object->post_type )
 			&& (duplicate_post_is_post_type_enabled($current_object->post_type) ) )
 		{
-			wp_enqueue_style ( 'duplicate-post', plugins_url('/duplicate-post.css', __FILE__), array(), DUPLICATE_POST_CURRENT_VERSION );
+			duplicate_post_enqueue_css();
 		}
 	} else if ( is_admin() && isset( $_GET['post'] )){
 		$id = $_GET['post'];
@@ -206,11 +208,25 @@ function duplicate_post_add_css() {
 		if( !is_null($post)
 				&& duplicate_post_is_current_user_allowed_to_copy()
 				&& duplicate_post_is_post_type_enabled($post->post_type)) {
-					wp_enqueue_style ( 'duplicate-post', plugins_url('/duplicate-post.css', __FILE__), array(), DUPLICATE_POST_CURRENT_VERSION );
+					duplicate_post_enqueue_css();
 				}
 	}
 }
 
+function duplicate_post_add_css_to_post_list() {
+	if ( is_admin() ) {
+		$current_screen = get_current_screen();
+		if ( ! is_null( $current_screen ) ) {
+			if ( 'edit' === $current_screen->base ) {
+				$post_type = $current_screen->post_type;
+				if ( duplicate_post_is_current_user_allowed_to_copy()
+				     && duplicate_post_is_post_type_enabled( $post_type ) ) {
+					duplicate_post_enqueue_css();
+				}
+			}
+		}
+	}
+}
 
 add_action('init', 'duplicate_post_init');
 
@@ -220,6 +236,7 @@ function duplicate_post_init(){
 		add_action ( 'wp_enqueue_scripts', 'duplicate_post_add_css' );
 		add_action ( 'admin_enqueue_scripts', 'duplicate_post_add_css' );
 	}
+	add_action ( 'admin_enqueue_scripts', 'duplicate_post_add_css_to_post_list' );
 }
 
 /**

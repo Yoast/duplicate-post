@@ -1,15 +1,15 @@
 <?php
-/*
- Plugin Name: Duplicate Post
- Plugin URI: https://duplicate-post.lopo.it/
- Description: Clone posts and pages.
- Version: 3.2.4
- Author: Enrico Battocchi
- Author URI: https://lopo.it
- Text Domain: duplicate-post
+/**
+ * Plugin Name: Yoast Duplicate Post
+ * Plugin URI: https://yoast.com/wordpress/plugins/duplicate-post/
+ * Description: Clone posts and pages.
+ * Version: 3.2.5
+ * Author: Enrico Battocchi & Team Yoast
+ * Author URI: https://yoast.com
+ * Text Domain: duplicate-post
  */
 
-/*  Copyright 2009-2012	Enrico Battocchi  (email : enrico.battocchi@gmail.com)
+/*  Copyright 2020 Yoast BV (email : info@yoast.com)
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -31,8 +31,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Version of the plugin
-define('DUPLICATE_POST_CURRENT_VERSION', '3.2.4' );
-
+define('DUPLICATE_POST_CURRENT_VERSION', '3.2.5' );
 
 /**
  * Initialise the internationalisation domain
@@ -42,17 +41,28 @@ function duplicate_post_load_plugin_textdomain() {
 }
 add_action( 'plugins_loaded', 'duplicate_post_load_plugin_textdomain' );
 
+add_filter( "plugin_action_links_" . plugin_basename(__FILE__), "duplicate_post_plugin_actions", 10);
 
-add_filter("plugin_action_links_".plugin_basename(__FILE__), "duplicate_post_plugin_actions", 10, 4);
-
-function duplicate_post_plugin_actions( $actions, $plugin_file, $plugin_data, $context ) {
-	array_unshift($actions,
-		sprintf('<a href="%s" aria-label="%s">%s</a>',
-			menu_page_url('duplicatepost', false),
-			esc_attr__( 'Settings for Duplicate Post', 'duplicate-post'),
-			esc_html__("Settings", 'default')
-		)
+/**
+ * Adds 'Settings' link to plugin entry in the Plugins list.
+ *
+ * @ignore
+ * @see 'plugin_action_links_$plugin_file'
+ *
+ * @param array $actions An array of plugin action links.
+ * @return array
+ */
+function duplicate_post_plugin_actions( $actions ) {
+	$settings_action = array(
+		'settings' => sprintf(
+			'<a href="%1$s" %2$s>%3$s</a>',
+			menu_page_url( 'duplicatepost', false ),
+			'aria-label="' . __( 'Settings for Duplicate Post', 'duplicate-post' ) . '"',
+			esc_html__( 'Settings', 'default' )
+		),
 	);
+
+	$actions = $settings_action + $actions;
 	return $actions;
 }
 
