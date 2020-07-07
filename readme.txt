@@ -1,4 +1,4 @@
-=== Duplicate Post ===
+=== Yoast Duplicate Post ===
 Contributors: 		yoast, lopo
 Donate link: 		https://yoast.com/wordpress/plugins/duplicate-post/
 Tags: 				duplicate post, copy, clone

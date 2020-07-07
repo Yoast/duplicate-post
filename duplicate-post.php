@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: Duplicate Post
+ * Plugin Name: Yoast Duplicate Post
  * Plugin URI: https://yoast.com/wordpress/plugins/duplicate-post/
  * Description: Clone posts and pages.
  * Version: 3.2.5-RC1
