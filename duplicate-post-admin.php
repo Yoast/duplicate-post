@@ -118,7 +118,7 @@ function duplicate_post_plugin_upgrade() {
 			'administrator',
 			'editor',
 			'wpseo_manager',
-            'wpseo_editor'
+			'wpseo_editor',
 		);
 
 		// Cycle all roles and assign capability if its level >= duplicate_post_copy_user_level.
