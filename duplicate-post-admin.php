@@ -119,7 +119,7 @@ function duplicate_post_plugin_upgrade() {
 			8 => 'administrator',
 		);
 
-		// Cycle all roles and assign capability if its level >= duplicate_post_copy_user_level.
+		// Cycle all roles and assign capability.
 		foreach ( $default_roles as $level => $name ) {
 			$role = get_role( $name );
 			if ( ! empty( $role ) ) {
@@ -179,15 +179,8 @@ function duplicate_post_plugin_upgrade() {
 	}
 	update_option( 'duplicate_post_blacklist', implode( ',', $meta_blacklist ) );
 
-	delete_option( 'duplicate_post_admin_user_level' );
-	delete_option( 'duplicate_post_create_user_level' );
-	delete_option( 'duplicate_post_view_user_level' );
-	delete_option( 'dp_notice' );
-
-	delete_site_option( 'duplicate_post_version' );
 	update_option( 'duplicate_post_version', duplicate_post_get_current_version() );
 
-	delete_option( 'duplicate_post_show_notice' );
 	update_site_option( 'duplicate_post_show_notice', 1 );
 }
 
