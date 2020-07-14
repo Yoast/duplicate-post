@@ -115,8 +115,10 @@ function duplicate_post_plugin_upgrade() {
 	if ( empty( $installed_version ) ) {
 		// Get default roles.
 		$default_roles = array(
-			3 => 'editor',
-			8 => 'administrator',
+			'administrator',
+			'editor',
+			'wpseo_manager',
+            'wpseo_editor'
 		);
 
 		// Cycle all roles and assign capability if its level >= duplicate_post_copy_user_level.
