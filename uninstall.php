@@ -23,6 +23,10 @@ if ( ! is_multisite() ) {
 	delete_site_option( 'duplicate_post_show_notice' );
 }
 
+
+/**
+ * Deletes all the options for a single site.
+ */
 function duplicate_post_delete_options() {
 	delete_option( 'duplicate_post_copytitle' );
 	delete_option( 'duplicate_post_copydate' );
