@@ -275,7 +275,7 @@ function duplicate_post_newsletter_signup_form() {
 <div class="mc-field-group" style="margin-top: 8px;">
 	<label for="mce-EMAIL">' . $email_label . '</label>
 	<input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
-	<input type="submit" value="' . esc_attr_e( 'Subscribe', 'duplicate-post' ) . '" name="subscribe" id="mc-embedded-subscribe" class="button">
+	<input type="submit" value="' . esc_attr__( 'Subscribe', 'duplicate-post' ) . '" name="subscribe" id="mc-embedded-subscribe" class="button">
 </div>
 	<div id="mce-responses" class="clear">
 		<div class="response" id="mce-error-response" style="display:none"></div>
