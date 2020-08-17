@@ -193,12 +193,13 @@ function duplicate_post_plugin_upgrade() {
 	delete_option('duplicate_post_view_user_level');
 	delete_option('dp_notice');
 
+	delete_option('duplicate_post_show_notice' );
+	if ( version_compare( $installed_version, '3.2.5' ) < 0) {
+		update_site_option( 'duplicate_post_show_notice', 1 );
+	}
+
 	delete_site_option('duplicate_post_version');
 	update_option( 'duplicate_post_version', duplicate_post_get_current_version() );
-
-	delete_option('duplicate_post_show_notice', 0);
-	update_site_option('duplicate_post_show_notice', 1);
-
 }
 
 /**
