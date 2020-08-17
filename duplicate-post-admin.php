@@ -206,6 +206,15 @@ function duplicate_post_plugin_upgrade() {
  */
 function duplicate_post_show_update_notice() {
 	if(!current_user_can( 'manage_options')) return;
+
+	$current_screen = get_current_screen();
+	if ( empty( $current_screen ) ||
+		 empty( $current_screen->base ) ||
+         ( $current_screen->base !== "dashboard" && $current_screen->base !== "plugins" )
+    ) {
+	    return;
+    }
+
 	$class = 'notice is-dismissible';
 	/* translators: %1$s: Yoast, %2$s: version number */
 	$message = '<p style="margin: 0;"><strong>' . sprintf( __( 'What\'s new in %1$s Duplicate Post version %2$s:', 'duplicate-post' ), 'Yoast', DUPLICATE_POST_CURRENT_VERSION ) . '</strong></p>';
