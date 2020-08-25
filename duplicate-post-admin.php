@@ -709,6 +709,15 @@ function duplicate_post_copy_post_taxonomies( $new_id, $post ) {
 		if ( intval( get_option( 'duplicate_post_copyformat' ) ) === 0 ) {
 			$taxonomies_blacklist[] = 'post_format';
 		}
+		/**
+		 * Filters the taxonomy excludelist when copying a post.
+		 *
+		 * @param array $taxonomies_blacklist The current taxonomy excludelist.
+		 *
+         * @return array.
+		 */
+		$taxonomies_blacklist = apply_filters( 'duplicate_post_taxonomies_excludelist_filter', $taxonomies_blacklist );
+
 		$taxonomies = array_diff( $post_taxonomies, $taxonomies_blacklist );
 		foreach ( $taxonomies as $taxonomy ) {
 			$post_terms = wp_get_object_terms( $post->ID, $taxonomy, array( 'orderby' => 'term_order' ) );
