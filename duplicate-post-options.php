@@ -540,7 +540,7 @@ function duplicate_post_options() {
                             $taxonomies = get_taxonomies( array(), 'objects' );
                             usort( $taxonomies, 'duplicate_post_tax_obj_cmp' );
                             $taxonomies_blacklist = get_option( 'duplicate_post_taxonomies_blacklist' );
-                            if ( '' === $taxonomies_blacklist ) {
+                            if ( ! is_array( $taxonomies_blacklist ) ) {
                                 $taxonomies_blacklist = array();
                             }
                             foreach ( $taxonomies as $taxonomy ) :
