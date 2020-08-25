@@ -712,7 +712,7 @@ function duplicate_post_copy_post_taxonomies( $new_id, $post ) {
 		/**
 		 * Filters the taxonomy excludelist when copying a post.
 		 *
-		 * @param array $taxonomies_blacklist The current taxonomy excludelist.
+		 * @param array $taxonomies_blacklist The taxonomy excludelist from the options.
 		 *
          * @return array.
 		 */
@@ -759,6 +759,13 @@ function duplicate_post_copy_post_meta_info( $new_id, $post ) {
 		$meta_blacklist[] = '_thumbnail_id';
 	}
 
+	/**
+	 * Filters the meta fields excludelist when copying a post.
+	 *
+	 * @param array $meta_blacklist The meta fields excludelist from the options.
+	 *
+	 * @return array.
+	 */
 	$meta_blacklist = apply_filters( 'duplicate_post_blacklist_filter', $meta_blacklist );
 
 	$meta_blacklist_string = '(' . implode( ')|(', $meta_blacklist ) . ')';
@@ -775,6 +782,13 @@ function duplicate_post_copy_post_meta_info( $new_id, $post ) {
 		$meta_keys = array_diff( $post_meta_keys, $meta_blacklist );
 	}
 
+	/**
+	 * Filters the list of meta fields names when copying a post.
+	 *
+	 * @param array $meta_keys The list of meta fields name, with the ones in the excludelist already removed.
+	 *
+	 * @return array.
+	 */
 	$meta_keys = apply_filters( 'duplicate_post_meta_keys_filter', $meta_keys );
 
 	foreach ( $meta_keys as $meta_key ) {

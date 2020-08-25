@@ -69,6 +69,16 @@ function duplicate_post_get_clone_post_link( $id = 0, $context = 'display', $dra
 	}
 
 	return wp_nonce_url(
+		/**
+		 * Filter on the URL of the clone link
+		 *
+		 * @param string $url  The URL of the clone link.
+		 * @param int    $ID   The ID of the post
+		 * @param string $context The context in which the URL is used.
+		 * @param bool   $draft Whether to clone to a new draft.
+		 *
+		 * @return string
+		 */
 		apply_filters( 'duplicate_post_get_clone_post_link', admin_url( 'admin.php' . $action ), $post->ID, $context, $draft ),
 		'duplicate-post_' . $post->ID
 	);
@@ -98,6 +108,14 @@ function duplicate_post_clone_post_link( $link = null, $before = '', $after = ''
 	}
 
 	$link = '<a class="post-clone-link" href="' . $url . '">' . $link . '</a>';
+	/**
+	 * Filter on the clone link HTML
+	 *
+	 * @param string $link The full HTML tag of the link.
+	 * @param int    $ID   The ID of the post
+	 *
+	 * @return string
+	 */
 	echo esc_html( $before . apply_filters( 'duplicate_post_clone_post_link', $link, $post->ID ) . $after );
 }
 
