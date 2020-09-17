@@ -193,12 +193,13 @@ function duplicate_post_plugin_upgrade() {
 	delete_option('duplicate_post_view_user_level');
 	delete_option('dp_notice');
 
+	delete_option('duplicate_post_show_notice' );
+	if ( version_compare( $installed_version, '3.2.5' ) < 0) {
+		update_site_option( 'duplicate_post_show_notice', 1 );
+	}
+
 	delete_site_option('duplicate_post_version');
 	update_option( 'duplicate_post_version', duplicate_post_get_current_version() );
-
-	delete_option('duplicate_post_show_notice', 0);
-	update_site_option('duplicate_post_show_notice', 1);
-
 }
 
 /**
@@ -206,11 +207,19 @@ function duplicate_post_plugin_upgrade() {
  */
 function duplicate_post_show_update_notice() {
 	if(!current_user_can( 'manage_options')) return;
+
+	$current_screen = get_current_screen();
+	if ( empty( $current_screen ) ||
+		empty( $current_screen->base ) ||
+		( $current_screen->base !== "dashboard" && $current_screen->base !== "plugins" )
+    ) {
+		return;
+    }
+
 	$class = 'notice is-dismissible';
 	/* translators: %1$s: Yoast, %2$s: version number */
 	$message = '<p style="margin: 0;"><strong>' . sprintf( __( 'What\'s new in %1$s Duplicate Post version %2$s:', 'duplicate-post' ), 'Yoast', DUPLICATE_POST_CURRENT_VERSION ) . '</strong> ';
-	/* translators: %s: Yoast */
-	$message .= sprintf( __( 'First release from %s + accessibility improvements + deprecated filter', 'duplicate-post' ), 'Yoast' ) . '</p>';
+	$message .= sprintf( __( 'Compatibility with WP 5.5 + various fixes', 'duplicate-post' ), 'Yoast' ) . '</p>';
 	$message .= '<p>%%SIGNUP_FORM%%</p>';
 	$message .= esc_html__('Serving the WordPress community since November 2007.', 'duplicate-post');
 	global $wp_version;
@@ -277,7 +286,7 @@ function duplicate_post_newsletter_signup_form() {
 <div class="mc-field-group" style="margin-top: 8px;">
 	<label for="mce-EMAIL">' . $email_label . '</label>
 	<input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
-	<input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button">
+	<input type="submit" value="' . esc_attr__( 'Subscribe', 'duplicate-post' ) . '" name="subscribe" id="mc-embedded-subscribe" class="button">
 </div>
 	<div id="mce-responses" class="clear">
 		<div class="response" id="mce-error-response" style="display:none"></div>
@@ -739,7 +748,7 @@ function duplicate_post_copy_comments($new_id, $post){
 	$old_id_to_new = array();
 	foreach ($comments as $comment){
 		//do not copy pingbacks or trackbacks
-		if(!empty($comment->comment_type)) continue;
+		if( $comment->comment_type === "pingback" || $comment->comment_type === "trackback" ) continue;
 		$parent = ($comment->comment_parent && $old_id_to_new[$comment->comment_parent])?$old_id_to_new[$comment->comment_parent]:0;
 		$commentdata = array(
 			'comment_post_ID' => $new_id,
@@ -747,7 +756,7 @@ function duplicate_post_copy_comments($new_id, $post){
 			'comment_author_email' => $comment->comment_author_email,
 			'comment_author_url' => $comment->comment_author_url,
 			'comment_content' => $comment->comment_content,
-			'comment_type' => '',
+			'comment_type' => $comment->comment_type,
 			'comment_parent' => $parent,
 			'user_id' => $comment->user_id,
 			'comment_author_IP' => $comment->comment_author_IP,
@@ -909,10 +918,15 @@ function duplicate_post_action_admin_notice() {
 
 
 /*** BULK ACTIONS ***/
-add_action('admin_init', 'duplicate_post_add_bulk_filters_for_enabled_post_types');
+add_action('admin_init', 'duplicate_post_add_bulk_filters');
 
-function duplicate_post_add_bulk_filters_for_enabled_post_types(){
+function duplicate_post_add_bulk_filters(){
 	if(get_option('duplicate_post_show_bulkactions') != 1) return;
+
+	if ( ! duplicate_post_is_current_user_allowed_to_copy() ) {
+		return;
+	}
+
 	$duplicate_post_types_enabled = get_option('duplicate_post_types_enabled', array ('post', 'page'));
 	if(!is_array($duplicate_post_types_enabled)) $duplicate_post_types_enabled = array($duplicate_post_types_enabled);
 	foreach($duplicate_post_types_enabled as $duplicate_post_type_enabled){
