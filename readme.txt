@@ -1,10 +1,10 @@
-=== Duplicate Post ===
+=== Yoast Duplicate Post ===
 Contributors: 		yoast, lopo
 Donate link: 		https://yoast.com/wordpress/plugins/duplicate-post/
 Tags: 				duplicate post, copy, clone
-Requires at least: 3.6
-Tested up to: 		5.4
-Stable tag: 		3.2.3
+Requires at least: 	3.6
+Tested up to: 		5.5
+Stable tag: 		3.2.6
 Requires PHP:		5.2.4
 License: 			GPLv2 or later
 License URI: 		http://www.gnu.org/licenses/gpl-2.0.html
@@ -59,7 +59,6 @@ If it still doesn't work, maybe there is some kind of conflict with other plugin
 From version 3.0 the plugin's translations are managed by the WordPress.org platform and the plugin is shipped without language files, so first of all update translations under Dashboard->Updates.
 
 If Duplicate Post is still in English, or if there are some untraslated strings, you can help traslating to your language [here](https://translate.wordpress.org/projects/wp-plugins/duplicate-post): you only need a WordPress.org account.
-[Contact me](https://duplicate-post.lopo.it/contact) if you wish to become an editor for your language.
 
 == Screenshots ==
 
@@ -71,6 +70,15 @@ If Duplicate Post is still in English, or if there are some untraslated strings,
 6. Bulk clone action.
 
 == Upgrade Notice ==
+
+= 3.2.6 =
+Compatibility with WP 5.5 + various fixes
+
+= 3.2.5 =
+First release from Yoast + accessibility improvements + filter deprecated
+
+= 3.2.4 =
+Options to show original post + accessibility improvements
 
 = 3.2.3 =
 Fixes some bugs and incompatibilities with CF7, WPML, and custom post types with custom capabilities
@@ -142,6 +150,26 @@ Some users have experienced a fatal error when upgrading to v1.1: this may fix i
 New features and customization, WP 3.0 compatibility: you should upgrade if you want to copy Custom Posts with Custom Taxonomies.
 
 == Changelog ==
+
+= 3.2.6 (2020-09-17) =
+* Compatibility with WordPress 5.5
+* Fixed bug about copying comments in WordPress 5.5
+* Check user permission when adding option to the bulk actions dropdown list
+* Improved update notice to be displayed only on selected screens when updating from < 3.2.5
+* Updated template tag documentation link
+* Added missing gettext to "Subscribe" button
+
+= 3.2.5 (2020-07-07) =
+* First release from Yoast
+* Accessibility improvements to the settings page
+* Accessibility improvements to the "Show original item" metabox
+* Accessibility improvements to the "Show original item" check box in Quick Edit
+* duplicate_post_blacklist_filter deprecated in favor of duplicate_post_excludelist_filter
+
+= 3.2.4 (2019-12-10) =
+* Options to show original item in post list (in a column or alongside post states) or in a metabox in the edit screen
+* Accessibility improvements
+* Small other fixes
 
 = 3.2.3 (2019-07-10) =
 * Fixes incompatibility with previous versions of CF7

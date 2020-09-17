@@ -729,7 +729,7 @@ function duplicate_post_options() {
 								esc_html__( 'You can also use the template tag %1$sduplicate_post_clone_post_link( $link, $before, $after, $id )%2$s. %3$sMore info on the template tag%4$s.', 'duplicate-post' ),
 								'<code>',
 								'</code>',
-								'<a href="' . esc_url( 'https://duplicate-post.lopo.it/docs/developers-guide/functions-template-tags/duplicate_post_clone_post_link/' ) . '">',
+								'<a href="' . esc_url( 'https://developer.yoast.com/duplicate-post/functions-template-tags#duplicate_post_clone_post_link' ) . '">',
 								'</a>'
 							);
 							?>

@@ -205,11 +205,13 @@ function duplicate_post_plugin_upgrade() {
 	delete_option( 'duplicate_post_view_user_level' );
 	delete_option( 'dp_notice' );
 
+	delete_option( 'duplicate_post_show_notice' );
+	if ( version_compare( $installed_version, '3.2.5' ) < 0 ) {
+		update_site_option( 'duplicate_post_show_notice', 1 );
+	}
+
 	delete_site_option( 'duplicate_post_version' );
 	update_option( 'duplicate_post_version', duplicate_post_get_current_version() );
-
-	delete_option( 'duplicate_post_show_notice' );
-	update_site_option( 'duplicate_post_show_notice', 1 );
 }
 
 /**
@@ -223,6 +225,16 @@ function duplicate_post_show_update_notice() {
 	if ( ! current_user_can( 'manage_options' ) ) {
 		return;
 	}
+
+	$current_screen = get_current_screen();
+	if (
+	        empty( $current_screen ) ||
+            empty( $current_screen->base ) ||
+            ( $current_screen->base !== "dashboard" && $current_screen->base !== "plugins" )
+    ) {
+		return;
+	}
+
 	$class   = 'notice is-dismissible';
 	$message = '<p><strong>' . sprintf(
 		/* translators: %s: Duplicate Post version. */
@@ -948,7 +960,7 @@ function duplicate_post_copy_comments( $new_id, $post ) {
 	$old_id_to_new = array();
 	foreach ( $comments as $comment ) {
 		// do not copy pingbacks or trackbacks.
-		if ( ! empty( $comment->comment_type ) ) {
+		if( $comment->comment_type === "pingback" || $comment->comment_type === "trackback" ) {
 			continue;
 		}
 		$parent      = ( $comment->comment_parent && $old_id_to_new[ $comment->comment_parent ] ) ? $old_id_to_new[ $comment->comment_parent ] : 0;
@@ -958,7 +970,7 @@ function duplicate_post_copy_comments( $new_id, $post ) {
 			'comment_author_email' => $comment->comment_author_email,
 			'comment_author_url'   => $comment->comment_author_url,
 			'comment_content'      => $comment->comment_content,
-			'comment_type'         => '',
+			'comment_type'         => $comment->comment_type,
 			'comment_parent'       => $parent,
 			'user_id'              => $comment->user_id,
 			'comment_author_IP'    => $comment->comment_author_IP,

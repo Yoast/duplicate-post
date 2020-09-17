@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: Duplicate Post
+ * Plugin Name: Yoast Duplicate Post
  * Plugin URI: https://yoast.com/wordpress/plugins/duplicate-post/
  * Description: Clone posts and pages.
  * Version: 4.0alpha
@@ -36,7 +36,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 define( 'DUPLICATE_POST_CURRENT_VERSION', '4.0alpha' );
 
 /**
- * Initialises the internationalisation domain
+ * Initialises the internationalisation domain.
  */
 function duplicate_post_load_plugin_textdomain() {
 	load_plugin_textdomain( 'duplicate-post', false, basename( dirname( __FILE__ ) ) . '/languages/' );
