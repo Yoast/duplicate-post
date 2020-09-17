@@ -3,7 +3,7 @@ Contributors: 		yoast, lopo
 Donate link: 		https://yoast.com/wordpress/plugins/duplicate-post/
 Tags: 				duplicate post, copy, clone
 Requires at least: 	3.6
-Tested up to: 		5.4
+Tested up to: 		5.5
 Stable tag: 		3.2.5
 Requires PHP:		5.2.4
 License: 			GPLv2 or later
@@ -70,6 +70,9 @@ If Duplicate Post is still in English, or if there are some untraslated strings,
 6. Bulk clone action.
 
 == Upgrade Notice ==
+
+= 3.2.6 =
+Compatibility with WP 5.5 + various fixes
 
 = 3.2.5 =
 First release from Yoast + accessibility improvements + filter deprecated
@@ -147,6 +150,14 @@ Some users have experienced a fatal error when upgrading to v1.1: this may fix i
 New features and customization, WP 3.0 compatibility: you should upgrade if you want to copy Custom Posts with Custom Taxonomies.
 
 == Changelog ==
+
+= 3.2.6 (2020-09-17) =
+* Compatibility with WordPress 5.5
+* Fixed bug about copying comments in WordPress 5.5
+* Check user permission when adding option to the bulk actions dropdown list
+* Improved update notice to be displayed only on selected screens when updating from < 3.2.5
+* Updated template tag documentation link
+* Added missing gettext to "Subscribe" button
 
 = 3.2.5 (2020-07-07) =
 * First release from Yoast
