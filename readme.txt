@@ -4,7 +4,7 @@ Donate link: 		https://yoast.com/wordpress/plugins/duplicate-post/
 Tags: 				duplicate post, copy, clone
 Requires at least: 	3.6
 Tested up to: 		5.4
-Stable tag: 		3.2.4
+Stable tag: 		3.2.5
 Requires PHP:		5.2.4
 License: 			GPLv2 or later
 License URI: 		http://www.gnu.org/licenses/gpl-2.0.html
@@ -70,6 +70,9 @@ If Duplicate Post is still in English, or if there are some untraslated strings,
 6. Bulk clone action.
 
 == Upgrade Notice ==
+
+= 3.2.5 =
+First release from Yoast + accessibility improvements + filter deprecated
 
 = 3.2.4 =
 Options to show original post + accessibility improvements
@@ -144,6 +147,13 @@ Some users have experienced a fatal error when upgrading to v1.1: this may fix i
 New features and customization, WP 3.0 compatibility: you should upgrade if you want to copy Custom Posts with Custom Taxonomies.
 
 == Changelog ==
+
+= 3.2.5 (2020-07-07) =
+* First release from Yoast
+* Accessibility improvements to the settings page
+* Accessibility improvements to the "Show original item" metabox
+* Accessibility improvements to the "Show original item" check box in Quick Edit
+* duplicate_post_blacklist_filter deprecated in favor of duplicate_post_excludelist_filter
 
 = 3.2.4 (2019-12-10) =
 * Options to show original item in post list (in a column or alongside post states) or in a metabox in the edit screen
