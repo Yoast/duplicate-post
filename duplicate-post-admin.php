@@ -1200,15 +1200,18 @@ function duplicate_post_action_admin_notice() {
 
 /*** BULK ACTIONS */
 
-add_action( 'admin_init', 'duplicate_post_add_bulk_filters_for_enabled_post_types' );
+add_action( 'admin_init', 'duplicate_post_add_bulk_filters' );
 
 /**
  * Adds the handlers for bulk actions.
  *
  * @ignore
  */
-function duplicate_post_add_bulk_filters_for_enabled_post_types() {
+function duplicate_post_add_bulk_filters() {
 	if ( 1 !== intval( get_option( 'duplicate_post_show_bulkactions' ) ) ) {
+		return;
+	}
+	if ( ! duplicate_post_is_current_user_allowed_to_copy() ) {
 		return;
 	}
 	$duplicate_post_types_enabled = get_option( 'duplicate_post_types_enabled', array( 'post', 'page' ) );
