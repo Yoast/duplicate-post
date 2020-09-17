@@ -917,10 +917,15 @@ function duplicate_post_action_admin_notice() {
 
 
 /*** BULK ACTIONS ***/
-add_action('admin_init', 'duplicate_post_add_bulk_filters_for_enabled_post_types');
+add_action('admin_init', 'duplicate_post_add_bulk_filters');
 
-function duplicate_post_add_bulk_filters_for_enabled_post_types(){
+function duplicate_post_add_bulk_filters(){
 	if(get_option('duplicate_post_show_bulkactions') != 1) return;
+
+	if ( ! duplicate_post_is_current_user_allowed_to_copy() ) {
+		return;
+	}
+
 	$duplicate_post_types_enabled = get_option('duplicate_post_types_enabled', array ('post', 'page'));
 	if(!is_array($duplicate_post_types_enabled)) $duplicate_post_types_enabled = array($duplicate_post_types_enabled);
 	foreach($duplicate_post_types_enabled as $duplicate_post_type_enabled){
