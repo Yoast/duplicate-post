@@ -218,7 +218,8 @@ function duplicate_post_show_update_notice() {
 
 	$class = 'notice is-dismissible';
 	/* translators: %1$s: Yoast, %2$s: version number */
-	$message = '<p style="margin: 0;"><strong>' . sprintf( __( 'What\'s new in %1$s Duplicate Post version %2$s:', 'duplicate-post' ), 'Yoast', DUPLICATE_POST_CURRENT_VERSION ) . '</strong></p>';
+	$message = '<p style="margin: 0;"><strong>' . sprintf( __( 'What\'s new in %1$s Duplicate Post version %2$s:', 'duplicate-post' ), 'Yoast', DUPLICATE_POST_CURRENT_VERSION ) . '</strong> ';
+	$message .= sprintf( __( 'Compatibility with WP 5.5 + various fixes', 'duplicate-post' ), 'Yoast' ) . '</p>';
 	$message .= '<p>%%SIGNUP_FORM%%</p>';
 	$message .= esc_html__('Serving the WordPress community since November 2007.', 'duplicate-post');
 	global $wp_version;
