@@ -747,7 +747,7 @@ function duplicate_post_copy_comments($new_id, $post){
 	$old_id_to_new = array();
 	foreach ($comments as $comment){
 		//do not copy pingbacks or trackbacks
-		if(!empty($comment->comment_type)) continue;
+		if( $comment->comment_type === "pingback" || $comment->comment_type === "trackback" ) continue;
 		$parent = ($comment->comment_parent && $old_id_to_new[$comment->comment_parent])?$old_id_to_new[$comment->comment_parent]:0;
 		$commentdata = array(
 			'comment_post_ID' => $new_id,
@@ -755,7 +755,7 @@ function duplicate_post_copy_comments($new_id, $post){
 			'comment_author_email' => $comment->comment_author_email,
 			'comment_author_url' => $comment->comment_author_url,
 			'comment_content' => $comment->comment_content,
-			'comment_type' => '',
+			'comment_type' => $comment->comment_type,
 			'comment_parent' => $parent,
 			'user_id' => $comment->user_id,
 			'comment_author_IP' => $comment->comment_author_IP,
