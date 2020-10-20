@@ -627,6 +627,7 @@ function duplicate_post_options() {
                             <legend class="screen-reader-text"><?php esc_html_e( 'Enable for these post types', 'duplicate-post' ); ?></legend>
 							<?php
 							$post_types = get_post_types( array( 'show_ui' => true ), 'objects' );
+							$post_types = apply_filters( 'duplicate_post_post_types', $post_types );
 							foreach ( $post_types as $post_type_object ) :
 								if ( 'attachment' === $post_type_object->name ) {
 									continue;
