@@ -407,7 +407,7 @@ function duplicate_post_add_custom_box(){
 	foreach ($screens as $screen) {
 		add_meta_box(
 			'duplicate_post_show_original',           // Unique ID
-			'Duplicate Post',  // Box title
+			__('Duplicate Post', 'duplicate-post'),  // Box title
 			'duplicate_post_custom_box_html',  // Content callback, must be of type callable
 			$screen,                   // Post type
 			'side'
