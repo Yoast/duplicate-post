@@ -367,9 +367,9 @@ function duplicate_post_quick_edit_remove_original( $column_name, $post_type ) {
 	printf(
 		'<fieldset class="inline-edit-col-left" id="duplicate_post_quick_edit_fieldset">
 			<div class="inline-edit-col">
-                <input type="checkbox" 
-                name="duplicate_post_remove_original" 
-                id="duplicate-post-remove-original" 
+                <input type="checkbox"
+                name="duplicate_post_remove_original"
+                id="duplicate-post-remove-original"
                 value="duplicate_post_remove_original"
                 aria-describedby="duplicate-post-remove-original-description">
                 <label for="duplicate-post-remove-original">
@@ -1042,7 +1042,7 @@ function duplicate_post_create_duplicate( $post, $status = '', $parent_id = '' )
 	if ( 'attachment' !== $post->post_type ) {
 		$prefix = sanitize_text_field( get_option( 'duplicate_post_title_prefix' ) );
 		$suffix = sanitize_text_field( get_option( 'duplicate_post_title_suffix' ) );
-		if ( 1 === intval( get_option( 'duplicate_post_copytitle' ) ) ) {
+		if ( intval( get_option( 'duplicate_post_copytitle' ) ) === 1 ) {
 			$title = $post->post_title;
 			if ( ! empty( $prefix ) ) {
 				$prefix .= ' ';
@@ -1063,7 +1063,7 @@ function duplicate_post_create_duplicate( $post, $status = '', $parent_id = '' )
 		 * }
 		 */
 
-		if ( 0 === intval( get_option( 'duplicate_post_copystatus' ) ) ) {
+		if ( intval( get_option( 'duplicate_post_copystatus' ) ) === 0 ) {
 			$new_post_status = 'draft';
 		} else {
 			if ( 'publish' === $new_post_status || 'future' === $new_post_status ) {
@@ -1083,7 +1083,7 @@ function duplicate_post_create_duplicate( $post, $status = '', $parent_id = '' )
 
 	$new_post_author    = wp_get_current_user();
 	$new_post_author_id = $new_post_author->ID;
-	if ( '1' === intval( get_option( 'duplicate_post_copyauthor' ) ) ) {
+	if ( intval( get_option( 'duplicate_post_copyauthor' ) ) === 1 ) {
 		// check if the user has the right capability.
 		if ( is_post_type_hierarchical( $post->post_type ) ) {
 			if ( current_user_can( 'edit_others_pages' ) ) {
@@ -1096,14 +1096,14 @@ function duplicate_post_create_duplicate( $post, $status = '', $parent_id = '' )
 		}
 	}
 
-	$menu_order             = ( '1' === intval( get_option( 'duplicate_post_copymenuorder' ) ) ) ? $post->menu_order : 0;
+	$menu_order             = ( intval( get_option( 'duplicate_post_copymenuorder' ) ) === 1 ) ? $post->menu_order : 0;
 	$increase_menu_order_by = get_option( 'duplicate_post_increase_menu_order_by' );
 	if ( ! empty( $increase_menu_order_by ) && is_numeric( $increase_menu_order_by ) ) {
 		$menu_order += intval( $increase_menu_order_by );
 	}
 
 	$post_name = $post->post_name;
-	if ( 1 !== intval( get_option( 'duplicate_post_copyslug' ) ) ) {
+	if ( intval( get_option( 'duplicate_post_copyslug' ) ) !== 1 ) {
 		$post_name = '';
 	}
 	$new_post_parent = empty( $parent_id ) ? $post->post_parent : $parent_id;
@@ -1113,19 +1113,19 @@ function duplicate_post_create_duplicate( $post, $status = '', $parent_id = '' )
 		'comment_status'        => $post->comment_status,
 		'ping_status'           => $post->ping_status,
 		'post_author'           => $new_post_author_id,
-		'post_content'          => ( 1 === intval( get_option( 'duplicate_post_copycontent' ) ) ) ? $post->post_content : '',
-		'post_content_filtered' => ( 1 === intval( get_option( 'duplicate_post_copycontent' ) ) ) ? $post->post_content_filtered : '',
-		'post_excerpt'          => ( 1 === intval( get_option( 'duplicate_post_copyexcerpt' ) ) ) ? $post->post_excerpt : '',
+		'post_content'          => ( intval( get_option( 'duplicate_post_copycontent' ) ) === 1 ) ? $post->post_content : '',
+		'post_content_filtered' => ( intval( get_option( 'duplicate_post_copycontent' ) ) === 1 ) ? $post->post_content_filtered : '',
+		'post_excerpt'          => ( intval( get_option( 'duplicate_post_copyexcerpt' ) ) === 1 ) ? $post->post_excerpt : '',
 		'post_mime_type'        => $post->post_mime_type,
 		'post_parent'           => $new_post_parent,
-		'post_password'         => ( 1 === intval( get_option( 'duplicate_post_copypassword' ) ) ) ? $post->post_password : '',
+		'post_password'         => ( intval( get_option( 'duplicate_post_copypassword' ) ) === 1 ) ? $post->post_password : '',
 		'post_status'           => $new_post_status,
 		'post_title'            => $title,
 		'post_type'             => $post->post_type,
 		'post_name'             => $post_name,
 	);
 
-	if ( 1 === intval( get_option( 'duplicate_post_copydate' ) ) ) {
+	if ( intval( get_option( 'duplicate_post_copydate' ) ) === 1 ) {
 		$new_post_date             = $post->post_date;
 		$new_post['post_date']     = $new_post_date;
 		$new_post['post_date_gmt'] = get_gmt_from_date( $new_post_date );
@@ -1220,7 +1220,7 @@ add_action( 'admin_init', 'duplicate_post_add_bulk_filters' );
  * @ignore
  */
 function duplicate_post_add_bulk_filters() {
-	if ( 1 !== intval( get_option( 'duplicate_post_show_bulkactions' ) ) ) {
+	if ( intval( get_option( 'duplicate_post_show_bulkactions' ) ) !== 1 ) {
 		return;
 	}
 	if ( ! duplicate_post_is_current_user_allowed_to_copy() ) {
@@ -1267,7 +1267,7 @@ function duplicate_post_action_handler( $redirect_to, $doaction, $post_ids ) {
 	foreach ( $post_ids as $post_id ) {
 		$post = get_post( $post_id );
 		if ( ! empty( $post ) ) {
-			if ( 1 !== intval( get_option( 'duplicate_post_copychildren' ) )
+			if ( intval( get_option( 'duplicate_post_copychildren' ) !== 1 )
 					|| ! is_post_type_hierarchical( $post->post_type )
 					|| ( is_post_type_hierarchical( $post->post_type ) && ! duplicate_post_has_ancestors_marked( $post, $post_ids ) )
 				) {
