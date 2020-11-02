@@ -235,15 +235,9 @@ function duplicate_post_admin_bar_render() {
 			return;
 		}
 
-		$post_type_object = get_post_type_object( $post->post_type );
-
 		if ( 'post' === $current_screen->base
 			&& 'add' !== $current_screen->action
-			&& ( $post_type_object )
-			&& duplicate_post_is_current_user_allowed_to_copy()
-			&& ( $post_type_object->public )
-			&& ( $post_type_object->show_in_admin_bar )
-			&& ( duplicate_post_is_post_type_enabled( $post->post_type ) ) ) {
+			&& duplicate_post_can_copy_to_draft( $post ) ) {
 				$wp_admin_bar->add_menu(
 					array(
 						'id'    => 'new_draft',
@@ -264,13 +258,7 @@ function duplicate_post_admin_bar_render() {
 			return;
 		}
 
-		$post_type_object = get_post_type_object( $current_object->post_type );
-
-		if ( ! empty( $current_object->post_type )
-			&& ( $post_type_object )
-			&& duplicate_post_is_current_user_allowed_to_copy()
-			&& ( $post_type_object->show_in_admin_bar )
-			&& ( duplicate_post_is_post_type_enabled( $current_object->post_type ) ) ) {
+		if ( duplicate_post_can_copy_to_draft( $current_object ) ) {
 			$wp_admin_bar->add_menu(
 				array(
 					'id'    => 'new_draft',
@@ -316,15 +304,9 @@ function duplicate_post_add_css() {
 			return;
 		}
 
-		$post_type_object = get_post_type_object( $post->post_type );
-
 		if ( 'post' === $current_screen->base
 			&& 'add' !== $current_screen->action
-			&& ( $post_type_object )
-			&& duplicate_post_is_current_user_allowed_to_copy()
-			&& ( $post_type_object->public )
-			&& ( $post_type_object->show_in_admin_bar )
-			&& ( duplicate_post_is_post_type_enabled( $post->post_type ) ) ) {
+			&& duplicate_post_can_copy_to_draft( $post ) ) {
 			duplicate_post_enqueue_css();
 		}
 	} else {
@@ -339,13 +321,7 @@ function duplicate_post_add_css() {
 			return;
 		}
 
-		$post_type_object = get_post_type_object( $current_object->post_type );
-
-		if ( ! empty( $current_object->post_type )
-			&& ( $post_type_object )
-			&& duplicate_post_is_current_user_allowed_to_copy()
-			&& ( $post_type_object->show_in_admin_bar )
-			&& ( duplicate_post_is_post_type_enabled( $current_object->post_type ) ) ) {
+		if ( duplicate_post_can_copy_to_draft( $current_object ) ) {
 			duplicate_post_enqueue_css();
 		}
 	}
@@ -393,4 +369,33 @@ function duplicate_post_init() {
  */
 function duplicate_post_tax_obj_cmp( $a, $b ) {
 	return ( $a->public < $b->public );
+}
+
+/**
+ * Checks whether the passed post can be copied to a new draft.
+ *
+ * @param WP_Post $post The post to copy.
+ *
+ * @return bool Whether or not the post can be copied to a new draft.
+ */
+function duplicate_post_can_copy_to_draft( $post ) {
+	if ( empty( $post->post_type ) ) {
+		return false;
+	}
+
+	$post_type_object = get_post_type_object( $post->post_type );
+
+	if ( empty( $post_type_object ) ) {
+		return false;
+	}
+
+	$is_public = true;
+	if ( property_exists( $post_type_object, 'public' ) ) {
+		$is_public = $post_type_object->public;
+	}
+
+	return duplicate_post_is_current_user_allowed_to_copy()
+		 && $is_public
+		 && $post_type_object->show_in_admin_bar
+		 && duplicate_post_is_post_type_enabled( $post->post_type );
 }
