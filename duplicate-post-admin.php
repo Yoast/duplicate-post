@@ -228,10 +228,10 @@ function duplicate_post_show_update_notice() {
 
 	$current_screen = get_current_screen();
 	if (
-	        empty( $current_screen ) ||
-            empty( $current_screen->base ) ||
-            ( $current_screen->base !== "dashboard" && $current_screen->base !== "plugins" )
-    ) {
+		empty( $current_screen ) ||
+		empty( $current_screen->base ) ||
+		( $current_screen->base !== 'dashboard' && $current_screen->base !== 'plugins' )
+	) {
 		return;
 	}
 
@@ -726,7 +726,7 @@ function duplicate_post_copy_post_taxonomies( $new_id, $post ) {
 		 *
 		 * @param array $taxonomies_blacklist The taxonomy excludelist from the options.
 		 *
-         * @return array.
+		 * @return array.
 		 */
 		$taxonomies_blacklist = apply_filters( 'duplicate_post_taxonomies_excludelist_filter', $taxonomies_blacklist );
 
@@ -960,7 +960,7 @@ function duplicate_post_copy_comments( $new_id, $post ) {
 	$old_id_to_new = array();
 	foreach ( $comments as $comment ) {
 		// do not copy pingbacks or trackbacks.
-		if( $comment->comment_type === "pingback" || $comment->comment_type === "trackback" ) {
+		if ( $comment->comment_type === 'pingback' || $comment->comment_type === 'trackback' ) {
 			continue;
 		}
 		$parent      = ( $comment->comment_parent && $old_id_to_new[ $comment->comment_parent ] ) ? $old_id_to_new[ $comment->comment_parent ] : 0;
