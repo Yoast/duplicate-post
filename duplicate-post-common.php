@@ -223,50 +223,28 @@ function duplicate_post_admin_bar_render() {
 	global $wp_admin_bar;
 
 	if ( is_admin() ) {
-		$current_screen = get_current_screen();
-		$post           = get_post();
-
-		if ( empty( $post ) ) {
-			return;
-		}
-
-		/** This filter is documented in duplicate-post-admin.php */
-		if ( ! apply_filters( 'duplicate_post_show_link', duplicate_post_is_current_user_allowed_to_copy(), $post ) ) {
-			return;
-		}
-
-		if ( 'post' === $current_screen->base
-			&& 'add' !== $current_screen->action
-			&& duplicate_post_can_copy_to_draft( $post ) ) {
-				$wp_admin_bar->add_menu(
-					array(
-						'id'    => 'new_draft',
-						'title' => esc_attr__( 'Copy to a new draft', 'duplicate-post' ),
-						'href'  => duplicate_post_get_clone_post_link( $post->ID ),
-					)
-				);
-		}
+		$post = get_post();
 	} else {
-		$current_object = $wp_the_query->get_queried_object();
+		$post = $wp_the_query->get_queried_object();
+	}
 
-		if ( empty( $current_object ) ) {
-			return;
-		}
+	if ( empty( $post ) ) {
+		return;
+	}
 
-		/** This filter is documented in duplicate-post-admin.php */
-		if ( ! apply_filters( 'duplicate_post_show_link', duplicate_post_is_current_user_allowed_to_copy(), $current_object ) ) {
-			return;
-		}
+	/** This filter is documented in duplicate-post-admin.php */
+	if ( ! apply_filters( 'duplicate_post_show_link', duplicate_post_is_current_user_allowed_to_copy(), $post ) ) {
+		return;
+	}
 
-		if ( duplicate_post_can_copy_to_draft( $current_object ) ) {
-			$wp_admin_bar->add_menu(
-				array(
-					'id'    => 'new_draft',
-					'title' => esc_attr__( 'Copy to a new draft', 'duplicate-post' ),
-					'href'  => duplicate_post_get_clone_post_link( $current_object->ID ),
-				)
-			);
-		}
+	if ( duplicate_post_is_valid_post_edit_screen() && duplicate_post_can_copy_to_draft( $post ) ) {
+		$wp_admin_bar->add_menu(
+			array(
+				'id'    => 'new_draft',
+				'title' => esc_attr__( 'Copy to a new draft', 'duplicate-post' ),
+				'href'  => duplicate_post_get_clone_post_link( $post->ID ),
+			)
+		);
 	}
 }
 
@@ -292,38 +270,22 @@ function duplicate_post_add_css() {
 	}
 
 	if ( is_admin() ) {
-		$current_screen = get_current_screen();
-		$post           = get_post();
-
-		if ( empty( $post ) ) {
-			return;
-		}
-
-		/** This filter is documented in duplicate-post-admin.php */
-		if ( ! apply_filters( 'duplicate_post_show_link', duplicate_post_is_current_user_allowed_to_copy(), $post ) ) {
-			return;
-		}
-
-		if ( 'post' === $current_screen->base
-			&& 'add' !== $current_screen->action
-			&& duplicate_post_can_copy_to_draft( $post ) ) {
-			duplicate_post_enqueue_css();
-		}
+		$post = get_post();
 	} else {
-		$current_object = $wp_the_query->get_queried_object();
+		$post = $wp_the_query->get_queried_object();
+	}
 
-		if ( empty( $current_object ) ) {
-			return;
-		}
+	if ( empty( $post ) ) {
+		return;
+	}
 
-		/** This filter is documented in duplicate-post-admin.php */
-		if ( ! apply_filters( 'duplicate_post_show_link', duplicate_post_is_current_user_allowed_to_copy(), $current_object ) ) {
-			return;
-		}
+	/** This filter is documented in duplicate-post-admin.php */
+	if ( ! apply_filters( 'duplicate_post_show_link', duplicate_post_is_current_user_allowed_to_copy(), $post ) ) {
+		return;
+	}
 
-		if ( duplicate_post_can_copy_to_draft( $current_object ) ) {
-			duplicate_post_enqueue_css();
-		}
+	if ( duplicate_post_is_valid_post_edit_screen() && duplicate_post_can_copy_to_draft( $post ) ) {
+		duplicate_post_enqueue_css();
 	}
 }
 
@@ -398,4 +360,19 @@ function duplicate_post_can_copy_to_draft( $post ) {
 		 && $is_public
 		 && $post_type_object->show_in_admin_bar
 		 && duplicate_post_is_post_type_enabled( $post->post_type );
+}
+
+/**
+ * Determines whether the current screen is a valid edit post screen.
+ *
+ * @return bool Whether or not the current screen is considered valid.
+ */
+function duplicate_post_is_valid_post_edit_screen() {
+	if ( ! is_admin() ) {
+		return true;
+	}
+
+	$current_screen = get_current_screen();
+
+	return $current_screen->base === 'post' && $current_screen->action !== 'add';
 }
