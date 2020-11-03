@@ -230,6 +230,7 @@ function duplicate_post_show_update_notice() {
 	if (
 		empty( $current_screen ) ||
 		empty( $current_screen->base ) ||
+        // phpcs:ignore WordPress.PHP.YodaConditions
 		( $current_screen->base !== 'dashboard' && $current_screen->base !== 'plugins' )
 	) {
 		return;
@@ -960,6 +961,7 @@ function duplicate_post_copy_comments( $new_id, $post ) {
 	$old_id_to_new = array();
 	foreach ( $comments as $comment ) {
 		// do not copy pingbacks or trackbacks.
+		// phpcs:ignore WordPress.PHP.YodaConditions
 		if ( $comment->comment_type === 'pingback' || $comment->comment_type === 'trackback' ) {
 			continue;
 		}
