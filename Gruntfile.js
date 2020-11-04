@@ -5,8 +5,6 @@ const path = require( "path" );
 module.exports = function( grunt ) {
 	'use strict';
 
-//	grunt.loadNpmTasks( 'grunt-wp-readme-to-markdown');
-
 	const pkg = grunt.file.readJSON( './package.json' );
 	const pluginVersion = pkg.version;
 
