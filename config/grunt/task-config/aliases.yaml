@@ -1,0 +1,16 @@
+# Grunt aliases
+---
+'build':
+  - 'build:js'
+
+# Build JavaScript from assets to production
+'build:js':
+  - 'clean:build-assets'
+  - 'webpack:buildDev'
+
+clean:build-assets:
+  - 'clean:build-assets-js'
+
+# Default task
+default:
+  - 'wp_readme_to_markdown'
