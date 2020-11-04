@@ -3,7 +3,7 @@
  * Backend functions.
  *
  * @package Duplicate Post
- * @since 2.0
+ * @since   2.0
  */
 
 if ( ! is_admin() ) {
@@ -232,7 +232,7 @@ function duplicate_post_show_update_notice() {
 	if (
 		empty( $current_screen ) ||
 		empty( $current_screen->base ) ||
-        // phpcs:ignore WordPress.PHP.YodaConditions
+		// phpcs:ignore WordPress.PHP.YodaConditions
 		( $current_screen->base !== 'dashboard' && $current_screen->base !== 'plugins' )
 	) {
 		return;
@@ -270,7 +270,7 @@ function duplicate_post_show_update_notice() {
 	$img_path = plugins_url( '/duplicate_post_yoast_icon-125x125.png', __FILE__ );
 
 	echo '<div id="duplicate-post-notice" class="' . esc_attr( $class ) . '" style="display: flex; align-items: center;">
-            <img src="' . esc_url( $img_path ) . '" alt=""/>
+			<img src="' . esc_url( $img_path ) . '" alt=""/>
 			<div style="margin: 0.5em">' . $sanitized_message . // phpcs:ignore WordPress.Security.EscapeOutput
 			'</div></div>';
 
@@ -370,12 +370,12 @@ function duplicate_post_quick_edit_remove_original( $column_name, $post_type ) {
 	printf(
 		'<fieldset class="inline-edit-col-left" id="duplicate_post_quick_edit_fieldset">
 			<div class="inline-edit-col">
-                <input type="checkbox"
-                name="duplicate_post_remove_original"
-                id="duplicate-post-remove-original"
-                value="duplicate_post_remove_original"
-                aria-describedby="duplicate-post-remove-original-description">
-                <label for="duplicate-post-remove-original">
+				<input type="checkbox"
+				name="duplicate_post_remove_original"
+				id="duplicate-post-remove-original"
+				value="duplicate_post_remove_original"
+				aria-describedby="duplicate-post-remove-original-description">
+				<label for="duplicate-post-remove-original">
 					<span class="checkbox-title">%s</span>
 				</label>
 				<span id="duplicate-post-remove-original-description" class="checkbox-title">%s</span>
@@ -453,18 +453,62 @@ function duplicate_post_admin_enqueue_scripts( $hook ) {
 }
 
 /**
+ * Flattens a version number for use in a filename.
+ *
+ * @param string $version The original version number.
+ *
+ * @return string The flattened version number.
+ */
+function duplicate_post_flatten_version( $version ) {
+	$parts = explode( '.', $version );
+
+	if ( count( $parts ) === 2 && preg_match( '/^\d+$/', $parts[1] ) === 1 ) {
+		$parts[] = '0';
+	}
+
+	return implode( '', $parts );
+}
+
+/**
  * Enqueues the necessary JavaScript code for the block editor.
  *
  * @return void
  */
 function duplicate_post_admin_enqueue_block_editor_scripts() {
 	wp_enqueue_script(
-        'duplicate_post_edit_script',
-        plugins_url( sprintf( 'js/dist/duplicate-post-edit-%s.js', DUPLICATE_POST_CURRENT_VERSION ), __FILE__ ),
-        [ 'wp-blocks', 'wp-element', 'wp-i18n' ],
-        DUPLICATE_POST_CURRENT_VERSION,
-        true
-    );
+		'duplicate_post_edit_script',
+		plugins_url( sprintf( 'js/dist/duplicate-post-edit-%s.js', duplicate_post_flatten_version( DUPLICATE_POST_CURRENT_VERSION ) ), __FILE__ ),
+		array(
+			'wp-blocks',
+			'wp-element',
+			'wp-i18n',
+		),
+		DUPLICATE_POST_CURRENT_VERSION,
+		true
+	);
+
+	wp_localize_script(
+		'duplicate_post_edit_script',
+		'yoastRewriteRepost',
+		array(
+			'permalink' => duplicate_post_get_rewrite_republish_permalink(),
+		)
+	);
+}
+
+/**
+ * Generates a rewrite and republish permalink for the current post.
+ *
+ * @return string The permalink. Returns empty if the post hasn't been published yet.
+ */
+function duplicate_post_get_rewrite_republish_permalink() {
+	$post = get_post();
+	// phpcs:ignore WordPress.PHP.YodaConditions
+	if ( $post->post_status !== 'publish' ) {
+		return '';
+	}
+
+	return duplicate_post_get_clone_post_link( $post->ID );
 }
 
 /**
@@ -560,32 +604,33 @@ function duplicate_post_make_duplicate_link_row( $actions, $post ) {
 	 * @return bool Whether or not to display the duplicate post link.
 	 */
 	if ( ! apply_filters( 'duplicate_post_show_link', duplicate_post_is_current_user_allowed_to_copy() && duplicate_post_is_post_type_enabled( $post->post_type ), $post ) ) {
-	    return $actions;
+		return $actions;
 	}
 
-    $actions['clone'] = '<a href="' . duplicate_post_get_clone_post_link( $post->ID, 'display', false ) .
-        '" aria-label="' . esc_attr(
-            /* translators: %s: Post title. */
-            sprintf( __( 'Clone &#8220;%s&#8221;', 'duplicate-post' ), $title )
-        ) . '">' .
-        esc_html_x( 'Clone', 'verb', 'duplicate-post' ) . '</a>';
+	$actions['clone'] = '<a href="' . duplicate_post_get_clone_post_link( $post->ID, 'display', false ) .
+		'" aria-label="' . esc_attr(
+			/* translators: %s: Post title. */
+			sprintf( __( 'Clone &#8220;%s&#8221;', 'duplicate-post' ), $title )
+		) . '">' .
+		esc_html_x( 'Clone', 'verb', 'duplicate-post' ) . '</a>';
 
-    $actions['edit_as_new_draft'] = '<a href="' . duplicate_post_get_clone_post_link( $post->ID ) .
-        '" aria-label="' . esc_attr(
-            /* translators: %s: Post title. */
-            sprintf( __( 'New draft of &#8220;%s&#8221;', 'duplicate-post' ), $title )
-        ) . '">' .
-        esc_html__( 'New Draft', 'duplicate-post' ) .
-        '</a>';
+	$actions['edit_as_new_draft'] = '<a href="' . duplicate_post_get_clone_post_link( $post->ID ) .
+		'" aria-label="' . esc_attr(
+			/* translators: %s: Post title. */
+			sprintf( __( 'New draft of &#8220;%s&#8221;', 'duplicate-post' ), $title )
+		) . '">' .
+		esc_html__( 'New Draft', 'duplicate-post' ) .
+		'</a>';
 
-    if ( $post->post_status === 'publish' ) {
+	// phpcs:ignore WordPress.PHP.YodaConditions
+	if ( $post->post_status === 'publish' ) {
 		$actions['rewrite'] = '<a href="' . duplicate_post_get_clone_post_link( $post->ID, 'display', false ) .
-              '" aria-label="' . esc_attr(
-              /* translators: %s: Post title. */
-                  sprintf( __( 'Rewrite & Republish &#8220;%s&#8221;', 'duplicate-post' ), $title )
-              ) . '">' .
-              esc_html_x( 'Rewrite & Republish', 'verb', 'duplicate-post' ) . '</a>';
-    }
+			'" aria-label="' . esc_attr(
+			/* translators: %s: Post title. */
+				sprintf( __( 'Rewrite & Republish &#8220;%s&#8221;', 'duplicate-post' ), $title )
+			) . '">' .
+			esc_html_x( 'Rewrite & Republish', 'verb', 'duplicate-post' ) . '</a>';
+	}
 
 	return $actions;
 }
@@ -612,9 +657,9 @@ function duplicate_post_add_duplicate_post_button( $post = null ) {
 	</a>
 </div>
 <div id="rewrite-republish-action">
-    <a class="submitduplicate duplication"
-       href="<?php echo esc_url( duplicate_post_get_clone_post_link( $post->id ) ); ?>"><?php esc_html_e( 'Rewrite & Republish', 'duplicate-post' ); ?>
-    </a>
+	<a class="submitduplicate duplication"
+	   href="<?php echo esc_url( duplicate_post_get_clone_post_link( $post->id ) ); ?>"><?php esc_html_e( 'Rewrite & Republish', 'duplicate-post' ); ?>
+	</a>
 </div>
 			<?php
 		}
@@ -1273,15 +1318,17 @@ function duplicate_post_add_bulk_filters() {
 }
 
 /**
- * Adds 'Clone' to the bulk action dropdown.
+ * Adds 'Clone' and 'Rewrite & Republish' to the bulk action dropdown.
  *
  * @ignore
  *
  * @param array $bulk_actions The bulk actions array.
- * @return array.
+ * @return array The bulk actions array.
  */
 function duplicate_post_register_bulk_action( $bulk_actions ) {
 	$bulk_actions['duplicate_post_clone'] = esc_html__( 'Clone', 'duplicate-post' );
+	$bulk_actions['duplicate_post_rewrite_republish'] = esc_html__( 'Rewrite & Republish', 'duplicate-post' );
+
 	return $bulk_actions;
 }
 
@@ -1304,11 +1351,11 @@ function duplicate_post_action_handler( $redirect_to, $doaction, $post_ids ) {
 		$post = get_post( $post_id );
 		if ( ! empty( $post ) ) {
 			if ( intval( get_option( 'duplicate_post_copychildren' ) !== 1 )
-					|| ! is_post_type_hierarchical( $post->post_type )
-					|| ( is_post_type_hierarchical( $post->post_type ) && ! duplicate_post_has_ancestors_marked( $post, $post_ids ) )
-				) {
+				 || ! is_post_type_hierarchical( $post->post_type )
+				 || ( is_post_type_hierarchical( $post->post_type ) && ! duplicate_post_has_ancestors_marked( $post, $post_ids ) )
+			) {
 				if ( ! is_wp_error( duplicate_post_create_duplicate( $post ) ) ) {
-					$counter++;
+					$counter ++;
 				}
 			}
 		}
@@ -1361,7 +1408,7 @@ function duplicate_post_newsletter_signup_form() {
 <!-- Begin Mailchimp Signup Form -->
 <div id="mc_embed_signup">
 <form action="https://yoast.us1.list-manage.com/subscribe/post?u=ffa93edfe21752c921f860358&amp;id=972f1c9122" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
-    <div id="mc_embed_signup_scroll">
+	<div id="mc_embed_signup_scroll">
 	' . $copy . '
 <div class="mc-field-group" style="margin-top: 8px;">
 	<label for="mce-EMAIL">' . $email_label . '</label>
@@ -1372,8 +1419,8 @@ function duplicate_post_newsletter_signup_form() {
 		<div class="response" id="mce-error-response" style="display:none"></div>
 		<div class="response" id="mce-success-response" style="display:none"></div>
 	</div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
-    <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_ffa93edfe21752c921f860358_972f1c9122" tabindex="-1" value=""></div>
-    </div>
+	<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_ffa93edfe21752c921f860358_972f1c9122" tabindex="-1" value=""></div>
+	</div>
 </form>
 </div>
 <!--End mc_embed_signup-->

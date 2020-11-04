@@ -1,15 +1,18 @@
+/* global yoastRewriteRepost */
+
 import { registerPlugin } from "@wordpress/plugins";
 import { PluginPostStatusInfo } from "@wordpress/edit-post";
 import { __ } from "@wordpress/i18n";
 
 /**
- * Renders the plugin.
+ * Renders the Rewrite & Republish link in the PluginPostStatusInfo component.
  *
- * @returns {JSX.Element} The rendered plugin.
+ * @returns {JSX.Element} The rendered link.
  */
 const render = () => (
 	<PluginPostStatusInfo>
-		<a href="#">{ __( "Rewrite & Republish", "duplicate-post" ) }</a>
+		{ yoastRewriteRepost.permalink !== "" &&
+		  <a href={ yoastRewriteRepost.permalink }>{ __( "Rewrite & Republish", "duplicate-post" ) }</a> }
 	</PluginPostStatusInfo>
 );
 
