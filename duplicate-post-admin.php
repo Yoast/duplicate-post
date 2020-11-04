@@ -489,7 +489,7 @@ function duplicate_post_admin_enqueue_block_editor_scripts() {
 
 	wp_localize_script(
 		'duplicate_post_edit_script',
-		'yoastRewriteRepost',
+		'duplicatePostRewriteRepost',
 		array(
 			'permalink' => duplicate_post_get_rewrite_republish_permalink(),
 		)

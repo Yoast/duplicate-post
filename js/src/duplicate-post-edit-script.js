@@ -1,4 +1,4 @@
-/* global yoastRewriteRepost */
+/* global duplicatePostRewriteRepost */
 
 import { registerPlugin } from "@wordpress/plugins";
 import { PluginPostStatusInfo } from "@wordpress/edit-post";
@@ -11,11 +11,11 @@ import { __ } from "@wordpress/i18n";
  */
 const render = () => (
 	<PluginPostStatusInfo>
-		{ yoastRewriteRepost.permalink !== "" &&
-		  <a href={ yoastRewriteRepost.permalink }>{ __( "Rewrite & Republish", "duplicate-post" ) }</a> }
+		{ duplicatePostRewriteRepost.permalink !== "" &&
+		  <a href={ duplicatePostRewriteRepost.permalink }>{ __( "Rewrite & Republish", "duplicate-post" ) }</a> }
 	</PluginPostStatusInfo>
 );
 
-registerPlugin( "yoast-duplicate-post", {
+registerPlugin( "duplicate-post", {
 	render
 } );
