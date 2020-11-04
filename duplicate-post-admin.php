@@ -647,18 +647,20 @@ function duplicate_post_add_duplicate_post_button( $post = null ) {
 			$post = get_post( $id );
 		}
 	}
-	if ( ! is_null( $post ) ) {
+
+	// phpcs:ignore WordPress.PHP.YodaConditions
+	if ( ! is_null( $post ) && $post->post_status === 'publish' ) {
 		/** This filter is documented in duplicate-post-admin.php */
 		if ( apply_filters( 'duplicate_post_show_link', duplicate_post_is_current_user_allowed_to_copy() && duplicate_post_is_post_type_enabled( $post->post_type ), $post ) ) {
 			?>
 <div id="duplicate-action">
 	<a class="submitduplicate duplication"
-		href="<?php echo esc_url( duplicate_post_get_clone_post_link( $post->id ) ); ?>"><?php esc_html_e( 'Copy to a new draft', 'duplicate-post' ); ?>
+		href="<?php echo esc_url( duplicate_post_get_clone_post_link( $post->ID ) ); ?>"><?php esc_html_e( 'Copy to a new draft', 'duplicate-post' ); ?>
 	</a>
 </div>
 <div id="rewrite-republish-action">
 	<a class="submitduplicate duplication"
-	   href="<?php echo esc_url( duplicate_post_get_clone_post_link( $post->id ) ); ?>"><?php esc_html_e( 'Rewrite & Republish', 'duplicate-post' ); ?>
+	   href="<?php echo esc_url( duplicate_post_get_clone_post_link( $post->ID ) ); ?>"><?php esc_html_e( 'Rewrite & Republish', 'duplicate-post' ); ?>
 	</a>
 </div>
 			<?php
