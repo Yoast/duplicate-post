@@ -237,15 +237,25 @@ function duplicate_post_admin_bar_render() {
 		return;
 	}
 
-	if ( duplicate_post_is_valid_post_edit_screen() && duplicate_post_can_copy_to_draft( $post ) ) {
-		$wp_admin_bar->add_menu(
-			array(
-				'id'    => 'new_draft',
-				'title' => esc_attr__( 'Copy to a new draft', 'duplicate-post' ),
-				'href'  => duplicate_post_get_clone_post_link( $post->ID ),
-			)
-		);
+	if ( ! duplicate_post_is_valid_post_edit_screen() || ! duplicate_post_can_copy_to_draft( $post ) ) {
+		return;
 	}
+
+	$wp_admin_bar->add_menu(
+		array(
+			'id'    => 'new_draft',
+			'title' => esc_attr__( 'Copy to a new draft', 'duplicate-post' ),
+			'href'  => duplicate_post_get_clone_post_link( $post->ID ),
+		)
+	);
+
+	$wp_admin_bar->add_menu(
+		array(
+			'id'    => 'rewrite_republish',
+			'title' => esc_attr__( 'Rewrite & Republish', 'duplicate-post' ),
+			'href'  => duplicate_post_get_clone_post_link( $post->ID ),
+		)
+	);
 }
 
 /**

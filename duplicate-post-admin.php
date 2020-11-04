@@ -100,6 +100,8 @@ function duplicate_post_admin_init() {
 	add_filter( 'plugin_row_meta', 'duplicate_post_add_plugin_links', 10, 2 );
 
 	add_action( 'admin_notices', 'duplicate_post_action_admin_notice' );
+
+	add_action( 'enqueue_block_editor_assets', 'duplicate_post_admin_enqueue_block_editor_scripts' );
 }
 
 /**
@@ -451,6 +453,21 @@ function duplicate_post_admin_enqueue_scripts( $hook ) {
 }
 
 /**
+ * Enqueues the necessary JavaScript code for the block editor.
+ *
+ * @return void
+ */
+function duplicate_post_admin_enqueue_block_editor_scripts() {
+	wp_enqueue_script(
+        'duplicate_post_edit_script',
+        plugins_url( sprintf( 'js/dist/duplicate-post-edit-%s.js', DUPLICATE_POST_CURRENT_VERSION ), __FILE__ ),
+        [ 'wp-blocks', 'wp-element', 'wp-i18n' ],
+        DUPLICATE_POST_CURRENT_VERSION,
+        true
+    );
+}
+
+/**
  * Adds a metabox to Edit screen.
  *
  * @ignore
@@ -537,27 +554,39 @@ function duplicate_post_make_duplicate_link_row( $actions, $post ) {
 	/**
 	 * Filter allowing displaying duplicate post link for current post.
 	 *
-	 * @param boolean $show_duplicate_link When to show duplicate link.
+	 * @param bool    $show_duplicate_link When to show duplicate link.
 	 * @param WP_Post $post                The post object.
 	 *
-	 * @return boolean
+	 * @return bool Whether or not to display the duplicate post link.
 	 */
-	if ( apply_filters( 'duplicate_post_show_link', duplicate_post_is_current_user_allowed_to_copy() && duplicate_post_is_post_type_enabled( $post->post_type ), $post ) ) {
-		$actions['clone'] = '<a href="' . duplicate_post_get_clone_post_link( $post->ID, 'display', false ) .
-			'" aria-label="' . esc_attr(
-				/* translators: %s: Post title. */
-				sprintf( __( 'Clone &#8220;%s&#8221;', 'duplicate-post' ), $title )
-			) . '">' .
-			esc_html_x( 'Clone', 'verb', 'duplicate-post' ) . '</a>';
-
-		$actions['edit_as_new_draft'] = '<a href="' . duplicate_post_get_clone_post_link( $post->ID ) .
-			'" aria-label="' . esc_attr(
-				/* translators: %s: Post title. */
-				sprintf( __( 'New draft of &#8220;%s&#8221;', 'duplicate-post' ), $title )
-			) . '">' .
-			esc_html__( 'New Draft', 'duplicate-post' ) .
-			'</a>';
+	if ( ! apply_filters( 'duplicate_post_show_link', duplicate_post_is_current_user_allowed_to_copy() && duplicate_post_is_post_type_enabled( $post->post_type ), $post ) ) {
+	    return $actions;
 	}
+
+    $actions['clone'] = '<a href="' . duplicate_post_get_clone_post_link( $post->ID, 'display', false ) .
+        '" aria-label="' . esc_attr(
+            /* translators: %s: Post title. */
+            sprintf( __( 'Clone &#8220;%s&#8221;', 'duplicate-post' ), $title )
+        ) . '">' .
+        esc_html_x( 'Clone', 'verb', 'duplicate-post' ) . '</a>';
+
+    $actions['edit_as_new_draft'] = '<a href="' . duplicate_post_get_clone_post_link( $post->ID ) .
+        '" aria-label="' . esc_attr(
+            /* translators: %s: Post title. */
+            sprintf( __( 'New draft of &#8220;%s&#8221;', 'duplicate-post' ), $title )
+        ) . '">' .
+        esc_html__( 'New Draft', 'duplicate-post' ) .
+        '</a>';
+
+    if ( $post->post_status === 'publish' ) {
+		$actions['rewrite'] = '<a href="' . duplicate_post_get_clone_post_link( $post->ID, 'display', false ) .
+              '" aria-label="' . esc_attr(
+              /* translators: %s: Post title. */
+                  sprintf( __( 'Rewrite & Republish &#8220;%s&#8221;', 'duplicate-post' ), $title )
+              ) . '">' .
+              esc_html_x( 'Rewrite & Republish', 'verb', 'duplicate-post' ) . '</a>';
+    }
+
 	return $actions;
 }
 
@@ -581,6 +610,11 @@ function duplicate_post_add_duplicate_post_button( $post = null ) {
 	<a class="submitduplicate duplication"
 		href="<?php echo esc_url( duplicate_post_get_clone_post_link( $post->id ) ); ?>"><?php esc_html_e( 'Copy to a new draft', 'duplicate-post' ); ?>
 	</a>
+</div>
+<div id="rewrite-republish-action">
+    <a class="submitduplicate duplication"
+       href="<?php echo esc_url( duplicate_post_get_clone_post_link( $post->id ) ); ?>"><?php esc_html_e( 'Rewrite & Republish', 'duplicate-post' ); ?>
+    </a>
 </div>
 			<?php
 		}
