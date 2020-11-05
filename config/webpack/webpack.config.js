@@ -86,7 +86,7 @@ module.exports = ( env = { environment: "production" } ) => {
 			rules: [
 				{
 					test: /.jsx?$/,
-					exclude: /node_modules[/\\](?!(yoast-components|gutenberg|yoastseo|@wordpress|@yoast|parse5)[/\\]).*/,
+					exclude: /node_modules[/\\](?!(gutenberg|@wordpress|parse5)[/\\]).*/,
 					use: [
 						{
 							loader: "babel-loader",
