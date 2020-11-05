@@ -47,7 +47,7 @@ const wordpressPackages = [
 const wordpressExternals = wordpressPackages.reduce( ( memo, packageName ) => {
 	const name = camelCaseDash( packageName.replace( "@wordpress/", "" ) );
 
-	memo[packageName] = `window.wp.${ name }`;
+	memo[ packageName ] = `window.wp.${ name }`;
 	return memo;
 }, {} );
 

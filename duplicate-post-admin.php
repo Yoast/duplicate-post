@@ -626,7 +626,7 @@ function duplicate_post_make_duplicate_link_row( $actions, $post ) {
 	if ( $post->post_status === 'publish' ) {
 		$actions['rewrite'] = '<a href="' . duplicate_post_get_clone_post_link( $post->ID, 'display', false ) .
 			'" aria-label="' . esc_attr(
-			/* translators: %s: Post title. */
+				/* translators: %s: Post title. */
 				sprintf( __( 'Rewrite & Republish &#8220;%s&#8221;', 'duplicate-post' ), $title )
 			) . '">' .
 			esc_html_x( 'Rewrite & Republish', 'verb', 'duplicate-post' ) . '</a>';
@@ -1328,7 +1328,7 @@ function duplicate_post_add_bulk_filters() {
  * @return array The bulk actions array.
  */
 function duplicate_post_register_bulk_action( $bulk_actions ) {
-	$bulk_actions['duplicate_post_clone'] = esc_html__( 'Clone', 'duplicate-post' );
+	$bulk_actions['duplicate_post_clone']             = esc_html__( 'Clone', 'duplicate-post' );
 	$bulk_actions['duplicate_post_rewrite_republish'] = esc_html__( 'Rewrite & Republish', 'duplicate-post' );
 
 	return $bulk_actions;
