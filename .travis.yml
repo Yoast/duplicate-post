@@ -23,6 +23,7 @@ matrix:
       env: SNIFF=1
 
 before_install:
+  - composer self-update 1.10.16
   - if [[ "$SNIFF" == "1" ]]; then composer install; fi
 
 script:
