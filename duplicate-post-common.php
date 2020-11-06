@@ -223,63 +223,39 @@ function duplicate_post_admin_bar_render() {
 	global $wp_admin_bar;
 
 	if ( is_admin() ) {
-		$current_screen = get_current_screen();
-		$post           = get_post();
-
-		if ( empty( $post ) ) {
-			return;
-		}
-
-		/** This filter is documented in duplicate-post-admin.php */
-		if ( ! apply_filters( 'duplicate_post_show_link', duplicate_post_is_current_user_allowed_to_copy(), $post ) ) {
-			return;
-		}
-
-		$post_type_object = get_post_type_object( $post->post_type );
-
-		if ( 'post' === $current_screen->base
-			&& 'add' !== $current_screen->action
-			&& ( $post_type_object )
-			&& duplicate_post_is_current_user_allowed_to_copy()
-			&& ( $post_type_object->public )
-			&& ( $post_type_object->show_in_admin_bar )
-			&& ( duplicate_post_is_post_type_enabled( $post->post_type ) ) ) {
-				$wp_admin_bar->add_menu(
-					array(
-						'id'    => 'new_draft',
-						'title' => esc_attr__( 'Copy to a new draft', 'duplicate-post' ),
-						'href'  => duplicate_post_get_clone_post_link( $post->ID ),
-					)
-				);
-		}
+		$post = get_post();
 	} else {
-		$current_object = $wp_the_query->get_queried_object();
-
-		if ( empty( $current_object ) ) {
-			return;
-		}
-
-		/** This filter is documented in duplicate-post-admin.php */
-		if ( ! apply_filters( 'duplicate_post_show_link', duplicate_post_is_current_user_allowed_to_copy(), $current_object ) ) {
-			return;
-		}
-
-		$post_type_object = get_post_type_object( $current_object->post_type );
-
-		if ( ! empty( $current_object->post_type )
-			&& ( $post_type_object )
-			&& duplicate_post_is_current_user_allowed_to_copy()
-			&& ( $post_type_object->show_in_admin_bar )
-			&& ( duplicate_post_is_post_type_enabled( $current_object->post_type ) ) ) {
-			$wp_admin_bar->add_menu(
-				array(
-					'id'    => 'new_draft',
-					'title' => esc_attr__( 'Copy to a new draft', 'duplicate-post' ),
-					'href'  => duplicate_post_get_clone_post_link( $current_object->ID ),
-				)
-			);
-		}
+		$post = $wp_the_query->get_queried_object();
 	}
+
+	if ( empty( $post ) ) {
+		return;
+	}
+
+	/** This filter is documented in duplicate-post-admin.php */
+	if ( ! apply_filters( 'duplicate_post_show_link', duplicate_post_is_current_user_allowed_to_copy(), $post ) ) {
+		return;
+	}
+
+	if ( ! duplicate_post_is_valid_post_edit_screen() || ! duplicate_post_can_copy_to_draft( $post ) ) {
+		return;
+	}
+
+	$wp_admin_bar->add_menu(
+		array(
+			'id'    => 'new_draft',
+			'title' => esc_attr__( 'Copy to a new draft', 'duplicate-post' ),
+			'href'  => duplicate_post_get_clone_post_link( $post->ID ),
+		)
+	);
+
+	$wp_admin_bar->add_menu(
+		array(
+			'id'    => 'rewrite_republish',
+			'title' => esc_attr__( 'Rewrite & Republish', 'duplicate-post' ),
+			'href'  => duplicate_post_get_clone_post_link( $post->ID ),
+		)
+	);
 }
 
 /**
@@ -304,50 +280,22 @@ function duplicate_post_add_css() {
 	}
 
 	if ( is_admin() ) {
-		$current_screen = get_current_screen();
-		$post           = get_post();
-
-		if ( empty( $post ) ) {
-			return;
-		}
-
-		/** This filter is documented in duplicate-post-admin.php */
-		if ( ! apply_filters( 'duplicate_post_show_link', duplicate_post_is_current_user_allowed_to_copy(), $post ) ) {
-			return;
-		}
-
-		$post_type_object = get_post_type_object( $post->post_type );
-
-		if ( 'post' === $current_screen->base
-			&& 'add' !== $current_screen->action
-			&& ( $post_type_object )
-			&& duplicate_post_is_current_user_allowed_to_copy()
-			&& ( $post_type_object->public )
-			&& ( $post_type_object->show_in_admin_bar )
-			&& ( duplicate_post_is_post_type_enabled( $post->post_type ) ) ) {
-			duplicate_post_enqueue_css();
-		}
+		$post = get_post();
 	} else {
-		$current_object = $wp_the_query->get_queried_object();
+		$post = $wp_the_query->get_queried_object();
+	}
 
-		if ( empty( $current_object ) ) {
-			return;
-		}
+	if ( empty( $post ) ) {
+		return;
+	}
 
-		/** This filter is documented in duplicate-post-admin.php */
-		if ( ! apply_filters( 'duplicate_post_show_link', duplicate_post_is_current_user_allowed_to_copy(), $current_object ) ) {
-			return;
-		}
+	/** This filter is documented in duplicate-post-admin.php */
+	if ( ! apply_filters( 'duplicate_post_show_link', duplicate_post_is_current_user_allowed_to_copy(), $post ) ) {
+		return;
+	}
 
-		$post_type_object = get_post_type_object( $current_object->post_type );
-
-		if ( ! empty( $current_object->post_type )
-			&& ( $post_type_object )
-			&& duplicate_post_is_current_user_allowed_to_copy()
-			&& ( $post_type_object->show_in_admin_bar )
-			&& ( duplicate_post_is_post_type_enabled( $current_object->post_type ) ) ) {
-			duplicate_post_enqueue_css();
-		}
+	if ( duplicate_post_is_valid_post_edit_screen() && duplicate_post_can_copy_to_draft( $post ) ) {
+		duplicate_post_enqueue_css();
 	}
 }
 
@@ -393,4 +341,49 @@ function duplicate_post_init() {
  */
 function duplicate_post_tax_obj_cmp( $a, $b ) {
 	return ( $a->public < $b->public );
+}
+
+/**
+ * Checks whether the passed post can be copied to a new draft.
+ *
+ * @param WP_Post $post The post to copy.
+ *
+ * @return bool Whether or not the post can be copied to a new draft.
+ */
+function duplicate_post_can_copy_to_draft( $post ) {
+	if ( empty( $post->post_type ) ) {
+		return false;
+	}
+
+	$post_type_object = get_post_type_object( $post->post_type );
+
+	if ( empty( $post_type_object ) ) {
+		return false;
+	}
+
+	$is_public = true;
+	if ( property_exists( $post_type_object, 'public' ) ) {
+		$is_public = $post_type_object->public;
+	}
+
+	return duplicate_post_is_current_user_allowed_to_copy()
+		 && $is_public
+		 && $post_type_object->show_in_admin_bar
+		 && duplicate_post_is_post_type_enabled( $post->post_type );
+}
+
+/**
+ * Determines whether the current screen is a valid edit post screen.
+ *
+ * @return bool Whether or not the current screen is considered valid.
+ */
+function duplicate_post_is_valid_post_edit_screen() {
+	if ( ! is_admin() ) {
+		return true;
+	}
+
+	$current_screen = get_current_screen();
+
+	// phpcs:ignore WordPress.PHP.YodaConditions
+	return $current_screen->base === 'post' && $current_screen->action !== 'add';
 }

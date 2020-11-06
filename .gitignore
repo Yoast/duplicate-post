@@ -38,3 +38,5 @@ tests/cli/vendor
 ## Composer
 ############
 /vendor/
+
+/js/dist/
