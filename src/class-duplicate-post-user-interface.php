@@ -5,7 +5,7 @@
  * @package Duplicate_Post
  */
 
-namespace Yoast\WP\Duplicate_Post\Duplicate_Post_User_Interface;
+namespace Yoast\WP\Duplicate_Post;
 
 /**
  * Represents the Duplicate Post User Interface class.
