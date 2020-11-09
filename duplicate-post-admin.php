@@ -294,7 +294,7 @@ function duplicate_post_show_update_notice() {
 /**
  * Dismisses the notice.
  *
- * @return boolean.
+ * @return bool
  */
 function duplicate_post_dismiss_notice() {
 	$result = update_site_option( 'duplicate_post_show_notice', 0 );
@@ -327,7 +327,7 @@ function duplicate_post_show_original_column() {
  * @ignore
  *
  * @param array $post_columns The post columns array.
- * @return array.
+ * @return array
  */
 function duplicate_post_add_original_column( $post_columns ) {
 	$post_columns['duplicate_post_original_item'] = __( 'Original item', 'duplicate-post' );
@@ -339,8 +339,8 @@ function duplicate_post_add_original_column( $post_columns ) {
  *
  * @ignore
  *
- * @param string  $column_name  The name for the current column.
- * @param integer $post_id     The ID for the current post.
+ * @param string $column_name The name for the current column.
+ * @param int    $post_id     The ID for the current post.
  */
 function duplicate_post_show_original_item( $column_name, $post_id ) {
 	if ( 'duplicate_post_original_item' === $column_name ) {
@@ -358,8 +358,8 @@ function duplicate_post_show_original_item( $column_name, $post_id ) {
  *
  * @ignore
  *
- * @param string $column_name  The name for the current column.
- * @param string $post_type    The post type for the current post.
+ * @param string $column_name The name for the current column.
+ * @param string $post_type   The post type for the current post.
  */
 function duplicate_post_quick_edit_remove_original( $column_name, $post_type ) {
 	if ( 'duplicate_post_original_item' !== $column_name ) {
@@ -402,7 +402,7 @@ function duplicate_post_quick_edit_remove_original( $column_name, $post_type ) {
  *
  * @ignore
  *
- * @param integer $post_id The current post ID.
+ * @param int $post_id The current post ID.
  * @return void
  */
 function duplicate_post_save_quick_edit_data( $post_id ) {
@@ -425,7 +425,7 @@ function duplicate_post_save_quick_edit_data( $post_id ) {
  * @ignore
  *
  * @param array    $post_states The array of post states.
- * @param \WP_Post $post The current post.
+ * @param \WP_Post $post        The current post.
  * @return array
  */
 function duplicate_post_show_original_in_post_states( $post_states, $post ) {
@@ -527,8 +527,8 @@ function duplicate_post_custom_box_html( $post ) {
  * Adds the link to action list for post_row_actions.
  *
  * @param array   $actions The actions array.
- * @param WP_Post $post The post object.
- * @return array.
+ * @param WP_Post $post    The post object.
+ * @return array
  */
 function duplicate_post_make_duplicate_link_row( $actions, $post ) {
 	// $title = empty( $post->post_title ) ? __( '(no title)', 'duplicate-post' ) : $post->post_title;
@@ -622,7 +622,7 @@ function duplicate_post_save_as_new_post_draft() {
  * @ignore
  *
  * @param array $removable_query_args Array of query args keys.
- * @return array.
+ * @return array
  */
 function duplicate_post_add_removable_query_arg( $removable_query_args ) {
 	$removable_query_args[] = 'cloned';
@@ -720,8 +720,8 @@ function duplicate_post_save_as_new_post( $status = '' ) {
  *
  * @global wpdb $wpdb WordPress database abstraction object.
  *
- * @param integer $new_id New post ID.
- * @param WP_Post $post The original post object.
+ * @param int     $new_id New post ID.
+ * @param WP_Post $post   The original post object.
  */
 function duplicate_post_copy_post_taxonomies( $new_id, $post ) {
 	global $wpdb;
@@ -748,7 +748,7 @@ function duplicate_post_copy_post_taxonomies( $new_id, $post ) {
 		 *
 		 * @param array $taxonomies_blacklist The taxonomy excludelist from the options.
 		 *
-		 * @return array.
+		 * @return array
 		 */
 		$taxonomies_blacklist = apply_filters( 'duplicate_post_taxonomies_excludelist_filter', $taxonomies_blacklist );
 
@@ -768,8 +768,8 @@ function duplicate_post_copy_post_taxonomies( $new_id, $post ) {
 /**
  * Copies the meta information of a post to another post
  *
- * @param integer $new_id The new post ID.
- * @param WP_Post $post The original post object.
+ * @param int     $new_id The new post ID.
+ * @param WP_Post $post   The original post object.
  */
 function duplicate_post_copy_post_meta_info( $new_id, $post ) {
 	$post_meta_keys = get_post_custom_keys( $post->ID );
@@ -798,7 +798,7 @@ function duplicate_post_copy_post_meta_info( $new_id, $post ) {
 	 *
 	 * @param array $meta_blacklist The meta fields excludelist from the options.
 	 *
-	 * @return array.
+	 * @return array
 	 */
 	$meta_blacklist = apply_filters( 'duplicate_post_blacklist_filter', $meta_blacklist );
 
@@ -821,7 +821,7 @@ function duplicate_post_copy_post_meta_info( $new_id, $post ) {
 	 *
 	 * @param array $meta_keys The list of meta fields name, with the ones in the excludelist already removed.
 	 *
-	 * @return array.
+	 * @return array
 	 */
 	$meta_keys = apply_filters( 'duplicate_post_meta_keys_filter', $meta_keys );
 
@@ -841,7 +841,7 @@ function duplicate_post_copy_post_meta_info( $new_id, $post ) {
  * @ignore
  *
  * @param mixed $value Array or object to be recursively slashed.
- * @return string|mixed.
+ * @return string|mixed
  */
 function duplicate_post_addslashes_deep( $value ) {
 	if ( function_exists( 'map_deep' ) ) {
@@ -857,7 +857,7 @@ function duplicate_post_addslashes_deep( $value ) {
  * @ignore
  *
  * @param mixed $value Value to slash only if string.
- * @return string|mixed.
+ * @return string|mixed
  */
 function duplicate_post_addslashes_to_strings_only( $value ) {
 	return is_string( $value ) ? addslashes( $value ) : $value;
@@ -869,7 +869,7 @@ function duplicate_post_addslashes_to_strings_only( $value ) {
  * @ignore
  *
  * @param mixed $value What to add slash to.
- * @return mixed.
+ * @return mixed
  */
 function duplicate_post_wp_slash( $value ) {
 	return duplicate_post_addslashes_deep( $value );
@@ -878,8 +878,8 @@ function duplicate_post_wp_slash( $value ) {
 /**
  * Copies attachments, including physical files.
  *
- * @param integer $new_id The new post ID.
- * @param WP_Post $post The original post object.
+ * @param int     $new_id The new post ID.
+ * @param WP_Post $post   The original post object.
  */
 function duplicate_post_copy_attachments( $new_id, $post ) {
 	// get thumbnail ID.
@@ -941,8 +941,8 @@ function duplicate_post_copy_attachments( $new_id, $post ) {
 /**
  * Copies child posts.
  *
- * @param integer $new_id The new post ID.
- * @param WP_Post $post The original post object.
+ * @param int     $new_id The new post ID.
+ * @param WP_Post $post   The original post object.
  * @param string  $status Optional. The destination status.
  */
 function duplicate_post_copy_children( $new_id, $post, $status = '' ) {
@@ -967,8 +967,8 @@ function duplicate_post_copy_children( $new_id, $post, $status = '' ) {
 /**
  * Copies comments.
  *
- * @param integer $new_id The new post ID.
- * @param WP_Post $post The original post object.
+ * @param int     $new_id The new post ID.
+ * @param WP_Post $post   The original post object.
  */
 function duplicate_post_copy_comments( $new_id, $post ) {
 	$comments = get_comments(
@@ -1021,30 +1021,30 @@ function duplicate_post_copy_comments( $new_id, $post ) {
  *
  * This is the main functions that does the cloning.
  *
- * @param WP_Post $post The original post object.
- * @param string  $status Optional. The intended destination status.
+ * @param WP_Post $post      The original post object.
+ * @param string  $status    Optional. The intended destination status.
  * @param string  $parent_id Optional. The parent post ID if we are calling this recursively.
- * @return number|WP_Error.
+ * @return number|WP_Error
  */
 function duplicate_post_create_duplicate( $post, $status = '', $parent_id = '' ) {
 	/**
 	 * Fires before duplicating a post.
 	 *
 	 * @param WP_Post $post      The original post object.
-	 * @param boolean $status    The intended destination status.
-	 * @param integer $parent_id The parent post ID if we are calling this recursively.
+	 * @param bool    $status    The intended destination status.
+	 * @param int     $parent_id The parent post ID if we are calling this recursively.
 	 */
 	do_action( 'duplicate_post_pre_copy', $post, $status, $parent_id );
 
 	/**
 	 * Filter allowing to copy post.
 	 *
-	 * @param boolean $can_duplicate Default to `true`.
+	 * @param bool    $can_duplicate Default to `true`.
 	 * @param WP_Post $post          The original post object.
-	 * @param boolean $status        The intended destination status.
-	 * @param integer $parent_id     The parent post ID if we are calling this recursively.
+	 * @param bool    $status        The intended destination status.
+	 * @param int     $parent_id     The parent post ID if we are calling this recursively.
 	 *
-	 * @return boolean.
+	 * @return bool
 	 */
 	$can_duplicate = apply_filters( 'duplicate_post_allow', true, $post, $status, $parent_id );
 	if ( ! $can_duplicate ) {
@@ -1161,7 +1161,7 @@ function duplicate_post_create_duplicate( $post, $status = '', $parent_id = '' )
 	 * @param array   $new_post New post values.
 	 * @param WP_Post $post     Original post object.
 	 *
-	 * @return array.
+	 * @return array
 	 */
 	$new_post    = apply_filters( 'duplicate_post_new_post', $new_post, $post );
 	$new_post_id = wp_insert_post( wp_slash( $new_post ), true );
@@ -1183,10 +1183,10 @@ function duplicate_post_create_duplicate( $post, $status = '', $parent_id = '' )
 	/**
 	 * Fires after duplicating a post.
 	 *
-	 * @param integer|WP_Error $new_post_id The new post id or WP_Error object on error.
-	 * @param WP_Post          $post        The original post object.
-	 * @param boolean          $status      The intended destination status.
-	 * @param integer          $parent_id   The parent post ID if we are calling this recursively.
+	 * @param int|WP_Error $new_post_id The new post id or WP_Error object on error.
+	 * @param WP_Post      $post        The original post object.
+	 * @param bool         $status      The intended destination status.
+	 * @param int          $parent_id   The parent post ID if we are calling this recursively.
 	 */
 	do_action( 'duplicate_post_post_copy', $new_post_id, $post, $status, $parent_id );
 
@@ -1197,8 +1197,8 @@ function duplicate_post_create_duplicate( $post, $status = '', $parent_id = '' )
  * Adds some links on the plugin page.
  *
  * @param array  $links The links array.
- * @param string $file The file name.
- * @return array.
+ * @param string $file  The file name.
+ * @return array
  */
 function duplicate_post_add_plugin_links( $links, $file ) {
 	if ( plugin_basename( dirname( __FILE__ ) . '/duplicate-post.php' ) === $file ) {
@@ -1281,9 +1281,9 @@ function duplicate_post_register_bulk_action( $bulk_actions ) {
  * @ignore
  *
  * @param string $redirect_to The URL to redirect to.
- * @param string $doaction The action that has been called.
- * @param array  $post_ids The array of marked post IDs.
- * @return string.
+ * @param string $doaction    The action that has been called.
+ * @param array  $post_ids    The array of marked post IDs.
+ * @return string
  */
 function duplicate_post_action_handler( $redirect_to, $doaction, $post_ids ) {
 	if ( 'duplicate_post_clone' !== $doaction ) {
@@ -1314,9 +1314,9 @@ function duplicate_post_action_handler( $redirect_to, $doaction, $post_ids ) {
  *
  * @ignore
  *
- * @param WP_Post $post The post object.
+ * @param WP_Post $post     The post object.
  * @param array   $post_ids The array of marked post IDs.
- * @return boolean.
+ * @return bool
  */
 function duplicate_post_has_ancestors_marked( $post, $post_ids ) {
 	$ancestors_in_array = 0;

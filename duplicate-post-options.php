@@ -77,8 +77,8 @@ function duplicate_post_add_options_page_css() {
 /**
  * Show options page.
  *
- * @global WP_Roles $wp_roles WordPress User Roles.
- * @global string $wp_version The WordPress version string.
+ * @global WP_Roles $wp_roles   WordPress User Roles.
+ * @global string   $wp_version The WordPress version string.
  */
 function duplicate_post_options() {
 	global $wp_roles, $wp_version;
