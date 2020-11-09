@@ -662,7 +662,7 @@ function duplicate_post_save_as_new_post( $status = '' ) {
 			wp_die(
 				esc_html(
 					__( 'Copy creation failed, could not find original:', 'duplicate-post' ) . ' '
-					. htmlspecialchars( $id )
+					. $id
 				)
 			);
 		}
@@ -709,7 +709,7 @@ function duplicate_post_save_as_new_post( $status = '' ) {
 		wp_die(
 			esc_html(
 				__( 'Copy creation failed, could not find original:', 'duplicate-post' ) . ' '
-				. htmlspecialchars( $id )
+				. $id
 			)
 		);
 	}
