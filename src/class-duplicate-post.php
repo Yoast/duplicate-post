@@ -5,6 +5,8 @@
  * @package Duplicate_Post
  */
 
+namespace Yoast\WP\Duplicate_Post;
+
 /**
  * Represents the Duplicate Post main class.
  */
