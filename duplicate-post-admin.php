@@ -730,7 +730,7 @@ function duplicate_post_copy_post_taxonomies( $new_id, $post ) {
 		wp_set_object_terms( $new_id, null, 'category' );
 
 		$post_taxonomies = get_object_taxonomies( $post->post_type );
-		// several plugins just add support to post-formats but don't register post_format taxonomy.
+		// Several plugins just add support to post-formats but don't register post_format taxonomy.
 		if ( post_type_supports( $post->post_type, 'post-formats' ) && ! in_array( 'post_format', $post_taxonomies, true ) ) {
 			$post_taxonomies[] = 'post_format';
 		}
@@ -784,8 +784,8 @@ function duplicate_post_copy_post_meta_info( $new_id, $post ) {
 		$meta_blacklist = array_filter( $meta_blacklist );
 		$meta_blacklist = array_map( 'trim', $meta_blacklist );
 	}
-	$meta_blacklist[] = '_edit_lock'; // edit lock.
-	$meta_blacklist[] = '_edit_last'; // edit lock.
+	$meta_blacklist[] = '_edit_lock'; // Edit lock.
+	$meta_blacklist[] = '_edit_last'; // Edit lock.
 	if ( intval( get_option( 'duplicate_post_copytemplate' ) ) === 0 ) {
 		$meta_blacklist[] = '_wp_page_template';
 	}
@@ -882,9 +882,9 @@ function duplicate_post_wp_slash( $value ) {
  * @param WP_Post $post   The original post object.
  */
 function duplicate_post_copy_attachments( $new_id, $post ) {
-	// get thumbnail ID.
+	// Get thumbnail ID.
 	$old_thumbnail_id = get_post_thumbnail_id( $post->ID );
-	// get children.
+	// Get children.
 	$children = get_posts(
 		array(
 			'post_type'   => 'any',
@@ -893,7 +893,7 @@ function duplicate_post_copy_attachments( $new_id, $post ) {
 			'post_parent' => $post->ID,
 		)
 	);
-	// clone old attachments.
+	// Clone old attachments.
 	foreach ( $children as $child ) {
 		if ( 'attachment' !== $child->post_type ) {
 			continue;
@@ -931,7 +931,7 @@ function duplicate_post_copy_attachments( $new_id, $post ) {
 			update_post_meta( $new_attachment_id, '_wp_attachment_image_alt', wp_slash( $alt_title ) );
 		}
 
-		// if we have cloned the post thumbnail, set the copy as the thumbnail for the new post.
+		// If we have cloned the post thumbnail, set the copy as the thumbnail for the new post.
 		if ( intval( get_option( 'duplicate_post_copythumbnail' ) ) === 1 && $old_thumbnail_id === $child->ID ) {
 			set_post_thumbnail( $new_id, $new_attachment_id );
 		}
@@ -946,7 +946,7 @@ function duplicate_post_copy_attachments( $new_id, $post ) {
  * @param string  $status Optional. The destination status.
  */
 function duplicate_post_copy_children( $new_id, $post, $status = '' ) {
-	// get children.
+	// Get children.
 	$children = get_posts(
 		array(
 			'post_type'   => 'any',
@@ -981,7 +981,7 @@ function duplicate_post_copy_comments( $new_id, $post ) {
 
 	$old_id_to_new = array();
 	foreach ( $comments as $comment ) {
-		// do not copy pingbacks or trackbacks.
+		// Do not copy pingbacks or trackbacks.
 		// phpcs:ignore WordPress.PHP.YodaConditions
 		if ( $comment->comment_type === 'pingback' || $comment->comment_type === 'trackback' ) {
 			continue;
@@ -1091,7 +1091,7 @@ function duplicate_post_create_duplicate( $post, $status = '', $parent_id = '' )
 			$new_post_status = 'draft';
 		} else {
 			if ( 'publish' === $new_post_status || 'future' === $new_post_status ) {
-				// check if the user has the right capability.
+				// Check if the user has the right capability.
 				if ( is_post_type_hierarchical( $post->post_type ) ) {
 					if ( ! current_user_can( 'publish_pages' ) ) {
 						$new_post_status = 'pending';
@@ -1108,7 +1108,7 @@ function duplicate_post_create_duplicate( $post, $status = '', $parent_id = '' )
 	$new_post_author    = wp_get_current_user();
 	$new_post_author_id = $new_post_author->ID;
 	if ( intval( get_option( 'duplicate_post_copyauthor' ) ) === 1 ) {
-		// check if the user has the right capability.
+		// Check if the user has the right capability.
 		if ( is_post_type_hierarchical( $post->post_type ) ) {
 			if ( current_user_can( 'edit_others_pages' ) ) {
 				$new_post_author_id = $post->post_author;
