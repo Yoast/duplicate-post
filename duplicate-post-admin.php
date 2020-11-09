@@ -431,7 +431,7 @@ function duplicate_post_save_quick_edit_data( $post_id ) {
 function duplicate_post_show_original_in_post_states( $post_states, $post ) {
 	$original_item = duplicate_post_get_original( $post->ID );
 	if ( $original_item ) {
-		// translators: Original item link (to view or edit) or title.
+		/* translators: Original item link (to view or edit) or title. */
 		$post_states['duplicate_post_original_item'] = sprintf( __( 'Original: %s', 'duplicate-post' ), duplicate_post_get_edit_or_view_link( $original_item ) );
 	}
 	return $post_states;
