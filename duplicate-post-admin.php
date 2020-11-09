@@ -100,8 +100,6 @@ function duplicate_post_admin_init() {
 	add_filter( 'plugin_row_meta', 'duplicate_post_add_plugin_links', 10, 2 );
 
 	add_action( 'admin_notices', 'duplicate_post_action_admin_notice' );
-
-	add_action( 'enqueue_block_editor_assets', 'duplicate_post_admin_enqueue_block_editor_scripts' );
 }
 
 /**
@@ -450,65 +448,6 @@ function duplicate_post_admin_enqueue_scripts( $hook ) {
 	if ( 'edit.php' === $hook ) {
 		wp_enqueue_script( 'duplicate_post_admin_script', plugins_url( 'duplicate_post_admin_script.js', __FILE__ ), false, DUPLICATE_POST_CURRENT_VERSION, true );
 	}
-}
-
-/**
- * Flattens a version number for use in a filename.
- *
- * @param string $version The original version number.
- *
- * @return string The flattened version number.
- */
-function duplicate_post_flatten_version( $version ) {
-	$parts = explode( '.', $version );
-
-	if ( count( $parts ) === 2 && preg_match( '/^\d+$/', $parts[1] ) === 1 ) {
-		$parts[] = '0';
-	}
-
-	return implode( '', $parts );
-}
-
-/**
- * Enqueues the necessary JavaScript code for the block editor.
- *
- * @return void
- */
-function duplicate_post_admin_enqueue_block_editor_scripts() {
-	wp_enqueue_script(
-		'duplicate_post_edit_script',
-		plugins_url( sprintf( 'js/dist/duplicate-post-edit-%s.js', duplicate_post_flatten_version( DUPLICATE_POST_CURRENT_VERSION ) ), __FILE__ ),
-		array(
-			'wp-blocks',
-			'wp-element',
-			'wp-i18n',
-		),
-		DUPLICATE_POST_CURRENT_VERSION,
-		true
-	);
-
-	wp_localize_script(
-		'duplicate_post_edit_script',
-		'duplicatePostRewriteRepost',
-		array(
-			'permalink' => duplicate_post_get_rewrite_republish_permalink(),
-		)
-	);
-}
-
-/**
- * Generates a rewrite and republish permalink for the current post.
- *
- * @return string The permalink. Returns empty if the post hasn't been published yet.
- */
-function duplicate_post_get_rewrite_republish_permalink() {
-	$post = get_post();
-	// phpcs:ignore WordPress.PHP.YodaConditions
-	if ( $post->post_status !== 'publish' ) {
-		return '';
-	}
-
-	return duplicate_post_get_clone_post_link( $post->ID );
 }
 
 /**

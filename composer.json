@@ -6,9 +6,14 @@
         "phpcompatibility/phpcompatibility-wp": "*",
         "automattic/vipwpcs": "^2.0"
     },
+	"autoload": {
+		"classmap": [
+			"src/"
+		]
+	},
     "scripts": {
         "check-cs": [
-            "@php ./vendor/squizlabs/php_codesniffer/bin/phpcs -p *.php compat/*.php --runtime-set ignore_warnings_on_exit 1"
+            "@php ./vendor/squizlabs/php_codesniffer/bin/phpcs -p *.php compat/*.php src/*.php --runtime-set ignore_warnings_on_exit 1"
         ]
     }
 }

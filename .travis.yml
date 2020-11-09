@@ -10,8 +10,6 @@ php:
 
 matrix:
   include:
-    - php: '5.2'
-      dist: precise
     - php: '5.3'
       dist: precise
     - php: '5.4'
@@ -23,7 +21,7 @@ matrix:
       env: SNIFF=1
 
 before_install:
-  - if [[ "$SNIFF" == "1" ]]; then composer install; fi
+  - if [[ "$SNIFF" == "1" ]]; then composer self-update 1.10.16 && composer install; fi
 
 script:
   - find -L . compat/ -maxdepth 1 -name '*.php' -print0 | xargs -0 -n 1 -P 4 php -l

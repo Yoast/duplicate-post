@@ -29,11 +29,37 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
+
+use Yoast\WP\Duplicate_Post\Duplicate_Post;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit();
 }
 
+if ( ! defined( 'DUPLICATE_POST_FILE' ) ) {
+	define( 'DUPLICATE_POST_FILE', __FILE__ );
+}
+
 define( 'DUPLICATE_POST_CURRENT_VERSION', '4.0alpha' );
+
+$duplicate_post_autoload_file = __DIR__ . '/vendor/autoload.php';
+
+if ( is_readable( $duplicate_post_autoload_file ) ) {
+	require $duplicate_post_autoload_file;
+
+	// Initialize the main autoloaded class.
+	add_action( 'plugins_loaded', '__duplicate_post_main' );
+}
+
+/**
+ * Loads the Duplicate Post main class.
+ *
+ * @phpcs:disable PHPCompatibility.FunctionNameRestrictions.ReservedFunctionNames.FunctionDoubleUnderscore,WordPress.NamingConventions.ValidFunctionName.FunctionDoubleUnderscore,WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedFunctionFound -- Function name change would be BC-break.
+ */
+function __duplicate_post_main() {
+	new Duplicate_Post();
+}
+// phpcs:enable
 
 /**
  * Initialises the internationalisation domain.
