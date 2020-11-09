@@ -166,7 +166,7 @@ function duplicate_post_get_edit_or_view_link( $post ) {
 			$title
 		);
 	} elseif ( duplicate_post_is_post_type_viewable( $post_type_object ) ) {
-		if ( in_array( $post->post_status, array( 'pending', 'draft', 'future' ) ) ) {
+		if ( in_array( $post->post_status, array( 'pending', 'draft', 'future' ), true ) ) {
 			if ( $can_edit_post ) {
 				$preview_link = get_preview_post_link( $post );
 				return sprintf(
