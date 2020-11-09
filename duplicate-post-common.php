@@ -108,6 +108,7 @@ function duplicate_post_clone_post_link( $link = null, $before = '', $after = ''
 	}
 
 	$link = '<a class="post-clone-link" href="' . $url . '">' . $link . '</a>';
+
 	/**
 	 * Filter on the clone link HTML
 	 *

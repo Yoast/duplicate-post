@@ -742,6 +742,7 @@ function duplicate_post_copy_post_taxonomies( $new_id, $post ) {
 		if ( intval( get_option( 'duplicate_post_copyformat' ) ) === 0 ) {
 			$taxonomies_blacklist[] = 'post_format';
 		}
+
 		/**
 		 * Filters the taxonomy excludelist when copying a post.
 		 *
@@ -1034,6 +1035,7 @@ function duplicate_post_create_duplicate( $post, $status = '', $parent_id = '' )
 	 * @param integer $parent_id The parent post ID if we are calling this recursively.
 	 */
 	do_action( 'duplicate_post_pre_copy', $post, $status, $parent_id );
+
 	/**
 	 * Filter allowing to copy post.
 	 *
@@ -1205,7 +1207,7 @@ function duplicate_post_add_plugin_links( $links, $file ) {
 	return $links;
 }
 
-/*** NOTICES */
+/* NOTICES */
 
 /**
  * Shows a notice after the copy has succeeded.
@@ -1232,7 +1234,7 @@ function duplicate_post_action_admin_notice() {
 	}
 }
 
-/*** BULK ACTIONS */
+/* BULK ACTIONS */
 
 add_action( 'admin_init', 'duplicate_post_add_bulk_filters' );
 

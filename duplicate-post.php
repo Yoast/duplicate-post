@@ -10,9 +10,7 @@
  *
  * @package Duplicate Post
  * @since 0.1
- **/
-
-/*
+ *
  * Copyright 2020 Yoast BV (email : info@yoast.com)
  *
  * This program is free software; you can redistribute it and/or modify
