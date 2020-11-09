@@ -60,7 +60,6 @@ class Duplicate_Post_User_Interface {
 	 */
 	private function duplicate_post_get_rewrite_republish_permalink() {
 		$post = get_post();
-		// phpcs:ignore WordPress.PHP.YodaConditions
 		if ( $post->post_status !== 'publish' ) {
 			return '';
 		}
