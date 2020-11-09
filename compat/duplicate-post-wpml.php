@@ -27,12 +27,12 @@ $duplicated_posts = array(); // phpcs:ignore WordPress.NamingConventions.PrefixA
 /**
  * Copy post translations.
  *
- * @global SitePress() $sitepress Instance of the Main WPML class.
- * @global array() $duplicated_posts Array of duplicated posts.
+ * @global SitePress $sitepress        Instance of the Main WPML class.
+ * @global array     $duplicated_posts Array of duplicated posts.
  *
- * @param integer $post_id ID of the copy.
- * @param WP_Post $post Original post object.
- * @param string  $status Status of the new post.
+ * @param int     $post_id ID of the copy.
+ * @param WP_Post $post    Original post object.
+ * @param string  $status  Status of the new post.
  */
 function duplicate_post_wpml_copy_translations( $post_id, $post, $status = '' ) {
 	global $sitepress;

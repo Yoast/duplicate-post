@@ -9,7 +9,7 @@
 /**
  * Tests if the user is allowed to copy posts.
  *
- * @return boolean.
+ * @return bool
  */
 function duplicate_post_is_current_user_allowed_to_copy() {
 	return current_user_can( 'copy_posts' );
@@ -19,7 +19,7 @@ function duplicate_post_is_current_user_allowed_to_copy() {
  * Tests if post type is enable to be copied.
  *
  * @param string $post_type The post type to check.
- * @return boolean.
+ * @return bool
  */
 function duplicate_post_is_post_type_enabled( $post_type ) {
 	$duplicate_post_types_enabled = get_option( 'duplicate_post_types_enabled', array( 'post', 'page' ) );
@@ -32,10 +32,10 @@ function duplicate_post_is_post_type_enabled( $post_type ) {
 /**
  * Template tag to retrieve/display duplicate post link for post.
  *
- * @param int     $id Optional. Post ID.
- * @param string  $context Optional, default to display. How to write the '&', defaults to '&amp;'.
- * @param boolean $draft Optional, default to true.
- * @return string.
+ * @param int    $id      Optional. Post ID.
+ * @param string $context Optional, default to display. How to write the '&', defaults to '&amp;'.
+ * @param bool   $draft   Optional, default to true.
+ * @return string
  */
 function duplicate_post_get_clone_post_link( $id = 0, $context = 'display', $draft = true ) {
 	if ( ! duplicate_post_is_current_user_allowed_to_copy() ) {
@@ -72,10 +72,10 @@ function duplicate_post_get_clone_post_link( $id = 0, $context = 'display', $dra
 		/**
 		 * Filter on the URL of the clone link
 		 *
-		 * @param string $url  The URL of the clone link.
-		 * @param int    $ID   The ID of the post
+		 * @param string $url     The URL of the clone link.
+		 * @param int    $ID      The ID of the post
 		 * @param string $context The context in which the URL is used.
-		 * @param bool   $draft Whether to clone to a new draft.
+		 * @param bool   $draft   Whether to clone to a new draft.
 		 *
 		 * @return string
 		 */
@@ -87,10 +87,10 @@ function duplicate_post_get_clone_post_link( $id = 0, $context = 'display', $dra
 /**
  * Displays duplicate post link for post.
  *
- * @param string $link Optional. Anchor text.
- * @param string $before Optional. Display before edit link.
- * @param string $after Optional. Display after edit link.
- * @param int    $id Optional. Post ID.
+ * @param string|null $link   Optional. Anchor text.
+ * @param string      $before Optional. Display before edit link.
+ * @param string      $after  Optional. Display after edit link.
+ * @param int         $id     Optional. Post ID.
  */
 function duplicate_post_clone_post_link( $link = null, $before = '', $after = '', $id = 0 ) {
 	$post = get_post( $id );
@@ -108,6 +108,7 @@ function duplicate_post_clone_post_link( $link = null, $before = '', $after = ''
 	}
 
 	$link = '<a class="post-clone-link" href="' . $url . '">' . $link . '</a>';
+
 	/**
 	 * Filter on the clone link HTML
 	 *
@@ -122,8 +123,8 @@ function duplicate_post_clone_post_link( $link = null, $before = '', $after = ''
 /**
  * Gets the original post.
  *
- * @param int    $post Optional. Post ID or Post object.
- * @param string $output Optional, default is Object. Either OBJECT, ARRAY_A, or ARRAY_N.
+ * @param int|null $post   Optional. Post ID or Post object.
+ * @param string   $output Optional, default is Object. Either OBJECT, ARRAY_A, or ARRAY_N.
  * @return mixed Post data.
  */
 function duplicate_post_get_original( $post = null, $output = OBJECT ) {
@@ -145,7 +146,7 @@ function duplicate_post_get_original( $post = null, $output = OBJECT ) {
  * @ignore
  *
  * @param WP_Post $post Post ID or Post object.
- * @return string
+ * @return string|null
  */
 function duplicate_post_get_edit_or_view_link( $post ) {
 	$post = get_post( $post );
@@ -195,7 +196,7 @@ function duplicate_post_get_edit_or_view_link( $post ) {
  *
  * @ignore
  *
- * @param mixed $post_type  The post type to check.
+ * @param mixed $post_type The post type to check.
  * @return bool
  */
 function duplicate_post_is_post_type_viewable( $post_type ) {
@@ -215,7 +216,7 @@ function duplicate_post_is_post_type_viewable( $post_type ) {
 /**
  * Shows link in the Toolbar.
  *
- * @global WP_Query $wp_the_query.
+ * @global WP_Query     $wp_the_query
  * @global WP_Admin_Bar $wp_admin_bar WP_Admin_Bar instance.
  */
 function duplicate_post_admin_bar_render() {
@@ -337,7 +338,7 @@ function duplicate_post_init() {
  * @ignore
  * @param WP_Taxonomy $a First taxonomy object.
  * @param WP_Taxonomy $b Second taxonomy object.
- * @return boolean.
+ * @return bool
  */
 function duplicate_post_tax_obj_cmp( $a, $b ) {
 	return ( $a->public < $b->public );

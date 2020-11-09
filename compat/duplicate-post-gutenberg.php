@@ -13,12 +13,12 @@ add_filter( 'duplicate_post_get_clone_post_link', 'duplicate_post_classic_editor
  *
  * @see duplicate_post_get_clone_post_link()
  *
- * @param string  $url The duplicate post link URL.
- * @param int     $post_id The original post ID.
- * @param string  $context The context in which the URL is used.
- * @param boolean $draft Whether the link is "New Draft" or "Clone".
+ * @param string $url     The duplicate post link URL.
+ * @param int    $post_id The original post ID.
+ * @param string $context The context in which the URL is used.
+ * @param bool   $draft   Whether the link is "New Draft" or "Clone".
  *
- * @return string $url
+ * @return string
  */
 function duplicate_post_classic_editor_clone_link( $url, $post_id, $context, $draft ) {
 	$post = get_post( $post_id );
