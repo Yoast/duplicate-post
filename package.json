@@ -1,0 +1,46 @@
+{
+  "name": "duplicate-post",
+  "version": "4.0alpha",
+  "description": "Duplicate Post plugin for WordPress",
+  "main": "duplicate-post.php",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Yoast/duplicate-post.git"
+  },
+  "keywords": [
+    "duplicate",
+    "post",
+    "wordpress"
+  ],
+  "author": "Enrico Battocchi <enrico.battocchi@gmail.com>",
+  "license": "GPL-2.0-only",
+  "bugs": {
+    "url": "https://github.com/Yoast/duplicate-post/issues"
+  },
+  "homepage": "https://github.com/Yoast/duplicate-post#readme",
+  "devDependencies": {
+    "@wordpress/dependency-extraction-webpack-plugin": "^2.8.0",
+    "babel-core": "^6.26.3",
+    "babel-eslint": "^10.1.0",
+    "babel-loader": "7",
+    "babel-plugin-dynamic-import-webpack": "^1.1.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-plugin-transform-react-jsx": "^6.24.1",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "babelify": "^10.0.0",
+    "case-sensitive-paths-webpack-plugin": "^2.3.0",
+    "grunt": "^1.3.0",
+    "grunt-contrib-clean": "^2.0.0",
+    "grunt-shell": "^3.0.1",
+    "grunt-webpack": "^4.0.2",
+    "grunt-wp-readme-to-markdown": "^2.0.1",
+    "load-grunt-config": "^3.0.1",
+    "webpack": "^4.20.2"
+  },
+  "dependencies": {
+    "@wordpress/edit-post": "^3.25.2",
+    "@wordpress/plugins": "^2.23.0"
+  }
+}

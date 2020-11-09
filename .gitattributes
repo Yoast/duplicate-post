@@ -1,4 +1,6 @@
 /.* export-ignore
+assets export-ignore
+dist export-ignore
 svn-assets export-ignore
 CHANGELOG export-ignore
 composer.* export-ignore

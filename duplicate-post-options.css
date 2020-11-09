@@ -7,6 +7,7 @@
 }
 
 #duplicate_post_settings_form header .nav-tab:focus {
+	color: #555;
 	box-shadow: none;
 	outline: 1px dotted #000000;
 }

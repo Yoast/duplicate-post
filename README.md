@@ -1,12 +1,16 @@
-# Yoast Duplicate Post
+# Duplicate Post
 
-[![WordPress Plugin Version](https://img.shields.io/wordpress/plugin/v/duplicate-post.svg)](https://wordpress.org/plugins/duplicate-post/) ![WordPress Plugin: Tested WP Version](https://img.shields.io/wordpress/plugin/tested/duplicate-post.svg) [![WordPress Plugin Active Installs](https://img.shields.io/wordpress/plugin/installs/duplicate-post.svg)](https://wordpress.org/plugins/duplicate-post/advanced/) [![WordPress Plugin Downloads](https://img.shields.io/wordpress/plugin/dt/duplicate-post.svg)](https://wordpress.org/plugins/duplicate-post/advanced/) [![WordPress Plugin Rating](https://img.shields.io/wordpress/plugin/stars/duplicate-post.svg)](https://wordpress.org/support/plugin/duplicate-post/reviews/) [![GitHub](https://img.shields.io/github/license/Yoast/duplicate-post.svg)](https://github.com/Yoast/duplicate-post/blob/future/LICENSE) [![Build Status](https://travis-ci.org/enricobattocchi/duplicate-post.svg?branch=master)](https://travis-ci.org/Yoast/duplicate-post) [![RIPS CodeRisk](https://coderisk.com/wp/plugin/duplicate-post/badge "RIPS CodeRisk")](https://coderisk.com/wp/plugin/duplicate-post)
+![Banner](assets/banner-772x250.png)
+
+[![WordPress Plugin Version](https://img.shields.io/wordpress/plugin/v/duplicate-post.svg)](https://wordpress.org/plugins/duplicate-post/) ![WordPress Plugin: Tested WP Version](https://img.shields.io/wordpress/plugin/tested/duplicate-post.svg) [![WordPress Plugin Active Installs](https://img.shields.io/wordpress/plugin/installs/duplicate-post.svg)](https://wordpress.org/plugins/duplicate-post/advanced/) [![WordPress Plugin Downloads](https://img.shields.io/wordpress/plugin/dt/duplicate-post.svg)](https://wordpress.org/plugins/duplicate-post/advanced/) [![WordPress Plugin Rating](https://img.shields.io/wordpress/plugin/stars/duplicate-post.svg)](https://wordpress.org/support/plugin/duplicate-post/reviews/) [![GitHub](https://img.shields.io/github/license/enricobattocchi/duplicate-post.svg)](https://github.com/enricobattocchi/duplicate-post/blob/master/LICENSE) [![Build Status](https://travis-ci.org/enricobattocchi/duplicate-post.svg?branch=master)](https://travis-ci.org/enricobattocchi/duplicate-post) [![RIPS CodeRisk](https://coderisk.com/wp/plugin/duplicate-post/badge "RIPS CodeRisk")](https://coderisk.com/wp/plugin/duplicate-post)
 
 > Duplicate Post plugin for WordPress https://yoast.com/wordpress/plugins/duplicate-post/  
 
 This WordPress plugin allows users to clone posts of any type, or copy them to new drafts for further editing.
 
-This document addresses the GitHub repository. WordPress.org uses the [readme.txt file](readme.txt).
+This is the development repository: pull requests are supposed to be based on the `develop` branch, with changes merged to `svntrunk` branch and then committed to the [SVN repository](https://plugins.svn.wordpress.org/duplicate-post/) on WordPress.org only before version releases.
+
+This document addresses the GitHub repository. For a readable version of the [readme.txt file](readme.txt) required by WordPress.org see [README.wordpress.md](README.wordpress.md).
 
 - [Install](#install)
 - [Usage](#usage)
@@ -27,7 +31,7 @@ This document addresses the GitHub repository. WordPress.org uses the [readme.tx
 
 ### Install using zipfile
 
-1. Download the archive from https://wordpress.org/plugins/duplicate-post/ (latest stable) or the [latest snapshot ZIP](https://github.com/Yoast/duplicate-post/archive/master.zip) from GitHub;
+1. Download the archive from https://wordpress.org/plugins/duplicate-post/ (latest stable) or the [latest snapshot ZIP](https://github.com/enricobattocchi/duplicate-post/archive/master.zip) from GitHub;
 2. Unzip the archive on your computer;
 3. Upload the `duplicate-post` directory into the `/wp-content/plugins/` directory;
 4. Activate the plugin through the _Plugins_ page in WordPress Dashboard;
@@ -58,7 +62,7 @@ The Duplicate Post plugin was created by Enrico Battocchi ([Lopo](https://lopo.i
 If you find this useful and if you want to contribute, there are three ways:
 
    1. You can submit your bug reports, suggestions and requests for features [on GitHub](https://github.com/Yoast/duplicate-post/);
-   2. You can also [submit a pull request](https://github.com/Yoast/duplicate-post/pulls); 
+   2. You can also [submit a pull request](https://github.com/yoast/duplicate-post/pulls); 
    3. If you want to translate it to your language (there are just a few lines of text), you can use the [translation project](https://translate.wordpress.org/projects/wp-plugins/duplicate-post);
   
 ## License
