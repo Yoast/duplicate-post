@@ -46,3 +46,4 @@ tests/cli/vendor
 ############
 .phpcs.xml
 phpcs.xml
+.cache/phpcs.cache
