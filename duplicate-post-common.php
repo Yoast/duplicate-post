@@ -87,10 +87,10 @@ function duplicate_post_get_clone_post_link( $id = 0, $context = 'display', $dra
 /**
  * Displays duplicate post link for post.
  *
- * @param string $link   Optional. Anchor text.
- * @param string $before Optional. Display before edit link.
- * @param string $after  Optional. Display after edit link.
- * @param int    $id     Optional. Post ID.
+ * @param string|null $link   Optional. Anchor text.
+ * @param string      $before Optional. Display before edit link.
+ * @param string      $after  Optional. Display after edit link.
+ * @param int         $id     Optional. Post ID.
  */
 function duplicate_post_clone_post_link( $link = null, $before = '', $after = '', $id = 0 ) {
 	$post = get_post( $id );
@@ -123,8 +123,8 @@ function duplicate_post_clone_post_link( $link = null, $before = '', $after = ''
 /**
  * Gets the original post.
  *
- * @param int    $post   Optional. Post ID or Post object.
- * @param string $output Optional, default is Object. Either OBJECT, ARRAY_A, or ARRAY_N.
+ * @param int|null $post   Optional. Post ID or Post object.
+ * @param string   $output Optional, default is Object. Either OBJECT, ARRAY_A, or ARRAY_N.
  * @return mixed Post data.
  */
 function duplicate_post_get_original( $post = null, $output = OBJECT ) {
@@ -146,7 +146,7 @@ function duplicate_post_get_original( $post = null, $output = OBJECT ) {
  * @ignore
  *
  * @param WP_Post $post Post ID or Post object.
- * @return string
+ * @return string|null
  */
 function duplicate_post_get_edit_or_view_link( $post ) {
 	$post = get_post( $post );
