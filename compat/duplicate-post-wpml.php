@@ -110,5 +110,3 @@ function duplicate_wpml_string_packages() { // phpcs:ignore WordPress.NamingConv
 		}
 	}
 }
-
-

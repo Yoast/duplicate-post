@@ -599,7 +599,7 @@ function duplicate_post_add_duplicate_post_button( $post = null ) {
 </div>
 <div id="rewrite-republish-action">
 	<a class="submitduplicate duplication"
-	   href="<?php echo esc_url( duplicate_post_get_clone_post_link( $post->ID ) ); ?>"><?php esc_html_e( 'Rewrite & Republish', 'duplicate-post' ); ?>
+		href="<?php echo esc_url( duplicate_post_get_clone_post_link( $post->ID ) ); ?>"><?php esc_html_e( 'Rewrite & Republish', 'duplicate-post' ); ?>
 	</a>
 </div>
 			<?php
@@ -887,7 +887,7 @@ function duplicate_post_copy_attachments( $new_id, $post ) {
 	$children = get_posts(
 		array(
 			'post_type'   => 'any',
-			'numberposts' => - 1,
+			'numberposts' => -1,
 			'post_status' => 'any',
 			'post_parent' => $post->ID,
 		)
@@ -949,7 +949,7 @@ function duplicate_post_copy_children( $new_id, $post, $status = '' ) {
 	$children = get_posts(
 		array(
 			'post_type'   => 'any',
-			'numberposts' => - 1,
+			'numberposts' => -1,
 			'post_status' => 'any',
 			'post_parent' => $post->ID,
 		)
@@ -1080,8 +1080,8 @@ function duplicate_post_create_duplicate( $post, $status = '', $parent_id = '' )
 		/*
 		 * Not sure we should force a title. Instead, we should respect what WP does.
 		 * if ( '' === $title ) {
-		 * 	// empty title.
-		 * 	$title = __( 'Untitled', 'default' );
+		 *  // empty title.
+		 *  $title = __( 'Untitled', 'default' );
 		 * }
 		 */
 
@@ -1292,11 +1292,11 @@ function duplicate_post_action_handler( $redirect_to, $doaction, $post_ids ) {
 		$post = get_post( $post_id );
 		if ( ! empty( $post ) ) {
 			if ( intval( get_option( 'duplicate_post_copychildren' ) !== 1 )
-				 || ! is_post_type_hierarchical( $post->post_type )
-				 || ( is_post_type_hierarchical( $post->post_type ) && ! duplicate_post_has_ancestors_marked( $post, $post_ids ) )
+				|| ! is_post_type_hierarchical( $post->post_type )
+				|| ( is_post_type_hierarchical( $post->post_type ) && ! duplicate_post_has_ancestors_marked( $post, $post_ids ) )
 			) {
 				if ( ! is_wp_error( duplicate_post_create_duplicate( $post ) ) ) {
-					$counter ++;
+					$counter++;
 				}
 			}
 		}

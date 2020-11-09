@@ -367,9 +367,9 @@ function duplicate_post_can_copy_to_draft( $post ) {
 	}
 
 	return duplicate_post_is_current_user_allowed_to_copy()
-		 && $is_public
-		 && $post_type_object->show_in_admin_bar
-		 && duplicate_post_is_post_type_enabled( $post->post_type );
+		&& $is_public
+		&& $post_type_object->show_in_admin_bar
+		&& duplicate_post_is_post_type_enabled( $post->post_type );
 }
 
 /**

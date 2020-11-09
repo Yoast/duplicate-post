@@ -809,4 +809,3 @@ function duplicate_post_options() {
 </div>
 	<?php
 }
-?>
