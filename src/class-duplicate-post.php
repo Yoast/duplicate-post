@@ -29,6 +29,30 @@ class Duplicate_Post {
 	 */
 	public function create_duplicate( \WP_Post $post, array $options ) {
 
+		$defaults = [
+			'copy_title'             => true,
+			'copy_date'              => false,
+			'copy_status'            => false,
+			'copy_name'              => false,
+			'copy_excerpt'           => true,
+			'copy_content'           => true,
+			'copy_thumbnail'         => true,
+			'copy_template'          => true,
+			'copy_format'            => true,
+			'copy_author'            => false,
+			'copy_password'          => false,
+			'copy_attachments'       => false,
+			'copy_children'          => false,
+			'copy_comments'          => false,
+			'copy_menu_order'        => true,
+			'title_prefix'           => '',
+			'title_suffix'           => '',
+			'increase_menu_order_by' => null,
+			'parent_id'              => null,
+		];
+
+		$options = \wp_parse_args( $options, $defaults );
+
 		$title = '';
 
 		if ( 'attachment' !== $post->post_type ) {
