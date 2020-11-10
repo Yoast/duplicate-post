@@ -35,8 +35,8 @@ class Duplicate_Post_User_Interface {
 	 * @return void
 	 */
 	private function register_hooks() {
-		add_action( 'enqueue_block_editor_assets', array( $this, 'duplicate_post_admin_enqueue_block_editor_scripts' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'should_previously_used_keyword_assessment_run' ), 9 );
+		\add_action( 'enqueue_block_editor_assets', array( $this, 'duplicate_post_admin_enqueue_block_editor_scripts' ) );
+		\add_action( 'admin_enqueue_scripts', array( $this, 'should_previously_used_keyword_assessment_run' ), 9 );
 	}
 
 	/**
@@ -45,20 +45,20 @@ class Duplicate_Post_User_Interface {
 	 * @return void
 	 */
 	public function should_previously_used_keyword_assessment_run() {
-		if ( ! in_array( $this->pagenow, array( 'post.php', 'post-new.php' ), true ) ) {
+		if ( ! \in_array( $this->pagenow, array( 'post.php', 'post-new.php' ), true ) ) {
 			return;
 		}
 
-		$post = get_post();
+		$post = \get_post();
 
-		if ( null === $post ) {
+		if ( ! $post ) {
 			return;
 		}
 
-		$skip_assessment = get_post_meta( $post->ID, '_dp_is_rewrite_republish_copy', true );
+		$skip_assessment = \get_post_meta( $post->ID, '_dp_is_rewrite_republish_copy', true );
 
 		if ( ! empty( $skip_assessment ) ) {
-			add_filter( 'wpseo_previously_used_keyword_active', '__return_false' );
+			\add_filter( 'wpseo_previously_used_keyword_active', '__return_false' );
 		}
 	}
 
