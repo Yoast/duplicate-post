@@ -790,6 +790,7 @@ function duplicate_post_copy_post_meta_info( $new_id, $post ) {
 		$meta_blacklist[] = '_thumbnail_id';
 	}
 
+	$meta_blacklist = apply_filters_deprecated( 'duplicate_post_blacklist_filter' , array( $meta_blacklist ), '3.2.5', 'duplicate_post_excludelist_filter' );
 	/**
 	 * Filters the meta fields excludelist when copying a post.
 	 *
@@ -797,7 +798,7 @@ function duplicate_post_copy_post_meta_info( $new_id, $post ) {
 	 *
 	 * @return array
 	 */
-	$meta_blacklist = apply_filters( 'duplicate_post_blacklist_filter', $meta_blacklist );
+	$meta_blacklist = apply_filters( 'duplicate_post_excludelist_filter' , $meta_blacklist );
 
 	$meta_blacklist_string = '(' . implode( ')|(', $meta_blacklist ) . ')';
 	if ( strpos( $meta_blacklist_string, '*' ) !== false ) {
