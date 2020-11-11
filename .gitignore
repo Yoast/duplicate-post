@@ -40,3 +40,10 @@ tests/cli/vendor
 /vendor/
 
 /js/dist/
+
+############
+## Dev tool config overrides.
+############
+.phpcs.xml
+phpcs.xml
+.cache/phpcs.cache
