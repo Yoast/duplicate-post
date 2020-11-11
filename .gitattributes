@@ -13,3 +13,4 @@ phpunit.* export-ignore
 README.md export-ignore
 README.wordpress.md export-ignore
 tests export-ignore
+phpunit.xml.dist export-ignore
