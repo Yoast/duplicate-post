@@ -1,4 +1,9 @@
 <?php
+/**
+ * Duplicate Post base test file.
+ *
+ * @package Duplicate_Post\Tests
+ */
 
 namespace Yoast\WP\Duplicate_Post\Tests;
 
@@ -19,7 +24,7 @@ abstract class TestCase extends BaseTestCase {
 		Monkey\setUp();
 
 		Monkey\Functions\stubs(
-			[
+			array(
 				// Passing "null" makes the function return its first argument.
 				'esc_attr'       => null,
 				'esc_html'       => null,
@@ -42,21 +47,17 @@ abstract class TestCase extends BaseTestCase {
 				'is_admin'       => false,
 				'is_multisite'   => false,
 				'site_url'       => 'https://www.example.org',
-				'wp_json_encode' => static function( $data, $options = 0, $depth = 512 ) {
-					// phpcs:ignore Yoast.Yoast.AlternativeFunctions -- Mocks the wp_json_encode function.
-					return \json_encode( $data, $options, $depth );
-				},
 				'wp_slash'       => null,
 				'wp_unslash'     => function( $value ) {
 					return \is_string( $value ) ? \stripslashes( $value ) : $value;
 				},
-				'absint'         => static function( $value ) {
+				'absint'         => function( $value ) {
 					return \abs( \intval( $value ) );
 				},
-				'wp_parse_args'  => static function ( $settings, $defaults ) {
+				'wp_parse_args'  => function ( $settings, $defaults ) {
 					return \array_merge( $defaults, $settings );
 				},
-			]
+			)
 		);
 	}
 
