@@ -22,12 +22,24 @@ matrix:
       dist: precise
     # Arbitrary PHP version to run the sniffs against.
     - php: '7.4'
-      env: SNIFF=1
+      env: SNIFF=1 PHPUNIT=1
 
 before_install:
-  - if [[ "$SNIFF" == "1" ]]; then composer install; fi
+  - if [[ "$SNIFF" == "1" || "$PHPUNIT" == "1" ]]; then composer install; fi
+
+before_script:
+- export -f travis_fold
+- export -f travis_time_start
+- export -f travis_time_finish
 
 script:
   - find -L . compat/ -maxdepth 1 -name '*.php' -print0 | xargs -0 -n 1 -P 4 php -l
   - if [[ "$SNIFF" == "1" ]]; then composer check-cs; fi
   - if [[ "$SNIFF" == "1" ]]; then composer check-vip; fi
+  # PHP Unit Tests
+  - |
+    if [[ "$PHPUNIT" == "1" ]]; then
+      travis_fold start "PHP.tests" && travis_time_start
+      composer test
+      travis_time_finish && travis_fold end "PHP.tests"
+    fi
