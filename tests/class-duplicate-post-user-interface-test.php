@@ -50,7 +50,7 @@ class Duplicate_Post_User_Interface_Test extends TestCase {
 	 */
 	public function flatten_version_provider() {
 		return array(
-			array( '3.0', '300' ),
+			array( 'abc', '300' ),
 			array( '1.4', '140' ),
 			array( '', '' ),
 			array( '3.0.0', '300' ),
