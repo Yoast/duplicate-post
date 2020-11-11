@@ -385,6 +385,5 @@ function duplicate_post_is_valid_post_edit_screen() {
 
 	$current_screen = get_current_screen();
 
-	// phpcs:ignore WordPress.PHP.YodaConditions
 	return $current_screen->base === 'post' && $current_screen->action !== 'add';
 }

@@ -1,5 +1,9 @@
 language: php
 
+cache:
+  directories:
+    - .cache
+
 php:
     - '5.6'
     - '7.0'
@@ -17,7 +21,7 @@ matrix:
     - php: '5.5'
       dist: precise
     # Arbitrary PHP version to run the sniffs against.
-    - php: '7.3'
+    - php: '7.4'
       env: SNIFF=1
 
 before_install:
@@ -25,5 +29,5 @@ before_install:
 
 script:
   - find -L . compat/ -maxdepth 1 -name '*.php' -print0 | xargs -0 -n 1 -P 4 php -l
-  - if [[ "$SNIFF" == "1" ]]; then vendor/bin/phpcs -p *.php compat/*.php --standard=WordPress --runtime-set ignore_warnings_on_exit 1; fi
-  - if [[ "$SNIFF" == "1" ]]; then vendor/bin/phpcs -p *.php compat/*.php --standard=WordPress-VIP-Go --runtime-set ignore_warnings_on_exit 1; fi
+  - if [[ "$SNIFF" == "1" ]]; then composer check-cs; fi
+  - if [[ "$SNIFF" == "1" ]]; then composer check-vip; fi

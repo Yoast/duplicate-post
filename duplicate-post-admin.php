@@ -230,7 +230,6 @@ function duplicate_post_show_update_notice() {
 	if (
 		empty( $current_screen ) ||
 		empty( $current_screen->base ) ||
-		// phpcs:ignore WordPress.PHP.YodaConditions
 		( $current_screen->base !== 'dashboard' && $current_screen->base !== 'plugins' )
 	) {
 		return;
@@ -561,7 +560,6 @@ function duplicate_post_make_duplicate_link_row( $actions, $post ) {
 		esc_html__( 'New Draft', 'duplicate-post' ) .
 		'</a>';
 
-	// phpcs:ignore WordPress.PHP.YodaConditions
 	if ( $post->post_status === 'publish' ) {
 		$actions['rewrite'] = '<a href="' . duplicate_post_get_clone_post_link( $post->ID, 'display', false ) .
 			'" aria-label="' . esc_attr(
@@ -587,7 +585,6 @@ function duplicate_post_add_duplicate_post_button( $post = null ) {
 		}
 	}
 
-	// phpcs:ignore WordPress.PHP.YodaConditions
 	if ( ! is_null( $post ) && $post->post_status === 'publish' ) {
 		/** This filter is documented in duplicate-post-admin.php */
 		if ( apply_filters( 'duplicate_post_show_link', duplicate_post_is_current_user_allowed_to_copy() && duplicate_post_is_post_type_enabled( $post->post_type ), $post ) ) {
@@ -982,7 +979,6 @@ function duplicate_post_copy_comments( $new_id, $post ) {
 	$old_id_to_new = array();
 	foreach ( $comments as $comment ) {
 		// Do not copy pingbacks or trackbacks.
-		// phpcs:ignore WordPress.PHP.YodaConditions
 		if ( $comment->comment_type === 'pingback' || $comment->comment_type === 'trackback' ) {
 			continue;
 		}

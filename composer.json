@@ -2,8 +2,7 @@
     "require-dev": {
         "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
         "wp-coding-standards/wpcs": "^2.1",
-        "squizlabs/php_codesniffer": "^3.5",
-        "phpcompatibility/phpcompatibility-wp": "*",
+        "phpcompatibility/phpcompatibility-wp": "^2.1.0",
         "automattic/vipwpcs": "^2.0",
         "phpunit/phpunit": "^5.7",
         "brain/monkey": "^2.5"
@@ -20,7 +19,13 @@
     },
     "scripts": {
         "check-cs": [
-            "@php ./vendor/squizlabs/php_codesniffer/bin/phpcs -p *.php compat/*.php src/*.php --runtime-set ignore_warnings_on_exit 1"
+            "@php ./vendor/squizlabs/php_codesniffer/bin/phpcs --runtime-set ignore_warnings_on_exit 1"
+        ],
+        "check-vip": [
+            "@php ./vendor/squizlabs/php_codesniffer/bin/phpcs -psl . ./compat/ ./src/ ./js/src/ --standard=WordPress-VIP-Go --runtime-set ignore_warnings_on_exit 1"
+        ],
+        "fix-cs": [
+            "@php ./vendor/squizlabs/php_codesniffer/bin/phpcbf"
         ],
         "test": [
             "@php ./vendor/phpunit/phpunit/phpunit"

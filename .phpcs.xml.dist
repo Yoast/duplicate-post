@@ -1,0 +1,101 @@
+<?xml version="1.0"?>
+<ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	name="Duplicate Post"
+	xsi:noNamespaceSchemaLocation="./vendor/squizlabs/php_codesniffer/phpcs.xsd">
+
+	<description>Duplicate Post rules for PHP_CodeSniffer</description>
+
+	<!--
+	#############################################################################
+	COMMAND LINE ARGUMENTS
+	https://github.com/squizlabs/PHP_CodeSniffer/wiki/Annotated-ruleset.xml
+	#############################################################################
+	-->
+
+	<file>.</file>
+
+	<!-- Always exclude all files in version management related directories. -->
+	<exclude-pattern>*/.git/*</exclude-pattern>
+	<exclude-pattern>*/.wordpress-svn/*</exclude-pattern>
+
+	<!-- Exclude the build tool and dependency related directories. -->
+	<exclude-pattern>/vendor/*</exclude-pattern>
+	<exclude-pattern>/node_modules/*</exclude-pattern>
+
+	<!-- Only check PHP files. -->
+	<arg name="extensions" value="php"/>
+
+	<!-- Show progress, show the error codes for each message (source). -->
+	<arg value="ps"/>
+
+	<!-- Strip the filepaths down to the relevant bit. -->
+	<arg name="basepath" value="./"/>
+
+	<!-- Check up to 8 files simultaneously. -->
+	<arg name="parallel" value="8"/>
+
+	<!-- Cache the results between runs. -->
+	<arg name="cache" value="./.cache/phpcs.cache"/>
+
+
+	<!--
+	#############################################################################
+	USE THE WordPress + PHPCompatibilityWP RULESETS
+	#############################################################################
+	-->
+
+	<!-- Include the WordPress standard. -->
+	<rule ref="WordPress">
+		<!-- No need for this sniff as every Yoast travis script includes linting all files. -->
+		<exclude name="Generic.PHP.Syntax"/>
+
+		<!-- Demanding Yoda conditions is stupid. -->
+		<exclude name="WordPress.PHP.YodaConditions"/>
+	</rule>
+
+	<config name="testVersion" value="5.3-"/>
+	<rule ref="PHPCompatibilityWP">
+		<include-pattern>*\.php$</include-pattern>
+	</rule>
+
+
+	<!--
+	#############################################################################
+	SNIFF SPECIFIC CONFIGURATION
+	#############################################################################
+	-->
+
+	<config name="minimum_supported_wp_version" value="3.6"/>
+
+	<rule ref="WordPress.WP.I18n">
+		<properties>
+			<property name="text_domain" type="array">
+				<element value="duplicate-post"/>
+				<element value="default"/>
+			</property>
+		</properties>
+	</rule>
+
+	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
+		<properties>
+			<property name="prefixes" type="array">
+				<element value="Yoast\WP\Duplicate_Post"/>
+				<element value="duplicate_post"/>
+				<element value="dp_"/>
+			</property>
+		</properties>
+	</rule>
+
+	<rule ref="WordPress.Arrays.MultipleStatementAlignment">
+		<type>error</type>
+		<properties>
+			<!-- No need to adjust alignment of large arrays when the item with the largest key is removed. -->
+			<property name="exact" value="false"/>
+			<!-- Don't align multi-line items if ALL items in the array are multi-line. -->
+			<property name="alignMultilineItems" value="!=100"/>
+			<!-- Array Assignment operator should always be on the same line as the array key. -->
+			<property name="ignoreNewlines" value="false"/>
+		</properties>
+	</rule>
+
+</ruleset>
