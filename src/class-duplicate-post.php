@@ -19,5 +19,8 @@ class Duplicate_Post {
 
 		// Handle the user interface.
 		new Duplicate_Post_User_Interface();
+
+		// Republish a post marked for Rewrite & Republish.
+		new Duplicate_Post_Republish();
 	}
 }
