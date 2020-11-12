@@ -15,7 +15,7 @@ class Duplicate_Post_User_Interface {
 	/**
 	 * Holds the post.
 	 *
-	 * @var WP_Post
+	 * @var \WP_Post
 	 */
 	private $post = null;
 
