@@ -11,6 +11,7 @@ php:
     - '7.2'
     - '7.3'
     - '7.4'
+    - "nightly"
 
 matrix:
   include:
@@ -24,10 +25,13 @@ matrix:
     - php: '7.4'
       env: SNIFF=1
 
+  allow_failures:
+    - php: "nightly"
+
 before_install:
   - if [[ "$SNIFF" == "1" ]]; then composer install; fi
 
 script:
-  - find -L . compat/ -maxdepth 1 -name '*.php' -print0 | xargs -0 -n 1 -P 4 php -l
+  - find -L . ./compat/ ./src/ -maxdepth 1 -name '*.php' -print0 | xargs -0 -n 1 -P 4 php -l
   - if [[ "$SNIFF" == "1" ]]; then composer check-cs; fi
   - if [[ "$SNIFF" == "1" ]]; then composer check-vip; fi
