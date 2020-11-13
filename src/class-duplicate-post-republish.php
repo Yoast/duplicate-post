@@ -7,6 +7,8 @@
 
 namespace Yoast\WP\Duplicate_Post;
 
+use Yoast\WP\Duplicate_Post\Duplicate_Post_Utils;
+
 /**
  * Represents the Duplicate Post Republish class.
  */
@@ -25,8 +27,10 @@ class Duplicate_Post_Republish {
 	 * @return void
 	 */
 	private function register_hooks() {
-		\add_action( 'publish_post', array( $this, 'duplicate_post_republish' ), 10, 2 );
-		\add_action( 'publish_page', array( $this, 'duplicate_post_republish' ), 10, 2 );
+		$enabled_post_types = Duplicate_Post_Utils::get_post_types_enabled_for_copy();
+		foreach ( $enabled_post_types as $enabled_post_type ) {
+			\add_action( "publish_{$enabled_post_type}", array( $this, 'duplicate_post_republish' ), 10, 2, 10, 2 );
+		}
 	}
 
 	/**
@@ -38,7 +42,6 @@ class Duplicate_Post_Republish {
 	 * @return void
 	 */
 	public function duplicate_post_republish( $post_id, $post ) {
-		// Runs also on: trash, restore, pending review...
 		$this->republish_post_elements( $post_id, $post );
 	}
 
@@ -60,11 +63,11 @@ class Duplicate_Post_Republish {
 
 		$post_to_be_rewritten            = $post_copy;
 		$post_to_be_rewritten->ID        = $original_post_id;
-		$post_to_be_rewritten->post_name = get_post_field( 'post_name', $post_to_be_rewritten->ID );
+		$post_to_be_rewritten->post_name = \get_post_field( 'post_name', $post_to_be_rewritten->ID );
 
 		$rewritten_post_id = \wp_update_post( \wp_slash( (array) $post_to_be_rewritten ), true );
 
-		if ( 0 === $rewritten_post_id || is_wp_error( $rewritten_post_id ) ) {
+		if ( 0 === $rewritten_post_id || \is_wp_error( $rewritten_post_id ) ) {
 			// Error handling here.
 			die( 'An error occurred.' );
 		}
