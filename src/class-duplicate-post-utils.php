@@ -26,4 +26,15 @@ class Duplicate_Post_Utils {
 
 		return $duplicate_post_types_enabled;
 	}
+
+	/**
+	 * Gets the ID of a post marked as a copy for Rewrite & Republish.
+	 *
+	 * @param int $post_id The post ID.
+	 *
+	 * @return string|bool The post id if the post is a copy for Rewrite & Republish, false otherwise.
+	 */
+	public static function get_rewrite_republish_copy_id( $post_id ) {
+		return \get_post_meta( $post_id, '_dp_is_rewrite_republish_copy', true );
+	}
 }
