@@ -119,7 +119,7 @@ class Duplicate_Post_User_Interface {
 	 *
 	 * @return string The flattened version number.
 	 */
-	private function duplicate_post_flatten_version( $version ) {
+	public function duplicate_post_flatten_version( $version ) {
 		$parts = \explode( '.', $version );
 
 		if ( \count( $parts ) === 2 && \preg_match( '/^\d+$/', $parts[1] ) === 1 ) {
