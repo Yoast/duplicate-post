@@ -49,11 +49,14 @@
 		<!-- No need for this sniff as every Yoast travis script includes linting all files. -->
 		<exclude name="Generic.PHP.Syntax"/>
 
+        <!-- WPCS demands long arrays. YoastCS demands short arrays. -->
+        <exclude name="Generic.Arrays.DisallowShortArraySyntax"/>
+
 		<!-- Demanding Yoda conditions is stupid. -->
 		<exclude name="WordPress.PHP.YodaConditions"/>
 	</rule>
 
-	<config name="testVersion" value="5.3-"/>
+	<config name="testVersion" value="5.4-"/>
 	<rule ref="PHPCompatibilityWP">
 		<include-pattern>*\.php$</include-pattern>
 	</rule>
