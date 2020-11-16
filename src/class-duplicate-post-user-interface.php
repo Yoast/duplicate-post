@@ -13,17 +13,58 @@ namespace Yoast\WP\Duplicate_Post;
 class Duplicate_Post_User_Interface {
 
 	/**
+	 * Holds the post.
+	 *
+	 * @var \WP_Post
+	 */
+	private $post = null;
+
+	/**
+	 * Holds the global `$pagenow` variable's value.
+	 *
+	 * @var string
+	 */
+	private $pagenow;
+
+	/**
 	 * Initializes the class.
 	 */
 	public function __construct() {
+		global $pagenow;
+		$this->pagenow = $pagenow;
+
 		$this->register_hooks();
 	}
 
 	/**
 	 * Adds hooks to integrate with WordPress.
+	 *
+	 * @return void
 	 */
 	private function register_hooks() {
-		add_action( 'enqueue_block_editor_assets', array( $this, 'duplicate_post_admin_enqueue_block_editor_scripts' ) );
+		\add_action( 'enqueue_block_editor_assets', array( $this, 'duplicate_post_admin_enqueue_block_editor_scripts' ) );
+		\add_action( 'admin_enqueue_scripts', array( $this, 'should_previously_used_keyword_assessment_run' ), 9 );
+	}
+
+	/**
+	 * Disables the Yoast SEO PreviouslyUsedKeyword assessment for posts duplicated for Rewrite & Republish.
+	 *
+	 * @return void
+	 */
+	public function should_previously_used_keyword_assessment_run() {
+		if ( ! \in_array( $this->pagenow, array( 'post.php', 'post-new.php' ), true ) ) {
+			return;
+		}
+
+		if ( ! $this->post ) {
+			$this->post = \get_post();
+		}
+
+		$skip_assessment = \get_post_meta( $this->post->ID, '_dp_is_rewrite_republish_copy', true );
+
+		if ( ! empty( $skip_assessment ) ) {
+			\add_filter( 'wpseo_previously_used_keyword_active', '__return_false' );
+		}
 	}
 
 	/**
@@ -59,12 +100,16 @@ class Duplicate_Post_User_Interface {
 	 * @return string The permalink. Returns empty if the post hasn't been published yet.
 	 */
 	private function duplicate_post_get_rewrite_republish_permalink() {
-		$post = get_post();
-		if ( $post->post_status !== 'publish' ) {
+		if ( ! $this->post ) {
+			$this->post = \get_post();
+		}
+
+		// phpcs:ignore WordPress.PHP.YodaConditions
+		if ( $this->post->post_status !== 'publish' ) {
 			return '';
 		}
 
-		return \duplicate_post_get_clone_post_link( $post->ID );
+		return \duplicate_post_get_clone_post_link( $this->post->ID );
 	}
 
 	/**
