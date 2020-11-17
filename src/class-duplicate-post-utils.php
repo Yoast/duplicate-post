@@ -35,6 +35,6 @@ class Duplicate_Post_Utils {
 	 * @return string|bool The post id if the post is a copy for Rewrite & Republish, false otherwise.
 	 */
 	public static function get_rewrite_republish_copy_id( $post_id ) {
-		return \get_post_meta( $post_id, '_dp_is_rewrite_republish_copy', true );
+		return \get_post_meta( $post_id, '_dp_original', true );
 	}
 }
