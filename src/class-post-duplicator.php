@@ -204,6 +204,9 @@ class Post_Duplicator {
 		}
 		$meta_excludelist[] = '_edit_lock'; // Edit lock.
 		$meta_excludelist[] = '_edit_last'; // Edit lock.
+		$meta_excludelist[] = '_dp_original';
+		$meta_excludelist[] = '_dp_is_rewrite_republish_copy';
+		$meta_excludelist[] = '_dp_has_rewrite_republish_copy';
 		if ( $options['copy_template'] ) {
 			$meta_excludelist[] = '_wp_page_template';
 		}
