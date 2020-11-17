@@ -69,6 +69,19 @@ class Duplicate_Post_Republish {
 		$post_to_be_rewritten->post_name   = \get_post_field( 'post_name', $post_to_be_rewritten->ID );
 		$post_to_be_rewritten->post_status = 'publish';
 
+		// This section of code is partially duplicated from copy_post_taxonomies() which maybe should be better abstracted.
+		$post_taxonomies = \get_object_taxonomies( $post_copy->post_type );
+		foreach ( $post_taxonomies as $taxonomy ) {
+			$post_terms = \wp_get_object_terms( $post_copy_id, $taxonomy, array( 'orderby' => 'term_order' ) );
+			$terms      = array();
+			$num_terms  = count( $post_terms );
+			for ( $i = 0; $i < $num_terms; $i++ ) {
+				$terms[] = $post_terms[ $i ]->slug;
+			}
+			\wp_set_object_terms( $post_to_be_rewritten->ID, $terms, $taxonomy );
+		}
+		// End of duplicated code section.
+
 		$rewritten_post_id = \wp_update_post( \wp_slash( (array) $post_to_be_rewritten ), true );
 
 		if ( 0 === $rewritten_post_id || \is_wp_error( $rewritten_post_id ) ) {
