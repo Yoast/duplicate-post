@@ -57,7 +57,11 @@ class User_Interface_Test extends TestCase {
 		$this->assertNotFalse( \has_action( 'admin_notices', [ $this->instance, 'bulk_action_admin_notice' ] ), 'Does not have expected admin_notices action' );
 		$this->assertNotFalse( \has_action( 'wp_before_admin_bar_render', [ $this->instance, 'admin_bar_render' ] ), 'Does not have expected wp_before_admin_bar_render action' );
 	}
-
+	/**
+	 * Tests the add_removable_query_args function.
+	 *
+	 * @covers ::add_removable_query_args
+	 */
 	public function test_add_removable_query_args() {
 		$array = [
 			'activate',
@@ -119,7 +123,7 @@ class User_Interface_Test extends TestCase {
 				'wp-post-new-reload',
 				'cloned',
 				'rewriting',
-				'bulk_rewriting'
+				'bulk_rewriting',
 			],
 			$this->instance->add_removable_query_args( $array )
 		);

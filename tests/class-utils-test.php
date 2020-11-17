@@ -69,8 +69,8 @@ class Utils_Test extends TestCase {
 			[ 'A string with NUL \0 in the middle', 'A string with NUL \\\0 in the middle' ],
 			[ 1000, 1000 ],
 			[ 999.99, 999.99 ],
-			[ true , true ],
-			[ [ 'must', 'remain', 'array'] , [ 'must', 'remain', 'array'] ],
+			[ true, true ],
+			[ [ 'must', 'remain', 'array' ], [ 'must', 'remain', 'array' ] ],
 		];
 	}
 }
