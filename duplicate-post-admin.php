@@ -560,15 +560,6 @@ function duplicate_post_make_duplicate_link_row( $actions, $post ) {
 		esc_html__( 'New Draft', 'duplicate-post' ) .
 		'</a>';
 
-	if ( $post->post_status === 'publish' ) {
-		$actions['rewrite'] = '<a href="' . duplicate_post_get_clone_post_link( $post->ID, 'display', false ) .
-			'" aria-label="' . esc_attr(
-				/* translators: %s: Post title. */
-				sprintf( __( 'Rewrite & Republish &#8220;%s&#8221;', 'duplicate-post' ), $title )
-			) . '">' .
-			esc_html_x( 'Rewrite & Republish', 'verb', 'duplicate-post' ) . '</a>';
-	}
-
 	return $actions;
 }
 
@@ -592,11 +583,6 @@ function duplicate_post_add_duplicate_post_button( $post = null ) {
 <div id="duplicate-action">
 	<a class="submitduplicate duplication"
 		href="<?php echo esc_url( duplicate_post_get_clone_post_link( $post->ID ) ); ?>"><?php esc_html_e( 'Copy to a new draft', 'duplicate-post' ); ?>
-	</a>
-</div>
-<div id="rewrite-republish-action">
-	<a class="submitduplicate duplication"
-		href="<?php echo esc_url( duplicate_post_get_clone_post_link( $post->ID ) ); ?>"><?php esc_html_e( 'Rewrite & Republish', 'duplicate-post' ); ?>
 	</a>
 </div>
 			<?php
@@ -790,7 +776,7 @@ function duplicate_post_copy_post_meta_info( $new_id, $post ) {
 		$meta_blacklist[] = '_thumbnail_id';
 	}
 
-	$meta_blacklist = apply_filters_deprecated( 'duplicate_post_blacklist_filter' , array( $meta_blacklist ), '3.2.5', 'duplicate_post_excludelist_filter' );
+	$meta_blacklist = apply_filters_deprecated( 'duplicate_post_blacklist_filter', array( $meta_blacklist ), '3.2.5', 'duplicate_post_excludelist_filter' );
 	/**
 	 * Filters the meta fields excludelist when copying a post.
 	 *
@@ -798,7 +784,7 @@ function duplicate_post_copy_post_meta_info( $new_id, $post ) {
 	 *
 	 * @return array
 	 */
-	$meta_blacklist = apply_filters( 'duplicate_post_excludelist_filter' , $meta_blacklist );
+	$meta_blacklist = apply_filters( 'duplicate_post_excludelist_filter', $meta_blacklist );
 
 	$meta_blacklist_string = '(' . implode( ')|(', $meta_blacklist ) . ')';
 	if ( strpos( $meta_blacklist_string, '*' ) !== false ) {
@@ -1258,7 +1244,7 @@ function duplicate_post_add_bulk_filters() {
 }
 
 /**
- * Adds 'Clone' and 'Rewrite & Republish' to the bulk action dropdown.
+ * Adds 'Clone' to the bulk action dropdown.
  *
  * @ignore
  *
@@ -1267,7 +1253,6 @@ function duplicate_post_add_bulk_filters() {
  */
 function duplicate_post_register_bulk_action( $bulk_actions ) {
 	$bulk_actions['duplicate_post_clone']             = esc_html__( 'Clone', 'duplicate-post' );
-	$bulk_actions['duplicate_post_rewrite_republish'] = esc_html__( 'Rewrite & Republish', 'duplicate-post' );
 
 	return $bulk_actions;
 }
