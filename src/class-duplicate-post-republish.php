@@ -32,7 +32,7 @@ class Duplicate_Post_Republish {
 
 		$enabled_post_types = Duplicate_Post_Utils::get_post_types_enabled_for_copy();
 		foreach ( $enabled_post_types as $enabled_post_type ) {
-			\add_action( "rewrite_republish_{$enabled_post_type}", array( $this, 'duplicate_post_republish' ), 10, 2, 10, 2 );
+			\add_action( "rewrite_republish_{$enabled_post_type}", array( $this, 'duplicate_post_republish' ), 10, 2 );
 		}
 	}
 
