@@ -1,14 +1,15 @@
 <?php
 /**
- * Duplicate Post main class.
+ * Duplicate Post handler class for duplication actions.
  *
  * @package Duplicate_Post
+ * @since 4.0
  */
 
 namespace Yoast\WP\Duplicate_Post;
 
 /**
- * Represents the Duplicate Post main class.
+ * Represents the handler for duplication actions.
  */
 class Handler {
 
@@ -22,24 +23,26 @@ class Handler {
 	/**
 	 * Initializes the main class.
 	 *
-	 * @param Post_Duplicator $post_duplicator
+	 * @param Post_Duplicator $post_duplicator The Post_Duplicator object.
 	 */
-	public function __construct( $post_duplicator ) {
-
+	public function __construct( Post_Duplicator $post_duplicator ) {
 		$this->post_duplicator = $post_duplicator;
-
 		$this->register_hooks();
 	}
 
 	/**
 	 * Adds hooks to integrate with WordPress.
+	 *
+	 * @return void
 	 */
 	private function register_hooks() {
 		\add_action( 'admin_action_duplicate_post_copy_for_rewrite', [ $this, 'rewrite_link_action_handler' ] );
 	}
 
 	/**
+	 * Handles the action for copying a post for the Rewrite and Republish feature.
 	 *
+	 * @return void
 	 */
 	public function rewrite_link_action_handler() {
 		if ( ! \duplicate_post_is_current_user_allowed_to_copy() ) {
@@ -47,7 +50,7 @@ class Handler {
 		}
 
 		if ( ! ( isset( $_GET['post'] ) || isset( $_POST['post'] ) || // Input var okay.
-		         ( isset( $_REQUEST['action'] ) && 'duplicate_post_copy_for_rewrite' === $_REQUEST['action'] ) ) ) { // Input var okay.
+			( isset( $_REQUEST['action'] ) && 'duplicate_post_copy_for_rewrite' === $_REQUEST['action'] ) ) ) { // Input var okay.
 			\wp_die( \esc_html__( 'No post to duplicate has been supplied!', 'duplicate-post' ) );
 		}
 
@@ -61,18 +64,6 @@ class Handler {
 
 		// Copy the post and insert it.
 		if ( ! $post ) {
-			wp_die(
-				esc_html(
-					__( 'Copy creation failed, could not find original:', 'duplicate-post' ) . ' '
-					. $id
-				)
-			);
-		}
-
-		$new_id    = $this->post_duplicator->create_duplicate_for_rewrite_and_republish( $post );
-
-		// Die on insert error.
-		if ( \is_wp_error( $new_id ) ) {
 			\wp_die(
 				\esc_html(
 					__( 'Copy creation failed, could not find original:', 'duplicate-post' ) . ' '
@@ -81,21 +72,32 @@ class Handler {
 			);
 		}
 
+		$new_id = $this->post_duplicator->create_duplicate_for_rewrite_and_republish( $post );
+
+		// Die on insert error.
+		if ( \is_wp_error( $new_id ) ) {
+			\wp_die(
+				\esc_html(
+					__( 'Copy creation failed, could not create a copy.', 'duplicate-post' )
+				)
+			);
+		}
+
 		// Redirect to the edit screen for the new draft post.
-		wp_safe_redirect(
-			add_query_arg(
+		\wp_safe_redirect(
+			\add_query_arg(
 				array(
 					'rewriting' => 1,
-					'ids'    => $post->ID,
+					'ids'       => $post->ID,
 				),
-				admin_url( 'post.php?action=edit&post=' . $new_id . ( isset( $_GET['classic-editor'] ) ? '&classic-editor' : '' ) )
+				\admin_url( 'post.php?action=edit&post=' . $new_id . ( isset( $_GET['classic-editor'] ) ? '&classic-editor' : '' ) )
 			)
 		);
 		exit();
 	}
 
 	/**
-	 * Bulk action handler.
+	 * Bulk action handler for the Rewrite and Republish feature.
 	 *
 	 * @param string $redirect_to The URL to redirect to.
 	 * @param string $doaction    The action that has been called.
@@ -103,10 +105,11 @@ class Handler {
 	 *
 	 * @return string
 	 */
-	public function bulk_action_handler( $redirect_to, $doaction, $post_ids ) {
+	public function bulk_action_handler( $redirect_to, $doaction, array $post_ids ) {
 		if ( $doaction !== 'duplicate_post_rewrite_republish' ) {
 			return $redirect_to;
 		}
+
 		$counter = 0;
 		foreach ( $post_ids as $post_id ) {
 			$post = \get_post( $post_id );

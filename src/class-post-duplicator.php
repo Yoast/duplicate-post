@@ -1,19 +1,22 @@
 <?php
 /**
- * Duplicate Post main class.
+ * Duplicate Post class to create copies.
  *
  * @package Duplicate_Post
+ * @since 4.0
  */
 
 namespace Yoast\WP\Duplicate_Post;
 
 /**
- * Represents the Duplicate Post main class.
+ * Represents the Post Duplicator class.
  */
 class Post_Duplicator {
 
 	/**
-	 * @return array
+	 * Returns an array with the default option values.
+	 *
+	 * @return array The default options values.
 	 */
 	public function get_default_options() {
 		return [
@@ -43,12 +46,14 @@ class Post_Duplicator {
 	}
 
 	/**
-	 * @param \WP_Post $post
-	 * @param array $options
+	 * Creates a copy of a post object, accordingly to an options array.
 	 *
-	 * @return number|\WP_Error.
+	 * @param \WP_Post $post    The original post object.
+	 * @param array    $options The options overriding the default ones.
+	 *
+	 * @return number|\WP_Error The copy ID, or a WP_Error object on failure.
 	 */
-	public function create_duplicate( \WP_Post $post, array $options ) {
+	public function create_duplicate( \WP_Post $post, array $options = [] ) {
 		$defaults = $this->get_default_options();
 		$options  = \wp_parse_args( $options, $defaults );
 
@@ -111,9 +116,11 @@ class Post_Duplicator {
 	}
 
 	/**
-	 * @param \WP_Post $post
+	 * Wrapper function to create a copy for the Rewrite and Republish feature.
 	 *
-	 * @return number|\WP_Error
+	 * @param \WP_Post $post The original post object.
+	 *
+	 * @return number|\WP_Error The copy ID, or a WP_Error object on failure.
 	 */
 	public function create_duplicate_for_rewrite_and_republish( \WP_Post $post ) {
 		$options = [
@@ -143,8 +150,11 @@ class Post_Duplicator {
 	/**
 	 * Copies the taxonomies of a post to another post.
 	 *
-	 * @param int      $new_id New post ID.
-	 * @param \WP_Post $post   The original post object.
+	 * @param int      $new_id  New post ID.
+	 * @param \WP_Post $post    The original post object.
+	 * @param array    $options The options array.
+	 *
+	 * @return void
 	 */
 	private function copy_post_taxonomies( $new_id, $post, $options ) {
 		// Clear default category (added by wp_insert_post).
@@ -188,17 +198,20 @@ class Post_Duplicator {
 	}
 
 	/**
-	 * Copies the meta information of a post to another post
+	 * Copies the meta information of a post to another post.
 	 *
 	 * @param int      $new_id The new post ID.
 	 * @param \WP_Post $post   The original post object.
+	 * @param array    $options The options array.
+	 *
+	 * @return void
 	 */
-	function copy_post_meta_info( $new_id, $post, $options ) {
+	public function copy_post_meta_info( $new_id, $post, $options ) {
 		$post_meta_keys = \get_post_custom_keys( $post->ID );
 		if ( empty( $post_meta_keys ) ) {
 			return;
 		}
-		$meta_excludelist   = $options['meta_excludelist'];
+		$meta_excludelist = $options['meta_excludelist'];
 		if ( ! is_array( $meta_excludelist ) ) {
 			$meta_excludelist = [];
 		}
@@ -260,10 +273,12 @@ class Post_Duplicator {
 	}
 
 	/**
-	 * @param \WP_Post $post
-	 * @param array $options
+	 * Generates and returns the title for the copy.
 	 *
-	 * @return string
+	 * @param \WP_Post $post    The original post object.
+	 * @param array    $options The options array.
+	 *
+	 * @return string The calculated title for the copy.
 	 */
 	public function generate_copy_title( \WP_Post $post, array $options ) {
 		$prefix = \sanitize_text_field( $options['title_prefix'] );
@@ -283,10 +298,12 @@ class Post_Duplicator {
 	}
 
 	/**
-	 * @param \WP_Post $post
-	 * @param array $options
+	 * Generates and returns the status for the copy.
 	 *
-	 * @return mixed|string
+	 * @param \WP_Post $post    The original post object.
+	 * @param array    $options The options array.
+	 *
+	 * @return string The calculated status for the copy.
 	 */
 	public function generate_copy_status( \WP_Post $post, array $options ) {
 		$new_post_status = 'draft';
@@ -311,10 +328,12 @@ class Post_Duplicator {
 	}
 
 	/**
-	 * @param \WP_Post $post
-	 * @param array $options
+	 * Generates and returns the author ID for the copy.
 	 *
-	 * @return int|string
+	 * @param \WP_Post $post    The original post object.
+	 * @param array    $options The options array.
+	 *
+	 * @return int|string The calculated author ID for the copy.
 	 */
 	public function generate_copy_author( \WP_Post $post, array $options ) {
 		$new_post_author    = \wp_get_current_user();

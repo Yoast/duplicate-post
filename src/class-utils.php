@@ -1,9 +1,16 @@
 <?php
-
+/**
+ * Utility methods for Duplicate Post
+ *
+ * @package Duplicate_Post
+ * @since 4.0
+ */
 
 namespace Yoast\WP\Duplicate_Post;
 
-
+/**
+ * Represents the Utils class.
+ */
 class Utils {
 
 	/**
@@ -44,7 +51,7 @@ class Utils {
 	 * @return mixed
 	 */
 	public static function recursively_slash_strings( $value ) {
-		return \map_deep( $value, [ Utils::class, 'addslashes_to_strings_only' ] );
+		return \map_deep( $value, 'self::addslashes_to_strings_only' );
 	}
 
 }

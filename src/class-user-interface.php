@@ -42,11 +42,15 @@ class User_Interface {
 
 	/**
 	 * Handler object.
+	 *
+	 * @var Handler
 	 */
 	private $handler;
 
 	/**
 	 * Initializes the class.
+	 *
+	 * @param Handler $handler The handler object.
 	 */
 	public function __construct( $handler ) {
 		global $pagenow;
@@ -65,15 +69,16 @@ class User_Interface {
 	 * @return void
 	 */
 	private function register_hooks() {
-		\add_action( 'enqueue_block_editor_assets',[ $this, 'enqueue_block_editor_scripts' ] );
+		\add_action( 'enqueue_block_editor_assets', [ $this, 'enqueue_block_editor_scripts' ] );
 		\add_filter( 'post_row_actions', [ $this->rewrite_and_republish_row_action, 'add_action_link' ], 10, 2 );
 		\add_filter( 'page_row_actions', [ $this->rewrite_and_republish_row_action, 'add_action_link' ], 10, 2 );
 		\add_action( 'admin_enqueue_scripts', [ $this, 'should_previously_used_keyword_assessment_run' ], 9 );
-		\add_action( 'admin_init', [ $this, 'add_bulk_filters'] );
+		\add_action( 'admin_init', [ $this, 'add_bulk_filters' ] );
 		\add_action( 'post_submitbox_start', [ $this, 'add_rewrite_and_republish_post_button' ] );
 		\add_filter( 'removable_query_args', [ $this, 'add_removable_query_args' ] );
 		\add_action( 'admin_notices', [ $this, 'single_action_admin_notice' ] );
 		\add_action( 'admin_notices', [ $this, 'bulk_action_admin_notice' ] );
+		\add_action( 'wp_before_admin_bar_render', [ $this, 'admin_bar_render' ] );
 	}
 
 	/**
@@ -134,8 +139,8 @@ class User_Interface {
 			'duplicatePostRewriteRepost',
 			[
 				'permalink' => $this->get_rewrite_republish_permalink(),
-                'rewriting' => ( ! empty( $_REQUEST['rewriting'] ) ) ? 1 : 0,
-		    ]
+				'rewriting' => ( ! empty( $_REQUEST['rewriting'] ) ) ? 1 : 0,  // phpcs:ignore WordPress.Security.NonceVerification
+			]
 		);
 	}
 
@@ -155,6 +160,45 @@ class User_Interface {
 		}
 
 		return $this->link_builder->build_link( $this->post );
+	}
+
+	/**
+	 * Shows Rewrite and Republish link in the Toolbar.
+	 *
+	 * @global \WP_Query     $wp_the_query
+	 * @global \WP_Admin_Bar $wp_admin_bar WP_Admin_Bar instance.
+	 */
+	public function admin_bar_render() {
+		global $wp_the_query;
+		global $wp_admin_bar;
+
+		if ( \is_admin() ) {
+			$this->post = \get_post();
+		} else {
+			$this->postpost = $wp_the_query->get_queried_object();
+		}
+
+		if ( empty( $this->post ) ) {
+			return;
+		}
+
+		/** This filter is documented in duplicate-post-admin.php */
+		if ( ! \apply_filters( 'duplicate_post_show_link', \duplicate_post_is_current_user_allowed_to_copy(), $this->post ) ) {
+			return;
+		}
+
+		if ( ! \duplicate_post_is_valid_post_edit_screen() || ! \duplicate_post_can_copy_to_draft( $this->post ) ) {
+			return;
+		}
+
+		$wp_admin_bar->add_menu(
+			array(
+				'id'     => 'rewrite_republish',
+				'parent' => 'new_draft',
+				'title'  => \esc_attr__( 'Rewrite & Republish', 'duplicate-post' ),
+				'href'   => $this->get_rewrite_republish_permalink(),
+			)
+		);
 	}
 
 	/**
@@ -201,8 +245,7 @@ class User_Interface {
 			) ) {
 				?>
 				<div id="rewrite-republish-action">
-					<a class="submitduplicate duplication"
-					   href="<?php echo \esc_url( $this->link_builder->build_link( $this->post ) ); ?>"><?php \esc_html_e( 'Rewrite & Republish', 'duplicate-post' ); ?>
+					<a class="submitduplicate duplication" href="<?php echo \esc_url( $this->link_builder->build_link( $this->post ) ); ?>"><?php \esc_html_e( 'Rewrite & Republish', 'duplicate-post' ); ?>
 					</a>
 				</div>
 				<?php

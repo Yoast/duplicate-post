@@ -1252,8 +1252,7 @@ function duplicate_post_add_bulk_filters() {
  * @return array The bulk actions array.
  */
 function duplicate_post_register_bulk_action( $bulk_actions ) {
-	$bulk_actions['duplicate_post_clone']             = esc_html__( 'Clone', 'duplicate-post' );
-
+	$bulk_actions['duplicate_post_clone'] = esc_html__( 'Clone', 'duplicate-post' );
 	return $bulk_actions;
 }
 
