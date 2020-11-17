@@ -175,7 +175,7 @@ class User_Interface {
 		if ( \is_admin() ) {
 			$this->post = \get_post();
 		} else {
-			$this->postpost = $wp_the_query->get_queried_object();
+			$this->post = $wp_the_query->get_queried_object();
 		}
 
 		if ( empty( $this->post ) ) {
