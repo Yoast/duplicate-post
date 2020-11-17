@@ -68,10 +68,10 @@ class User_Interface {
 	 *
 	 * @return void
 	 */
-	private function register_hooks() {
+	public function register_hooks() {
 		\add_action( 'enqueue_block_editor_assets', [ $this, 'enqueue_block_editor_scripts' ] );
-		\add_filter( 'post_row_actions', [ $this->rewrite_and_republish_row_action, 'add_action_link' ], 10, 2 );
-		\add_filter( 'page_row_actions', [ $this->rewrite_and_republish_row_action, 'add_action_link' ], 10, 2 );
+		\add_filter( 'post_row_actions', [ $this->rewrite_and_republish_row_action, 'add_action_link' ], 11, 2 );
+		\add_filter( 'page_row_actions', [ $this->rewrite_and_republish_row_action, 'add_action_link' ], 11, 2 );
 		\add_action( 'admin_enqueue_scripts', [ $this, 'should_previously_used_keyword_assessment_run' ], 9 );
 		\add_action( 'admin_init', [ $this, 'add_bulk_filters' ] );
 		\add_action( 'post_submitbox_start', [ $this, 'add_rewrite_and_republish_post_button' ] );
