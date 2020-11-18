@@ -54,4 +54,17 @@ class Utils {
 		return \map_deep( $value, 'self::addslashes_to_strings_only' );
 	}
 
+	/**
+	 * Returns the array of the enabled post types.
+	 *
+	 * @return array The array of post types.
+	 */
+	public static function get_enabled_post_types() {
+		$duplicate_post_types_enabled = \get_option( 'duplicate_post_types_enabled', array( 'post', 'page' ) );
+		if ( ! is_array( $duplicate_post_types_enabled ) ) {
+			$duplicate_post_types_enabled = array( $duplicate_post_types_enabled );
+		}
+		return $duplicate_post_types_enabled;
+	}
+
 }

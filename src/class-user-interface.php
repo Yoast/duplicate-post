@@ -41,24 +41,22 @@ class User_Interface {
 	protected $link_builder;
 
 	/**
-	 * Handler object.
+	 * Admin notices object.
 	 *
-	 * @var Handler
+	 * @var Admin_Notices
 	 */
-	private $handler;
+	private $admin_notices;
 
 	/**
 	 * Initializes the class.
-	 *
-	 * @param Handler $handler The handler object.
 	 */
-	public function __construct( $handler ) {
+	public function __construct() {
 		global $pagenow;
 		$this->pagenow = $pagenow;
 
-		$this->handler                          = $handler;
-		$this->rewrite_and_republish_row_action = new Row_Action();
 		$this->link_builder                     = new Rewrite_Republish_Link_Builder();
+		$this->rewrite_and_republish_row_action = new Row_Action( $this->link_builder );
+		$this->admin_notices                    = new Admin_Notices();
 
 		$this->register_hooks();
 	}
@@ -70,29 +68,14 @@ class User_Interface {
 	 */
 	public function register_hooks() {
 		\add_action( 'enqueue_block_editor_assets', [ $this, 'enqueue_block_editor_scripts' ] );
+		\add_action( 'admin_enqueue_scripts', [ $this, 'should_previously_used_keyword_assessment_run' ], 9 );
+
 		\add_filter( 'post_row_actions', [ $this->rewrite_and_republish_row_action, 'add_action_link' ], 11, 2 );
 		\add_filter( 'page_row_actions', [ $this->rewrite_and_republish_row_action, 'add_action_link' ], 11, 2 );
-		\add_action( 'admin_enqueue_scripts', [ $this, 'should_previously_used_keyword_assessment_run' ], 9 );
-		\add_action( 'admin_init', [ $this, 'add_bulk_filters' ] );
 		\add_action( 'post_submitbox_start', [ $this, 'add_rewrite_and_republish_post_button' ] );
-		\add_filter( 'removable_query_args', [ $this, 'add_removable_query_args' ] );
-		\add_action( 'admin_notices', [ $this, 'single_action_admin_notice' ] );
-		\add_action( 'admin_notices', [ $this, 'bulk_action_admin_notice' ] );
 		\add_action( 'wp_before_admin_bar_render', [ $this, 'admin_bar_render' ] );
-	}
 
-	/**
-	 * Adds 'rewriting' to the removable query args.
-	 *
-	 * @ignore
-	 *
-	 * @param array $removable_query_args Array of query args keys.
-	 * @return array
-	 */
-	public function add_removable_query_args( $removable_query_args ) {
-		$removable_query_args[] = 'rewriting';
-		$removable_query_args[] = 'bulk_rewriting';
-		return $removable_query_args;
+		\add_action( 'admin_init', [ $this, 'add_bulk_filters' ] );
 	}
 
 	/**
@@ -202,9 +185,9 @@ class User_Interface {
 	}
 
 	/**
-	 * Adds the handlers for bulk actions.
+	 * Hooks the function to add the Rewrite and Republish in the bulk actions for the selected post types.
 	 *
-	 * @ignore
+	 * @return void
 	 */
 	public function add_bulk_filters() {
 		if ( intval( \get_option( 'duplicate_post_show_bulkactions' ) ) !== 1 ) {
@@ -213,13 +196,10 @@ class User_Interface {
 		if ( ! \duplicate_post_is_current_user_allowed_to_copy() ) {
 			return;
 		}
-		$duplicate_post_types_enabled = \get_option( 'duplicate_post_types_enabled', array( 'post', 'page' ) );
-		if ( ! is_array( $duplicate_post_types_enabled ) ) {
-			$duplicate_post_types_enabled = array( $duplicate_post_types_enabled );
-		}
+
+		$duplicate_post_types_enabled = Utils::get_enabled_post_types();
 		foreach ( $duplicate_post_types_enabled as $duplicate_post_type_enabled ) {
 			add_filter( "bulk_actions-edit-{$duplicate_post_type_enabled}", [ $this, 'register_bulk_action' ] );
-			add_filter( "handle_bulk_actions-edit-{$duplicate_post_type_enabled}", [ $this->handler, 'bulk_action_handler' ], 10, 3 );
 		}
 	}
 
@@ -227,6 +207,8 @@ class User_Interface {
 	 * Adds a button in the post/page edit screen to create a clone
 	 *
 	 * @param \WP_Post|null $post The post object that's being edited.
+	 *
+	 * @return void
 	 */
 	public function add_rewrite_and_republish_post_button( $post = null ) {
 		if ( is_null( $post ) ) {
@@ -263,48 +245,5 @@ class User_Interface {
 		$bulk_actions['duplicate_post_rewrite_republish'] = esc_html__( 'Rewrite & Republish', 'duplicate-post' );
 
 		return $bulk_actions;
-	}
-
-	/**
-	 * Shows a notice after the copy has succeeded.
-	 */
-	public function single_action_admin_notice() {
-		if ( ! empty( $_REQUEST['rewriting'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-			echo '<div id="message" class="notice notice-warning fade"><p>';
-			esc_html_e(
-				'You can now start rewriting your post in this duplicate of the original post. If you click "Republish", your changes will be merged into the original post and you’ll be redirected there.',
-				'duplicate-post'
-			);
-			echo '</p></div>';
-			\remove_query_arg( 'rewriting' );
-		}
-	}
-
-	/**
-	 * Shows a notice after the copy has succeeded.
-	 */
-	public function bulk_action_admin_notice() {
-		if ( ! empty( $_REQUEST['bulk_rewriting'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-			$copied_posts = intval( $_REQUEST['bulk_rewriting'] ); // phpcs:ignore WordPress.Security.NonceVerification
-			echo '<div id="message" class="notice notice-success fade"><p>';
-			printf(
-				\esc_html(
-				/* translators: %s: Number of posts copied. */
-					_n(
-						'%s item copied.',
-						'%s items copied.',
-						$copied_posts,
-						'duplicate-post'
-					)
-				) . ' ',
-				\esc_html( $copied_posts )
-			);
-			esc_html_e(
-				'You can now start rewriting your posts in the duplicates of the original posts. Once you choose to republish them your changes will be merged back into the original post.',
-				'duplicate-post'
-			);
-			echo '</p></div>';
-			\remove_query_arg( 'bulk_rewriting' );
-		}
 	}
 }

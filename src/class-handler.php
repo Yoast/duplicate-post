@@ -37,6 +37,7 @@ class Handler {
 	 */
 	private function register_hooks() {
 		\add_action( 'admin_action_duplicate_post_copy_for_rewrite', [ $this, 'rewrite_link_action_handler' ] );
+		\add_action( 'admin_init', [ $this, 'add_bulk_handlers' ] );
 	}
 
 	/**
@@ -94,6 +95,19 @@ class Handler {
 			)
 		);
 		exit();
+	}
+
+	/**
+	 * Hooks the handler for the Rewrite and Republish action for all the selected post types.
+	 *
+	 * @return void
+	 */
+	public function add_bulk_handlers() {
+		$duplicate_post_types_enabled = Utils::get_enabled_post_types();
+
+		foreach ( $duplicate_post_types_enabled as $duplicate_post_type_enabled ) {
+			add_filter( "handle_bulk_actions-edit-{$duplicate_post_type_enabled}", [ $this, 'bulk_action_handler' ], 10, 3 );
+		}
 	}
 
 	/**

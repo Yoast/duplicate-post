@@ -14,6 +14,13 @@ namespace Yoast\WP\Duplicate_Post;
 class Duplicate_Post {
 
 	/**
+	 * User_Interface object.
+	 *
+	 * @var User_Interface
+	 */
+	private $user_interface;
+
+	/**
 	 * Post_Duplicator object.
 	 *
 	 * @var Post_Duplicator
@@ -28,18 +35,11 @@ class Duplicate_Post {
 	private $handler;
 
 	/**
-	 * User_Interface object.
-	 *
-	 * @var User_Interface
-	 */
-	private $user_interface;
-
-	/**
 	 * Initializes the main class.
 	 */
 	public function __construct() {
+		$this->user_interface  = new User_Interface();
 		$this->post_duplicator = new Post_Duplicator();
 		$this->handler         = new Handler( $this->post_duplicator );
-		$this->user_interface  = new User_Interface( $this->handler );
 	}
 }

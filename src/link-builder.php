@@ -15,6 +15,6 @@ interface Link_Builder {
 	 * @param int|\WP_Post $post    The post object or ID.
 	 * @param string       $context The context in which the URL will be used.
 	 */
-	public function build_link( $post, $context );
+	public function build_link( $post, $context = 'display' );
 
 }

@@ -21,9 +21,23 @@ class Row_Action {
 
 	/**
 	 * Initializes the class.
+	 *
+	 * @param Link_Builder $link_builder The link builder.
 	 */
-	public function __construct() {
-		$this->link_builder = new Rewrite_Republish_Link_Builder();
+	public function __construct( Link_Builder $link_builder ) {
+		$this->link_builder = $link_builder;
+
+		$this->register_hooks();
+	}
+
+	/**
+	 * Adds hooks to integrate with WordPress.
+	 *
+	 * @return void
+	 */
+	public function register_hooks() {
+		\add_filter( 'post_row_actions', [ $this, 'add_action_link' ], 11, 2 );
+		\add_filter( 'page_row_actions', [ $this, 'add_action_link' ], 11, 2 );
 	}
 
 	/**
