@@ -123,7 +123,7 @@ class Post_Duplicator {
 	 * @return number|\WP_Error The copy ID, or a WP_Error object on failure.
 	 */
 	public function create_duplicate_for_rewrite_and_republish( \WP_Post $post ) {
-		$options = [
+		$options  = [
 			'copy_title'      => true,
 			'copy_date'       => true,
 			'copy_name'       => true,
@@ -133,6 +133,8 @@ class Post_Duplicator {
 			'copy_menu_order' => true,
 			'use_filters'     => false,
 		];
+		$defaults = $this->get_default_options();
+		$options  = \wp_parse_args( $options, $defaults );
 
 		$new_post_id = $this->create_duplicate( $post, $options );
 
@@ -166,15 +168,16 @@ class Post_Duplicator {
 			$post_taxonomies[] = 'post_format';
 		}
 
-		if ( $options['use_filters'] ) {
-			$taxonomies_excludelist = $options['taxonomies_excludelist'];
-			if ( ! is_array( $taxonomies_excludelist ) ) {
-				$taxonomies_excludelist = [];
-			}
-			if ( ! $options['copy_format'] ) {
-				$taxonomies_excludelist[] = 'post_format';
-			}
+		$taxonomies_excludelist = $options['taxonomies_excludelist'];
+		if ( ! is_array( $taxonomies_excludelist ) ) {
+			$taxonomies_excludelist = [];
+		}
 
+		if ( ! $options['copy_format'] ) {
+			$taxonomies_excludelist[] = 'post_format';
+		}
+
+		if ( $options['use_filters'] ) {
 			/**
 			 * Filters the taxonomy excludelist when copying a post.
 			 *
@@ -183,8 +186,9 @@ class Post_Duplicator {
 			 * @return array
 			 */
 			$taxonomies_excludelist = \apply_filters( 'duplicate_post_taxonomies_excludelist_filter', $taxonomies_excludelist );
-			$post_taxonomies        = array_diff( $post_taxonomies, $taxonomies_excludelist );
 		}
+
+		$post_taxonomies = array_diff( $post_taxonomies, $taxonomies_excludelist );
 
 		foreach ( $post_taxonomies as $taxonomy ) {
 			$post_terms = \wp_get_object_terms( $post->ID, $taxonomy, [ 'orderby' => 'term_order' ] );
@@ -220,10 +224,10 @@ class Post_Duplicator {
 		$meta_excludelist[] = '_dp_original';
 		$meta_excludelist[] = '_dp_is_rewrite_republish_copy';
 		$meta_excludelist[] = '_dp_has_rewrite_republish_copy';
-		if ( $options['copy_template'] ) {
+		if ( ! $options['copy_template'] ) {
 			$meta_excludelist[] = '_wp_page_template';
 		}
-		if ( $options['copy_thumbnail'] ) {
+		if ( ! $options['copy_thumbnail'] ) {
 			$meta_excludelist[] = '_thumbnail_id';
 		}
 
