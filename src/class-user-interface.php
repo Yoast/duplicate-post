@@ -84,7 +84,7 @@ class User_Interface {
 	 * @return void
 	 */
 	public function should_previously_used_keyword_assessment_run() {
-		if ( ! \in_array( $this->pagenow, array( 'post.php', 'post-new.php' ), true ) ) {
+		if ( ! \in_array( $this->pagenow, [ 'post.php', 'post-new.php' ], true ) ) {
 			return;
 		}
 
@@ -108,11 +108,11 @@ class User_Interface {
 		\wp_enqueue_script(
 			'duplicate_post_edit_script',
 			\plugins_url( \sprintf( 'js/dist/duplicate-post-edit-%s.js', Utils::flatten_version( DUPLICATE_POST_CURRENT_VERSION ) ), DUPLICATE_POST_FILE ),
-			array(
+			[
 				'wp-blocks',
 				'wp-element',
 				'wp-i18n',
-			),
+			],
 			DUPLICATE_POST_CURRENT_VERSION,
 			true
 		);
@@ -175,12 +175,12 @@ class User_Interface {
 		}
 
 		$wp_admin_bar->add_menu(
-			array(
+			[
 				'id'     => 'rewrite_republish',
 				'parent' => 'new_draft',
 				'title'  => \esc_attr__( 'Rewrite & Republish', 'duplicate-post' ),
 				'href'   => $this->get_rewrite_republish_permalink(),
-			)
+			]
 		);
 	}
 
@@ -199,7 +199,7 @@ class User_Interface {
 
 		$duplicate_post_types_enabled = Utils::get_enabled_post_types();
 		foreach ( $duplicate_post_types_enabled as $duplicate_post_type_enabled ) {
-			add_filter( "bulk_actions-edit-{$duplicate_post_type_enabled}", [ $this, 'register_bulk_action' ] );
+			\add_filter( "bulk_actions-edit-{$duplicate_post_type_enabled}", [ $this, 'register_bulk_action' ] );
 		}
 	}
 
@@ -211,14 +211,14 @@ class User_Interface {
 	 * @return void
 	 */
 	public function add_rewrite_and_republish_post_button( $post = null ) {
-		if ( is_null( $post ) ) {
+		if ( \is_null( $post ) ) {
 			if ( isset( $_GET['post'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-				$id   = intval( \wp_unslash( $_GET['post'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
+				$id   = \intval( \wp_unslash( $_GET['post'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
 				$post = \get_post( $id );
 			}
 		}
 
-		if ( ! is_null( $post ) && $post->post_status === 'publish' ) {
+		if ( ! \is_null( $post ) && $post->post_status === 'publish' ) {
 			/** This filter is documented in duplicate-post-admin.php */
 			if ( \apply_filters(
 				'duplicate_post_show_link',
@@ -242,7 +242,7 @@ class User_Interface {
 	 * @return array The bulk actions array.
 	 */
 	public function register_bulk_action( $bulk_actions ) {
-		$bulk_actions['duplicate_post_rewrite_republish'] = esc_html__( 'Rewrite & Republish', 'duplicate-post' );
+		$bulk_actions['duplicate_post_rewrite_republish'] = \esc_html__( 'Rewrite & Republish', 'duplicate-post' );
 
 		return $bulk_actions;
 	}

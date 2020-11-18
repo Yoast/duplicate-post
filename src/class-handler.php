@@ -14,14 +14,14 @@ namespace Yoast\WP\Duplicate_Post;
 class Handler {
 
 	/**
-	 * Post_Duplicator object
+	 * Post_Duplicator object.
 	 *
 	 * @var Post_Duplicator
 	 */
 	private $post_duplicator;
 
 	/**
-	 * Initializes the main class.
+	 * Initializes the class.
 	 *
 	 * @param Post_Duplicator $post_duplicator The Post_Duplicator object.
 	 */
@@ -55,7 +55,7 @@ class Handler {
 			\wp_die( \esc_html__( 'No post to duplicate has been supplied!', 'duplicate-post' ) );
 		}
 
-		$id = ( isset( $_GET['post'] ) ? intval( \wp_unslash( $_GET['post'] ) ) : intval( \wp_unslash( $_POST['post'] ) ) ); // Input var okay.
+		$id = ( isset( $_GET['post'] ) ? \intval( \wp_unslash( $_GET['post'] ) ) : \intval( \wp_unslash( $_POST['post'] ) ) ); // Input var okay.
 
 		\check_admin_referer( 'duplicate-post_rewrite_' . $id ); // Input var okay.
 
@@ -64,7 +64,7 @@ class Handler {
 		if ( ! $post ) {
 			\wp_die(
 				\esc_html(
-					__( 'Copy creation failed, could not find original:', 'duplicate-post' ) . ' '
+					\__( 'Copy creation failed, could not find original:', 'duplicate-post' ) . ' '
 					. $id
 				)
 			);
@@ -72,9 +72,7 @@ class Handler {
 
 		if ( $post->post_status !== 'publish' ) {
 			\wp_die(
-				\esc_html(
-					__( 'You cannot create a copy for Rewrite and Republish if the original is not published.', 'duplicate-post' )
-				)
+				\esc_html__( 'You cannot create a copy for Rewrite & Republish if the original is not published.', 'duplicate-post' )
 			);
 		}
 
@@ -82,18 +80,16 @@ class Handler {
 
 		if ( \is_wp_error( $new_id ) ) {
 			\wp_die(
-				\esc_html(
-					__( 'Copy creation failed, could not create a copy.', 'duplicate-post' )
-				)
+				\esc_html__( 'Copy creation failed, could not create a copy.', 'duplicate-post' )
 			);
 		}
 
 		\wp_safe_redirect(
 			\add_query_arg(
-				array(
+				[
 					'rewriting' => 1,
 					'ids'       => $post->ID,
-				),
+				],
 				\admin_url( 'post.php?action=edit&post=' . $new_id . ( isset( $_GET['classic-editor'] ) ? '&classic-editor' : '' ) )
 			)
 		);
@@ -109,18 +105,18 @@ class Handler {
 		$duplicate_post_types_enabled = Utils::get_enabled_post_types();
 
 		foreach ( $duplicate_post_types_enabled as $duplicate_post_type_enabled ) {
-			add_filter( "handle_bulk_actions-edit-{$duplicate_post_type_enabled}", [ $this, 'bulk_action_handler' ], 10, 3 );
+			\add_filter( "handle_bulk_actions-edit-{$duplicate_post_type_enabled}", [ $this, 'bulk_action_handler' ], 10, 3 );
 		}
 	}
 
 	/**
-	 * Bulk action handler for the Rewrite and Republish feature.
+	 * Handles the bulk action for the Rewrite & Republish feature.
 	 *
 	 * @param string $redirect_to The URL to redirect to.
 	 * @param string $doaction    The action that has been called.
 	 * @param array  $post_ids    The array of marked post IDs.
 	 *
-	 * @return string
+	 * @return string The URL to redirect to.
 	 */
 	public function bulk_action_handler( $redirect_to, $doaction, array $post_ids ) {
 		if ( $doaction !== 'duplicate_post_rewrite_republish' ) {

@@ -38,7 +38,7 @@ class Utils {
 	 * @return string|mixed
 	 */
 	public static function addslashes_to_strings_only( $value ) {
-		return is_string( $value ) ? addslashes( $value ) : $value;
+		return \is_string( $value ) ? \addslashes( $value ) : $value;
 	}
 
 	/**
@@ -60,9 +60,9 @@ class Utils {
 	 * @return array The array of post types.
 	 */
 	public static function get_enabled_post_types() {
-		$duplicate_post_types_enabled = \get_option( 'duplicate_post_types_enabled', array( 'post', 'page' ) );
-		if ( ! is_array( $duplicate_post_types_enabled ) ) {
-			$duplicate_post_types_enabled = array( $duplicate_post_types_enabled );
+		$duplicate_post_types_enabled = \get_option( 'duplicate_post_types_enabled', [ 'post', 'page' ] );
+		if ( ! \is_array( $duplicate_post_types_enabled ) ) {
+			$duplicate_post_types_enabled = [ $duplicate_post_types_enabled ];
 		}
 		return $duplicate_post_types_enabled;
 	}

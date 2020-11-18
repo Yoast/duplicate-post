@@ -33,10 +33,9 @@ class Admin_Notices {
 	/**
 	 * Adds 'rewriting' to the removable query args.
 	 *
-	 * @ignore
-	 *
 	 * @param array $removable_query_args Array of query args keys.
-	 * @return array
+	 *
+	 * @return array The updated array of query args keys.
 	 */
 	public function add_removable_query_args( $removable_query_args ) {
 		$removable_query_args[] = 'rewriting';
@@ -46,11 +45,13 @@ class Admin_Notices {
 
 	/**
 	 * Shows a notice after the copy has succeeded.
+	 *
+	 * @return void
 	 */
 	public function single_action_admin_notice() {
 		if ( ! empty( $_REQUEST['rewriting'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			echo '<div id="message" class="notice notice-warning fade"><p>';
-			esc_html_e(
+			\esc_html_e(
 				'You can now start rewriting your post in this duplicate of the original post. If you click "Republish", your changes will be merged into the original post and you’ll be redirected there.',
 				'duplicate-post'
 			);
@@ -61,15 +62,17 @@ class Admin_Notices {
 
 	/**
 	 * Shows a notice after the copy has succeeded.
+	 *
+	 * @return void
 	 */
 	public function bulk_action_admin_notice() {
 		if ( ! empty( $_REQUEST['bulk_rewriting'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-			$copied_posts = intval( $_REQUEST['bulk_rewriting'] ); // phpcs:ignore WordPress.Security.NonceVerification
+			$copied_posts = \intval( $_REQUEST['bulk_rewriting'] ); // phpcs:ignore WordPress.Security.NonceVerification
 			echo '<div id="message" class="notice notice-success fade"><p>';
-			printf(
+			\printf(
 				\esc_html(
 				/* translators: %s: Number of posts copied. */
-					_n(
+					\_n(
 						'%s item copied.',
 						'%s items copied.',
 						$copied_posts,
@@ -78,7 +81,7 @@ class Admin_Notices {
 				) . ' ',
 				\esc_html( $copied_posts )
 			);
-			esc_html_e(
+			\esc_html_e(
 				'You can now start rewriting your posts in the duplicates of the original posts. Once you choose to republish them your changes will be merged back into the original post.',
 				'duplicate-post'
 			);

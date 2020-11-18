@@ -1007,7 +1007,7 @@ function duplicate_post_copy_comments( $new_id, $post ) {
  * @param WP_Post $post      The original post object.
  * @param string  $status    Optional. The intended destination status.
  * @param string  $parent_id Optional. The parent post ID if we are calling this recursively.
- * @return number|WP_Error
+ * @return int|WP_Error
  */
 function duplicate_post_create_duplicate( $post, $status = '', $parent_id = '' ) {
 	/**

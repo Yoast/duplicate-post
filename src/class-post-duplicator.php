@@ -51,7 +51,7 @@ class Post_Duplicator {
 	 * @param \WP_Post $post    The original post object.
 	 * @param array    $options The options overriding the default ones.
 	 *
-	 * @return number|\WP_Error The copy ID, or a WP_Error object on failure.
+	 * @return int|\WP_Error The copy ID, or a WP_Error object on failure.
 	 */
 	public function create_duplicate( \WP_Post $post, array $options = [] ) {
 		$defaults = $this->get_default_options();
@@ -67,11 +67,11 @@ class Post_Duplicator {
 		$new_post_author_id = $this->generate_copy_author( $post, $options );
 
 		$menu_order = $options['copy_menu_order'] ? $post->menu_order : 0;
-		if ( ! empty( $options['increase_menu_order_by'] ) && is_numeric( $options['increase_menu_order_by'] ) ) {
-			$menu_order += intval( $options['increase_menu_order_by'] );
+		if ( ! empty( $options['increase_menu_order_by'] ) && \is_numeric( $options['increase_menu_order_by'] ) ) {
+			$menu_order += \intval( $options['increase_menu_order_by'] );
 		}
 
-		$new_post = array(
+		$new_post = [
 			'post_author'           => $new_post_author_id,
 			'post_content'          => $options['copy_content'] ? $post->post_content : '',
 			'post_content_filtered' => $options['copy_content'] ? $post->post_content_filtered : '',
@@ -86,7 +86,7 @@ class Post_Duplicator {
 			'post_parent'           => empty( $options['parent_id'] ) ? $post->post_parent : $options['parent_id'],
 			'menu_order'            => $menu_order,
 			'post_mime_type'        => $post->post_mime_type,
-		);
+		];
 
 		if ( $options['copy_date'] ) {
 			$new_post_date             = $post->post_date;
@@ -98,10 +98,10 @@ class Post_Duplicator {
 			/**
 			 * Filter new post values.
 			 *
-			 * @param array $new_post New post values.
-			 * @param \WP_Post $post Original post object.
+			 * @param array    $new_post New post values.
+			 * @param \WP_Post $post     Original post object.
 			 *
-			 * @return array.
+			 * @return array
 			 */
 			$new_post = \apply_filters( 'duplicate_post_new_post', $new_post, $post );
 		}
@@ -116,11 +116,11 @@ class Post_Duplicator {
 	}
 
 	/**
-	 * Wrapper function to create a copy for the Rewrite and Republish feature.
+	 * Wraps the function to create a copy for the Rewrite & Republish feature.
 	 *
 	 * @param \WP_Post $post The original post object.
 	 *
-	 * @return number|\WP_Error The copy ID, or a WP_Error object on failure.
+	 * @return int|\WP_Error The copy ID, or a WP_Error object on failure.
 	 */
 	public function create_duplicate_for_rewrite_and_republish( \WP_Post $post ) {
 		$options  = [
@@ -164,7 +164,7 @@ class Post_Duplicator {
 
 		$post_taxonomies = \get_object_taxonomies( $post->post_type );
 		// Several plugins just add support to post-formats but don't register post_format taxonomy.
-		if ( \post_type_supports( $post->post_type, 'post-formats' ) && ! in_array( 'post_format', $post_taxonomies, true ) ) {
+		if ( \post_type_supports( $post->post_type, 'post-formats' ) && ! \in_array( 'post_format', $post_taxonomies, true ) ) {
 			$post_taxonomies[] = 'post_format';
 		}
 
@@ -188,12 +188,12 @@ class Post_Duplicator {
 			$taxonomies_excludelist = \apply_filters( 'duplicate_post_taxonomies_excludelist_filter', $taxonomies_excludelist );
 		}
 
-		$post_taxonomies = array_diff( $post_taxonomies, $taxonomies_excludelist );
+		$post_taxonomies = \array_diff( $post_taxonomies, $taxonomies_excludelist );
 
 		foreach ( $post_taxonomies as $taxonomy ) {
 			$post_terms = \wp_get_object_terms( $post->ID, $taxonomy, [ 'orderby' => 'term_order' ] );
-			$terms      = array();
-			$num_terms  = count( $post_terms );
+			$terms      = [];
+			$num_terms  = \count( $post_terms );
 			for ( $i = 0; $i < $num_terms; $i++ ) {
 				$terms[] = $post_terms[ $i ]->slug;
 			}
@@ -204,8 +204,8 @@ class Post_Duplicator {
 	/**
 	 * Copies the meta information of a post to another post.
 	 *
-	 * @param int      $new_id The new post ID.
-	 * @param \WP_Post $post   The original post object.
+	 * @param int      $new_id  The new post ID.
+	 * @param \WP_Post $post    The original post object.
 	 * @param array    $options The options array.
 	 *
 	 * @return void
@@ -216,7 +216,7 @@ class Post_Duplicator {
 			return;
 		}
 		$meta_excludelist = $options['meta_excludelist'];
-		if ( ! is_array( $meta_excludelist ) ) {
+		if ( ! \is_array( $meta_excludelist ) ) {
 			$meta_excludelist = [];
 		}
 		$meta_excludelist[] = '_edit_lock'; // Edit lock.
@@ -242,18 +242,18 @@ class Post_Duplicator {
 			$meta_excludelist = \apply_filters( 'duplicate_post_excludelist_filter', $meta_excludelist );
 		}
 
-		$meta_excludelist_string = '(' . implode( ')|(', $meta_excludelist ) . ')';
-		if ( strpos( $meta_excludelist_string, '*' ) !== false ) {
-			$meta_excludelist_string = str_replace( array( '*' ), array( '[a-zA-Z0-9_]*' ), $meta_excludelist_string );
+		$meta_excludelist_string = '(' . \implode( ')|(', $meta_excludelist ) . ')';
+		if ( \strpos( $meta_excludelist_string, '*' ) !== false ) {
+			$meta_excludelist_string = \str_replace( [ '*' ], [ '[a-zA-Z0-9_]*' ], $meta_excludelist_string );
 
-			$meta_keys = array();
+			$meta_keys = [];
 			foreach ( $post_meta_keys as $meta_key ) {
-				if ( ! preg_match( '#^' . $meta_excludelist_string . '$#', $meta_key ) ) {
+				if ( ! \preg_match( '#^' . $meta_excludelist_string . '$#', $meta_key ) ) {
 					$meta_keys[] = $meta_key;
 				}
 			}
 		} else {
-			$meta_keys = array_diff( $post_meta_keys, $meta_excludelist );
+			$meta_keys = \array_diff( $post_meta_keys, $meta_excludelist );
 		}
 
 		if ( $options['use_filters'] ) {
