@@ -57,13 +57,10 @@ class Handler {
 
 		$id = ( isset( $_GET['post'] ) ? intval( \wp_unslash( $_GET['post'] ) ) : intval( \wp_unslash( $_POST['post'] ) ) ); // Input var okay.
 
-		// Nonce check.
 		\check_admin_referer( 'duplicate-post_rewrite_' . $id ); // Input var okay.
 
-		// Get the original post.
 		$post = \get_post( $id );
 
-		// Copy the post and insert it.
 		if ( ! $post ) {
 			\wp_die(
 				\esc_html(
@@ -73,9 +70,16 @@ class Handler {
 			);
 		}
 
+		if ( $post->post_status !== 'publish' ) {
+			\wp_die(
+				\esc_html(
+					__( 'You cannot create a copy for Rewrite and Republish if the original is not published.', 'duplicate-post' )
+				)
+			);
+		}
+
 		$new_id = $this->post_duplicator->create_duplicate_for_rewrite_and_republish( $post );
 
-		// Die on insert error.
 		if ( \is_wp_error( $new_id ) ) {
 			\wp_die(
 				\esc_html(
@@ -84,7 +88,6 @@ class Handler {
 			);
 		}
 
-		// Redirect to the edit screen for the new draft post.
 		\wp_safe_redirect(
 			\add_query_arg(
 				array(
@@ -127,7 +130,7 @@ class Handler {
 		$counter = 0;
 		foreach ( $post_ids as $post_id ) {
 			$post = \get_post( $post_id );
-			if ( ! empty( $post ) ) {
+			if ( ! empty( $post ) && $post->post_status === 'publish' ) {
 				$new_post_id = $this->post_duplicator->create_duplicate_for_rewrite_and_republish( $post );
 				if ( ! \is_wp_error( $new_post_id ) ) {
 					$counter++;
