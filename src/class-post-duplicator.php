@@ -169,7 +169,7 @@ class Post_Duplicator {
 		}
 
 		$taxonomies_excludelist = $options['taxonomies_excludelist'];
-		if ( ! is_array( $taxonomies_excludelist ) ) {
+		if ( ! \is_array( $taxonomies_excludelist ) ) {
 			$taxonomies_excludelist = [];
 		}
 

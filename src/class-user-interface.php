@@ -128,7 +128,7 @@ class User_Interface {
 	}
 
 	/**
-	 * Generates a rewrite and republish permalink for the current post.
+	 * Generates a Rewrite & Republish permalink for the current post.
 	 *
 	 * @return string The permalink. Returns empty if the post hasn't been published yet.
 	 */
@@ -146,7 +146,7 @@ class User_Interface {
 	}
 
 	/**
-	 * Shows Rewrite and Republish link in the Toolbar.
+	 * Shows Rewrite & Republish link in the Toolbar.
 	 *
 	 * @global \WP_Query     $wp_the_query
 	 * @global \WP_Admin_Bar $wp_admin_bar WP_Admin_Bar instance.
@@ -185,7 +185,7 @@ class User_Interface {
 	}
 
 	/**
-	 * Hooks the function to add the Rewrite and Republish in the bulk actions for the selected post types.
+	 * Hooks the function to add the Rewrite & Republish option in the bulk actions for the selected post types.
 	 *
 	 * @return void
 	 */

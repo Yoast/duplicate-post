@@ -41,7 +41,7 @@ class Handler {
 	}
 
 	/**
-	 * Handles the action for copying a post for the Rewrite and Republish feature.
+	 * Handles the action for copying a post for the Rewrite & Republish feature.
 	 *
 	 * @return void
 	 */
@@ -97,7 +97,7 @@ class Handler {
 	}
 
 	/**
-	 * Hooks the handler for the Rewrite and Republish action for all the selected post types.
+	 * Hooks the handler for the Rewrite & Republish action for all the selected post types.
 	 *
 	 * @return void
 	 */

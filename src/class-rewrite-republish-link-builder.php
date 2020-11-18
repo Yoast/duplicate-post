@@ -15,12 +15,12 @@ namespace Yoast\WP\Duplicate_Post;
 class Rewrite_Republish_Link_Builder implements Link_Builder {
 
 	/**
-	 * Build URL for duplication action for the Rewrite and Republish feature.
+	 * Build URL for duplication action for the Rewrite & Republish feature.
 	 *
 	 * @param int|\WP_Post $post    The post object or ID.
 	 * @param string       $context The context in which the URL will be used.
 	 *
-	 * @return string The URL for the link "Rewrite and Republish".
+	 * @return string The URL for the link "Rewrite & Republish".
 	 */
 	public function build_link( $post, $context = 'display' ) {
 		$post = \get_post( $post );
