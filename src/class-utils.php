@@ -1,6 +1,6 @@
 <?php
 /**
- * Utility methods for Duplicate Post
+ * Utility methods for Duplicate Post.
  *
  * @package Duplicate_Post
  * @since 4.0
@@ -42,7 +42,7 @@ class Utils {
 	}
 
 	/**
-	 * Replacement function for faulty core wp_slash().
+	 * Replaces faulty core wp_slash().
 	 *
 	 * Until WP 5.5 wp_slash() recursively added slashes not just to strings in array/objects, leading to errors.
 	 *

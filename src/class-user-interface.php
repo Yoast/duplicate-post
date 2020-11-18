@@ -70,8 +70,6 @@ class User_Interface {
 		\add_action( 'enqueue_block_editor_assets', [ $this, 'enqueue_block_editor_scripts' ] );
 		\add_action( 'admin_enqueue_scripts', [ $this, 'should_previously_used_keyword_assessment_run' ], 9 );
 
-		\add_filter( 'post_row_actions', [ $this->rewrite_and_republish_row_action, 'add_action_link' ], 11, 2 );
-		\add_filter( 'page_row_actions', [ $this->rewrite_and_republish_row_action, 'add_action_link' ], 11, 2 );
 		\add_action( 'post_submitbox_start', [ $this, 'add_rewrite_and_republish_post_button' ] );
 		\add_action( 'wp_before_admin_bar_render', [ $this, 'admin_bar_render' ] );
 
@@ -137,7 +135,6 @@ class User_Interface {
 			$this->post = \get_post();
 		}
 
-		// phpcs:ignore WordPress.PHP.YodaConditions
 		if ( $this->post->post_status !== 'publish' ) {
 			return '';
 		}
@@ -190,7 +187,7 @@ class User_Interface {
 	 * @return void
 	 */
 	public function add_bulk_filters() {
-		if ( intval( \get_option( 'duplicate_post_show_bulkactions' ) ) !== 1 ) {
+		if ( \intval( \get_option( 'duplicate_post_show_bulkactions' ) ) !== 1 ) {
 			return;
 		}
 		if ( ! \duplicate_post_is_current_user_allowed_to_copy() ) {
@@ -204,7 +201,7 @@ class User_Interface {
 	}
 
 	/**
-	 * Adds a button in the post/page edit screen to create a clone
+	 * Adds a button in the post/page edit screen to create a clone.
 	 *
 	 * @param \WP_Post|null $post The post object that's being edited.
 	 *
@@ -227,7 +224,7 @@ class User_Interface {
 			) ) {
 				?>
 				<div id="rewrite-republish-action">
-					<a class="submitduplicate duplication" href="<?php echo \esc_url( $this->link_builder->build_link( $this->post ) ); ?>"><?php \esc_html_e( 'Rewrite & Republish', 'duplicate-post' ); ?>
+					<a class="submitduplicate duplication" href="<?php echo esc_url( $this->link_builder->build_link( $this->post ) ); ?>"><?php \esc_html_e( 'Rewrite & Republish', 'duplicate-post' ); ?>
 					</a>
 				</div>
 				<?php

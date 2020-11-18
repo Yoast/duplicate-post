@@ -46,7 +46,7 @@ class Row_Action {
 	 * @param array    $actions The array of actions from the filter.
 	 * @param \WP_Post $post    The post object.
 	 *
-	 * @return mixed
+	 * @return array The updated array of actions.
 	 */
 	public function add_action_link( array $actions, \WP_Post $post ) {
 		$title = \_draft_or_post_title( $post );
