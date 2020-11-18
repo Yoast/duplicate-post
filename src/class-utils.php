@@ -51,7 +51,7 @@ class Utils {
 	 * @return mixed
 	 */
 	public static function recursively_slash_strings( $value ) {
-		return \map_deep( $value, [ Utils::class, 'addslashes_to_strings_only' ] );
+		return \map_deep( $value, [ self::class, 'addslashes_to_strings_only' ] );
 	}
 
 	/**
