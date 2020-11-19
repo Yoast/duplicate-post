@@ -12,7 +12,7 @@ use Yoast\WP\Duplicate_Post\Duplicate_Post_Utils;
 /**
  * Represents the Duplicate Post Republish class.
  */
-class Duplicate_Post_Republish {
+class Republish {
 
 	/**
 	 * Initializes the class.

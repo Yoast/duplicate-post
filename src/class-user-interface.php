@@ -10,7 +10,7 @@ namespace Yoast\WP\Duplicate_Post;
 /**
  * Represents the Duplicate Post User Interface class.
  */
-class Duplicate_Post_User_Interface {
+class User_Interface {
 
 	/**
 	 * Initializes the class.

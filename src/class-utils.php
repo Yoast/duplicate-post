@@ -10,7 +10,7 @@ namespace Yoast\WP\Duplicate_Post;
 /**
  * Represents the Duplicate Post Utils class.
  */
-class Duplicate_Post_Utils {
+class Utils {
 
 	/**
 	 * Gets the post types enabled for copy.
