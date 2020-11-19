@@ -1,16 +1,17 @@
 <?php
 /**
- * Duplicate Post republish class.
+ * Duplicate Post class to republish a rewritten post.
  *
  * @package Duplicate_Post
+ * @since 4.0
  */
 
 namespace Yoast\WP\Duplicate_Post;
 
 /**
- * Represents the Duplicate Post Republish class.
+ * Represents the Post Republisher class.
  */
-class Republish {
+class Post_Republisher {
 
 	/**
 	 * Initializes the class.

@@ -38,12 +38,9 @@ class Duplicate_Post {
 	 * Initializes the main class.
 	 */
 	public function __construct() {
-
-		// Republish a post marked for Rewrite & Republish.
-		new Republish();
-
 		$this->user_interface  = new User_Interface();
 		$this->post_duplicator = new Post_Duplicator();
 		$this->handler         = new Handler( $this->post_duplicator );
+		new Post_Republisher();
 	}
 }
