@@ -70,7 +70,7 @@ class User_Interface {
 		\add_action( 'enqueue_block_editor_assets', [ $this, 'enqueue_block_editor_scripts' ] );
 		\add_action( 'admin_enqueue_scripts', [ $this, 'should_previously_used_keyword_assessment_run' ], 9 );
 
-		\add_action( 'post_submitbox_start', [ $this, 'add_rewrite_and_republish_post_button' ] );
+		\add_action( 'post_submitbox_start', [ $this, 'add_rewrite_and_republish_post_button' ], 11 );
 		\add_action( 'wp_before_admin_bar_render', [ $this, 'admin_bar_render' ] );
 
 		\add_action( 'admin_init', [ $this, 'add_bulk_filters' ] );
