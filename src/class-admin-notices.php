@@ -31,7 +31,7 @@ class Admin_Notices {
 	}
 
 	/**
-	 * Adds 'rewriting' to the removable query args.
+	 * Adds Rewrite & Republish vars to the removable query args.
 	 *
 	 * @param array $removable_query_args Array of query args keys.
 	 *
@@ -44,7 +44,7 @@ class Admin_Notices {
 	}
 
 	/**
-	 * Shows a notice after the copy has succeeded.
+	 * Shows a notice after the copy via link has succeeded.
 	 *
 	 * @return void
 	 */
@@ -61,7 +61,7 @@ class Admin_Notices {
 	}
 
 	/**
-	 * Shows a notice after the copy has succeeded.
+	 * Shows a notice after the copy via bulk actions has succeeded.
 	 *
 	 * @return void
 	 */
@@ -73,17 +73,13 @@ class Admin_Notices {
 				\esc_html(
 				/* translators: %s: Number of posts copied. */
 					\_n(
-						'%s item copied.',
-						'%s items copied.',
+						'%s item duplicated. You can now start rewriting your post in the duplicate of the original post. Once you choose to republish it your changes will be merged back into the original post.',
+						'%s items duplicated. You can now start rewriting your posts in the duplicates of the original posts. Once you choose to republish them your changes will be merged back into the original post.',
 						$copied_posts,
 						'duplicate-post'
 					)
 				) . ' ',
 				\esc_html( $copied_posts )
-			);
-			\esc_html_e(
-				'You can now start rewriting your posts in the duplicates of the original posts. Once you choose to republish them your changes will be merged back into the original post.',
-				'duplicate-post'
 			);
 			echo '</p></div>';
 			\remove_query_arg( 'bulk_rewriting' );
