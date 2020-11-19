@@ -92,6 +92,7 @@ class Post_Duplicator {
 			$new_post_date             = $post->post_date;
 			$new_post['post_date']     = $new_post_date;
 			$new_post['post_date_gmt'] = \get_gmt_from_date( $new_post_date );
+			\add_filter( 'wp_insert_post_data', [ $this, 'set_modified' ], 1, 1 );
 		}
 
 		if ( $options['use_filters'] ) {
@@ -105,7 +106,12 @@ class Post_Duplicator {
 			 */
 			$new_post = \apply_filters( 'duplicate_post_new_post', $new_post, $post );
 		}
+
 		$new_post_id = \wp_insert_post( \wp_slash( $new_post ), true );
+
+		if ( $options['copy_date'] ) {
+			\remove_filter( 'wp_insert_post_data', [ $this, 'set_modified' ], 1 );
+		}
 
 		if ( ! \is_wp_error( $new_post_id ) ) {
 			\delete_post_meta( $new_post_id, '_dp_original' );
@@ -113,6 +119,23 @@ class Post_Duplicator {
 		}
 
 		return $new_post_id;
+	}
+
+	/**
+	 * Modifies the post data to set the modified date to now.
+	 *
+	 * This is needed for the Block editor when a post is copied with its date,
+	 * so that the current publish date is shown instead of "Immediately".
+	 *
+	 * @param array $data The array of post data.
+	 *
+	 * @return array The updated array of post data.
+	 */
+	public function set_modified( $data ) {
+		$data['post_modified']     = \current_time( 'mysql' );
+		$data['post_modified_gmt'] = \current_time( 'mysql', 1 );
+
+		return $data;
 	}
 
 	/**
