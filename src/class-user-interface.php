@@ -171,6 +171,10 @@ class User_Interface {
 			return;
 		}
 
+		if ( $this->post->post_status !== 'publish' ) {
+			return;
+		}
+
 		$wp_admin_bar->add_menu(
 			[
 				'id'     => 'rewrite_republish',
