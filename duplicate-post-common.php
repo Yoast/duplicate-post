@@ -249,14 +249,6 @@ function duplicate_post_admin_bar_render() {
 			'href'  => duplicate_post_get_clone_post_link( $post->ID ),
 		)
 	);
-
-	$wp_admin_bar->add_menu(
-		array(
-			'id'    => 'rewrite_republish',
-			'title' => esc_attr__( 'Rewrite & Republish', 'duplicate-post' ),
-			'href'  => duplicate_post_get_clone_post_link( $post->ID ),
-		)
-	);
 }
 
 /**

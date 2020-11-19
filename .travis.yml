@@ -11,23 +11,35 @@ php:
     - '7.2'
     - '7.3'
     - '7.4'
+    - "nightly"
 
 matrix:
   include:
-    - php: '5.3'
-      dist: precise
-    - php: '5.4'
-      dist: precise
     - php: '5.5'
       dist: precise
     # Arbitrary PHP version to run the sniffs against.
     - php: '7.4'
-      env: SNIFF=1
+      env: SNIFF=1 PHPUNIT=1
+
+  allow_failures:
+    - php: "nightly"
 
 before_install:
-  - if [[ "$SNIFF" == "1" ]]; then composer install; fi
+  - if [[ "$SNIFF" == "1" || "$PHPUNIT" == "1" ]]; then composer install; fi
+
+before_script:
+- export -f travis_fold
+- export -f travis_time_start
+- export -f travis_time_finish
 
 script:
-  - find -L . compat/ -maxdepth 1 -name '*.php' -print0 | xargs -0 -n 1 -P 4 php -l
+  - find -L . ./compat/ ./src/ -maxdepth 1 -name '*.php' -print0 | xargs -0 -n 1 -P 4 php -l
   - if [[ "$SNIFF" == "1" ]]; then composer check-cs; fi
   - if [[ "$SNIFF" == "1" ]]; then composer check-vip; fi
+  # PHP Unit Tests
+  - |
+    if [[ "$PHPUNIT" == "1" ]]; then
+      travis_fold start "PHP.tests" && travis_time_start
+      composer test
+      travis_time_finish && travis_fold end "PHP.tests"
+    fi

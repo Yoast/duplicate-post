@@ -3,13 +3,20 @@
         "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
         "wp-coding-standards/wpcs": "^2.1",
         "phpcompatibility/phpcompatibility-wp": "^2.1.0",
-        "automattic/vipwpcs": "^2.0"
+        "automattic/vipwpcs": "^2.0",
+        "phpunit/phpunit": "^5.7",
+        "brain/monkey": "^2.5"
     },
 	"autoload": {
 		"classmap": [
 			"src/"
 		]
 	},
+    "autoload-dev": {
+        "classmap": [
+            "tests/"
+        ]
+    },
     "scripts": {
         "check-cs": [
             "@php ./vendor/squizlabs/php_codesniffer/bin/phpcs --runtime-set ignore_warnings_on_exit 1"
@@ -19,6 +26,9 @@
         ],
         "fix-cs": [
             "@php ./vendor/squizlabs/php_codesniffer/bin/phpcbf"
+        ],
+        "test": [
+            "@php ./vendor/phpunit/phpunit/phpunit"
         ]
     }
 }

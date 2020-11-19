@@ -7,8 +7,6 @@
 
 namespace Yoast\WP\Duplicate_Post;
 
-use Yoast\WP\Duplicate_Post\Duplicate_Post_Utils;
-
 /**
  * Represents the Duplicate Post Republish class.
  */
@@ -30,7 +28,7 @@ class Republish {
 		\add_action( 'init', array( $this, 'register_post_statuses' ) );
 		\add_filter( 'wp_insert_post_data', array( $this, 'filter_post_data_before_wp_insert' ), 10, 2 );
 
-		$enabled_post_types = Duplicate_Post_Utils::get_post_types_enabled_for_copy();
+		$enabled_post_types = Utils::get_enabled_post_types();
 		foreach ( $enabled_post_types as $enabled_post_type ) {
 			\add_action( "rewrite_republish_{$enabled_post_type}", array( $this, 'duplicate_post_republish' ), 10, 2 );
 		}
@@ -58,7 +56,7 @@ class Republish {
 	 */
 	private function republish_post_elements( $post_copy_id, $post_copy ) {
 
-		$original_post_id = Duplicate_Post_Utils::get_rewrite_republish_copy_id( $post_copy_id );
+		$original_post_id = Utils::get_rewrite_republish_copy_id( $post_copy_id );
 
 		if ( ! $original_post_id ) {
 			return;
@@ -132,7 +130,7 @@ class Republish {
 	 * @return array An array of slashed, sanitized, and processed attachment post data.
 	 */
 	public function filter_post_data_before_wp_insert( $data, $postarr ) {
-		if ( ! isset( $postarr['ID'] ) || ! Duplicate_Post_Utils::get_rewrite_republish_copy_id( $postarr['ID'] ) ) {
+		if ( ! isset( $postarr['ID'] ) || ! Utils::get_rewrite_republish_copy_id( $postarr['ID'] ) ) {
 			return $data;
 		}
 
