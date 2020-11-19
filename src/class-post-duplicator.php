@@ -181,7 +181,7 @@ class Post_Duplicator {
 	 *
 	 * @return void
 	 */
-	private function copy_post_taxonomies( $new_id, $post, $options ) {
+	public function copy_post_taxonomies( $new_id, $post, $options ) {
 		// Clear default category (added by wp_insert_post).
 		\wp_set_object_terms( $new_id, null, 'category' );
 

@@ -14,9 +14,19 @@ namespace Yoast\WP\Duplicate_Post;
 class Post_Republisher {
 
 	/**
-	 * Initializes the class.
+	 * Post_Duplicator object.
+	 *
+	 * @var Post_Duplicator
 	 */
-	public function __construct() {
+	private $post_duplicator;
+
+	/**
+	 * Initializes the class.
+	 *
+	 * @param Post_Duplicator $post_duplicator The Post_Duplicator object.
+	 */
+	public function __construct( Post_Duplicator $post_duplicator ) {
+		$this->post_duplicator = $post_duplicator;
 		$this->register_hooks();
 	}
 
@@ -63,24 +73,16 @@ class Post_Republisher {
 			return;
 		}
 
+		// Republish taxonomies first.
+		$this->post_duplicator->copy_post_taxonomies( $original_post_id, $post_copy, [] );
+
+		// Prepare post data for republishing.
 		$post_to_be_rewritten              = $post_copy;
 		$post_to_be_rewritten->ID          = $original_post_id;
 		$post_to_be_rewritten->post_name   = \get_post_field( 'post_name', $post_to_be_rewritten->ID );
 		$post_to_be_rewritten->post_status = 'publish';
 
-		// This section of code is partially duplicated from copy_post_taxonomies() which maybe should be better abstracted.
-		$post_taxonomies = \get_object_taxonomies( $post_copy->post_type );
-		foreach ( $post_taxonomies as $taxonomy ) {
-			$post_terms = \wp_get_object_terms( $post_copy_id, $taxonomy, array( 'orderby' => 'term_order' ) );
-			$terms      = array();
-			$num_terms  = count( $post_terms );
-			for ( $i = 0; $i < $num_terms; $i++ ) {
-				$terms[] = $post_terms[ $i ]->slug;
-			}
-			\wp_set_object_terms( $post_to_be_rewritten->ID, $terms, $taxonomy );
-		}
-		// End of duplicated code section.
-
+		// Republish original post.
 		$rewritten_post_id = \wp_update_post( \wp_slash( (array) $post_to_be_rewritten ), true );
 
 		if ( 0 === $rewritten_post_id || \is_wp_error( $rewritten_post_id ) ) {

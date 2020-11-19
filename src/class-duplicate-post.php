@@ -38,9 +38,9 @@ class Duplicate_Post {
 	 * Initializes the main class.
 	 */
 	public function __construct() {
-		$this->user_interface  = new User_Interface();
-		$this->post_duplicator = new Post_Duplicator();
-		$this->handler         = new Handler( $this->post_duplicator );
-		new Post_Republisher();
+		$this->user_interface   = new User_Interface();
+		$this->post_duplicator  = new Post_Duplicator();
+		$this->handler          = new Handler( $this->post_duplicator );
+		$this->post_republisher = new Post_Republisher( $this->post_duplicator );
 	}
 }
