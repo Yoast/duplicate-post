@@ -74,7 +74,12 @@ class Post_Republisher {
 		}
 
 		// Republish taxonomies first.
-		$this->post_duplicator->copy_post_taxonomies( $original_post_id, $post_copy, [] );
+		$copy_taxonomies_options = [
+			'taxonomies_excludelist' => [],
+			'use_filters'            => false,
+			'copy_format'            => true,
+		];
+		$this->post_duplicator->copy_post_taxonomies( $original_post_id, $post_copy, $copy_taxonomies_options );
 
 		// Prepare post data for republishing.
 		$post_to_be_rewritten              = $post_copy;
@@ -92,6 +97,8 @@ class Post_Republisher {
 
 		// Deleting the copy bypassing the trash also deletes the post copy meta.
 		\wp_delete_post( $post_copy_id, true );
+		// Delete the meta that marks the original post has having a copy.
+		\delete_post_meta( $rewritten_post_id, '_dp_has_rewrite_republish_copy' );
 
 		// Add nonce verification here.
 		\wp_safe_redirect(
