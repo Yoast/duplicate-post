@@ -1,0 +1,173 @@
+<?php
+/**
+ * Duplicate Post class to manage the row actions.
+ *
+ * @package Duplicate_Post
+ */
+
+namespace Yoast\WP\Duplicate_Post\UI;
+
+use Yoast\WP\Duplicate_Post\Utils;
+
+/**
+ * Represents the Row_Action class.
+ */
+class Row_Action {
+
+	/**
+	 * Holds the object to create the action link to duplicate.
+	 *
+	 * @var Link_Builder
+	 */
+	protected $link_builder;
+
+	/**
+	 * Initializes the class.
+	 *
+	 * @param Link_Builder $link_builder The link builder.
+	 */
+	public function __construct( Link_Builder $link_builder ) {
+		$this->link_builder = $link_builder;
+
+		$this->register_hooks();
+	}
+
+	/**
+	 * Adds hooks to integrate with WordPress.
+	 *
+	 * @return void
+	 */
+	public function register_hooks() {
+		\add_filter( 'post_row_actions', [ $this, 'add_clone_action_link' ], 10, 2 );
+		\add_filter( 'page_row_actions', [ $this, 'add_clone_action_link' ], 10, 2 );
+		\add_filter( 'post_row_actions', [ $this, 'add_new_draft_action_link' ], 10, 2 );
+		\add_filter( 'page_row_actions', [ $this, 'add_new_draft_action_link' ], 10, 2 );
+		\add_filter( 'post_row_actions', [ $this, 'add_rewrite_and_republish_action_link' ], 10, 2 );
+		\add_filter( 'page_row_actions', [ $this, 'add_rewrite_and_republish_action_link' ], 10, 2 );
+	}
+
+	/**
+	 * Hooks in the `post_row_actions` and `page_row_actions` filters to add a 'Clone' link.
+	 *
+	 * @param array    $actions The array of actions from the filter.
+	 * @param \WP_Post $post    The post object.
+	 *
+	 * @return array The updated array of actions.
+	 */
+	public function add_clone_action_link( array $actions, \WP_Post $post ) {
+		$title = \_draft_or_post_title( $post );
+
+		if ( \intval( \get_option( 'duplicate_post_show_row' ) ) !== 1 ) {
+			return $actions;
+		}
+
+		$show_duplicate_link = Utils::is_current_user_allowed_to_copy()
+								&& Utils::is_post_type_enabled( $post->post_type )
+								&& ! Utils::is_rewrite_and_republish_copy( $post );
+
+		/**
+		 * Filter allowing displaying duplicate post link for current post.
+		 *
+		 * @param bool     $show_duplicate_link Whether the duplicate link will be displayed.
+		 * @param \WP_Post $post                The post object.
+		 *
+		 * @return bool Whether or not to display the duplicate post link.
+		 */
+		if ( ! apply_filters( 'duplicate_post_show_link', $show_duplicate_link, $post ) ) {
+			return $actions;
+		}
+
+		$actions['clone'] = '<a href="' . $this->link_builder->build_clone_link( $post->ID ) .
+			'" aria-label="' . \esc_attr(
+			/* translators: %s: Post title. */
+				\sprintf( __( 'Clone &#8220;%s&#8221;', 'duplicate-post' ), $title )
+			) . '">' .
+			\esc_html_x( 'Clone', 'verb', 'duplicate-post' ) . '</a>';
+
+		return $actions;
+	}
+
+	/**
+	 * Hooks in the `post_row_actions` and `page_row_actions` filters to add a 'New Draft' link.
+	 *
+	 * @param array    $actions The array of actions from the filter.
+	 * @param \WP_Post $post    The post object.
+	 *
+	 * @return array The updated array of actions.
+	 */
+	public function add_new_draft_action_link( array $actions, \WP_Post $post ) {
+		$title = \_draft_or_post_title( $post );
+
+		if ( \intval( \get_option( 'duplicate_post_show_row' ) ) !== 1 ) {
+			return $actions;
+		}
+
+		$show_duplicate_link = Utils::is_current_user_allowed_to_copy()
+								&& Utils::is_post_type_enabled( $post->post_type )
+								&& ! Utils::is_rewrite_and_republish_copy( $post );
+
+		/**
+		 * Filter allowing displaying duplicate post link for current post.
+		 *
+		 * @param bool     $show_duplicate_link Whether the duplicate link will be displayed.
+		 * @param \WP_Post $post                The post object.
+		 *
+		 * @return bool Whether or not to display the duplicate post link.
+		 */
+		if ( ! apply_filters( 'duplicate_post_show_link', $show_duplicate_link, $post ) ) {
+			return $actions;
+		}
+
+		$actions['edit_as_new_draft'] = '<a href="' . $this->link_builder->build_new_draft_link( $post->ID ) .
+			'" aria-label="' . \esc_attr(
+			/* translators: %s: Post title. */
+				\sprintf( __( 'New draft of &#8220;%s&#8221;', 'duplicate-post' ), $title )
+			) . '">' .
+			\esc_html__( 'New Draft', 'duplicate-post' ) .
+			'</a>';
+
+		return $actions;
+	}
+
+	/**
+	 * Hooks in the `post_row_actions` and `page_row_actions` filters to add a 'Rewrite & Republish' link.
+	 *
+	 * @param array    $actions The array of actions from the filter.
+	 * @param \WP_Post $post    The post object.
+	 *
+	 * @return array The updated array of actions.
+	 */
+	public function add_rewrite_and_republish_action_link( array $actions, \WP_Post $post ) {
+		$title = \_draft_or_post_title( $post );
+
+		if ( \intval( \get_option( 'duplicate_post_show_row' ) ) !== 1 ) {
+			return $actions;
+		}
+
+		$show_duplicate_link = Utils::is_current_user_allowed_to_copy()
+								&& Utils::is_post_type_enabled( $post->post_type )
+								&& ! Utils::is_rewrite_and_republish_copy( $post )
+								&& $post->post_status === 'publish';
+
+		/**
+		 * Filter allowing displaying duplicate post link for current post.
+		 *
+		 * @param bool     $show_duplicate_link Whether the duplicate link will be displayed.
+		 * @param \WP_Post $post                The post object.
+		 *
+		 * @return bool Whether or not to display the duplicate post link.
+		 */
+		if ( ! apply_filters( 'duplicate_post_show_link', $show_duplicate_link, $post ) ) {
+			return $actions;
+		}
+
+		$actions['rewrite'] = '<a href="' . $this->link_builder->build_rewrite_and_republish_link( $post->ID ) .
+			'" aria-label="' . \esc_attr(
+			/* translators: %s: Post title. */
+				\sprintf( __( 'Rewrite & Republish &#8220;%s&#8221;', 'duplicate-post' ), $title )
+			) . '">' .
+			\esc_html_x( 'Rewrite & Republish', 'verb', 'duplicate-post' ) . '</a>';
+
+		return $actions;
+	}
+}

@@ -5,9 +5,10 @@
  * @package Duplicate_Post\Tests
  */
 
-namespace Yoast\WP\Duplicate_Post\Tests;
+namespace Yoast\WP\Duplicate_Post\Tests\UI;
 
-use Yoast\WP\Duplicate_Post\Admin_Notices;
+use Yoast\WP\Duplicate_Post\Tests\TestCase;
+use Yoast\WP\Duplicate_Post\UI\Admin_Notices;
 
 /**
  * Test the Admin_Notices class.
@@ -76,7 +77,6 @@ class Admin_Notices_Test extends TestCase {
 			'update',
 			'updated',
 			'wp-post-new-reload',
-			'cloned',
 		];
 
 		$this->assertEquals(

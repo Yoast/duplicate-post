@@ -37,11 +37,6 @@ add_action( 'admin_init', 'duplicate_post_admin_init' );
 function duplicate_post_admin_init() {
 	duplicate_post_plugin_upgrade();
 
-	if ( intval( get_option( 'duplicate_post_show_row' ) ) === 1 ) {
-		add_filter( 'post_row_actions', 'duplicate_post_make_duplicate_link_row', 10, 2 );
-		add_filter( 'page_row_actions', 'duplicate_post_make_duplicate_link_row', 10, 2 );
-	}
-
 	if ( intval( get_site_option( 'duplicate_post_show_notice' ) ) === 1 ) {
 		if ( is_multisite() ) {
 			add_action( 'network_admin_notices', 'duplicate_post_show_update_notice' );
@@ -49,10 +44,6 @@ function duplicate_post_admin_init() {
 			add_action( 'admin_notices', 'duplicate_post_show_update_notice' );
 		}
 		add_action( 'wp_ajax_duplicate_post_dismiss_notice', 'duplicate_post_dismiss_notice' );
-	}
-
-	if ( intval( get_option( 'duplicate_post_show_submitbox' ) ) === 1 ) {
-		add_action( 'post_submitbox_start', 'duplicate_post_add_duplicate_post_button' );
 	}
 
 	if ( intval( get_option( 'duplicate_post_show_original_column' ) ) === 1 ) {
@@ -73,8 +64,6 @@ function duplicate_post_admin_init() {
 	 */
 	add_action( 'admin_action_duplicate_post_save_as_new_post', 'duplicate_post_save_as_new_post' );
 	add_action( 'admin_action_duplicate_post_save_as_new_post_draft', 'duplicate_post_save_as_new_post_draft' );
-
-	add_filter( 'removable_query_args', 'duplicate_post_add_removable_query_arg', 10, 1 );
 
 	add_action( 'dp_duplicate_post', 'duplicate_post_copy_post_meta_info', 10, 2 );
 	add_action( 'dp_duplicate_page', 'duplicate_post_copy_post_meta_info', 10, 2 );
@@ -98,8 +87,6 @@ function duplicate_post_admin_init() {
 	add_action( 'dp_duplicate_page', 'duplicate_post_copy_post_taxonomies', 50, 2 );
 
 	add_filter( 'plugin_row_meta', 'duplicate_post_add_plugin_links', 10, 2 );
-
-	add_action( 'admin_notices', 'duplicate_post_action_admin_notice' );
 }
 
 /**
@@ -523,93 +510,12 @@ function duplicate_post_custom_box_html( $post ) {
 }
 
 /**
- * Adds the link to action list for post_row_actions.
- *
- * @param array   $actions The actions array.
- * @param WP_Post $post    The post object.
- * @return array
- */
-function duplicate_post_make_duplicate_link_row( $actions, $post ) {
-	// $title = empty( $post->post_title ) ? __( '(no title)', 'duplicate-post' ) : $post->post_title;
-	$title = _draft_or_post_title( $post );
-
-	/**
-	 * Filter allowing displaying duplicate post link for current post.
-	 *
-	 * @param bool    $show_duplicate_link When to show duplicate link.
-	 * @param WP_Post $post                The post object.
-	 *
-	 * @return bool Whether or not to display the duplicate post link.
-	 */
-	if ( ! apply_filters( 'duplicate_post_show_link', duplicate_post_is_current_user_allowed_to_copy() && duplicate_post_is_post_type_enabled( $post->post_type ), $post ) ) {
-		return $actions;
-	}
-
-	$actions['clone'] = '<a href="' . duplicate_post_get_clone_post_link( $post->ID, 'display', false ) .
-		'" aria-label="' . esc_attr(
-			/* translators: %s: Post title. */
-			sprintf( __( 'Clone &#8220;%s&#8221;', 'duplicate-post' ), $title )
-		) . '">' .
-		esc_html_x( 'Clone', 'verb', 'duplicate-post' ) . '</a>';
-
-	$actions['edit_as_new_draft'] = '<a href="' . duplicate_post_get_clone_post_link( $post->ID ) .
-		'" aria-label="' . esc_attr(
-			/* translators: %s: Post title. */
-			sprintf( __( 'New draft of &#8220;%s&#8221;', 'duplicate-post' ), $title )
-		) . '">' .
-		esc_html__( 'New Draft', 'duplicate-post' ) .
-		'</a>';
-
-	return $actions;
-}
-
-/**
- * Adds a button in the post/page edit screen to create a clone
- *
- * @param WP_Post|null $post The post object that's being edited.
- */
-function duplicate_post_add_duplicate_post_button( $post = null ) {
-	if ( is_null( $post ) ) {
-		if ( isset( $_GET['post'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-			$id   = intval( wp_unslash( $_GET['post'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
-			$post = get_post( $id );
-		}
-	}
-
-	if ( ! is_null( $post ) && $post->post_status === 'publish' ) {
-		/** This filter is documented in duplicate-post-admin.php */
-		if ( apply_filters( 'duplicate_post_show_link', duplicate_post_is_current_user_allowed_to_copy() && duplicate_post_is_post_type_enabled( $post->post_type ), $post ) ) {
-			?>
-<div id="duplicate-action">
-	<a class="submitduplicate duplication"
-		href="<?php echo esc_url( duplicate_post_get_clone_post_link( $post->ID ) ); ?>"><?php esc_html_e( 'Copy to a new draft', 'duplicate-post' ); ?>
-	</a>
-</div>
-			<?php
-		}
-	}
-}
-
-/**
  * Calls the creation of a new copy of the selected post (as a draft) then redirects to the edit post screen.
  *
  * @see duplicate_post_save_as_new_post()
  */
 function duplicate_post_save_as_new_post_draft() {
 	duplicate_post_save_as_new_post( 'draft' );
-}
-
-/**
- * Adds 'cloned' to the removable query args.
- *
- * @ignore
- *
- * @param array $removable_query_args Array of query args keys.
- * @return array
- */
-function duplicate_post_add_removable_query_arg( $removable_query_args ) {
-	$removable_query_args[] = 'cloned';
-	return $removable_query_args;
 }
 
 /**
@@ -1197,119 +1103,7 @@ function duplicate_post_add_plugin_links( $links, $file ) {
  *
  * @ignore
  */
-function duplicate_post_action_admin_notice() {
-	if ( ! empty( $_REQUEST['cloned'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-		$copied_posts = intval( $_REQUEST['cloned'] ); // phpcs:ignore WordPress.Security.NonceVerification
-		printf(
-			'<div id="message" class="notice notice-success fade"><p>' .
-				esc_html(
-					/* translators: %s: Number of posts copied. */
-					_n(
-						'%s item copied.',
-						'%s items copied.',
-						$copied_posts,
-						'duplicate-post'
-					)
-				) . '</p></div>',
-			esc_html( $copied_posts )
-		);
-		remove_query_arg( 'cloned' );
-	}
-}
 
-/* BULK ACTIONS */
-
-add_action( 'admin_init', 'duplicate_post_add_bulk_filters' );
-
-/**
- * Adds the handlers for bulk actions.
- *
- * @ignore
- */
-function duplicate_post_add_bulk_filters() {
-	if ( intval( get_option( 'duplicate_post_show_bulkactions' ) ) !== 1 ) {
-		return;
-	}
-	if ( ! duplicate_post_is_current_user_allowed_to_copy() ) {
-		return;
-	}
-	$duplicate_post_types_enabled = get_option( 'duplicate_post_types_enabled', array( 'post', 'page' ) );
-	if ( ! is_array( $duplicate_post_types_enabled ) ) {
-		$duplicate_post_types_enabled = array( $duplicate_post_types_enabled );
-	}
-	foreach ( $duplicate_post_types_enabled as $duplicate_post_type_enabled ) {
-		add_filter( "bulk_actions-edit-{$duplicate_post_type_enabled}", 'duplicate_post_register_bulk_action' );
-		add_filter( "handle_bulk_actions-edit-{$duplicate_post_type_enabled}", 'duplicate_post_action_handler', 10, 3 );
-	}
-}
-
-/**
- * Adds 'Clone' to the bulk action dropdown.
- *
- * @ignore
- *
- * @param array $bulk_actions The bulk actions array.
- * @return array The bulk actions array.
- */
-function duplicate_post_register_bulk_action( $bulk_actions ) {
-	$bulk_actions['duplicate_post_clone'] = esc_html__( 'Clone', 'duplicate-post' );
-	return $bulk_actions;
-}
-
-/**
- * Bulk action handler.
- *
- * @ignore
- *
- * @param string $redirect_to The URL to redirect to.
- * @param string $doaction    The action that has been called.
- * @param array  $post_ids    The array of marked post IDs.
- * @return string
- */
-function duplicate_post_action_handler( $redirect_to, $doaction, $post_ids ) {
-	if ( 'duplicate_post_clone' !== $doaction ) {
-		return $redirect_to;
-	}
-	$counter = 0;
-	foreach ( $post_ids as $post_id ) {
-		$post = get_post( $post_id );
-		if ( ! empty( $post ) ) {
-			if ( intval( get_option( 'duplicate_post_copychildren' ) !== 1 )
-				|| ! is_post_type_hierarchical( $post->post_type )
-				|| ( is_post_type_hierarchical( $post->post_type ) && ! duplicate_post_has_ancestors_marked( $post, $post_ids ) )
-			) {
-				if ( ! is_wp_error( duplicate_post_create_duplicate( $post ) ) ) {
-					$counter++;
-				}
-			}
-		}
-	}
-	$redirect_to = add_query_arg( 'cloned', $counter, $redirect_to );
-	return $redirect_to;
-}
-
-/**
- * Checks if the post has ancestors marked for copy.
- *
- * If we are copying children, and the post has already an ancestor marked for copy, we have to filter it out.
- *
- * @ignore
- *
- * @param WP_Post $post     The post object.
- * @param array   $post_ids The array of marked post IDs.
- * @return bool
- */
-function duplicate_post_has_ancestors_marked( $post, $post_ids ) {
-	$ancestors_in_array = 0;
-	$parent             = wp_get_post_parent_id( $post->ID );
-	while ( $parent ) {
-		if ( in_array( $parent, $post_ids, true ) ) {
-			$ancestors_in_array++;
-		}
-		$parent = wp_get_post_parent_id( $parent );
-	}
-	return ( 0 !== $ancestors_in_array );
-}
 
 /**
  * Renders the newsletter signup form.

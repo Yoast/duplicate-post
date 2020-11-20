@@ -5,9 +5,10 @@
  * @package Duplicate_Post\Tests
  */
 
-namespace Yoast\WP\Duplicate_Post\Tests;
+namespace Yoast\WP\Duplicate_Post\Tests\UI;
 
-use Yoast\WP\Duplicate_Post\User_Interface;
+use Yoast\WP\Duplicate_Post\Tests\TestCase;
+use Yoast\WP\Duplicate_Post\UI\User_Interface;
 
 /**
  * Test the User_Interface class.

@@ -8,6 +8,8 @@
 
 namespace Yoast\WP\Duplicate_Post;
 
+use Yoast\WP\Duplicate_Post\UI\User_Interface;
+
 /**
  * Represents the Duplicate Post main class.
  */
