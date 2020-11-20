@@ -294,7 +294,7 @@ class Post_Duplicator {
 			$meta_values = \get_post_custom_values( $meta_key, $post->ID );
 			foreach ( $meta_values as $meta_value ) {
 				$meta_value = \maybe_unserialize( $meta_value );
-				\add_post_meta( $new_id, $meta_key, Utils::recursively_slash_strings( $meta_value ) );
+				\update_post_meta( $new_id, $meta_key, Utils::recursively_slash_strings( $meta_value ) );
 			}
 		}
 	}

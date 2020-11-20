@@ -66,7 +66,6 @@ class Post_Republisher {
 	 * @return void
 	 */
 	private function republish_post_elements( $post_copy_id, $post_copy ) {
-
 		$original_post_id = Utils::get_rewrite_republish_copy_id( $post_copy_id );
 
 		if ( ! $original_post_id ) {
@@ -81,14 +80,29 @@ class Post_Republisher {
 		];
 		$this->post_duplicator->copy_post_taxonomies( $original_post_id, $post_copy, $copy_taxonomies_options );
 
+		// This will need to run later because the WP SEO metadata get saved later on the `wp_insert_post` hook.
+		$copy_meta_options = [
+			'meta_excludelist' => [
+				'_edit_lock',
+				'_edit_last',
+				'_dp_original',
+				'_dp_is_rewrite_republish_copy',
+			],
+			'use_filters'      => false,
+			'copy_thumbnail'   => true,
+			'copy_template'    => false, // The function wp_insert_post handles the page template internally.
+		];
+		$this->post_duplicator->copy_post_meta_info( $original_post_id, $post_copy, $copy_meta_options );
+
+		// Cast to array and not alter the original object.
+		$post_to_be_rewritten = (array) $post_copy;
 		// Prepare post data for republishing.
-		$post_to_be_rewritten              = $post_copy;
-		$post_to_be_rewritten->ID          = $original_post_id;
-		$post_to_be_rewritten->post_name   = \get_post_field( 'post_name', $post_to_be_rewritten->ID );
-		$post_to_be_rewritten->post_status = 'publish';
+		$post_to_be_rewritten['ID']          = $original_post_id;
+		$post_to_be_rewritten['post_name']   = \get_post_field( 'post_name', $original_post_id );
+		$post_to_be_rewritten['post_status'] = 'publish';
 
 		// Republish original post.
-		$rewritten_post_id = \wp_update_post( \wp_slash( (array) $post_to_be_rewritten ), true );
+		$rewritten_post_id = \wp_update_post( \wp_slash( $post_to_be_rewritten ), true );
 
 		if ( 0 === $rewritten_post_id || \is_wp_error( $rewritten_post_id ) ) {
 			// Error handling here.
