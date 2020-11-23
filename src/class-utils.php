@@ -68,13 +68,24 @@ class Utils {
 	}
 
 	/**
-	 * Gets the ID of a post marked as a copy for Rewrite & Republish.
+	 * Gets the ID of the original post intended to be rewritten with the copy for Rewrite & Republish.
+	 *
+	 * @param int $post_id The copy post ID.
+	 *
+	 * @return int The original post id of a copy for Rewrite & Republish.
+	 */
+	public static function get_original_post_id( $post_id ) {
+		return (int) \get_post_meta( $post_id, '_dp_original', true );
+	}
+
+	/**
+	 * Checks whether a post is a copy for Rewrite & Republish.
 	 *
 	 * @param int $post_id The post ID.
 	 *
-	 * @return string|bool The post id if the post is a copy for Rewrite & Republish, false otherwise.
+	 * @return bool Whether a post is a copy for Rewrite & Republish.
 	 */
-	public static function get_rewrite_republish_copy_id( $post_id ) {
-		return \get_post_meta( $post_id, '_dp_original', true );
+	public static function is_copy_for_rewrite_republish( $post_id ) {
+		return (bool) \get_post_meta( $post_id, '_dp_is_rewrite_republish_copy', true );
 	}
 }
