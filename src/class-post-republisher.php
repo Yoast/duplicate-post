@@ -152,6 +152,7 @@ class Post_Republisher {
 		$post_to_be_rewritten['post_status'] = 'publish';
 
 		// Republish original post.
+		$_POST['ID']       = $this->original_post_id;
 		$rewritten_post_id = \wp_update_post( \wp_slash( $post_to_be_rewritten ), true );
 
 		if ( 0 === $rewritten_post_id || \is_wp_error( $rewritten_post_id ) ) {
