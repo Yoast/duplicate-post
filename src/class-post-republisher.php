@@ -132,9 +132,11 @@ class Post_Republisher {
 			return;
 		}
 
-		$this->republish_post_elements();
+		// Republish taxonomies and meta first.
 		$this->republish_post_taxonomies();
 		$this->republish_post_meta();
+		// Republish the post.
+		$this->republish_post_elements();
 		$this->clean_up_and_redirect();
 	}
 
