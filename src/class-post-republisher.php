@@ -57,12 +57,12 @@ class Post_Republisher {
 	 * @return void
 	 */
 	public function register_hooks() {
-		\add_action( 'init', array( $this, 'register_post_statuses' ) );
-		\add_filter( 'wp_insert_post_data', array( $this, 'change_post_copy_status' ), 10, 2 );
+		\add_action( 'init', [ $this, 'register_post_statuses' ] );
+		\add_filter( 'wp_insert_post_data', [ $this, 'change_post_copy_status' ], 10, 2 );
 
 		$enabled_post_types = Utils::get_enabled_post_types();
 		foreach ( $enabled_post_types as $enabled_post_type ) {
-			\add_action( "rewrite_republish_{$enabled_post_type}", array( $this, 'duplicate_post_republish' ), 10, 2 );
+			\add_action( "rewrite_republish_{$enabled_post_type}", [ $this, 'duplicate_post_republish' ], 10, 2 );
 		}
 	}
 
@@ -72,16 +72,16 @@ class Post_Republisher {
 	 * @return void
 	 */
 	public function register_post_statuses() {
-		$republish_args = array(
+		$republish_args = [
 			'label'    => __( 'Republish', 'duplicate-post' ),
 			'internal' => true,
-		);
+		];
 		\register_post_status( 'rewrite_republish', $republish_args );
 
-		$schedule_args = array(
+		$schedule_args = [
 			'label'    => __( 'Future Republish', 'duplicate-post' ),
 			'internal' => true,
-		);
+		];
 		\register_post_status( 'rewrite_schedule', $schedule_args );
 	}
 
@@ -212,9 +212,9 @@ class Post_Republisher {
 		// Add nonce verification here.
 		\wp_safe_redirect(
 			\add_query_arg(
-				array(
+				[
 					'republished' => 1,
-				),
+				],
 				\admin_url( 'post.php?action=edit&post=' . $this->original_post_id )
 			)
 		);
