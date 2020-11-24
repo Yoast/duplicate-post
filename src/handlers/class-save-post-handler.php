@@ -8,7 +8,7 @@
 
 namespace Yoast\WP\Duplicate_Post\Handlers;
 
-use Yoast\WP\Duplicate_Post\Utils;
+use Yoast\WP\Duplicate_Post\Permissions_Helper;
 
 /**
  * Represents the handler for save_post action.
@@ -16,9 +16,20 @@ use Yoast\WP\Duplicate_Post\Utils;
 class Save_Post_Handler {
 
 	/**
-	 * Initializes the class.
+	 * Holds the permissions helper.
+	 *
+	 * @var Permissions_Helper
 	 */
-	public function __construct() {
+	protected $permissions_helper;
+
+	/**
+	 * Initializes the class.
+	 *
+	 * @param Permissions_Helper $permissions_helper The Permissions Helper object.
+	 */
+	public function __construct( Permissions_Helper $permissions_helper ) {
+		$this->permissions_helper = $permissions_helper;
+
 		$this->register_hooks();
 	}
 
@@ -52,7 +63,7 @@ class Save_Post_Handler {
 		if ( ! $post ) {
 			return;
 		}
-		if ( ! Utils::is_rewrite_and_republish_copy( $post ) ) {
+		if ( ! $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
 			\delete_post_meta( $post_id, '_dp_original' );
 		}
 	}

@@ -17,6 +17,13 @@ use Yoast\WP\Duplicate_Post\UI\User_Interface;
 class Duplicate_Post {
 
 	/**
+	 * Permissions_Helper object.
+	 *
+	 * @var Permissions_Helper
+	 */
+	private $permissions_helper;
+
+	/**
 	 * User_Interface object.
 	 *
 	 * @var User_Interface
@@ -41,8 +48,9 @@ class Duplicate_Post {
 	 * Initializes the main class.
 	 */
 	public function __construct() {
-		$this->user_interface  = new User_Interface();
-		$this->post_duplicator = new Post_Duplicator();
-		$this->handler         = new Handler( $this->post_duplicator );
+		$this->permissions_helper = new Permissions_Helper();
+		$this->user_interface     = new User_Interface( $this->permissions_helper );
+		$this->post_duplicator    = new Post_Duplicator();
+		$this->handler            = new Handler( $this->post_duplicator, $this->permissions_helper );
 	}
 }

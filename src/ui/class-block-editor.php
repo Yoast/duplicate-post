@@ -7,6 +7,7 @@
 
 namespace Yoast\WP\Duplicate_Post\UI;
 
+use Yoast\WP\Duplicate_Post\Permissions_Helper;
 use Yoast\WP\Duplicate_Post\Utils;
 
 /**
@@ -22,12 +23,21 @@ class Block_Editor {
 	protected $link_builder;
 
 	/**
+	 * Holds the permissions helper.
+	 *
+	 * @var Permissions_Helper
+	 */
+	protected $permissions_helper;
+
+	/**
 	 * Initializes the class.
 	 *
-	 * @param Link_Builder $link_builder The link builder.
+	 * @param Link_Builder       $link_builder       The link builder.
+	 * @param Permissions_Helper $permissions_helper The permissions helper.
 	 */
-	public function __construct( Link_Builder $link_builder ) {
-		$this->link_builder = $link_builder;
+	public function __construct( Link_Builder $link_builder, Permissions_Helper $permissions_helper ) {
+		$this->link_builder       = $link_builder;
+		$this->permissions_helper = $permissions_helper;
 
 		$this->register_hooks();
 	}
@@ -78,7 +88,7 @@ class Block_Editor {
 	public function get_new_draft_permalink() {
 		$post = \get_post();
 
-		if ( Utils::is_rewrite_and_republish_copy( $post ) ) {
+		if ( $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
 			return '';
 		}
 
@@ -93,7 +103,7 @@ class Block_Editor {
 	public function get_rewrite_republish_permalink() {
 		$post = \get_post();
 
-		if ( $post->post_status !== 'publish' || Utils::is_rewrite_and_republish_copy( $post ) ) {
+		if ( $post->post_status !== 'publish' || $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
 			return '';
 		}
 

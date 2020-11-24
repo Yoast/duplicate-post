@@ -7,6 +7,7 @@
 
 namespace Yoast\WP\Duplicate_Post\Tests\UI;
 
+use Yoast\WP\Duplicate_Post\Permissions_Helper;
 use Yoast\WP\Duplicate_Post\Tests\TestCase;
 use Yoast\WP\Duplicate_Post\UI\User_Interface;
 
@@ -28,7 +29,9 @@ class User_Interface_Test extends TestCase {
 	public function setUp() {
 		parent::setUp();
 
-		$this->instance = new User_Interface();
+		$permissions_helper = \Mockery::mock( Permissions_Helper::class );
+
+		$this->instance = new User_Interface( $permissions_helper );
 	}
 
 	/**

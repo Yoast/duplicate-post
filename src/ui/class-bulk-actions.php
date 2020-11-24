@@ -7,7 +7,7 @@
 
 namespace Yoast\WP\Duplicate_Post\UI;
 
-use Yoast\WP\Duplicate_Post\Utils;
+use Yoast\WP\Duplicate_Post\Permissions_Helper;
 
 /**
  * Represents the Bulk_Actions class.
@@ -15,9 +15,20 @@ use Yoast\WP\Duplicate_Post\Utils;
 class Bulk_Actions {
 
 	/**
-	 * Initializes the class.
+	 * Holds the permissions helper.
+	 *
+	 * @var Permissions_Helper
 	 */
-	public function __construct() {
+	protected $permissions_helper;
+
+	/**
+	 * Initializes the class.
+	 *
+	 * @param Permissions_Helper $permissions_helper The permissions helper.
+	 */
+	public function __construct( Permissions_Helper $permissions_helper ) {
+		$this->permissions_helper = $permissions_helper;
+
 		$this->register_hooks();
 	}
 
@@ -39,11 +50,11 @@ class Bulk_Actions {
 		if ( \intval( \get_option( 'duplicate_post_show_bulkactions' ) ) !== 1 ) {
 			return;
 		}
-		if ( ! Utils::is_current_user_allowed_to_copy() ) {
+		if ( ! $this->permissions_helper->is_current_user_allowed_to_copy() ) {
 			return;
 		}
 
-		$duplicate_post_types_enabled = Utils::get_enabled_post_types();
+		$duplicate_post_types_enabled = $this->permissions_helper->get_enabled_post_types();
 		foreach ( $duplicate_post_types_enabled as $duplicate_post_type_enabled ) {
 			\add_filter( "bulk_actions-edit-{$duplicate_post_type_enabled}", [ $this, 'register_bulk_action' ] );
 		}

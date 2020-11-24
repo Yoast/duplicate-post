@@ -7,6 +7,7 @@
 
 namespace Yoast\WP\Duplicate_Post\UI;
 
+use Yoast\WP\Duplicate_Post\Permissions_Helper;
 use Yoast\WP\Duplicate_Post\Utils;
 
 /**
@@ -15,9 +16,20 @@ use Yoast\WP\Duplicate_Post\Utils;
 class Column {
 
 	/**
-	 * Initializes the class.
+	 * Holds the permissions helper.
+	 *
+	 * @var Permissions_Helper
 	 */
-	public function __construct() {
+	protected $permissions_helper;
+
+	/**
+	 * Initializes the class.
+	 *
+	 * @param Permissions_Helper $permissions_helper The permissions helper.
+	 */
+	public function __construct( Permissions_Helper $permissions_helper ) {
+		$this->permissions_helper = $permissions_helper;
+
 		$this->register_hooks();
 	}
 
@@ -28,7 +40,7 @@ class Column {
 	 */
 	public function register_hooks() {
 		if ( \intval( \get_option( 'duplicate_post_show_original_column' ) ) === 1 ) {
-			$enabled_post_types = Utils::get_enabled_post_types();
+			$enabled_post_types = $this->permissions_helper->get_enabled_post_types();
 			if ( \count( $enabled_post_types ) ) {
 				foreach ( $enabled_post_types as $enabled_post_type ) {
 					\add_filter( "manage_{$enabled_post_type}_posts_columns", [ $this, 'add_original_column' ] );
@@ -67,7 +79,7 @@ class Column {
 			$original_item  = Utils::get_original( $post_id );
 			if ( $original_item ) {
 				$post                          = \get_post( $post_id );
-				$is_rewrite_and_republish_copy = \is_null( $post ) ? false : Utils::is_rewrite_and_republish_copy( $post );
+				$is_rewrite_and_republish_copy = \is_null( $post ) ? false : $this->permissions_helper->is_rewrite_and_republish_copy( $post );
 
 				$data_attr      = $is_rewrite_and_republish_copy ? ' data-copy-is-for-rewrite-and-republish="1"' : '';
 				$column_content = Utils::get_edit_or_view_link( $original_item );

@@ -7,6 +7,7 @@
 
 namespace Yoast\WP\Duplicate_Post\UI;
 
+use Yoast\WP\Duplicate_Post\Permissions_Helper;
 use Yoast\WP\Duplicate_Post\Utils;
 
 /**
@@ -15,9 +16,20 @@ use Yoast\WP\Duplicate_Post\Utils;
 class Metabox {
 
 	/**
-	 * Initializes the class.
+	 * Holds the permissions helper.
+	 *
+	 * @var Permissions_Helper
 	 */
-	public function __construct() {
+	protected $permissions_helper;
+
+	/**
+	 * Initializes the class.
+	 *
+	 * @param Permissions_Helper $permissions_helper The permissions helper.
+	 */
+	public function __construct( Permissions_Helper $permissions_helper ) {
+		$this->permissions_helper = $permissions_helper;
+
 		$this->register_hooks();
 	}
 
@@ -38,7 +50,7 @@ class Metabox {
 	 * @return void
 	 */
 	public function add_custom_metabox() {
-		$screens = Utils::get_enabled_post_types();
+		$screens = $this->permissions_helper->get_enabled_post_types();
 		if ( ! \is_array( $screens ) ) {
 			$screens = [ $screens ];
 		}
@@ -61,9 +73,9 @@ class Metabox {
 	 * @return void
 	 */
 	public function custom_metabox_html( $post ) {
-		$original_item = Utils::get_original( $post->ID );
+		$original_item = Utils::get_original( $post );
 		if ( $original_item ) {
-			if ( ! Utils::is_rewrite_and_republish_copy( $post ) ) {
+			if ( ! $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
 				?>
 			<p>
 				<input type="checkbox"

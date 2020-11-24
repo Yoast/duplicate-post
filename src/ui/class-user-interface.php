@@ -7,6 +7,8 @@
 
 namespace Yoast\WP\Duplicate_Post\UI;
 
+use Yoast\WP\Duplicate_Post\Permissions_Helper;
+
 /**
  * Represents the Duplicate Post User Interface class.
  */
@@ -25,6 +27,13 @@ class User_Interface {
 	 * @var string
 	 */
 	private $pagenow;
+
+	/**
+	 * Holds the permissions helper.
+	 *
+	 * @var Permissions_Helper
+	 */
+	protected $permissions_helper;
 
 	/**
 	 * Holds the object to manage the row actions for the post.
@@ -98,21 +107,24 @@ class User_Interface {
 
 	/**
 	 * Initializes the class.
+	 *
+	 * @param Permissions_Helper $permissions_helper The permissions helper object.
 	 */
-	public function __construct() {
+	public function __construct( Permissions_Helper $permissions_helper ) {
 		global $pagenow;
 		$this->pagenow = $pagenow;
 
-		$this->link_builder   = new Link_Builder();
-		$this->row_action     = new Row_Action( $this->link_builder );
-		$this->post_submitbox = new Post_Submitbox( $this->link_builder );
-		$this->block_editor   = new Block_Editor( $this->link_builder );
-		$this->admin_bar      = new Admin_Bar( $this->link_builder );
-		$this->bulk_actions   = new Bulk_Actions();
-		$this->admin_notices  = new Admin_Notices();
-		$this->post_states    = new Post_States();
-		$this->metabox        = new Metabox();
-		$this->column         = new Column();
+		$this->permissions_helper = $permissions_helper;
+		$this->link_builder       = new Link_Builder();
+		$this->row_action         = new Row_Action( $this->link_builder, $this->permissions_helper );
+		$this->post_submitbox     = new Post_Submitbox( $this->link_builder, $this->permissions_helper );
+		$this->block_editor       = new Block_Editor( $this->link_builder, $this->permissions_helper );
+		$this->admin_bar          = new Admin_Bar( $this->link_builder, $this->permissions_helper );
+		$this->bulk_actions       = new Bulk_Actions( $this->permissions_helper );
+		$this->admin_notices      = new Admin_Notices();
+		$this->post_states        = new Post_States();
+		$this->metabox            = new Metabox( $this->permissions_helper );
+		$this->column             = new Column( $this->permissions_helper );
 
 		$this->register_hooks();
 	}

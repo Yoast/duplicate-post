@@ -8,8 +8,8 @@
 
 namespace Yoast\WP\Duplicate_Post\Handlers;
 
+use Yoast\WP\Duplicate_Post\Permissions_Helper;
 use Yoast\WP\Duplicate_Post\Post_Duplicator;
-use Yoast\WP\Duplicate_Post\Utils;
 
 /**
  * Represents the handler for duplication actions from links.
@@ -21,15 +21,25 @@ class Link_Handler {
 	 *
 	 * @var Post_Duplicator
 	 */
-	private $post_duplicator;
+	protected $post_duplicator;
+
+	/**
+	 * Holds the permissions helper.
+	 *
+	 * @var Permissions_Helper
+	 */
+	protected $permissions_helper;
 
 	/**
 	 * Initializes the class.
 	 *
-	 * @param Post_Duplicator $post_duplicator The Post_Duplicator object.
+	 * @param Post_Duplicator    $post_duplicator    The Post_Duplicator object.
+	 * @param Permissions_Helper $permissions_helper The Permissions Helper object.
 	 */
-	public function __construct( Post_Duplicator $post_duplicator ) {
-		$this->post_duplicator = $post_duplicator;
+	public function __construct( Post_Duplicator $post_duplicator, Permissions_Helper $permissions_helper ) {
+		$this->post_duplicator    = $post_duplicator;
+		$this->permissions_helper = $permissions_helper;
+
 		$this->register_hooks();
 	}
 
@@ -50,7 +60,7 @@ class Link_Handler {
 	 * @return void
 	 */
 	public function new_draft_link_action_handler() {
-		if ( ! Utils::is_current_user_allowed_to_copy() ) {
+		if ( ! $this->permissions_helper->is_current_user_allowed_to_copy() ) {
 			\wp_die( \esc_html__( 'Current user is not allowed to copy posts.', 'duplicate-post' ) );
 		}
 
@@ -74,7 +84,7 @@ class Link_Handler {
 			);
 		}
 
-		if ( Utils::is_rewrite_and_republish_copy( $post ) ) {
+		if ( $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
 			\wp_die(
 				\esc_html__( 'You cannot create a copy of a post which is intended for Rewrite & Republish.', 'duplicate-post' )
 			);
@@ -106,7 +116,7 @@ class Link_Handler {
 	 * @return void
 	 */
 	public function clone_link_action_handler() {
-		if ( ! Utils::is_current_user_allowed_to_copy() ) {
+		if ( ! $this->permissions_helper->is_current_user_allowed_to_copy() ) {
 			\wp_die( \esc_html__( 'Current user is not allowed to copy posts.', 'duplicate-post' ) );
 		}
 
@@ -130,7 +140,7 @@ class Link_Handler {
 			);
 		}
 
-		if ( Utils::is_rewrite_and_republish_copy( $post ) ) {
+		if ( $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
 			\wp_die(
 				\esc_html__( 'You cannot create a copy of a post which is intended for Rewrite & Republish.', 'duplicate-post' )
 			);
@@ -178,7 +188,7 @@ class Link_Handler {
 	 * @return void
 	 */
 	public function rewrite_link_action_handler() {
-		if ( ! Utils::is_current_user_allowed_to_copy() ) {
+		if ( ! $this->permissions_helper->is_current_user_allowed_to_copy() ) {
 			\wp_die( \esc_html__( 'Current user is not allowed to copy posts.', 'duplicate-post' ) );
 		}
 

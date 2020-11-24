@@ -8,6 +8,7 @@
 
 namespace Yoast\WP\Duplicate_Post\Handlers;
 
+use Yoast\WP\Duplicate_Post\Permissions_Helper;
 use Yoast\WP\Duplicate_Post\Post_Duplicator;
 use Yoast\WP\Duplicate_Post\Utils;
 
@@ -21,15 +22,25 @@ class Bulk_Handler {
 	 *
 	 * @var Post_Duplicator
 	 */
-	private $post_duplicator;
+	protected $post_duplicator;
+
+	/**
+	 * Holds the permissions helper.
+	 *
+	 * @var Permissions_Helper
+	 */
+	protected $permissions_helper;
 
 	/**
 	 * Initializes the class.
 	 *
-	 * @param Post_Duplicator $post_duplicator The Post_Duplicator object.
+	 * @param Post_Duplicator    $post_duplicator    The Post_Duplicator object.
+	 * @param Permissions_Helper $permissions_helper The Permissions Helper object.
 	 */
-	public function __construct( Post_Duplicator $post_duplicator ) {
-		$this->post_duplicator = $post_duplicator;
+	public function __construct( Post_Duplicator $post_duplicator, Permissions_Helper $permissions_helper ) {
+		$this->post_duplicator    = $post_duplicator;
+		$this->permissions_helper = $permissions_helper;
+
 		$this->register_hooks();
 	}
 
@@ -48,7 +59,7 @@ class Bulk_Handler {
 	 * @return void
 	 */
 	public function add_bulk_handlers() {
-		$duplicate_post_types_enabled = Utils::get_enabled_post_types();
+		$duplicate_post_types_enabled = $this->permissions_helper->get_enabled_post_types();
 
 		foreach ( $duplicate_post_types_enabled as $duplicate_post_type_enabled ) {
 			\add_filter( "handle_bulk_actions-edit-{$duplicate_post_type_enabled}", [ $this, 'bulk_action_handler' ], 10, 3 );
@@ -87,7 +98,7 @@ class Bulk_Handler {
 		$counter = 0;
 		foreach ( $post_ids as $post_id ) {
 			$post = \get_post( $post_id );
-			if ( ! empty( $post ) && $post->post_status === 'publish' && ! Utils::is_rewrite_and_republish_copy( $post ) ) {
+			if ( ! empty( $post ) && $post->post_status === 'publish' && ! $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
 				$new_post_id = $this->post_duplicator->create_duplicate_for_rewrite_and_republish( $post );
 				if ( ! \is_wp_error( $new_post_id ) ) {
 					$counter++;
@@ -115,7 +126,7 @@ class Bulk_Handler {
 		$counter = 0;
 		foreach ( $post_ids as $post_id ) {
 			$post = \get_post( $post_id );
-			if ( ! empty( $post ) && ! Utils::is_rewrite_and_republish_copy( $post ) ) {
+			if ( ! empty( $post ) && ! $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
 				if ( \intval( \get_option( 'duplicate_post_copychildren' ) !== 1 )
 					|| ! \is_post_type_hierarchical( $post->post_type )
 					|| ( \is_post_type_hierarchical( $post->post_type ) && ! Utils::has_ancestors_marked( $post, $post_ids ) )

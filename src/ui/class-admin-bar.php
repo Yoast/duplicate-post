@@ -7,7 +7,7 @@
 
 namespace Yoast\WP\Duplicate_Post\UI;
 
-use Yoast\WP\Duplicate_Post\Utils;
+use Yoast\WP\Duplicate_Post\Permissions_Helper;
 
 /**
  * Represents the Admin_Bar class.
@@ -22,12 +22,21 @@ class Admin_Bar {
 	protected $link_builder;
 
 	/**
+	 * Holds the permissions helper.
+	 *
+	 * @var Permissions_Helper
+	 */
+	protected $permissions_helper;
+
+	/**
 	 * Initializes the class.
 	 *
-	 * @param Link_Builder $link_builder The link builder.
+	 * @param Link_Builder       $link_builder       The link builder.
+	 * @param Permissions_Helper $permissions_helper The permissions helper.
 	 */
-	public function __construct( Link_Builder $link_builder ) {
-		$this->link_builder = $link_builder;
+	public function __construct( Link_Builder $link_builder, Permissions_Helper $permissions_helper ) {
+		$this->link_builder       = $link_builder;
+		$this->permissions_helper = $permissions_helper;
 
 		$this->register_hooks();
 	}
@@ -67,11 +76,11 @@ class Admin_Bar {
 			return;
 		}
 
-		$show_duplicate_link = Utils::is_current_user_allowed_to_copy()
-								&& Utils::is_post_type_enabled( $post->post_type )
-								&& ! Utils::is_rewrite_and_republish_copy( $post )
-								&& Utils::is_valid_post_edit_screen()
-								&& Utils::can_copy_to_draft( $post );
+		$show_duplicate_link = $this->permissions_helper->is_current_user_allowed_to_copy()
+								&& $this->permissions_helper->is_post_type_enabled( $post->post_type )
+								&& ! $this->permissions_helper->is_rewrite_and_republish_copy( $post )
+								&& $this->permissions_helper->is_valid_post_edit_screen()
+								&& $this->permissions_helper->can_copy_to_draft( $post );
 
 		/** This filter is documented in class-row-actions.php */
 		if ( ! apply_filters( 'duplicate_post_show_link', $show_duplicate_link, $post ) ) {

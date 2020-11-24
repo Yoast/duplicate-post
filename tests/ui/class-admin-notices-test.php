@@ -40,8 +40,9 @@ class Admin_Notices_Test extends TestCase {
 		$this->instance->register_hooks();
 
 		$this->assertNotFalse( \has_filter( 'removable_query_args', [ $this->instance, 'add_removable_query_args' ] ), 'Does not have expected removable_query_args filter' );
-		$this->assertNotFalse( \has_action( 'admin_notices', [ $this->instance, 'single_action_admin_notice' ] ), 'Does not have expected admin_notices action' );
-		$this->assertNotFalse( \has_action( 'admin_notices', [ $this->instance, 'bulk_action_admin_notice' ] ), 'Does not have expected admin_notices action' );
+		$this->assertNotFalse( \has_action( 'admin_notices', [ $this->instance, 'clone_admin_notice' ] ), 'Does not have expected admin_notices action' );
+		$this->assertNotFalse( \has_action( 'admin_notices', [ $this->instance, 'rewrite_and_republish_link_admin_notice' ] ), 'Does not have expected admin_notices action' );
+		$this->assertNotFalse( \has_action( 'admin_notices', [ $this->instance, 'rewrite_and_republish_bulk_admin_notice' ] ), 'Does not have expected admin_notices action' );
 	}
 
 	/**

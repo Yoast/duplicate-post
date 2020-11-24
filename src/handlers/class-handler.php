@@ -8,6 +8,7 @@
 
 namespace Yoast\WP\Duplicate_Post\Handlers;
 
+use Yoast\WP\Duplicate_Post\Permissions_Helper;
 use Yoast\WP\Duplicate_Post\Post_Duplicator;
 
 /**
@@ -20,38 +21,48 @@ class Handler {
 	 *
 	 * @var Post_Duplicator
 	 */
-	private $post_duplicator;
+	protected $post_duplicator;
+
+	/**
+	 * Holds the permissions helper.
+	 *
+	 * @var Permissions_Helper
+	 */
+	protected $permissions_helper;
 
 	/**
 	 * The bulk actions handler.
 	 *
 	 * @var Bulk_Handler
 	 */
-	private $bulk_handler;
+	protected $bulk_handler;
 
 	/**
 	 * The link actions handler.
 	 *
 	 * @var Link_Handler
 	 */
-	private $link_handler;
+	protected $link_handler;
 
 	/**
 	 * The save_post action handler.
 	 *
 	 * @var Save_Post_Handler
 	 */
-	private $save_post_handler;
+	protected $save_post_handler;
 
 	/**
 	 * Initializes the class.
 	 *
-	 * @param Post_Duplicator $post_duplicator The Post_Duplicator object.
+	 * @param Post_Duplicator    $post_duplicator    The Post_Duplicator object.
+	 * @param Permissions_Helper $permissions_helper The Permissions Helper object.
 	 */
-	public function __construct( Post_Duplicator $post_duplicator ) {
-		$this->post_duplicator   = $post_duplicator;
-		$this->bulk_handler      = new Bulk_Handler( $post_duplicator );
-		$this->link_handler      = new Link_Handler( $post_duplicator );
-		$this->save_post_handler = new Save_Post_Handler();
+	public function __construct( Post_Duplicator $post_duplicator, Permissions_Helper $permissions_helper ) {
+		$this->post_duplicator    = $post_duplicator;
+		$this->permissions_helper = $permissions_helper;
+
+		$this->bulk_handler      = new Bulk_Handler( $this->post_duplicator, $this->permissions_helper );
+		$this->link_handler      = new Link_Handler( $this->post_duplicator, $this->permissions_helper );
+		$this->save_post_handler = new Save_Post_Handler( $this->permissions_helper );
 	}
 }

@@ -40,7 +40,7 @@ class Post_States {
 	 * @return array
 	 */
 	public function show_original_in_post_states( $post_states, $post ) {
-		$original_item = Utils::get_original( $post->ID );
+		$original_item = Utils::get_original( $post );
 		if ( $original_item ) {
 			/* translators: Original item link (to view or edit) or title. */
 			$post_states['duplicate_post_original_item'] = \sprintf( __( 'Original: %s', 'duplicate-post' ), Utils::get_edit_or_view_link( $original_item ) );
