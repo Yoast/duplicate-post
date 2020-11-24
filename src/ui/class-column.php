@@ -48,6 +48,7 @@ class Column {
 				}
 				\add_action( 'quick_edit_custom_box', [ $this, 'quick_edit_remove_original' ], 10, 2 );
 				\add_action( 'admin_enqueue_scripts', [ $this, 'admin_enqueue_scripts' ] );
+				\add_action( 'admin_enqueue_scripts', [ $this, 'admin_enqueue_styles' ] );
 			}
 		}
 	}
@@ -145,6 +146,19 @@ class Column {
 	public function admin_enqueue_scripts( $hook ) {
 		if ( 'edit.php' === $hook ) {
 			\wp_enqueue_script( 'duplicate_post_admin_script', \plugins_url( 'duplicate_post_admin_script.js', DUPLICATE_POST_FILE ), [ 'jquery' ], DUPLICATE_POST_CURRENT_VERSION, true );
+		}
+	}
+
+	/**
+	 * Enqueues the CSS file to for the Quick edit
+	 *
+	 * @param string $hook The current admin page.
+	 *
+	 * @return void
+	 */
+	public function admin_enqueue_styles( $hook ) {
+		if ( 'edit.php' === $hook ) {
+			\wp_enqueue_style( 'duplicate-post' );
 		}
 	}
 }

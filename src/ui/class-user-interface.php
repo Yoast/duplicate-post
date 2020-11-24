@@ -136,6 +136,7 @@ class User_Interface {
 	 */
 	public function register_hooks() {
 		\add_action( 'admin_enqueue_scripts', [ $this, 'should_previously_used_keyword_assessment_run' ], 9 );
+		\add_action( 'init', [ $this, 'register_styles' ] );
 	}
 
 	/**
@@ -157,5 +158,12 @@ class User_Interface {
 		if ( ! empty( $skip_assessment ) ) {
 			\add_filter( 'wpseo_previously_used_keyword_active', '__return_false' );
 		}
+	}
+
+	/**
+	 * Registers the styles.
+	 */
+	public function register_styles() {
+		\wp_register_style( 'duplicate-post', \plugins_url( '/duplicate-post.css', DUPLICATE_POST_FILE ), [], DUPLICATE_POST_CURRENT_VERSION );
 	}
 }

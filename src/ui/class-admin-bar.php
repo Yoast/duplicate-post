@@ -47,43 +47,28 @@ class Admin_Bar {
 	 * @return void
 	 */
 	public function register_hooks() {
-		\add_action( 'wp_before_admin_bar_render', [ $this, 'admin_bar_render' ] );
+		if ( \intval( \get_option( 'duplicate_post_show_adminbar' ) ) === 1 ) {
+			\add_action( 'wp_before_admin_bar_render', [ $this, 'admin_bar_render' ] );
+			\add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_styles' ] );
+			\add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_styles' ] );
+		}
 	}
 
 	/**
 	 * Shows Rewrite & Republish link in the Toolbar.
 	 *
-	 * @global \WP_Query     $wp_the_query
 	 * @global \WP_Admin_Bar $wp_admin_bar WP_Admin_Bar instance.
 	 */
 	public function admin_bar_render() {
-		global $wp_the_query;
 		global $wp_admin_bar;
 
-		if ( \intval( \get_option( 'duplicate_post_show_adminbar' ) ) !== 1 ) {
+		if ( ! \is_admin_bar_showing() ) {
 			return;
 		}
 
-		$post = null;
+		$post = $this->get_current_post();
 
-		if ( \is_admin() ) {
-			$post = \get_post();
-		} else {
-			$post = $wp_the_query->get_queried_object();
-		}
-
-		if ( empty( $post ) ) {
-			return;
-		}
-
-		$show_duplicate_link = $this->permissions_helper->is_current_user_allowed_to_copy()
-								&& $this->permissions_helper->is_post_type_enabled( $post->post_type )
-								&& ! $this->permissions_helper->is_rewrite_and_republish_copy( $post )
-								&& $this->permissions_helper->is_valid_post_edit_screen()
-								&& $this->permissions_helper->can_copy_to_draft( $post );
-
-		/** This filter is documented in class-row-actions.php */
-		if ( ! apply_filters( 'duplicate_post_show_link', $show_duplicate_link, $post ) ) {
+		if ( ! $post ) {
 			return;
 		}
 
@@ -105,5 +90,56 @@ class Admin_Bar {
 				]
 			);
 		}
+	}
+
+	/**
+	 * Links stylesheet for Toolbar link.
+	 *
+	 * @global \WP_Query $wp_the_query.
+	 */
+	public function enqueue_styles() {
+		if ( ! \is_admin_bar_showing() ) {
+			return;
+		}
+
+		$post = $this->get_current_post();
+
+		if ( ! $post ) {
+			return;
+		}
+
+		\wp_enqueue_style( 'duplicate-post' );
+	}
+
+	/**
+	 * Returns the current post object (both if it's displayed or being edited).
+	 *
+	 * @global \WP_Query $wp_the_query
+	 *
+	 * @return false|\WP_Post The Post object, false if we are not on a post.
+	 */
+	public function get_current_post() {
+		global $wp_the_query;
+
+		if ( \is_admin() ) {
+			$post = \get_post();
+		} else {
+			$post = $wp_the_query->get_queried_object();
+		}
+
+		if ( empty( $post ) || ! \is_a( $post, '\WP_Post' ) ) {
+			return false;
+		}
+
+		$show_duplicate_link = ! $this->permissions_helper->is_rewrite_and_republish_copy( $post )
+							&& $this->permissions_helper->is_valid_post_edit_screen()
+							&& $this->permissions_helper->can_copy_to_draft( $post );
+
+		/** This filter is documented in class-row-actions.php */
+		if ( ! apply_filters( 'duplicate_post_show_link', $show_duplicate_link, $post ) ) {
+			return false;
+		}
+
+		return $post;
 	}
 }
