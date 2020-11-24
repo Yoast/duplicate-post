@@ -79,11 +79,11 @@ class Admin_Bar {
 		}
 
 		$wp_admin_bar->add_menu(
-			array(
+			[
 				'id'    => 'new_draft',
 				'title' => \esc_attr__( 'Copy to a new draft', 'duplicate-post' ),
 				'href'  => $this->link_builder->build_new_draft_link( $post ),
-			)
+			]
 		);
 
 		if ( $post->post_status === 'publish' ) {

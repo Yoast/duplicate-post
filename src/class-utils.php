@@ -55,6 +55,27 @@ class Utils {
 	}
 
 	/**
+	 * Gets the original post.
+	 *
+	 * @param int|null $post   Optional. Post ID or Post object.
+	 * @param string   $output Optional, default is Object. Either OBJECT, ARRAY_A, or ARRAY_N.
+	 * @return \WP_Post|null Post data if successful, null otherwise.
+	 */
+	public static function get_original( $post = null, $output = OBJECT ) {
+		$post = \get_post( $post );
+		if ( ! $post ) {
+			return null;
+		}
+
+		$original_id = \get_post_meta( $post->ID, '_dp_original' );
+		if ( empty( $original_id ) ) {
+			return null;
+		}
+
+		return \get_post( $original_id[0], $output );
+	}
+
+	/**
 	 * Returns the array of the enabled post types.
 	 *
 	 * @return array The array of post types.
@@ -161,5 +182,56 @@ class Utils {
 			&& $is_public
 			&& $post_type_object->show_in_admin_bar
 			&& self::is_post_type_enabled( $post->post_type );
+	}
+
+
+	/**
+	 * Returns a link to edit, preview or view a post, in accordance to user capabilities.
+	 *
+	 * @param \WP_Post $post                              Post ID or Post object.
+	 *
+	 * @return string|null
+	 */
+	public static function get_edit_or_view_link( $post ) {
+		$post = \get_post( $post );
+		if ( ! $post ) {
+			return null;
+		}
+
+		$can_edit_post    = \current_user_can( 'edit_post', $post->ID );
+		$title            = \_draft_or_post_title( $post );
+		$post_type_object = \get_post_type_object( $post->post_type );
+
+		if ( $can_edit_post && 'trash' !== $post->post_status ) {
+			return \sprintf(
+				'<a href="%s" aria-label="%s">%s</a>',
+				\get_edit_post_link( $post->ID ),
+				/* translators: %s: post title */
+				\esc_attr( \sprintf( \__( 'Edit &#8220;%s&#8221;', 'default' ), $title ) ),
+				$title
+			);
+		} elseif ( \is_post_type_viewable( $post_type_object ) ) {
+			if ( \in_array( $post->post_status, [ 'pending', 'draft', 'future' ], true ) ) {
+				if ( $can_edit_post ) {
+					$preview_link = \get_preview_post_link( $post );
+					return \sprintf(
+						'<a href="%s" rel="bookmark" aria-label="%s">%s</a>',
+						\esc_url( $preview_link ),
+						/* translators: %s: post title */
+						\esc_attr( \sprintf( \__( 'Preview &#8220;%s&#8221;', 'default' ), $title ) ),
+						$title
+					);
+				}
+			} elseif ( 'trash' !== $post->post_status ) {
+				return \sprintf(
+					'<a href="%s" rel="bookmark" aria-label="%s">%s</a>',
+					\get_permalink( $post->ID ),
+					/* translators: %s: post title */
+					\esc_attr( \sprintf( __( 'View &#8220;%s&#8221;', 'default' ), $title ) ),
+					$title
+				);
+			}
+		}
+		return $title;
 	}
 }

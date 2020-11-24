@@ -17,10 +17,11 @@
 			var $edit_row = jQuery( '#edit-' + $post_id );
 			var $post_row = jQuery( '#post-' + $post_id );
 
-			var has_original = ( jQuery( '.duplicate_post_original_item span[data-no_original]', $post_row ).length === 0 );
-			var original = jQuery( '.duplicate_post_original_item', $post_row ).html();
+			var has_original                      = ( jQuery( '.duplicate_post_original_item span', $post_row ).data( 'noOriginal' ) !== 1 );
+			var original                          = jQuery( '.duplicate_post_original_item span', $post_row ).html();
+			var is_copy_for_rewrite_and_republish = ( jQuery( '.duplicate_post_original_item span', $post_row ).data( 'copyIsForRewriteAndRepublish' ) === 1 );
 
-			if ( has_original ) {
+			if ( has_original && ! is_copy_for_rewrite_and_republish ) {
 				jQuery( '.duplicate_post_original_item_title_span', $edit_row ).html( original );
 				jQuery( '#duplicate_post_quick_edit_fieldset', $edit_row ).show();
 			} else {

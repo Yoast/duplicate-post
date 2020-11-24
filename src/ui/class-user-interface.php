@@ -69,6 +69,27 @@ class User_Interface {
 	protected $admin_notices;
 
 	/**
+	 * Post states object.
+	 *
+	 * @var Post_States
+	 */
+	protected $post_states;
+
+	/**
+	 * Metabox object.
+	 *
+	 * @var Metabox
+	 */
+	protected $metabox;
+
+	/**
+	 * Column object.
+	 *
+	 * @var Column
+	 */
+	protected $column;
+
+	/**
 	 * Holds the object to create the action link to duplicate.
 	 *
 	 * @var Link_Builder
@@ -89,6 +110,9 @@ class User_Interface {
 		$this->admin_bar      = new Admin_Bar( $this->link_builder );
 		$this->bulk_actions   = new Bulk_Actions();
 		$this->admin_notices  = new Admin_Notices();
+		$this->post_states    = new Post_States();
+		$this->metabox        = new Metabox();
+		$this->column         = new Column();
 
 		$this->register_hooks();
 	}
