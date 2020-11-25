@@ -12,7 +12,7 @@ use Yoast\WP\Duplicate_Post\Permissions_Helper;
 /**
  * Represents the Row_Action class.
  */
-class Row_Action {
+class Row_Actions {
 
 	/**
 	 * Holds the object to create the action link to duplicate.
@@ -47,12 +47,14 @@ class Row_Action {
 	 * @return void
 	 */
 	public function register_hooks() {
-		\add_filter( 'post_row_actions', [ $this, 'add_clone_action_link' ], 10, 2 );
-		\add_filter( 'page_row_actions', [ $this, 'add_clone_action_link' ], 10, 2 );
-		\add_filter( 'post_row_actions', [ $this, 'add_new_draft_action_link' ], 10, 2 );
-		\add_filter( 'page_row_actions', [ $this, 'add_new_draft_action_link' ], 10, 2 );
-		\add_filter( 'post_row_actions', [ $this, 'add_rewrite_and_republish_action_link' ], 10, 2 );
-		\add_filter( 'page_row_actions', [ $this, 'add_rewrite_and_republish_action_link' ], 10, 2 );
+		if ( \intval( \get_option( 'duplicate_post_show_row' ) ) === 1 ) {
+			\add_filter( 'post_row_actions', [ $this, 'add_clone_action_link' ], 10, 2 );
+			\add_filter( 'page_row_actions', [ $this, 'add_clone_action_link' ], 10, 2 );
+			\add_filter( 'post_row_actions', [ $this, 'add_new_draft_action_link' ], 10, 2 );
+			\add_filter( 'page_row_actions', [ $this, 'add_new_draft_action_link' ], 10, 2 );
+			\add_filter( 'post_row_actions', [ $this, 'add_rewrite_and_republish_action_link' ], 10, 2 );
+			\add_filter( 'page_row_actions', [ $this, 'add_rewrite_and_republish_action_link' ], 10, 2 );
+		}
 	}
 
 	/**
@@ -64,16 +66,6 @@ class Row_Action {
 	 * @return array The updated array of actions.
 	 */
 	public function add_clone_action_link( array $actions, \WP_Post $post ) {
-		$title = \_draft_or_post_title( $post );
-
-		if ( \intval( \get_option( 'duplicate_post_show_row' ) ) !== 1 ) {
-			return $actions;
-		}
-
-		$show_duplicate_link = $this->permissions_helper->is_current_user_allowed_to_copy()
-								&& $this->permissions_helper->is_post_type_enabled( $post->post_type )
-								&& ! $this->permissions_helper->is_rewrite_and_republish_copy( $post );
-
 		/**
 		 * Filter allowing displaying duplicate post link for current post.
 		 *
@@ -82,9 +74,11 @@ class Row_Action {
 		 *
 		 * @return bool Whether or not to display the duplicate post link.
 		 */
-		if ( ! apply_filters( 'duplicate_post_show_link', $show_duplicate_link, $post ) ) {
+		if ( ! apply_filters( 'duplicate_post_show_link', $this->permissions_helper->should_link_be_displayed( $post ), $post ) ) {
 			return $actions;
 		}
+
+		$title = \_draft_or_post_title( $post );
 
 		$actions['clone'] = '<a href="' . $this->link_builder->build_clone_link( $post->ID ) .
 			'" aria-label="' . \esc_attr(
@@ -105,16 +99,6 @@ class Row_Action {
 	 * @return array The updated array of actions.
 	 */
 	public function add_new_draft_action_link( array $actions, \WP_Post $post ) {
-		$title = \_draft_or_post_title( $post );
-
-		if ( \intval( \get_option( 'duplicate_post_show_row' ) ) !== 1 ) {
-			return $actions;
-		}
-
-		$show_duplicate_link = $this->permissions_helper->is_current_user_allowed_to_copy()
-								&& $this->permissions_helper->is_post_type_enabled( $post->post_type )
-								&& ! $this->permissions_helper->is_rewrite_and_republish_copy( $post );
-
 		/**
 		 * Filter allowing displaying duplicate post link for current post.
 		 *
@@ -123,9 +107,11 @@ class Row_Action {
 		 *
 		 * @return bool Whether or not to display the duplicate post link.
 		 */
-		if ( ! \apply_filters( 'duplicate_post_show_link', $show_duplicate_link, $post ) ) {
+		if ( ! \apply_filters( 'duplicate_post_show_link', $this->permissions_helper->should_link_be_displayed( $post ), $post ) ) {
 			return $actions;
 		}
+
+		$title = \_draft_or_post_title( $post );
 
 		$actions['edit_as_new_draft'] = '<a href="' . $this->link_builder->build_new_draft_link( $post->ID ) .
 			'" aria-label="' . \esc_attr(
@@ -147,17 +133,6 @@ class Row_Action {
 	 * @return array The updated array of actions.
 	 */
 	public function add_rewrite_and_republish_action_link( array $actions, \WP_Post $post ) {
-		$title = \_draft_or_post_title( $post );
-
-		if ( \intval( \get_option( 'duplicate_post_show_row' ) ) !== 1 ) {
-			return $actions;
-		}
-
-		$show_duplicate_link = $this->permissions_helper->is_current_user_allowed_to_copy()
-							&& $this->permissions_helper->is_post_type_enabled( $post->post_type )
-							&& ! $this->permissions_helper->is_rewrite_and_republish_copy( $post )
-							&& $post->post_status === 'publish';
-
 		/**
 		 * Filter allowing displaying duplicate post link for current post.
 		 *
@@ -166,9 +141,11 @@ class Row_Action {
 		 *
 		 * @return bool Whether or not to display the duplicate post link.
 		 */
-		if ( ! apply_filters( 'duplicate_post_show_link', $show_duplicate_link, $post ) ) {
+		if ( $post->post_status !== 'publish' || ! apply_filters( 'duplicate_post_show_link', $this->permissions_helper->should_link_be_displayed( $post ), $post ) ) {
 			return $actions;
 		}
+
+		$title = \_draft_or_post_title( $post );
 
 		$actions['rewrite'] = '<a href="' . $this->link_builder->build_rewrite_and_republish_link( $post->ID ) .
 			'" aria-label="' . \esc_attr(

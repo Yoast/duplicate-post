@@ -11,7 +11,7 @@ use Yoast\WP\Duplicate_Post\Permissions_Helper;
 use Yoast\WP\Duplicate_Post\Utils;
 
 /**
- * Represents the Post_Submitbox class.
+ * Represents the Metabox class.
  */
 class Metabox {
 

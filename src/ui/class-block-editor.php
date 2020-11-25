@@ -48,7 +48,32 @@ class Block_Editor {
 	 * @return void
 	 */
 	public function register_hooks() {
+		\add_action( 'admin_enqueue_scripts', [ $this, 'should_previously_used_keyword_assessment_run' ], 9 );
 		\add_action( 'enqueue_block_editor_assets', [ $this, 'enqueue_block_editor_scripts' ] );
+	}
+
+	/**
+	 * Disables the Yoast SEO PreviouslyUsedKeyword assessment for posts duplicated for Rewrite & Republish.
+	 *
+	 * @return void
+	 */
+	public function should_previously_used_keyword_assessment_run() {
+		global $pagenow;
+		if ( ! \in_array( $pagenow, [ 'post.php', 'post-new.php' ], true ) ) {
+			return;
+		}
+
+		$post = \get_post();
+
+		if ( \is_null( $post ) ) {
+			return;
+		}
+
+		$skip_assessment = \get_post_meta( $post->ID, '_dp_is_rewrite_republish_copy', true );
+
+		if ( ! empty( $skip_assessment ) ) {
+			\add_filter( 'wpseo_previously_used_keyword_active', '__return_false' );
+		}
 	}
 
 	/**

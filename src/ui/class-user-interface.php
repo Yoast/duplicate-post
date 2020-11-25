@@ -15,20 +15,6 @@ use Yoast\WP\Duplicate_Post\Permissions_Helper;
 class User_Interface {
 
 	/**
-	 * Holds the post.
-	 *
-	 * @var \WP_Post
-	 */
-	private $post = null;
-
-	/**
-	 * Holds the global `$pagenow` variable's value.
-	 *
-	 * @var string
-	 */
-	private $pagenow;
-
-	/**
 	 * Holds the permissions helper.
 	 *
 	 * @var Permissions_Helper
@@ -38,9 +24,9 @@ class User_Interface {
 	/**
 	 * Holds the object to manage the row actions for the post.
 	 *
-	 * @var Row_Action
+	 * @var Row_Actions
 	 */
-	protected $row_action;
+	protected $row_actions;
 
 	/**
 	 * Holds the object to manage the post submitbox links.
@@ -111,12 +97,9 @@ class User_Interface {
 	 * @param Permissions_Helper $permissions_helper The permissions helper object.
 	 */
 	public function __construct( Permissions_Helper $permissions_helper ) {
-		global $pagenow;
-		$this->pagenow = $pagenow;
-
 		$this->permissions_helper = $permissions_helper;
 		$this->link_builder       = new Link_Builder();
-		$this->row_action         = new Row_Action( $this->link_builder, $this->permissions_helper );
+		$this->row_actions        = new Row_Actions( $this->link_builder, $this->permissions_helper );
 		$this->post_submitbox     = new Post_Submitbox( $this->link_builder, $this->permissions_helper );
 		$this->block_editor       = new Block_Editor( $this->link_builder, $this->permissions_helper );
 		$this->admin_bar          = new Admin_Bar( $this->link_builder, $this->permissions_helper );
@@ -135,29 +118,7 @@ class User_Interface {
 	 * @return void
 	 */
 	public function register_hooks() {
-		\add_action( 'admin_enqueue_scripts', [ $this, 'should_previously_used_keyword_assessment_run' ], 9 );
 		\add_action( 'init', [ $this, 'register_styles' ] );
-	}
-
-	/**
-	 * Disables the Yoast SEO PreviouslyUsedKeyword assessment for posts duplicated for Rewrite & Republish.
-	 *
-	 * @return void
-	 */
-	public function should_previously_used_keyword_assessment_run() {
-		if ( ! \in_array( $this->pagenow, [ 'post.php', 'post-new.php' ], true ) ) {
-			return;
-		}
-
-		if ( ! $this->post ) {
-			$this->post = \get_post();
-		}
-
-		$skip_assessment = \get_post_meta( $this->post->ID, '_dp_is_rewrite_republish_copy', true );
-
-		if ( ! empty( $skip_assessment ) ) {
-			\add_filter( 'wpseo_previously_used_keyword_active', '__return_false' );
-		}
 	}
 
 	/**

@@ -34,7 +34,7 @@ class Admin_Notices_Test extends TestCase {
 	/**
 	 * Tests the registration of the hooks.
 	 *
-	 * @covers ::register_hooks
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Admin_Notices::register_hooks
 	 */
 	public function test_register_hooks() {
 		$this->instance->register_hooks();
@@ -48,7 +48,7 @@ class Admin_Notices_Test extends TestCase {
 	/**
 	 * Tests the add_removable_query_args function.
 	 *
-	 * @covers ::add_removable_query_args
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Admin_Notices::add_removable_query_args
 	 */
 	public function test_add_removable_query_args() {
 		$array = [

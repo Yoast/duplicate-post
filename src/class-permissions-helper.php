@@ -50,10 +50,23 @@ class Permissions_Helper {
 	 *
 	 * @param \WP_Post $post The post object.
 	 *
-	 * @return bool Whethere the post is a copy intended for Rewrite & Republish.
+	 * @return bool Whether the post is a copy intended for Rewrite & Republish.
 	 */
 	public function is_rewrite_and_republish_copy( \WP_Post $post ) {
 		return ( \intval( \get_post_meta( $post->ID, '_dp_is_rewrite_republish_copy', true ) ) === 1 );
+	}
+
+	/**
+	 * Tests if duplicate links for the post can be displayed.
+	 *
+	 * @param \WP_Post $post The post object.
+	 *
+	 * @return bool Whether the links can be displayed.
+	 */
+	public function should_link_be_displayed( \WP_Post $post ) {
+		return ! $this->is_rewrite_and_republish_copy( $post )
+			&& $this->is_current_user_allowed_to_copy()
+			&& $this->is_post_type_enabled( $post->post_type );
 	}
 
 	/**

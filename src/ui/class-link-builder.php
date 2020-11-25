@@ -71,7 +71,7 @@ class Link_Builder {
 			$action = '?action=' . $action_name . '&post=' . $post->ID;
 		}
 
-		return wp_nonce_url(
+		return \wp_nonce_url(
 		/**
 		 * Filter on the URL of the clone link
 		 *
@@ -82,7 +82,7 @@ class Link_Builder {
 		 *
 		 * @return string
 		 */
-			apply_filters( 'duplicate_post_get_clone_post_link', admin_url( 'admin.php' . $action ), $post->ID, $context, $action_name ),
+			\apply_filters( 'duplicate_post_get_clone_post_link', \admin_url( 'admin.php' . $action ), $post->ID, $context, $action_name ),
 			$action_name . '_' . $post->ID
 		);
 	}

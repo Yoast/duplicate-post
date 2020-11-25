@@ -68,11 +68,11 @@ class Post_Submitbox {
 			}
 		}
 
-		if ( ! \is_null( $post ) && ! $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
+		if ( ! \is_null( $post ) ) {
 			/** This filter is documented in class-row-action.php */
 			if ( \apply_filters(
 				'duplicate_post_show_link',
-				$this->permissions_helper->is_current_user_allowed_to_copy() && $this->permissions_helper->is_post_type_enabled( $post->post_type ),
+				$this->permissions_helper->should_link_be_displayed( $post ),
 				$post
 			) ) {
 				?>
@@ -87,7 +87,7 @@ class Post_Submitbox {
 	}
 
 	/**
-	 * Adds a button in the post/page edit screen to create a clone for W.
+	 * Adds a button in the post/page edit screen to create a clone for Rewrite & Republish.
 	 *
 	 * @param \WP_Post|null $post The post object that's being edited.
 	 *
@@ -109,7 +109,7 @@ class Post_Submitbox {
 			/** This filter is documented in duplicate-post-admin.php */
 			if ( \apply_filters(
 				'duplicate_post_show_link',
-				$this->permissions_helper->is_current_user_allowed_to_copy() && $this->permissions_helper->is_post_type_enabled( $post->post_type ),
+				$this->permissions_helper->should_link_be_displayed( $post ),
 				$post
 			) ) {
 				?>
