@@ -62,7 +62,9 @@ class Post_Republisher {
 
 		$enabled_post_types = Utils::get_enabled_post_types();
 		foreach ( $enabled_post_types as $enabled_post_type ) {
+			// Post transistion action, called when a post transistions to the rewrite_republish status.
 			\add_action( "rewrite_republish_{$enabled_post_type}", [ $this, 'duplicate_post_republish' ], 10, 2 );
+			\add_filter( "rest_pre_insert_{$enabled_post_type}", [ $this, 'duplicate_post_republish_post_data' ], 10, 2 );
 		}
 	}
 
@@ -116,6 +118,14 @@ class Post_Republisher {
 		}
 
 		return $data;
+	}
+
+	/**
+	 * @param $post
+	 * @param $request
+	 */
+	public function duplicate_post_republish_post_data( $post, $request ) {
+		// Update the basic post data in the original post
 	}
 
 	/**
