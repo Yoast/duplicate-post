@@ -131,9 +131,9 @@ class Admin_Bar {
 			return false;
 		}
 
-		$show_duplicate_link = ! $this->permissions_helper->is_rewrite_and_republish_copy( $post )
+		$show_duplicate_link = $this->permissions_helper->should_link_be_displayed( $post )
 							&& $this->permissions_helper->is_valid_post_edit_screen()
-							&& $this->permissions_helper->can_copy_to_draft( $post );
+							&& $this->permissions_helper->post_type_has_admin_bar( $post->post_type );
 
 		/** This filter is documented in class-row-actions.php */
 		if ( ! \apply_filters( 'duplicate_post_show_link', $show_duplicate_link, $post ) ) {

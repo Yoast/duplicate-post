@@ -287,8 +287,9 @@ class Admin_Bar_Test extends TestCase {
 	 */
 	public function test_get_current_post_successful_backend() {
 		global $wp_the_query;
-		$wp_the_query = Mockery::mock( \WP_Query::class ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Intended, to be able to test the method.
-		$post         = Mockery::mock( \WP_Post::class );
+		$wp_the_query    = Mockery::mock( \WP_Query::class ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Intended, to be able to test the method.
+		$post            = Mockery::mock( \WP_Post::class );
+		$post->post_type = 'post';
 
 		Monkey\Functions\expect( '\is_admin' )
 			->andReturn( true );
@@ -299,15 +300,18 @@ class Admin_Bar_Test extends TestCase {
 		$wp_the_query->expects( 'get_queried_object' )
 			->never();
 
-		$this->permissions_helper->expects( 'is_rewrite_and_republish_copy' )
+		$this->permissions_helper
+			->expects( 'should_link_be_displayed' )
 			->with( $post )
-			->andReturnFalse();
-
-		$this->permissions_helper->expects( 'is_valid_post_edit_screen' )
 			->andReturnTrue();
 
-		$this->permissions_helper->expects( 'can_copy_to_draft' )
-			->with( $post )
+		$this->permissions_helper
+			->expects( 'is_valid_post_edit_screen' )
+			->andReturnTrue();
+
+		$this->permissions_helper
+			->expects( 'post_type_has_admin_bar' )
+			->with( $post->post_type )
 			->andReturnTrue();
 
 		$this->assertSame( $post, $this->instance->get_current_post() );
@@ -321,8 +325,9 @@ class Admin_Bar_Test extends TestCase {
 	 */
 	public function test_get_current_post_successful_frontend() {
 		global $wp_the_query;
-		$wp_the_query = Mockery::mock( \WP_Query::class ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Intended, to be able to test the method.
-		$post         = Mockery::mock( \WP_Post::class );
+		$wp_the_query    = Mockery::mock( \WP_Query::class ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Intended, to be able to test the method.
+		$post            = Mockery::mock( \WP_Post::class );
+		$post->post_type = 'post';
 
 		Monkey\Functions\expect( '\is_admin' )
 			->andReturn( false );
@@ -330,18 +335,22 @@ class Admin_Bar_Test extends TestCase {
 		Monkey\Functions\expect( '\get_post' )
 			->never();
 
-		$wp_the_query->expects( 'get_queried_object' )
+		$wp_the_query
+			->expects( 'get_queried_object' )
 			->andReturn( $post );
 
-		$this->permissions_helper->expects( 'is_rewrite_and_republish_copy' )
+		$this->permissions_helper
+			->expects( 'should_link_be_displayed' )
 			->with( $post )
-			->andReturnFalse();
-
-		$this->permissions_helper->expects( 'is_valid_post_edit_screen' )
 			->andReturnTrue();
 
-		$this->permissions_helper->expects( 'can_copy_to_draft' )
-			->with( $post )
+		$this->permissions_helper
+			->expects( 'is_valid_post_edit_screen' )
+			->andReturnTrue();
+
+		$this->permissions_helper
+			->expects( 'post_type_has_admin_bar' )
+			->with( $post->post_type )
 			->andReturnTrue();
 
 		$this->assertSame( $post, $this->instance->get_current_post() );
@@ -364,18 +373,21 @@ class Admin_Bar_Test extends TestCase {
 		Monkey\Functions\expect( '\get_post' )
 			->andReturn( $post );
 
-		$wp_the_query->expects( 'get_queried_object' )
+		$wp_the_query
+			->expects( 'get_queried_object' )
 			->never();
 
-		$this->permissions_helper->expects( 'is_rewrite_and_republish_copy' )
+		$this->permissions_helper
+			->expects( 'should_link_be_displayed' )
 			->with( $post )
 			->never();
 
-		$this->permissions_helper->expects( 'is_valid_post_edit_screen' )
+		$this->permissions_helper
+			->expects( 'is_valid_post_edit_screen' )
 			->never();
 
-		$this->permissions_helper->expects( 'can_copy_to_draft' )
-			->with( $post )
+		$this->permissions_helper
+			->expects( 'post_type_has_admin_bar' )
 			->never();
 
 		$this->assertFalse( $this->instance->get_current_post() );
@@ -389,8 +401,9 @@ class Admin_Bar_Test extends TestCase {
 	 */
 	public function test_get_current_post_unsuccessful_frontend() {
 		global $wp_the_query;
-		$wp_the_query = Mockery::mock( \WP_Query::class ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Intended, to be able to test the method.
-		$post         = Mockery::mock( \WP_Term::class );
+		$wp_the_query    = Mockery::mock( \WP_Query::class ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Intended, to be able to test the method.
+		$post            = Mockery::mock( \WP_Term::class );
+		$post->post_type = 'post';
 
 		Monkey\Functions\expect( '\is_admin' )
 			->andReturn( false );
@@ -398,55 +411,25 @@ class Admin_Bar_Test extends TestCase {
 		Monkey\Functions\expect( '\get_post' )
 			->never();
 
-		$wp_the_query->expects( 'get_queried_object' )
+		$wp_the_query
+			->expects( 'get_queried_object' )
 			->andReturn( $post );
 
-		$this->permissions_helper->expects( 'is_rewrite_and_republish_copy' )
+		$this->permissions_helper
+			->expects( 'should_link_be_displayed' )
 			->with( $post )
 			->never();
 
-		$this->permissions_helper->expects( 'is_valid_post_edit_screen' )
+		$this->permissions_helper
+			->expects( 'is_valid_post_edit_screen' )
 			->never();
 
-		$this->permissions_helper->expects( 'can_copy_to_draft' )
-			->with( $post )
+		$this->permissions_helper
+			->expects( 'post_type_has_admin_bar' )
+			->with( $post->post_type )
 			->never();
 
 		$this->assertFalse( $this->instance->get_current_post() );
 		$this->assertTrue( Monkey\Filters\applied( 'duplicate_post_show_link' ) === 0 );
-	}
-
-	/**
-	 * Tests the get_current_post function when a post intended for Rewrite & Republish.
-	 *
-	 * @covers \Yoast\WP\Duplicate_Post\UI\Admin_Bar::get_current_post
-	 */
-	public function test_get_current_post_unsuccessful_rewrite_and_republish() {
-		global $wp_the_query;
-		$wp_the_query = Mockery::mock( \WP_Query::class ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Intended, to be able to test the method.
-		$post         = Mockery::mock( \WP_Post::class );
-
-		Monkey\Functions\expect( '\is_admin' )
-			->andReturn( true );
-
-		Monkey\Functions\expect( '\get_post' )
-			->andReturn( $post );
-
-		$wp_the_query->expects( 'get_queried_object' )
-			->never();
-
-		$this->permissions_helper->expects( 'is_rewrite_and_republish_copy' )
-			->with( $post )
-			->andReturnTrue();
-
-		$this->permissions_helper->expects( 'is_valid_post_edit_screen' )
-			->never();
-
-		$this->permissions_helper->expects( 'can_copy_to_draft' )
-			->with( $post )
-			->never();
-
-		$this->assertFalse( $this->instance->get_current_post() );
-		$this->assertTrue( Monkey\Filters\applied( 'duplicate_post_show_link' ) > 0 );
 	}
 }

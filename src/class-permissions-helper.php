@@ -85,31 +85,19 @@ class Permissions_Helper {
 	}
 
 	/**
-	 * Checks whether the passed post can be copied to a new draft.
+	 * Checks whether the passed post type is public and shows an admin bar.
 	 *
-	 * @param \WP_Post $post The post to copy.
+	 * @param string $post_type The post_type to copy.
 	 *
 	 * @return bool Whether or not the post can be copied to a new draft.
 	 */
-	public function can_copy_to_draft( $post ) {
-		if ( empty( $post->post_type ) ) {
-			return false;
-		}
-
-		$post_type_object = \get_post_type_object( $post->post_type );
+	public function post_type_has_admin_bar( $post_type ) {
+		$post_type_object = \get_post_type_object( $post_type );
 
 		if ( empty( $post_type_object ) ) {
 			return false;
 		}
 
-		$is_public = true;
-		if ( \property_exists( $post_type_object, 'public' ) ) {
-			$is_public = $post_type_object->public;
-		}
-
-		return $this->is_current_user_allowed_to_copy()
-			&& $is_public
-			&& $post_type_object->show_in_admin_bar
-			&& $this->is_post_type_enabled( $post->post_type );
+		return $post_type_object->public && $post_type_object->show_in_admin_bar;
 	}
 }
