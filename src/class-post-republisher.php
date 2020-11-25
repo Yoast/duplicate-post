@@ -83,6 +83,12 @@ class Post_Republisher {
 			'internal' => true,
 		];
 		\register_post_status( 'rewrite_schedule', $schedule_args );
+
+		$rewrite_args = [
+			'label'    => __( 'Rewrite Draft', 'duplicate-post' ),
+			'internal' => true,
+		];
+		\register_post_status( 'rewrite_draft', $rewrite_args );
 	}
 
 	/**
@@ -132,9 +138,14 @@ class Post_Republisher {
 			return;
 		}
 
+		if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
+			return;
+		}
+
 		// Republish taxonomies and meta first.
 		$this->republish_post_taxonomies();
 		$this->republish_post_meta();
+
 		// Republish the post.
 		$this->republish_post_elements();
 		$this->clean_up_and_redirect();

@@ -35,6 +35,11 @@ class Duplicate_Post {
 	private $handler;
 
 	/**
+	 * @var Post_Republisher
+	 */
+	private $post_republisher;
+
+	/**
 	 * Initializes the main class.
 	 */
 	public function __construct() {

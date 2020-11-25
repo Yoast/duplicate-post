@@ -155,6 +155,7 @@ class Post_Duplicator {
 			'copy_author'     => true,
 			'copy_menu_order' => true,
 			'use_filters'     => false,
+			'force_post_status' => 'rewrite_draft',
 		];
 		$defaults = $this->get_default_options();
 		$options  = \wp_parse_args( $options, $defaults );
@@ -349,6 +350,10 @@ class Post_Duplicator {
 					}
 				}
 			}
+		}
+
+		if ( $options['force_post_status'] ) {
+			return $options['force_post_status'];
 		}
 
 		return $new_post_status;
