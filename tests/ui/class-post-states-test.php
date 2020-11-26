@@ -29,10 +29,17 @@ class Post_States_Test extends TestCase {
 	public function setUp() {
 		parent::setUp();
 
-		Monkey\Functions\expect( '\get_option' )
-			->with( 'duplicate_post_show_original_in_post_states' )
-			->andReturn( '1' );
-		$this->instance = new Post_States();
+		$this->instance = \Mockery::mock( Post_States::class )->makePartial();
+	}
+
+	/**
+	 * Tests the constructor.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Post_States::__construct
+	 */
+	public function test_constructor() {
+		$this->instance->expects( 'register_hooks' )->once();
+		$this->instance->__construct();
 	}
 
 	/**

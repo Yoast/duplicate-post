@@ -60,6 +60,16 @@ class Admin_Bar_Test extends TestCase {
 	}
 
 	/**
+	 * Tests if the needed attributes are set correctly.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Admin_Bar::__construct
+	 */
+	public function test_constructor() {
+		$this->assertAttributeInstanceOf( Link_Builder::class, 'link_builder', $this->instance );
+		$this->assertAttributeInstanceOf( Permissions_Helper::class, 'permissions_helper', $this->instance );
+	}
+
+	/**
 	 * Tests the registration of the hooks.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Admin_Bar::register_hooks
@@ -431,5 +441,44 @@ class Admin_Bar_Test extends TestCase {
 
 		$this->assertFalse( $this->instance->get_current_post() );
 		$this->assertTrue( Monkey\Filters\applied( 'duplicate_post_show_link' ) === 0 );
+	}
+
+	/**
+	 * Tests the get_current_post function when the link should not be displayed.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Admin_Bar::get_current_post
+	 */
+	public function test_get_current_post_unsuccessful_should_not_be_displayed() {
+		global $wp_the_query;
+		$wp_the_query    = Mockery::mock( \WP_Query::class ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Intended, to be able to test the method.
+		$post            = Mockery::mock( \WP_Post::class );
+		$post->post_type = 'post';
+
+		Monkey\Functions\expect( '\is_admin' )
+			->andReturn( true );
+
+		Monkey\Functions\expect( '\get_post' )
+			->andReturn( $post );
+
+		$wp_the_query
+			->expects( 'get_queried_object' )
+			->never();
+
+		$this->permissions_helper
+			->expects( 'should_link_be_displayed' )
+			->with( $post )
+			->andReturnFalse();
+
+		$this->permissions_helper
+			->expects( 'is_valid_post_edit_screen' )
+			->never();
+
+		$this->permissions_helper
+			->expects( 'post_type_has_admin_bar' )
+			->with( $post->post_type )
+			->never();
+
+		$this->assertSame( false, $this->instance->get_current_post() );
+		$this->assertTrue( Monkey\Filters\applied( 'duplicate_post_show_link' ) > 0 );
 	}
 }

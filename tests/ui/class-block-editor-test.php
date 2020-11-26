@@ -53,6 +53,16 @@ class Block_Editor_Test extends TestCase {
 	}
 
 	/**
+	 * Tests if the needed attributes are set correctly.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Block_Editor::__construct
+	 */
+	public function test_constructor() {
+		$this->assertAttributeInstanceOf( Link_Builder::class, 'link_builder', $this->instance );
+		$this->assertAttributeInstanceOf( Permissions_Helper::class, 'permissions_helper', $this->instance );
+	}
+
+	/**
 	 * Tests the registration of the hooks.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Block_Editor::register_hooks

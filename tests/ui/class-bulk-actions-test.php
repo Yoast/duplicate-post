@@ -43,6 +43,15 @@ class Bulk_Actions_Test extends TestCase {
 	}
 
 	/**
+	 * Tests if the needed attributes are set correctly.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Bulk_Actions::__construct
+	 */
+	public function test_constructor() {
+		$this->assertAttributeInstanceOf( Permissions_Helper::class, 'permissions_helper', $this->instance );
+	}
+
+	/**
 	 * Tests the registration of the hooks.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Bulk_Actions::register_hooks

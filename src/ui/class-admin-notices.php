@@ -76,12 +76,11 @@ class Admin_Notices {
 	 */
 	public function rewrite_and_republish_link_admin_notice() {
 		if ( ! empty( $_REQUEST['rewriting'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-			echo '<div id="message" class="notice notice-warning fade"><p>';
-			\esc_html_e(
+			print '<div id="message" class="notice notice-warning fade"><p>' .
+			\esc_html__(
 				'You can now start rewriting your post in this duplicate of the original post. If you click "Republish", your changes will be merged into the original post and you’ll be redirected there.',
 				'duplicate-post'
-			);
-			echo '</p></div>';
+			) . '</p></div>';
 		}
 	}
 
@@ -93,8 +92,8 @@ class Admin_Notices {
 	public function rewrite_and_republish_bulk_admin_notice() {
 		if ( ! empty( $_REQUEST['bulk_rewriting'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			$copied_posts = \intval( $_REQUEST['bulk_rewriting'] ); // phpcs:ignore WordPress.Security.NonceVerification
-			echo '<div id="message" class="notice notice-success fade"><p>';
 			\printf(
+				'<div id="message" class="notice notice-success fade"><p>' .
 				\esc_html(
 				/* translators: %s: Number of posts copied. */
 					\_n(
@@ -103,10 +102,9 @@ class Admin_Notices {
 						$copied_posts,
 						'duplicate-post'
 					)
-				) . ' ',
+				) . '</p></div>',
 				\esc_html( $copied_posts )
 			);
-			echo '</p></div>';
 		}
 	}
 }

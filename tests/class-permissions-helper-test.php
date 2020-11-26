@@ -48,6 +48,21 @@ class Permissions_Helper_Test extends TestCase {
 	}
 
 	/**
+	 * Tests the get_enabled_post_types function when the option is not an array
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::get_enabled_post_types
+	 */
+	public function test_get_enabled_post_types_not_array() {
+		$post_types = 'post';
+
+		Monkey\Functions\expect( '\get_option' )
+			->with( 'duplicate_post_types_enabled', [ 'post', 'page' ] )
+			->andReturn( $post_types );
+
+		$this->assertEquals( [ $post_types ], $this->instance->get_enabled_post_types() );
+	}
+
+	/**
 	 * Tests the is_post_type_enabled function.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::is_post_type_enabled
@@ -112,6 +127,32 @@ class Permissions_Helper_Test extends TestCase {
 	}
 
 	/**
+	 * Tests the should_link_be_displayed function.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::should_link_be_displayed
+	 */
+	public function test_should_link_be_displayed_unsuccessful() {
+		$post            = Mockery::mock( \WP_Post::class );
+		$post->post_type = 'post';
+
+		$this->instance
+			->expects( 'is_rewrite_and_republish_copy' )
+			->with( $post )
+			->andReturnFalse();
+
+		$this->instance
+			->expects( 'is_current_user_allowed_to_copy' )
+			->andReturnTrue();
+
+		$this->instance
+			->expects( 'is_post_type_enabled' )
+			->with( $post->post_type )
+			->andReturnTrue();
+
+		$this->assertTrue( $this->instance->should_link_be_displayed( $post ) );
+	}
+
+	/**
 	 * Tests the is_valid_post_edit_screen function.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::is_valid_post_edit_screen
@@ -126,7 +167,7 @@ class Permissions_Helper_Test extends TestCase {
 		$screen->action = $original['action'];
 
 		Monkey\Functions\expect( '\is_admin' )
-			->andReturnTrue();
+			->andReturn( $original['is_admin'] );
 
 		Monkey\Functions\expect( '\get_current_screen' )
 			->andReturn( $screen );
@@ -143,31 +184,43 @@ class Permissions_Helper_Test extends TestCase {
 		return [
 			[
 				'original' => [
-					'base'   => 'post',
-					'action' => 'not-add',
+					'is_admin' => true,
+					'base'     => 'post',
+					'action'   => 'not-add',
 				],
 				'expected' => true,
 			],
 			[
 				'original' => [
-					'base'   => 'not-post',
-					'action' => 'add',
+					'is_admin' => true,
+					'base'     => 'not-post',
+					'action'   => 'add',
 				],
 				'expected' => false,
 			],
 			[
 				'original' => [
-					'base'   => 'post',
-					'action' => 'add',
+					'is_admin' => true,
+					'base'     => 'post',
+					'action'   => 'add',
 				],
 				'expected' => false,
 			],
 			[
 				'original' => [
-					'base'   => 'not-post',
-					'action' => 'not-add',
+					'is_admin' => true,
+					'base'     => 'not-post',
+					'action'   => 'not-add',
 				],
 				'expected' => false,
+			],
+			[
+				'original' => [
+					'is_admin' => false,
+					'base'     => 'not-post',
+					'action'   => 'not-add',
+				],
+				'expected' => true,
 			],
 		];
 	}
@@ -181,7 +234,7 @@ class Permissions_Helper_Test extends TestCase {
 	 * @param mixed $original Input value.
 	 * @param mixed $expected Expected output.
 	 */
-	public function test_can_copy_to_draft( $original, $expected ) {
+	public function test_post_type_has_admin_bar( $original, $expected ) {
 		$post_type                           = 'post';
 		$post_type_object                    = Mockery::mock( \WP_Post_Type::class );
 		$post_type_object->public            = $original['public'];
@@ -195,7 +248,7 @@ class Permissions_Helper_Test extends TestCase {
 	}
 
 	/**
-	 * Data provider for test_can_copy_to_draft.
+	 * Data provider for test_post_type_has_admin_bar.
 	 *
 	 * @return array
 	 */
@@ -230,5 +283,21 @@ class Permissions_Helper_Test extends TestCase {
 				'expected' => false,
 			],
 		];
+	}
+
+	/**
+	 * Tests the post_type_has_admin_bar function when the post type does not exist.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::post_type_has_admin_bar
+	 */
+	public function test_post_type_has_admin_bar_type_not_existing() {
+		$post_type        = 'apple';
+		$post_type_object = null;
+
+		Monkey\Functions\expect( '\get_post_type_object' )
+			->with( $post_type )
+			->andReturn( $post_type_object );
+
+		$this->assertSame( false, $this->instance->post_type_has_admin_bar( $post_type ) );
 	}
 }

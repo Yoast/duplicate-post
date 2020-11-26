@@ -57,6 +57,15 @@ class Column_Test extends TestCase {
 	}
 
 	/**
+	 * Tests if the needed attributes are set correctly.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Column::__construct
+	 */
+	public function test_constructor() {
+		$this->assertAttributeInstanceOf( Permissions_Helper::class, 'permissions_helper', $this->instance );
+	}
+
+	/**
 	 * Tests the registration of the hooks.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Column::register_hooks
