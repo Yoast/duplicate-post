@@ -132,19 +132,20 @@ class Block_Editor_Test extends TestCase {
 		Monkey\Functions\expect( '\get_post' )
 			->andReturn( $post );
 
-		$this->permissions_helper->expects( 'is_rewrite_and_republish_copy' )
+		$this->permissions_helper->expects( 'should_link_be_displayed' )
 			->with( $post )
-			->andReturnFalse();
+			->andReturnTrue();
 
 		$this->link_builder->expects( 'build_new_draft_link' )
 			->with( $post )
 			->andReturn( $url );
 
 		$this->assertSame( $url, $this->instance->get_new_draft_permalink() );
+		$this->assertTrue( Monkey\Filters\applied( 'duplicate_post_show_link' ) > 0 );
 	}
 
 	/**
-	 * Tests the get_new_draft_permalink function when a link is not returned.
+	 * Tests the get_new_draft_permalink function when a link should not be displayed.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Block_Editor::get_new_draft_permalink
 	 */
@@ -154,15 +155,16 @@ class Block_Editor_Test extends TestCase {
 		Monkey\Functions\expect( '\get_post' )
 			->andReturn( $post );
 
-		$this->permissions_helper->expects( 'is_rewrite_and_republish_copy' )
+		$this->permissions_helper->expects( 'should_link_be_displayed' )
 			->with( $post )
-			->andReturnTrue();
+			->andReturnFalse();
 
 		$this->link_builder->expects( 'build_new_draft_link' )
 			->with( $post )
 			->never();
 
 		$this->assertSame( '', $this->instance->get_new_draft_permalink() );
+		$this->assertTrue( Monkey\Filters\applied( 'duplicate_post_show_link' ) > 0 );
 	}
 
 	/**
@@ -178,15 +180,16 @@ class Block_Editor_Test extends TestCase {
 		Monkey\Functions\expect( '\get_post' )
 			->andReturn( $post );
 
-		$this->permissions_helper->expects( 'is_rewrite_and_republish_copy' )
+		$this->permissions_helper->expects( 'should_link_be_displayed' )
 			->with( $post )
-			->andReturnFalse();
+			->andReturnTrue();
 
 		$this->link_builder->expects( 'build_rewrite_and_republish_link' )
 			->with( $post )
 			->andReturn( $url );
 
 		$this->assertSame( $url, $this->instance->get_rewrite_republish_permalink() );
+		$this->assertTrue( Monkey\Filters\applied( 'duplicate_post_show_link' ) > 0 );
 	}
 
 	/**
@@ -201,7 +204,7 @@ class Block_Editor_Test extends TestCase {
 		Monkey\Functions\expect( '\get_post' )
 			->andReturn( $post );
 
-		$this->permissions_helper->expects( 'is_rewrite_and_republish_copy' )
+		$this->permissions_helper->expects( 'should_link_be_displayed' )
 			->with( $post )
 			->never();
 
@@ -210,28 +213,30 @@ class Block_Editor_Test extends TestCase {
 			->never();
 
 		$this->assertSame( '', $this->instance->get_rewrite_republish_permalink() );
+		$this->assertTrue( Monkey\Filters\applied( 'duplicate_post_show_link' ) === 0 );
 	}
 
 	/**
-	 * Tests the get_rewrite_republish_permalink function when the post is intendet for Rewrite & Republish.
+	 * Tests the get_rewrite_republish_permalink function when the link should not be displayed.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Block_Editor::get_rewrite_republish_permalink
 	 */
-	public function test_get_rewrite_republish_permalink_unsuccessful_for_rewrite_and_republish() {
+	public function test_get_rewrite_republish_permalink_unsuccessful_link_should_not_be_displayed() {
 		$post              = Mockery::mock( \WP_Post::class );
 		$post->post_status = 'publish';
 
 		Monkey\Functions\expect( '\get_post' )
 			->andReturn( $post );
 
-		$this->permissions_helper->expects( 'is_rewrite_and_republish_copy' )
+		$this->permissions_helper->expects( 'should_link_be_displayed' )
 			->with( $post )
-			->andReturnTrue();
+			->andReturnFalse();
 
 		$this->link_builder->expects( 'build_rewrite_and_republish_link' )
 			->with( $post )
 			->never();
 
 		$this->assertSame( '', $this->instance->get_rewrite_republish_permalink() );
+		$this->assertTrue( Monkey\Filters\applied( 'duplicate_post_show_link' ) > 0 );
 	}
 }
