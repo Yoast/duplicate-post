@@ -63,9 +63,9 @@ class Post_Republisher {
 		$enabled_post_types = Utils::get_enabled_post_types();
 		foreach ( $enabled_post_types as $enabled_post_type ) {
 			// Post transistion action, called when a post transistions to the rewrite_republish status.
-			\add_action( "rewrite_republish_{$enabled_post_type}", [ $this, 'duplicate_post_republish' ], 10, 2 );
-			\add_filter( "rest_pre_insert_{$enabled_post_type}", [ $this, 'duplicate_post_republish_post_data' ], 10, 2 );
+//			\add_action( "rewrite_republish_{$enabled_post_type}", [ $this, 'duplicate_post_republish' ], 10, 2 );
 		}
+			\add_action( "pre_post_update", [ $this, 'duplicate_post_republish_post_data' ], 10, 2 );
 	}
 
 	/**
@@ -121,11 +121,31 @@ class Post_Republisher {
 	}
 
 	/**
-	 * @param $post
-	 * @param $request
+	 * Republishes the original post data with the passed post data and redirects the user, when using the Classic editor.
+	 *
+	 * @param int   $post_id   The copy's post ID.
+	 * @param array $post_data The post data array.
+	 *
+	 * @return void
 	 */
-	public function duplicate_post_republish_post_data( $post, $request ) {
+	public function duplicate_post_republish_post_data( $post_id, $post_data ) {
+		if ( $post_data['post_status'] !== 'rewrite_republish' ) {
+			return;
+		}
+
 		// Update the basic post data in the original post
+		$original_post_id = Utils::get_original_post_id( $post_id );
+
+		if ( ! $original_post_id ) {
+			return;
+		}
+
+		$this->republish_post_elements( $post_data, $original_post_id );
+		$this->clean_up( $post_id, $original_post_id );
+
+		if ( ! defined( 'GUTENBERG_VERSION' ) ) {
+			$this->redirect( $original_post_id );
+		}
 	}
 
 	/**
@@ -164,18 +184,21 @@ class Post_Republisher {
 	/**
 	 * Republishes the post elements overwriting the original post.
 	 *
+	 * @param $post				The post object.
+	 * @param $original_post_id The original post's ID.
+	 *
 	 * @return void
 	 */
-	protected function republish_post_elements() {
+	protected function republish_post_elements( $post, $original_post_id ) {
 		// Cast to array and not alter the original object.
-		$post_to_be_rewritten = (array) $this->post_copy;
+		$post_to_be_rewritten = (array) $post;
 		// Prepare post data for republishing.
-		$post_to_be_rewritten['ID']          = $this->original_post_id;
-		$post_to_be_rewritten['post_name']   = \get_post_field( 'post_name', $this->original_post_id );
+		$post_to_be_rewritten['ID']          = $original_post_id;
+		$post_to_be_rewritten['post_name']   = \get_post_field( 'post_name', $original_post_id );
 		$post_to_be_rewritten['post_status'] = 'publish';
 
 		// Republish original post.
-		$_POST['ID']       = $this->original_post_id;
+		$_POST['ID']       = $original_post_id;
 		$rewritten_post_id = \wp_update_post( \wp_slash( $post_to_be_rewritten ), true );
 
 		if ( 0 === $rewritten_post_id || \is_wp_error( $rewritten_post_id ) ) {
@@ -220,23 +243,35 @@ class Post_Republisher {
 	}
 
 	/**
-	 * Deletes the copy and redirects users to the original post.
+	 * Deletes the copied post and temporary metadata.
+	 *
+	 * @param $post_copy_id		The copy's ID.
+	 * @param $original_post_id The original post ID.
 	 *
 	 * @return void
 	 */
-	protected function clean_up_and_redirect() {
+	protected function clean_up( $post_copy_id, $original_post_id ) {
 		// Deleting the copy bypassing the trash also deletes the post copy meta.
-		\wp_delete_post( $this->post_copy_id, true );
+		\wp_delete_post( $post_copy_id, true );
 		// Delete the meta that marks the original post has having a copy.
-		\delete_post_meta( $this->original_post_id, '_dp_has_rewrite_republish_copy' );
+		\delete_post_meta( $original_post_id, '_dp_has_rewrite_republish_copy' );
+	}
 
+	/**
+	 * Redirects the user to the original post.
+	 *
+	 * @param $original_post_id The original post to redirect to.
+	 *
+	 * @return void
+	 */
+	protected function redirect( $original_post_id ) {
 		// Add nonce verification here.
 		\wp_safe_redirect(
 			\add_query_arg(
 				[
 					'republished' => 1,
 				],
-				\admin_url( 'post.php?action=edit&post=' . $this->original_post_id )
+				\admin_url( 'post.php?action=edit&post=' . $original_post_id )
 			)
 		);
 		exit();

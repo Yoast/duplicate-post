@@ -1,4 +1,5 @@
 /* global duplicatePostRewriteRepost */
+/* global wp */
 
 import { registerPlugin } from "@wordpress/plugins";
 import { PluginPostStatusInfo } from "@wordpress/edit-post";
@@ -57,7 +58,7 @@ class DuplicatePost {
 }
 
 const instance = new DuplicatePost();
-subscribe( instance.handleRewritingPost );
+wp.data.subscribe( instance.handleRewritingPost );
 
 registerPlugin( 'duplicate-post', {
 	render: instance.render
