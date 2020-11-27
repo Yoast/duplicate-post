@@ -21,27 +21,6 @@ class Post_Republisher {
 	private $post_duplicator;
 
 	/**
-	 * Holds the post copy ID.
-	 *
-	 * @var int
-	 */
-	private $post_copy_id;
-
-	/**
-	 * Holds the post copy pbject.
-	 *
-	 * @var \WP_Post
-	 */
-	private $post_copy;
-
-	/**
-	 * Holds the original post ID.
-	 *
-	 * @var int
-	 */
-	private $original_post_id;
-
-	/**
 	 * Initializes the class.
 	 *
 	 * @param Post_Duplicator $post_duplicator The Post_Duplicator object.
@@ -62,10 +41,11 @@ class Post_Republisher {
 
 		$enabled_post_types = Utils::get_enabled_post_types();
 		foreach ( $enabled_post_types as $enabled_post_type ) {
-			// Post transistion action, called when a post transistions to the rewrite_republish status.
-//			\add_action( "rewrite_republish_{$enabled_post_type}", [ $this, 'duplicate_post_republish' ], 10, 2 );
+			// Classic editor: Post transition action, called when a post transitions to the rewrite_republish status.
+			\add_action( "rewrite_republish_{$enabled_post_type}", [ $this, 'republish_classic' ], 10, 2 );
+			// Block editor: called after a single post is completely created or updated via the REST API.
+			\add_action( "rest_after_insert_{$enabled_post_type}", [ $this, 'republish_gutenberg' ] );
 		}
-			\add_action( "pre_post_update", [ $this, 'duplicate_post_republish_post_data' ], 10, 2 );
 	}
 
 	/**
@@ -75,20 +55,20 @@ class Post_Republisher {
 	 */
 	public function register_post_statuses() {
 		$republish_args = [
-			'label'    => __( 'Republish', 'duplicate-post' ),
-			'internal' => true,
+			'label'  => __( 'Republish', 'duplicate-post' ),
+			'public' => true,
 		];
 		\register_post_status( 'rewrite_republish', $republish_args );
 
 		$schedule_args = [
-			'label'    => __( 'Future Republish', 'duplicate-post' ),
-			'internal' => true,
+			'label'  => __( 'Future Republish', 'duplicate-post' ),
+			'public' => true,
 		];
 		\register_post_status( 'rewrite_schedule', $schedule_args );
 
 		$rewrite_args = [
-			'label'    => __( 'Rewrite Draft', 'duplicate-post' ),
-			'internal' => true,
+			'label'  => __( 'Rewrite Draft', 'duplicate-post' ),
+			'public' => true,
 		];
 		\register_post_status( 'rewrite_draft', $rewrite_args );
 	}
@@ -121,71 +101,70 @@ class Post_Republisher {
 	}
 
 	/**
-	 * Republishes the original post data with the passed post data and redirects the user, when using the Classic editor.
+	 * Republishes the original post with the passed post, when using the Block editor.
 	 *
-	 * @param int   $post_id   The copy's post ID.
-	 * @param array $post_data The post data array.
+	 * @param \WP_Post $post_data The copy's post object.
 	 *
 	 * @return void
 	 */
-	public function duplicate_post_republish_post_data( $post_id, $post_data ) {
-		if ( $post_data['post_status'] !== 'rewrite_republish' ) {
+	public function republish_gutenberg( $post_data ) {
+		if ( $post_data->post_status !== 'rewrite_republish' ) {
 			return;
 		}
 
-		// Update the basic post data in the original post
+		$post_id          = $post_data->ID;
 		$original_post_id = Utils::get_original_post_id( $post_id );
 
 		if ( ! $original_post_id ) {
 			return;
 		}
 
+		// Republish taxonomies and meta.
+		$this->republish_post_taxonomies( $post_id, $post_data );
+		$this->republish_post_meta( $post_id, $post_data );
+		// Republish the post.
 		$this->republish_post_elements( $post_data, $original_post_id );
+		// Investigate whether the clean-up needs to be done on the Gutenberg JS side.
 		$this->clean_up( $post_id, $original_post_id );
-
-		if ( ! defined( 'GUTENBERG_VERSION' ) ) {
-			$this->redirect( $original_post_id );
-		}
 	}
 
 	/**
-	 * Handles the republishing flow.
+	 * Republishes the original post with the passed post and redirects the user, when using the Classic editor.
 	 *
-	 * Runs on the post transition status from `draft` to `rewrite_republish` in
-	 * `wp_insert_post()` when submitting the post copy.
+	 * Runs on the post transition status to `rewrite_republish` in `wp_insert_post()`
+	 * when submitting the post copy.
 	 *
-	 * @param int      $post_copy_id The post copy ID.
-	 * @param \WP_Post $post_copy    The post copy object.
+	 * @param int      $post_id   The copy's post ID.
+	 * @param \WP_Post $post_data The copy's post object.
 	 *
 	 * @return void
 	 */
-	public function duplicate_post_republish( $post_copy_id, $post_copy ) {
-		$this->post_copy_id     = $post_copy_id;
-		$this->post_copy        = $post_copy;
-		$this->original_post_id = Utils::get_original_post_id( $post_copy_id );
-
-		if ( ! $this->original_post_id ) {
-			return;
-		}
-
+	public function republish_classic( $post_id, $post_data ) {
 		if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
 			return;
 		}
 
-		// Republish taxonomies and meta first.
-		$this->republish_post_taxonomies();
-		$this->republish_post_meta();
+		$original_post_id = Utils::get_original_post_id( $post_id );
 
+		if ( ! $original_post_id ) {
+			return;
+		}
+
+		// Republish taxonomies and meta.
+		$this->republish_post_taxonomies( $post_id, $post_data );
+		$this->republish_post_meta( $post_id, $post_data );
 		// Republish the post.
-		$this->republish_post_elements();
-		$this->clean_up_and_redirect();
+		$this->republish_post_elements( $post_data, $original_post_id );
+		// Delete the copy and redirect.
+		$this->clean_up( $post_id, $original_post_id );
+		$this->redirect( $original_post_id );
 	}
 
 	/**
 	 * Republishes the post elements overwriting the original post.
 	 *
-	 * @param $post				The post object.
-	 * @param $original_post_id The original post's ID.
+	 * @param \WP_Post $post             The post object.
+	 * @param int      $original_post_id The original post's ID.
 	 *
 	 * @return void
 	 */
@@ -210,23 +189,33 @@ class Post_Republisher {
 	/**
 	 * Republishes the post taxonomies overwriting the ones of the original post.
 	 *
+	 * @param int      $post_id   The copy's post ID.
+	 * @param \WP_Post $post_data The copy's post object.
+	 *
 	 * @return void
 	 */
-	protected function republish_post_taxonomies() {
+	protected function republish_post_taxonomies( $post_id, $post_data ) {
+		$original_post_id = Utils::get_original_post_id( $post_id );
+
 		$copy_taxonomies_options = [
 			'taxonomies_excludelist' => [],
 			'use_filters'            => false,
 			'copy_format'            => true,
 		];
-		$this->post_duplicator->copy_post_taxonomies( $this->original_post_id, $this->post_copy, $copy_taxonomies_options );
+		$this->post_duplicator->copy_post_taxonomies( $original_post_id, $post_data, $copy_taxonomies_options );
 	}
 
 	/**
 	 * Republishes the post meta overwriting the ones of the original post.
 	 *
+	 * @param int      $post_id   The copy's post ID.
+	 * @param \WP_Post $post_data The copy's post object.
+	 *
 	 * @return void
 	 */
-	protected function republish_post_meta() {
+	protected function republish_post_meta( $post_id, $post_data ) {
+		$original_post_id = Utils::get_original_post_id( $post_id );
+
 		// Note that the WP SEO metadata get saved on the `wp_insert_post` hook.
 		$copy_meta_options = [
 			'meta_excludelist' => [
@@ -237,16 +226,16 @@ class Post_Republisher {
 			],
 			'use_filters'      => false,
 			'copy_thumbnail'   => true,
-			'copy_template'    => false, // The function wp_insert_post handles the page template internally.
+			'copy_template'    => true,
 		];
-		$this->post_duplicator->copy_post_meta_info( $this->original_post_id, $this->post_copy, $copy_meta_options );
+		$this->post_duplicator->copy_post_meta_info( $original_post_id, $post_data, $copy_meta_options );
 	}
 
 	/**
 	 * Deletes the copied post and temporary metadata.
 	 *
-	 * @param $post_copy_id		The copy's ID.
-	 * @param $original_post_id The original post ID.
+	 * @param int $post_copy_id     The copy's ID.
+	 * @param int $original_post_id The original post ID.
 	 *
 	 * @return void
 	 */
@@ -260,7 +249,7 @@ class Post_Republisher {
 	/**
 	 * Redirects the user to the original post.
 	 *
-	 * @param $original_post_id The original post to redirect to.
+	 * @param int $original_post_id The original post to redirect to.
 	 *
 	 * @return void
 	 */

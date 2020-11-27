@@ -147,14 +147,14 @@ class Post_Duplicator {
 	 */
 	public function create_duplicate_for_rewrite_and_republish( \WP_Post $post ) {
 		$options  = [
-			'copy_title'      => true,
-			'copy_date'       => true,
-			'copy_name'       => true,
-			'copy_content'    => true,
-			'copy_excerpt'    => true,
-			'copy_author'     => true,
-			'copy_menu_order' => true,
-			'use_filters'     => false,
+			'copy_title'        => true,
+			'copy_date'         => true,
+			'copy_name'         => true,
+			'copy_content'      => true,
+			'copy_excerpt'      => true,
+			'copy_author'       => true,
+			'copy_menu_order'   => true,
+			'use_filters'       => false,
 			'force_post_status' => 'rewrite_draft',
 		];
 		$defaults = $this->get_default_options();
