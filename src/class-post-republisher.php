@@ -127,7 +127,8 @@ class Post_Republisher {
 		$this->republish_post_meta( $post_id, $post_data );
 		// Republish the post.
 		$this->republish_post_elements( $post_data, $original_post_id );
-		// Investigate whether the clean-up needs to be done on the Gutenberg JS side.
+		// This clean-up shhould run only when there are no meta boxes in Gutenberg.
+		// Otherwise, custom meta boxes values aren't copied.
 		// $this->clean_up( $post_id, $original_post_id );
 	}
 
@@ -188,8 +189,7 @@ class Post_Republisher {
 		$rewritten_post_id = \wp_update_post( \wp_slash( $post_to_be_rewritten ), true );
 
 		if ( 0 === $rewritten_post_id || \is_wp_error( $rewritten_post_id ) ) {
-			// Error handling here.
-			die( 'An error occurred.' );
+			\wp_die( \esc_html__( 'An error occurred while republishing the post.', 'duplicate-post' ) );
 		}
 	}
 
