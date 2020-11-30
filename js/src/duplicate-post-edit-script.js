@@ -1,26 +1,46 @@
-/* global duplicatePostRewriteRepost */
+/* global duplicatePost */
 
 import { registerPlugin } from "@wordpress/plugins";
 import { PluginPostStatusInfo } from "@wordpress/edit-post";
+import { Fragment } from "@wordpress/element"
+import { Button } from '@wordpress/components';
 import { __ } from "@wordpress/i18n";
 
 /**
- * Renders the Rewrite & Republish link in the PluginPostStatusInfo component.
+ * Renders the links in the PluginPostStatusInfo component.
  *
- * @returns {JSX.Element} The rendered link.
+ * @returns {JSX.Element} The rendered links.
  */
 const render = () => (
-	<PluginPostStatusInfo>
-		{ duplicatePostRewriteRepost.permalink !== '' &&
-		  <a href={ duplicatePostRewriteRepost.permalink }>{ __( 'Rewrite & Republish', 'duplicate-post' ) }</a> }
-	</PluginPostStatusInfo>
+	<Fragment>
+		{ duplicatePost.new_draft_link !== '' &&
+			<PluginPostStatusInfo>
+				<Button
+					isTertiary={ true }
+					href={ duplicatePost.new_draft_link }
+				>
+					{ __( 'Copy to a new draft', 'duplicate-post' ) }
+				</Button>
+			</PluginPostStatusInfo>
+		}
+		{ duplicatePost.rewrite_and_republish_link !== '' &&
+			<PluginPostStatusInfo>
+				<Button
+					isTertiary={ true }
+					href={ duplicatePost.rewrite_and_republish_link }
+				>
+					{ __( 'Rewrite & Republish', 'duplicate-post' ) }
+				</Button>
+			</PluginPostStatusInfo>
+		}
+	</Fragment>
 );
 
 registerPlugin( 'duplicate-post', {
 	render
 } );
 
-if ( parseInt( duplicatePostRewriteRepost.rewriting ) ) {
+if ( parseInt( duplicatePost.rewriting ) ) {
 	( function( wp ) {
 		wp.data.dispatch( 'core/notices' ).createNotice(
 			'warning',

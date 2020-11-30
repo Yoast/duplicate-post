@@ -5,7 +5,7 @@
  * @package Duplicate_Post
  */
 
-namespace Yoast\WP\Duplicate_Post;
+namespace Yoast\WP\Duplicate_Post\UI;
 
 /**
  * Represents the Admin_Notices class.
@@ -26,50 +26,74 @@ class Admin_Notices {
 	 */
 	public function register_hooks() {
 		\add_filter( 'removable_query_args', [ $this, 'add_removable_query_args' ] );
-		\add_action( 'admin_notices', [ $this, 'single_action_admin_notice' ] );
-		\add_action( 'admin_notices', [ $this, 'bulk_action_admin_notice' ] );
+		\add_action( 'admin_notices', [ $this, 'clone_admin_notice' ] );
+		\add_action( 'admin_notices', [ $this, 'rewrite_and_republish_link_admin_notice' ] );
+		\add_action( 'admin_notices', [ $this, 'rewrite_and_republish_bulk_admin_notice' ] );
 	}
 
 	/**
-	 * Adds Rewrite & Republish vars to the removable query args.
+	 * Adds vars to the removable query args.
 	 *
 	 * @param array $removable_query_args Array of query args keys.
 	 *
 	 * @return array The updated array of query args keys.
 	 */
 	public function add_removable_query_args( $removable_query_args ) {
+		$removable_query_args[] = 'cloned';
 		$removable_query_args[] = 'rewriting';
 		$removable_query_args[] = 'bulk_rewriting';
 		return $removable_query_args;
 	}
 
 	/**
-	 * Shows a notice after the copy via link has succeeded.
+	 * Shows a notice after the clone action has succeeded.
 	 *
 	 * @return void
 	 */
-	public function single_action_admin_notice() {
-		if ( ! empty( $_REQUEST['rewriting'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-			echo '<div id="message" class="notice notice-warning fade"><p>';
-			\esc_html_e(
-				'You can now start rewriting your post in this duplicate of the original post. If you click "Republish", your changes will be merged into the original post and you’ll be redirected there.',
-				'duplicate-post'
+	public function clone_admin_notice() {
+		if ( ! empty( $_REQUEST['cloned'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+			$copied_posts = \intval( $_REQUEST['cloned'] ); // phpcs:ignore WordPress.Security.NonceVerification
+			\printf(
+				'<div id="message" class="notice notice-success fade"><p>' .
+				\esc_html(
+				/* translators: %s: Number of posts copied. */
+					_n(
+						'%s item copied.',
+						'%s items copied.',
+						$copied_posts,
+						'duplicate-post'
+					)
+				) . '</p></div>',
+				\esc_html( $copied_posts )
 			);
-			echo '</p></div>';
-			\remove_query_arg( 'rewriting' );
 		}
 	}
 
 	/**
-	 * Shows a notice after the copy via bulk actions has succeeded.
+	 * Shows a notice after the Rewrite & Republish action via link has succeeded.
 	 *
 	 * @return void
 	 */
-	public function bulk_action_admin_notice() {
+	public function rewrite_and_republish_link_admin_notice() {
+		if ( ! empty( $_REQUEST['rewriting'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+			print '<div id="message" class="notice notice-warning fade"><p>' .
+			\esc_html__(
+				'You can now start rewriting your post in this duplicate of the original post. If you click "Republish", your changes will be merged into the original post and you’ll be redirected there.',
+				'duplicate-post'
+			) . '</p></div>';
+		}
+	}
+
+	/**
+	 * Shows a notice after the Rewrite & Republish bulk action has succeeded.
+	 *
+	 * @return void
+	 */
+	public function rewrite_and_republish_bulk_admin_notice() {
 		if ( ! empty( $_REQUEST['bulk_rewriting'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			$copied_posts = \intval( $_REQUEST['bulk_rewriting'] ); // phpcs:ignore WordPress.Security.NonceVerification
-			echo '<div id="message" class="notice notice-success fade"><p>';
 			\printf(
+				'<div id="message" class="notice notice-success fade"><p>' .
 				\esc_html(
 				/* translators: %s: Number of posts copied. */
 					\_n(
@@ -78,11 +102,9 @@ class Admin_Notices {
 						$copied_posts,
 						'duplicate-post'
 					)
-				) . ' ',
+				) . '</p></div>',
 				\esc_html( $copied_posts )
 			);
-			echo '</p></div>';
-			\remove_query_arg( 'bulk_rewriting' );
 		}
 	}
 }
