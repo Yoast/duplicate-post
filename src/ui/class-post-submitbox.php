@@ -55,8 +55,8 @@ class Post_Submitbox {
 	 * Adds a button in the post/page edit screen to create a clone
 	 *
 	 * @param \WP_Post|null $post The post object that's being edited.
-     *
-     * @return void
+	 *
+	 * @return void
 	 */
 	public function add_new_draft_post_button( $post = null ) {
 		if ( \intval( \get_option( 'duplicate_post_show_submitbox' ) ) !== 1 ) {
