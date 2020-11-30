@@ -88,4 +88,16 @@ class Utils {
 	public static function is_copy_for_rewrite_republish( $post_id ) {
 		return (bool) \get_post_meta( $post_id, '_dp_is_rewrite_republish_copy', true );
 	}
+
+	/**
+	 * Gets the text for the republished notice.
+	 *
+	 * @return strong The republished notice text.
+	 */
+	public static function get_republished_notice_text() {
+		return \__(
+			'Your original post has been replaced with the rewritten post. You are now viewing the (rewritten) original post.',
+			'duplicate-post'
+		);
+	}
 }
