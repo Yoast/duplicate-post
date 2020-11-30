@@ -41,11 +41,14 @@ class Post_Republisher {
 
 		$enabled_post_types = Utils::get_enabled_post_types();
 		foreach ( $enabled_post_types as $enabled_post_type ) {
-			// Classic editor: Post transition action, called when a post transitions to the rewrite_republish status.
-			\add_action( "rewrite_republish_{$enabled_post_type}", [ $this, 'republish_classic' ], 10, 2 );
-			// Block editor: called after a single post is completely created or updated via the REST API.
-			\add_action( "rest_after_insert_{$enabled_post_type}", [ $this, 'republish_gutenberg' ] );
+			// Called in the REST API for the Block Editor after the copy gets "published".
+			// Runs the republishing of the copy onto the original.
+			\add_action( "rest_after_insert_{$enabled_post_type}", [ $this, 'republish_after_rest_api_request' ] );
 		}
+		// Called by the traditional post update flow, which runs in two cases:
+		// - In the Classic Editor, where there's only one request that updates everything.
+		// - In the Block Editor, only when there are custom meta boxes.
+		\add_action( 'wp_insert_post', [ $this, 'republish_after_post_request' ], 9999, 2 );
 	}
 
 	/**
@@ -107,7 +110,7 @@ class Post_Republisher {
 	 *
 	 * @return void
 	 */
-	public function republish_gutenberg( $post_data ) {
+	public function republish_after_rest_api_request( $post_data ) {
 		if ( $post_data->post_status !== 'rewrite_republish' ) {
 			return;
 		}
@@ -139,7 +142,11 @@ class Post_Republisher {
 	 *
 	 * @return void
 	 */
-	public function republish_classic( $post_id, $post_data ) {
+	public function republish_after_post_request( $post_id, $post_data ) {
+		if ( $post_data->post_status !== 'rewrite_republish' ) {
+			return;
+		}
+
 		if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
 			return;
 		}
