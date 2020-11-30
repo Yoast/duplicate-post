@@ -119,9 +119,34 @@ class User_Interface {
 			'duplicate_post_edit_script',
 			'duplicatePostRewriteRepost',
 			[
-				'permalink' => $this->get_rewrite_republish_permalink(),
-				'rewriting' => ( ! empty( $_REQUEST['rewriting'] ) ) ? 1 : 0,  // phpcs:ignore WordPress.Security.NonceVerification
+				'permalink'        => $this->get_rewrite_republish_permalink(),
+				'rewriting'        => ( ! empty( $_REQUEST['rewriting'] ) ) ? 1 : 0,  // phpcs:ignore WordPress.Security.NonceVerification
+				'originalEditURL'  => $this->get_original_post_edit_url(),
 			]
+		);
+	}
+
+	/**
+	 * Generates a URL to the original post edit screen.
+	 *
+	 * @return string The URL. Empty if the copy post doesn't have an original.
+	 */
+	public function get_original_post_edit_url() {
+		if ( ! $this->post ) {
+			$this->post = \get_post();
+		}
+
+		$original_post_id = Utils::get_original_post_id( $this->post->ID );
+
+		if ( ! $original_post_id ) {
+			return '';
+		}
+
+		return \add_query_arg(
+			[
+				'republished' => 1,
+			],
+			\admin_url( 'post.php?action=edit&post=' . $original_post_id )
 		);
 	}
 

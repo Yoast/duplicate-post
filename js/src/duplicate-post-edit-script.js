@@ -12,18 +12,26 @@ class DuplicatePost {
 	}
 
 	handleRewritingPost() {
-		const {
-			isSavingPost,
-			isAutosavingPost,
-			didPostSaveRequestSucceed,
-			getEditedPostAttribute
-		} = select( 'core/editor' );
+		const isSavingPost = wp.data.select( 'core/editor' ).isSavingPost();
+		const isAutosavingPost = wp.data.select( 'core/editor' ).isAutosavingPost();
+		const didPostSaveRequestSucceed = wp.data.select( 'core/editor' ).didPostSaveRequestSucceed();
+		const currentPostStatus = wp.data.select( 'core/editor' ).getEditedPostAttribute( 'status' );
 
-		const currentPostStatus = getEditedPostAttribute( 'status' );
+		// These can be used to determine whether active metaboxes are saving.
+		const hasActiveMetaBoxes = wp.data.select( 'core/edit-post' ).hasMetaBoxes();
+		const isSavingMetaBoxes = wp.data.select( 'core/edit-post' ).isSavingMetaBoxes();
 
-		if ( ! isSavingPost && ! isAutosavingPost && didPostSaveRequestSucceed && currentPostStatus === "rewrite_republish" ) {
-			console.log( "saved", currentPostStatus );
-//				window.location.href = {insert URL here};
+		console.log( { isSavingPost, currentPostStatus, hasActiveMetaBoxes, isSavingMetaBoxes } );
+		if (
+			! isSavingPost &&
+			! isAutosavingPost &&
+			didPostSaveRequestSucceed &&
+			! isSavingMetaBoxes &&
+			currentPostStatus === "rewrite_republish" &&
+			duplicatePostRewriteRepost.originalEditURL
+		) {
+			console.log( 'redirecting now' );
+			window.location.href = duplicatePostRewriteRepost.originalEditURL;
 		}
 	}
 
