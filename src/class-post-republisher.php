@@ -125,7 +125,7 @@ class Post_Republisher {
 		// Republish the post.
 		$this->republish_post_elements( $post_data, $original_post_id );
 		// Investigate whether the clean-up needs to be done on the Gutenberg JS side.
-		$this->clean_up( $post_id, $original_post_id );
+		// $this->clean_up( $post_id, $original_post_id );
 	}
 
 	/**
