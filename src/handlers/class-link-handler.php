@@ -48,7 +48,7 @@ class Link_Handler {
 	 *
 	 * @return void
 	 */
-	private function register_hooks() {
+	public function register_hooks() {
 		\add_action( 'admin_action_duplicate_post_rewrite', [ $this, 'rewrite_link_action_handler' ] );
 		\add_action( 'admin_action_duplicate_post_clone', [ $this, 'clone_link_action_handler' ] );
 		\add_action( 'admin_action_duplicate_post_new_draft', [ $this, 'new_draft_link_action_handler' ] );

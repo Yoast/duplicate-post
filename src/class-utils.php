@@ -77,14 +77,14 @@ class Utils {
 	}
 
 	/**
-	 * Checks if the post has ancestors marked for copy.
+	 * Determines if the post has ancestors marked for copy.
 	 *
 	 * If we are copying children, and the post has already an ancestor marked for copy, we have to filter it out.
 	 *
 	 * @param \WP_Post $post     The post object.
 	 * @param array    $post_ids The array of marked post IDs.
 	 *
-	 * @return bool
+	 * @return bool Whether the post has ancestors marked for copy.
 	 */
 	public static function has_ancestors_marked( $post, $post_ids ) {
 		$ancestors_in_array = 0;
@@ -95,15 +95,15 @@ class Utils {
 			}
 			$parent = \wp_get_post_parent_id( $parent );
 		}
-		return ( 0 !== $ancestors_in_array );
+		return ( $ancestors_in_array !== 0 );
 	}
 
 	/**
 	 * Returns a link to edit, preview or view a post, in accordance to user capabilities.
 	 *
-	 * @param \WP_Post $post                              Post ID or Post object.
+	 * @param \WP_Post $post Post ID or Post object.
 	 *
-	 * @return string|null
+	 * @return string|null The link to edit, preview or view a post.
 	 */
 	public static function get_edit_or_view_link( $post ) {
 		$post = \get_post( $post );
@@ -115,7 +115,7 @@ class Utils {
 		$title            = \_draft_or_post_title( $post );
 		$post_type_object = \get_post_type_object( $post->post_type );
 
-		if ( $can_edit_post && 'trash' !== $post->post_status ) {
+		if ( $can_edit_post && $post->post_status !== 'trash' ) {
 			return \sprintf(
 				'<a href="%s" aria-label="%s">%s</a>',
 				\get_edit_post_link( $post->ID ),
@@ -135,7 +135,7 @@ class Utils {
 						$title
 					);
 				}
-			} elseif ( 'trash' !== $post->post_status ) {
+			} elseif ( $post->post_status !== 'trash' ) {
 				return \sprintf(
 					'<a href="%s" rel="bookmark" aria-label="%s">%s</a>',
 					\get_permalink( $post->ID ),

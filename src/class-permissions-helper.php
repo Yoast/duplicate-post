@@ -27,17 +27,18 @@ class Permissions_Helper {
 	}
 
 	/**
-	 * Tests if post type is enable to be copied.
+	 * Determines if post type is enabled to be copied.
 	 *
 	 * @param string $post_type The post type to check.
-	 * @return bool
+	 *
+	 * @return bool Whether the post type is enabled to be copied.
 	 */
 	public function is_post_type_enabled( $post_type ) {
 		return \in_array( $post_type, $this->get_enabled_post_types(), true );
 	}
 
 	/**
-	 * Test if the current user can copy posts.
+	 * Determines if the current user can copy posts.
 	 *
 	 * @return bool Whether the current user can copy posts.
 	 */
@@ -46,7 +47,7 @@ class Permissions_Helper {
 	}
 
 	/**
-	 * Tests if the post is a copy intended for Rewrite & Republish.
+	 * Determines if the post is a copy intended for Rewrite & Republish.
 	 *
 	 * @param \WP_Post $post The post object.
 	 *
@@ -57,7 +58,7 @@ class Permissions_Helper {
 	}
 
 	/**
-	 * Tests if duplicate links for the post can be displayed.
+	 * Determines if duplicate links for the post can be displayed.
 	 *
 	 * @param \WP_Post $post The post object.
 	 *
@@ -85,7 +86,7 @@ class Permissions_Helper {
 	}
 
 	/**
-	 * Checks whether the passed post type is public and shows an admin bar.
+	 * Determines whether the passed post type is public and shows an admin bar.
 	 *
 	 * @param string $post_type The post_type to copy.
 	 *

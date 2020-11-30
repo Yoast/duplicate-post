@@ -58,6 +58,8 @@ class Admin_Bar {
 	 * Shows Rewrite & Republish link in the Toolbar.
 	 *
 	 * @global \WP_Admin_Bar $wp_admin_bar WP_Admin_Bar instance.
+	 *
+	 * @return void
 	 */
 	public function admin_bar_render() {
 		global $wp_admin_bar;
@@ -96,6 +98,8 @@ class Admin_Bar {
 	 * Links stylesheet for Toolbar link.
 	 *
 	 * @global \WP_Query $wp_the_query.
+	 *
+	 * @return void
 	 */
 	public function enqueue_styles() {
 		if ( ! \is_admin_bar_showing() ) {

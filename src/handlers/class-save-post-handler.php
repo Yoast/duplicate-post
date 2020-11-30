@@ -38,7 +38,7 @@ class Save_Post_Handler {
 	 *
 	 * @return void
 	 */
-	private function register_hooks() {
+	public function register_hooks() {
 		if ( \intval( \get_option( 'duplicate_post_show_original_meta_box' ) ) === 1
 			|| \intval( \get_option( 'duplicate_post_show_original_column' ) ) === 1 ) {
 			\add_action( 'save_post', [ $this, 'delete_on_save_post' ] );

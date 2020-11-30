@@ -178,7 +178,7 @@ class Permissions_Helper_Test extends TestCase {
 	/**
 	 * Data provider for test_is_valid_post_edit_screen_provider.
 	 *
-	 * @return array
+	 * @return array The test parameters.
 	 */
 	public function is_valid_post_edit_screen_provider() {
 		return [
@@ -250,7 +250,7 @@ class Permissions_Helper_Test extends TestCase {
 	/**
 	 * Data provider for test_post_type_has_admin_bar.
 	 *
-	 * @return array
+	 * @return array The test parameters.
 	 */
 	public function post_type_has_admin_bar_provider() {
 		return [

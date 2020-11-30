@@ -49,7 +49,7 @@ class Bulk_Handler {
 	 *
 	 * @return void
 	 */
-	private function register_hooks() {
+	public function register_hooks() {
 		\add_action( 'admin_init', [ $this, 'add_bulk_handlers' ] );
 	}
 
@@ -77,8 +77,7 @@ class Bulk_Handler {
 	 */
 	public function bulk_action_handler( $redirect_to, $doaction, array $post_ids ) {
 		$redirect_to = $this->clone_bulk_action_handler( $redirect_to, $doaction, $post_ids );
-		$redirect_to = $this->rewrite_bulk_action_handler( $redirect_to, $doaction, $post_ids );
-		return $redirect_to;
+		return $this->rewrite_bulk_action_handler( $redirect_to, $doaction, $post_ids );
 	}
 
 	/**
@@ -105,8 +104,7 @@ class Bulk_Handler {
 				}
 			}
 		}
-		$redirect_to = \add_query_arg( 'bulk_rewriting', $counter, $redirect_to );
-		return $redirect_to;
+		return \add_query_arg( 'bulk_rewriting', $counter, $redirect_to );
 	}
 
 	/**
@@ -137,7 +135,6 @@ class Bulk_Handler {
 				}
 			}
 		}
-		$redirect_to = \add_query_arg( 'cloned', $counter, $redirect_to );
-		return $redirect_to;
+		return \add_query_arg( 'cloned', $counter, $redirect_to );
 	}
 }

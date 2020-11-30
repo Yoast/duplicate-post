@@ -21,28 +21,28 @@ class Duplicate_Post {
 	 *
 	 * @var Permissions_Helper
 	 */
-	private $permissions_helper;
+	protected $permissions_helper;
 
 	/**
 	 * User_Interface object.
 	 *
 	 * @var User_Interface
 	 */
-	private $user_interface;
+	protected $user_interface;
 
 	/**
 	 * Post_Duplicator object.
 	 *
 	 * @var Post_Duplicator
 	 */
-	private $post_duplicator;
+	protected $post_duplicator;
 
 	/**
 	 * Handler object.
 	 *
 	 * @var Handler
 	 */
-	private $handler;
+	protected $handler;
 
 	/**
 	 * Initializes the main class.

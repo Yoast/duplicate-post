@@ -64,6 +64,7 @@ class Bulk_Actions {
 	 * Adds 'Rewrite & Republish' to the bulk action dropdown.
 	 *
 	 * @param array $bulk_actions The bulk actions array.
+	 *
 	 * @return array The bulk actions array.
 	 */
 	public function register_bulk_action( $bulk_actions ) {

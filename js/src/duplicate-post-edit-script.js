@@ -23,7 +23,7 @@ const render = () => (
 				</Button>
 			</PluginPostStatusInfo>
 		}
-		{duplicatePost.rewrite_and_republish_link !== '' &&
+		{ duplicatePost.rewrite_and_republish_link !== '' &&
 			<PluginPostStatusInfo>
 				<Button
 					isTertiary={ true }

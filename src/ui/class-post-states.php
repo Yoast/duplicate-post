@@ -37,7 +37,8 @@ class Post_States {
 	 *
 	 * @param array    $post_states The array of post states.
 	 * @param \WP_Post $post        The current post.
-	 * @return array
+	 *
+	 * @return array The updated post states array.
 	 */
 	public function show_original_in_post_states( $post_states, $post ) {
 		$original_item = Utils::get_original( $post );
