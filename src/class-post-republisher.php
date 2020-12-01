@@ -37,7 +37,7 @@ class Post_Republisher {
 	 */
 	public function register_hooks() {
 		\add_action( 'init', [ $this, 'register_post_statuses' ] );
-		\add_filter( 'wp_insert_post_data', [ $this, 'change_post_copy_status' ], 10, 2 );
+		\add_filter( 'wp_insert_post_data', [ $this, 'change_post_copy_status' ], 1, 2 );
 
 		$enabled_post_types = Utils::get_enabled_post_types();
 		foreach ( $enabled_post_types as $enabled_post_type ) {
@@ -54,24 +54,37 @@ class Post_Republisher {
 	/**
 	 * Adds custom post statuses.
 	 *
+	 * These post statuses are meant for internal use. However, we can't use the
+	 * `internal` status because the REST API posts controller allows all registered
+	 * statuses but the `internal` one.
+	 *
 	 * @return void
 	 */
 	public function register_post_statuses() {
 		$republish_args = [
-			'label'  => __( 'Republish', 'duplicate-post' ),
-			'public' => true,
+			'label'                     => __( 'Republish', 'duplicate-post' ),
+			'public'                    => true,
+			'exclude_from_search'       => false,
+			'show_in_admin_all_list'    => false,
+			'show_in_admin_status_list' => false,
 		];
 		\register_post_status( 'rewrite_republish', $republish_args );
 
 		$schedule_args = [
-			'label'  => __( 'Future Republish', 'duplicate-post' ),
-			'public' => true,
+			'label'                     => __( 'Future Republish', 'duplicate-post' ),
+			'public'                    => true,
+			'exclude_from_search'       => false,
+			'show_in_admin_all_list'    => false,
+			'show_in_admin_status_list' => false,
 		];
 		\register_post_status( 'rewrite_schedule', $schedule_args );
 
 		$rewrite_args = [
-			'label'  => __( 'Rewrite Draft', 'duplicate-post' ),
-			'public' => true,
+			'label'                     => __( 'Republish Draft', 'duplicate-post' ),
+			'public'                    => true,
+			'exclude_from_search'       => false,
+			'show_in_admin_all_list'    => false,
+			'show_in_admin_status_list' => false,
 		];
 		\register_post_status( 'rewrite_draft', $rewrite_args );
 	}
