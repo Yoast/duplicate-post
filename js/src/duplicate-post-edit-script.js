@@ -1,4 +1,4 @@
-/* global duplicatePost */
+/* global duplicatePostLinks */
 
 import { registerPlugin } from "@wordpress/plugins";
 import { PluginPostStatusInfo } from "@wordpress/edit-post";
@@ -13,21 +13,21 @@ import { __ } from "@wordpress/i18n";
  */
 const render = () => (
 	<Fragment>
-		{ duplicatePost.new_draft_link !== '' &&
+		{ duplicatePostLinks.new_draft_link !== '' &&
 			<PluginPostStatusInfo>
 				<Button
 					isTertiary={ true }
-					href={ duplicatePost.new_draft_link }
+					href={ duplicatePostLinks.new_draft_link }
 				>
 					{ __( 'Copy to a new draft', 'duplicate-post' ) }
 				</Button>
 			</PluginPostStatusInfo>
 		}
-		{ duplicatePost.rewrite_and_republish_link !== '' &&
+		{ duplicatePostLinks.rewrite_and_republish_link !== '' &&
 			<PluginPostStatusInfo>
 				<Button
 					isTertiary={ true }
-					href={ duplicatePost.rewrite_and_republish_link }
+					href={ duplicatePostLinks.rewrite_and_republish_link }
 				>
 					{ __( 'Rewrite & Republish', 'duplicate-post' ) }
 				</Button>
@@ -40,17 +40,15 @@ registerPlugin( 'duplicate-post', {
 	render
 } );
 
-if ( parseInt( duplicatePost.rewriting ) ) {
-	( function( wp ) {
-		wp.data.dispatch( 'core/notices' ).createNotice(
-			'warning',
-			__(
-				'You can now start rewriting your post in this duplicate of the original post. If you click "Republish", this rewritten post will replace the original post.',
-				'duplicate-post'
-			),
+( function( wp ) {
+	for ( const [ key, notice ] of Object.entries( duplicatePostNotices ) ){
+		let noticeObj = JSON.parse( notice );
+		wp.data.dispatch('core/notices').createNotice(
+			noticeObj.status,
+			noticeObj.text,
 			{
-				isDismissible: true, // Whether the user can dismiss the notice.
+				isDismissible: noticeObj.isDismissible, // Whether the user can dismiss the notice.
 			}
 		);
-	} )( window.wp );
-}
+	}
+} )( window.wp );

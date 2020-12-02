@@ -91,16 +91,20 @@ class Block_Editor {
 				'wp-i18n',
 			],
 			DUPLICATE_POST_CURRENT_VERSION,
-			true
+			false
+		);
+		\wp_add_inline_script(
+			'duplicate_post_edit_script',
+			'let duplicatePostNotices = {};',
+			'before'
 		);
 
 		\wp_localize_script(
 			'duplicate_post_edit_script',
-			'duplicatePost',
+			'duplicatePostLinks',
 			[
 				'new_draft_link'             => $this->get_new_draft_permalink(),
 				'rewrite_and_republish_link' => $this->get_rewrite_republish_permalink(),
-				'rewriting'                  => ( ! empty( $_REQUEST['rewriting'] ) ) ? 1 : 0,  // phpcs:ignore WordPress.Security.NonceVerification
 			]
 		);
 	}
