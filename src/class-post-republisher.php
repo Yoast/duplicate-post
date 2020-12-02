@@ -140,6 +140,8 @@ class Post_Republisher {
 		$this->republish_post_meta( $post_id, $post_data );
 		// Republish the post.
 		$this->republish_post_elements( $post_data, $original_post_id );
+
+		header( 'X-Yoast-Meta-Stored: 1' );
 		// This clean-up shhould run only when there are no meta boxes in Gutenberg.
 		// Otherwise, custom meta boxes values aren't copied.
 		// $this->clean_up( $post_id, $original_post_id );
@@ -176,9 +178,13 @@ class Post_Republisher {
 		$this->republish_post_meta( $post_id, $post_data );
 		// Republish the post.
 		$this->republish_post_elements( $post_data, $original_post_id );
+
+		header( 'X-Yoast-Meta-Stored: 1' );
+
+
 		// Delete the copy and redirect.
-		$this->clean_up( $post_id, $original_post_id );
-		$this->redirect( $original_post_id );
+//		$this->clean_up( $post_id, $original_post_id );
+//		$this->redirect( $original_post_id );
 	}
 
 	/**
