@@ -37,38 +37,54 @@ class Post_Republisher {
 	 */
 	public function register_hooks() {
 		\add_action( 'init', [ $this, 'register_post_statuses' ] );
-		\add_filter( 'wp_insert_post_data', [ $this, 'change_post_copy_status' ], 10, 2 );
+		\add_filter( 'wp_insert_post_data', [ $this, 'change_post_copy_status' ], 1, 2 );
 
 		$enabled_post_types = Utils::get_enabled_post_types();
 		foreach ( $enabled_post_types as $enabled_post_type ) {
-			// Classic editor: Post transition action, called when a post transitions to the rewrite_republish status.
-			\add_action( "rewrite_republish_{$enabled_post_type}", [ $this, 'republish_classic' ], 10, 2 );
-			// Block editor: called after a single post is completely created or updated via the REST API.
-			\add_action( "rest_after_insert_{$enabled_post_type}", [ $this, 'republish_gutenberg' ] );
+			// Called in the REST API for the Block Editor after the copy gets "published".
+			// Runs the republishing of the copy onto the original.
+			\add_action( "rest_after_insert_{$enabled_post_type}", [ $this, 'republish_after_rest_api_request' ] );
 		}
+		// Called by the traditional post update flow, which runs in two cases:
+		// - In the Classic Editor, where there's only one request that updates everything.
+		// - In the Block Editor, only when there are custom meta boxes.
+		\add_action( 'wp_insert_post', [ $this, 'republish_after_post_request' ], 9999, 2 );
 	}
 
 	/**
 	 * Adds custom post statuses.
 	 *
+	 * These post statuses are meant for internal use. However, we can't use the
+	 * `internal` status because the REST API posts controller allows all registered
+	 * statuses but the `internal` one.
+	 *
 	 * @return void
 	 */
 	public function register_post_statuses() {
 		$republish_args = [
-			'label'  => __( 'Republish', 'duplicate-post' ),
-			'public' => true,
+			'label'                     => __( 'Republish', 'duplicate-post' ),
+			'public'                    => true,
+			'exclude_from_search'       => false,
+			'show_in_admin_all_list'    => false,
+			'show_in_admin_status_list' => false,
 		];
 		\register_post_status( 'rewrite_republish', $republish_args );
 
 		$schedule_args = [
-			'label'  => __( 'Future Republish', 'duplicate-post' ),
-			'public' => true,
+			'label'                     => __( 'Future Republish', 'duplicate-post' ),
+			'public'                    => true,
+			'exclude_from_search'       => false,
+			'show_in_admin_all_list'    => false,
+			'show_in_admin_status_list' => false,
 		];
 		\register_post_status( 'rewrite_schedule', $schedule_args );
 
 		$rewrite_args = [
-			'label'  => __( 'Rewrite Draft', 'duplicate-post' ),
-			'public' => true,
+			'label'                     => __( 'Republish Draft', 'duplicate-post' ),
+			'public'                    => true,
+			'exclude_from_search'       => false,
+			'show_in_admin_all_list'    => false,
+			'show_in_admin_status_list' => false,
 		];
 		\register_post_status( 'rewrite_draft', $rewrite_args );
 	}
@@ -107,7 +123,7 @@ class Post_Republisher {
 	 *
 	 * @return void
 	 */
-	public function republish_gutenberg( $post_data ) {
+	public function republish_after_rest_api_request( $post_data ) {
 		if ( $post_data->post_status !== 'rewrite_republish' ) {
 			return;
 		}
@@ -124,7 +140,8 @@ class Post_Republisher {
 		$this->republish_post_meta( $post_id, $post_data );
 		// Republish the post.
 		$this->republish_post_elements( $post_data, $original_post_id );
-		// Investigate whether the clean-up needs to be done on the Gutenberg JS side.
+		// This clean-up shhould run only when there are no meta boxes in Gutenberg.
+		// Otherwise, custom meta boxes values aren't copied.
 		// $this->clean_up( $post_id, $original_post_id );
 	}
 
@@ -139,7 +156,11 @@ class Post_Republisher {
 	 *
 	 * @return void
 	 */
-	public function republish_classic( $post_id, $post_data ) {
+	public function republish_after_post_request( $post_id, $post_data ) {
+		if ( $post_data->post_status !== 'rewrite_republish' ) {
+			return;
+		}
+
 		if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
 			return;
 		}
@@ -181,8 +202,7 @@ class Post_Republisher {
 		$rewritten_post_id = \wp_update_post( \wp_slash( $post_to_be_rewritten ), true );
 
 		if ( 0 === $rewritten_post_id || \is_wp_error( $rewritten_post_id ) ) {
-			// Error handling here.
-			die( 'An error occurred.' );
+			\wp_die( \esc_html__( 'An error occurred while republishing the post.', 'duplicate-post' ) );
 		}
 	}
 

@@ -48,6 +48,16 @@ class DuplicatePost {
 				}
 			);
 		}
+
+		if ( parseInt( duplicatePostRewriteRepost.republished ) ) {
+			dispatch( 'core/notices' ).createNotice(
+				'warning',
+				duplicatePostRewriteRepost.republishedText,
+				{
+					isDismissible: true, // Whether the user can dismiss the notice.
+				}
+			);
+		}
 	}
 
 	/**
