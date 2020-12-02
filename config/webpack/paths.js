@@ -7,6 +7,7 @@ const jsSrcPath = path.resolve( "js", "src" );
 // Entries for webpack to make bundles from.
 const entry = {
 	"duplicate-post-edit": "./duplicate-post-edit-script.js",
+	"duplicate-post-options": "./duplicate-post-options.js",
 };
 
 /**
