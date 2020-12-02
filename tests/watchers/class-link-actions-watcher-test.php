@@ -1,0 +1,256 @@
+<?php
+/**
+ * Duplicate Post test file.
+ *
+ * @package Duplicate_Post\Tests
+ */
+
+namespace Yoast\WP\Duplicate_Post\Tests\Watchers;
+
+use Brain\Monkey;
+use Yoast\WP\Duplicate_Post\Permissions_Helper;
+use Yoast\WP\Duplicate_Post\Tests\TestCase;
+use Yoast\WP\Duplicate_Post\Watchers\Link_Actions_Watcher;
+
+/**
+ * Test the Link_Actions_Watcher class.
+ */
+class Link_Actions_Watcher_Test extends TestCase {
+
+	/**
+	 * Holds the permissions helper.
+	 *
+	 * @var Permissions_Helper
+	 */
+	protected $permissions_helper;
+
+	/**
+	 * The instance.
+	 *
+	 * @var Link_Actions_Watcher
+	 */
+	protected $instance;
+
+	/**
+	 * Sets the instance.
+	 */
+	public function setUp() {
+		parent::setUp();
+
+		$this->permissions_helper = \Mockery::mock( Permissions_Helper::class );
+
+		$this->instance = \Mockery::mock(
+			Link_Actions_Watcher::class
+		)->makePartial();
+		$this->instance->__construct( $this->permissions_helper );
+	}
+
+	/**
+	 * Tests the constructor.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Link_Actions_Watcher::__construct
+	 */
+	public function test_constructor() {
+		$this->assertAttributeInstanceOf( Permissions_Helper::class, 'permissions_helper', $this->instance );
+	}
+
+	/**
+	 * Tests the registration of the hooks.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Link_Actions_Watcher::register_hooks
+	 */
+	public function test_register_hooks() {
+		$this->instance->register_hooks();
+
+		$this->assertNotFalse( \has_filter( 'removable_query_args', [ $this->instance, 'add_removable_query_args' ] ), 'Does not have expected removable_query_args filter' );
+		$this->assertNotFalse( \has_action( 'admin_notices', [ $this->instance, 'add_clone_admin_notice' ] ), 'Does not have expected admin_notices action' );
+		$this->assertNotFalse( \has_action( 'admin_notices', [ $this->instance, 'add_rewrite_and_republish_admin_notice' ] ), 'Does not have expected admin_notices action' );
+		$this->assertNotFalse( \has_action( 'enqueue_block_editor_assets', [ $this->instance, 'add_rewrite_and_republish_block_editor_notice' ] ), 'Does not have expected enqueue_block_editor_assets action' );
+	}
+
+	/**
+	 * Tests the add_removable_query_args function.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Link_Actions_Watcher::add_removable_query_args
+	 */
+	public function test_add_removable_query_args() {
+		$array = [
+			'activate',
+			'activated',
+			'admin_email_remind_later',
+			'approved',
+			'deactivate',
+			'delete_count',
+			'deleted',
+			'disabled',
+			'doing_wp_cron',
+			'enabled',
+			'error',
+			'hotkeys_highlight_first',
+			'hotkeys_highlight_last',
+			'locked',
+			'message',
+			'same',
+			'saved',
+			'settings-updated',
+			'skipped',
+			'spammed',
+			'trashed',
+			'unspammed',
+			'untrashed',
+			'update',
+			'updated',
+			'wp-post-new-reload',
+		];
+
+		$this->assertEquals(
+			[
+				'activate',
+				'activated',
+				'admin_email_remind_later',
+				'approved',
+				'deactivate',
+				'delete_count',
+				'deleted',
+				'disabled',
+				'doing_wp_cron',
+				'enabled',
+				'error',
+				'hotkeys_highlight_first',
+				'hotkeys_highlight_last',
+				'locked',
+				'message',
+				'same',
+				'saved',
+				'settings-updated',
+				'skipped',
+				'spammed',
+				'trashed',
+				'unspammed',
+				'untrashed',
+				'update',
+				'updated',
+				'wp-post-new-reload',
+				'cloned',
+				'rewriting',
+			],
+			$this->instance->add_removable_query_args( $array )
+		);
+	}
+
+	/**
+	 * Tests the add_clone_admin_notice function on the Classic Editor.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Link_Actions_Watcher::add_clone_admin_notice
+	 */
+	public function test_add_clone_admin_notice_classic() {
+		$_REQUEST['cloned'] = '1';
+
+		$this->permissions_helper
+			->expects( 'is_classic_editor' )
+			->andReturnTrue();
+
+		$this->instance->add_clone_admin_notice();
+
+		$this->expectOutputString( '<div id="message" class="notice notice-success fade"><p>1 item copied.</p></div>' );
+	}
+
+	/**
+	 * Tests the add_clone_admin_notice function when not on the Classic editor.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Link_Actions_Watcher::add_clone_admin_notice
+	 */
+	public function test_add_clone_admin_notice_not_classic() {
+		$_REQUEST['cloned'] = '1';
+
+		$this->permissions_helper
+			->expects( 'is_classic_editor' )
+			->andReturnFalse();
+
+		$this->instance->add_clone_admin_notice();
+
+		$this->expectOutputString( '' );
+	}
+
+	/**
+	 * Tests the get_rewrite_and_republish_notice_text function.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Link_Actions_Watcher::get_rewrite_and_republish_notice_text
+	 */
+	public function test_get_rewrite_and_republish_notice_text() {
+		$this->assertSame(
+			'You can now start rewriting your post in this duplicate of the original post. If you click "Republish", your changes will be merged into the original post and you’ll be redirected there.',
+			$this->instance->get_rewrite_and_republish_notice_text()
+		);
+	}
+
+	/**
+	 * Tests the add_rewrite_and_republish_admin_notice function on the Classic editor.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Link_Actions_Watcher::add_rewrite_and_republish_admin_notice
+	 */
+	public function test_add_rewrite_and_republish_admin_notice_classic() {
+		$_REQUEST['rewriting'] = '1';
+
+		$this->permissions_helper
+			->expects( 'is_classic_editor' )
+			->andReturnTrue();
+
+		$this->instance
+			->expects( 'get_rewrite_and_republish_notice_text' )
+			->andReturn( 'notice' );
+
+		$this->instance->add_rewrite_and_republish_admin_notice();
+
+		$this->expectOutputString( '<div id="message" class="notice notice-warning is-dismissible fade"><p>notice</p></div>' );
+	}
+
+	/**
+	 * Tests the add_rewrite_and_republish_admin_notice function when not on the Classic editor.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Link_Actions_Watcher::add_rewrite_and_republish_admin_notice
+	 */
+	public function test_add_rewrite_and_republish_admin_notice_not_classic() {
+		$_REQUEST['rewriting'] = '1';
+
+		$this->permissions_helper
+			->expects( 'is_classic_editor' )
+			->andReturnFalse();
+
+		$this->instance->add_rewrite_and_republish_admin_notice();
+
+		$this->expectOutputString( '' );
+	}
+
+	/**
+	 * Tests the add_rewrite_and_republish_block_editor_notice function.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Link_Actions_Watcher::add_rewrite_and_republish_block_editor_notice
+	 */
+	public function test_add_rewrite_and_republish_block_editor_notice() {
+		$_REQUEST['rewriting'] = '1';
+
+		$notice = [
+			'text'          => 'notice',
+			'status'        => 'warning',
+			'isDismissible' => true,
+		];
+
+		$this->instance
+			->expects( 'get_rewrite_and_republish_notice_text' )
+			->andReturn( 'notice' );
+
+		Monkey\Functions\expect( '\wp_json_encode' )
+			->with( $notice )
+			->andReturn( '{"text":"notice","status":"warning","isDismissible":true}' );
+
+		Monkey\Functions\expect( '\wp_add_inline_script' )
+			->with(
+				'duplicate_post_edit_script',
+				"duplicatePostNotices.rewriting_notice = '{\"text\":\"notice\",\"status\":\"warning\",\"isDismissible\":true}';",
+				'before'
+			);
+
+		$this->instance->add_rewrite_and_republish_block_editor_notice();
+	}
+}
