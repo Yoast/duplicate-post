@@ -144,22 +144,10 @@ class Post_Republisher {
 		// Republish the post.
 		$this->republish_post_elements( $post_data, $original_post_id );
 
-		// Delete the copy and redirect.
-		// $this->clean_up( $post_id, $original_post_id );
-
-		// Change this to trigger only if using classic editor.
-		if ( $this->is_classic_editor() ) {
+		// Trigger the redirect in the Classic Editor.
+		if ( $this->is_classic_editor_post_request() ) {
 			$this->redirect( $original_post_id );
 		}
-	}
-
-	/**
-	 * Check if Classic Editor is being used.
-	 *
-	 * @return bool True if the current screen uses the Classic Editor. False otherwise.
-	 */
-	public function is_classic_editor() {
-		return WP_Screen::get()->is_block_editor() === false;
 	}
 
 	/**
@@ -295,5 +283,18 @@ class Post_Republisher {
 			)
 		);
 		exit();
+	}
+
+	/**
+	 * Checks whether a request is the Classic Editor POST request.
+	 *
+	 * @return bool Whether the request is the Classic Editor POST request.
+	 */
+	public function is_classic_editor_post_request() {
+		if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
+			return false;
+		}
+
+		return isset( $_GET['meta-box-loader'] ) === false; // phpcs:ignore WordPress.Security.NonceVerification
 	}
 }

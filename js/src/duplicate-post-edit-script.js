@@ -12,24 +12,37 @@ class DuplicatePost {
 		this.renderNotices();
 	}
 
-	handleRewritingPost() {
+	/**
+	 * Handles the redirect from the copy to the original.
+	 *
+	 * @returns {void}
+	 */
+	handleRedirect() {
 		if ( ! duplicatePostRewriteRepost.rewriting ) {
 			return;
 		}
 
-		const hasActiveMetaBoxes = select( 'core/edit-post' ).hasMetaBoxes();
-		let wasSavingPost        = false;
-		let wasSavingMetaboxes   = false;
-		let wasAutoSavingPost    = false;
+		let wasSavingPost      = false;
+		let wasSavingMetaboxes = false;
+		let wasAutoSavingPost  = false;
 
+		/**
+		 * Determines when the redirect needs to happen.
+		 *
+		 * @returns {void}
+		 */
 		subscribe( () => {
-			const isSavingPost      = select( 'core/editor' ).isSavingPost();
-			const isAutosavingPost  = select( 'core/editor' ).isAutosavingPost();
-			const isSavingMetaBoxes = select( 'core/edit-post' ).isSavingMetaBoxes();
+			const isSavingPost       = select( 'core/editor' ).isSavingPost();
+			const isAutosavingPost   = select( 'core/editor' ).isAutosavingPost();
+			const hasActiveMetaBoxes = select( 'core/edit-post' ).hasMetaBoxes();
+			const isSavingMetaBoxes  = select( 'core/edit-post' ).isSavingMetaBoxes();
 
+			// When there are custom meta boxes, redirect after they're saved.
 			if ( hasActiveMetaBoxes && ! isSavingMetaBoxes && wasSavingMetaboxes ) {
 				window.location.href = duplicatePostRewriteRepost.originalEditURL;
 			}
+
+			// When there are no custom meta boxes, redirect after the post is saved.
 			if ( ! hasActiveMetaBoxes && ! isSavingPost && wasSavingPost && ! wasAutoSavingPost ) {
 				window.location.href = duplicatePostRewriteRepost.originalEditURL;
 			}
@@ -40,6 +53,11 @@ class DuplicatePost {
 		} );
 	}
 
+	/**
+	 * Renders the notices in the block editor.
+	 *
+	 * @returns {void}
+	 */
 	renderNotices() {
 		if ( parseInt( duplicatePostRewriteRepost.rewriting ) ) {
 			dispatch( 'core/notices' ).createNotice(
@@ -81,7 +99,7 @@ class DuplicatePost {
 }
 
 const instance = new DuplicatePost();
-instance.handleRewritingPost();
+instance.handleRedirect();
 
 registerPlugin( 'duplicate-post', {
 	render: instance.render
