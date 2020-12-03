@@ -69,7 +69,7 @@ class Block_Editor {
 			return;
 		}
 
-		$skip_assessment = \get_post_meta( $post->ID, '_dp_is_rewrite_republish_copy', true );
+		$skip_assessment = $this->permissions_helper->is_rewrite_and_republish_copy( $post );
 
 		if ( ! empty( $skip_assessment ) ) {
 			\add_filter( 'wpseo_previously_used_keyword_active', '__return_false' );

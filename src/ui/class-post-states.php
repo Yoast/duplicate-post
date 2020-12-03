@@ -10,7 +10,7 @@ namespace Yoast\WP\Duplicate_Post\UI;
 use Yoast\WP\Duplicate_Post\Utils;
 
 /**
- * Represents the Admin_Notices class.
+ * Represents the Post_States class.
  */
 class Post_States {
 
