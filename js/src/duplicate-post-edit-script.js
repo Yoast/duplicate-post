@@ -1,4 +1,4 @@
-/* global duplicatePostLinks */
+/* global duplicatePostLinks, duplicatePostNotices */
 
 import { registerPlugin } from "@wordpress/plugins";
 import { PluginPostStatusInfo } from "@wordpress/edit-post";
@@ -41,14 +41,19 @@ registerPlugin( 'duplicate-post', {
 } );
 
 ( function( wp ) {
+	if ( ! duplicatePostNotices || ! ( duplicatePostNotices instanceof Object ) ) {
+		return;
+	}
 	for ( const [ key, notice ] of Object.entries( duplicatePostNotices ) ){
 		let noticeObj = JSON.parse( notice );
-		wp.data.dispatch('core/notices').createNotice(
-			noticeObj.status,
-			noticeObj.text,
-			{
-				isDismissible: noticeObj.isDismissible, // Whether the user can dismiss the notice.
-			}
-		);
+		if ( noticeObj.status && noticeObj.text ) {
+			wp.data.dispatch('core/notices').createNotice(
+				noticeObj.status,
+				noticeObj.text,
+				{
+					isDismissible: noticeObj.isDismissible || true,
+				}
+			);
+		}
 	}
 } )( window.wp );
