@@ -173,18 +173,6 @@ class Link_Actions_Watcher_Test extends TestCase {
 	}
 
 	/**
-	 * Tests the get_rewrite_and_republish_notice_text function.
-	 *
-	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Link_Actions_Watcher::get_rewrite_and_republish_notice_text
-	 */
-	public function test_get_rewrite_and_republish_notice_text() {
-		$this->assertSame(
-			'You can now start rewriting your post in this duplicate of the original post. If you click "Republish", your changes will be merged into the original post and you’ll be redirected there.',
-			$this->instance->get_rewrite_and_republish_notice_text()
-		);
-	}
-
-	/**
 	 * Tests the add_rewrite_and_republish_admin_notice function on the Classic editor.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Link_Actions_Watcher::add_rewrite_and_republish_admin_notice
@@ -196,13 +184,9 @@ class Link_Actions_Watcher_Test extends TestCase {
 			->expects( 'is_classic_editor' )
 			->andReturnTrue();
 
-		$this->instance
-			->expects( 'get_rewrite_and_republish_notice_text' )
-			->andReturn( 'notice' );
-
 		$this->instance->add_rewrite_and_republish_admin_notice();
 
-		$this->expectOutputString( '<div id="message" class="notice notice-warning is-dismissible fade"><p>notice</p></div>' );
+		$this->expectOutputString( '<div id="message" class="notice notice-warning is-dismissible fade"><p>You can now start rewriting your post in this duplicate of the original post. If you click "Republish", your changes will be merged into the original post and you’ll be redirected there.</p></div>' );
 	}
 
 	/**
@@ -231,23 +215,19 @@ class Link_Actions_Watcher_Test extends TestCase {
 		$_REQUEST['rewriting'] = '1';
 
 		$notice = [
-			'text'          => 'notice',
+			'text'          => 'You can now start rewriting your post in this duplicate of the original post. If you click "Republish", this rewritten post will replace the original post.',
 			'status'        => 'warning',
 			'isDismissible' => true,
 		];
 
-		$this->instance
-			->expects( 'get_rewrite_and_republish_notice_text' )
-			->andReturn( 'notice' );
-
 		Monkey\Functions\expect( '\wp_json_encode' )
 			->with( $notice )
-			->andReturn( '{"text":"notice","status":"warning","isDismissible":true}' );
+			->andReturn( '{"text":"You can now start rewriting your post in this duplicate of the original post. If you click \"Republish\", this rewritten post will replace the original post.","status":"warning","isDismissible":true}' );
 
 		Monkey\Functions\expect( '\wp_add_inline_script' )
 			->with(
 				'duplicate_post_edit_script',
-				"duplicatePostNotices.rewriting_notice = '{\"text\":\"notice\",\"status\":\"warning\",\"isDismissible\":true}';",
+				"duplicatePostNotices.rewriting_notice = '{\"text\":\"You can now start rewriting your post in this duplicate of the original post. If you click \\\"Republish\\\", this rewritten post will replace the original post.\",\"status\":\"warning\",\"isDismissible\":true}';",
 				'before'
 			);
 

@@ -86,18 +86,6 @@ class Link_Actions_Watcher {
 	}
 
 	/**
-	 * Generates the translated text for the Rewrite & Republish link actions notice.
-	 *
-	 * @return string The translated text for the Rewrite & Republish link actions notice.
-	 */
-	public function get_rewrite_and_republish_notice_text() {
-		return __(
-			'You can now start rewriting your post in this duplicate of the original post. If you click "Republish", your changes will be merged into the original post and you’ll be redirected there.',
-			'duplicate-post'
-		);
-	}
-
-	/**
 	 * Shows a notice in Classic editor after the Rewrite & Republish action via link has succeeded.
 	 *
 	 * @return void
@@ -109,7 +97,10 @@ class Link_Actions_Watcher {
 			}
 
 			print '<div id="message" class="notice notice-warning is-dismissible fade"><p>' .
-			\esc_html( $this->get_rewrite_and_republish_notice_text() ) . '</p></div>';
+			\esc_html__(
+				'You can now start rewriting your post in this duplicate of the original post. If you click "Republish", your changes will be merged into the original post and you’ll be redirected there.',
+				'duplicate-post'
+			) . '</p></div>';
 		}
 	}
 
@@ -121,7 +112,12 @@ class Link_Actions_Watcher {
 	public function add_rewrite_and_republish_block_editor_notice() {
 		if ( ! empty( $_REQUEST['rewriting'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			$notice = [
-				'text'          => \wp_slash( $this->get_rewrite_and_republish_notice_text() ),
+				'text'          => \wp_slash(
+					__(
+						'You can now start rewriting your post in this duplicate of the original post. If you click "Republish", this rewritten post will replace the original post.',
+						'duplicate-post'
+					)
+				),
 				'status'        => 'warning',
 				'isDismissible' => true,
 			];
