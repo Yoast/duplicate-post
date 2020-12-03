@@ -53,7 +53,7 @@ class Copied_Post_Watcher {
 		$scheduled_copy = $this->permissions_helper->has_scheduled_rewrite_and_republish_copy( $post );
 		if ( ! $scheduled_copy ) {
 			return __(
-				'A copy of this post was made. Please note that any changes you make to this post will be replaced when the copied version is republished.',
+				'A duplicate of this post was made. Please note that any changes you make to this post will be replaced when the duplicated version is republished.',
 				'duplicate-post'
 			);
 		}
@@ -61,11 +61,11 @@ class Copied_Post_Watcher {
 		return sprintf(
 			/* translators: %1$s: scheduled date of the copy, %2$s: scheduled time of the copy.  */
 			__(
-				'A copy of this post was made, which is scheduled to replace this post on %1$s at %2$s.',
+				'A duplicate of this post was made, which is scheduled to replace this post on %1$s at %2$s.',
 				'duplicate-post'
 			),
-			\get_the_time( __( 'Y/m/d', 'default' ), $scheduled_copy ),
-			\get_the_time( __( 'g:i a', 'default' ), $scheduled_copy )
+			\get_the_time( \get_option( 'date_format' ), $scheduled_copy ),
+			\get_the_time( \get_option( 'time_format' ), $scheduled_copy )
 		);
 	}
 

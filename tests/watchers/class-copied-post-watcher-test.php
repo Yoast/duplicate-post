@@ -80,7 +80,7 @@ class Copied_Post_Watcher_Test extends TestCase {
 			->andReturnFalse();
 
 		$this->assertSame(
-			'A copy of this post was made. Please note that any changes you make to this post will be replaced when the copied version is republished.',
+			'A duplicate of this post was made. Please note that any changes you make to this post will be replaced when the duplicated version is republished.',
 			$this->instance->get_notice_text( $post )
 		);
 	}
@@ -99,12 +99,16 @@ class Copied_Post_Watcher_Test extends TestCase {
 			->with( $post )
 			->andReturn( $copy );
 
+		Monkey\Functions\expect( '\get_option' )
+			->twice()
+			->andReturnValues( [ 'Y/m/d', 'g:i a' ] );
+
 		Monkey\Functions\expect( '\get_the_time' )
 			->twice()
 			->andReturnValues( [ '2020/12/02', '10:30 am' ] );
 
 		$this->assertSame(
-			'A copy of this post was made, which is scheduled to replace this post on 2020/12/02 at 10:30 am.',
+			'A duplicate of this post was made, which is scheduled to replace this post on 2020/12/02 at 10:30 am.',
 			$this->instance->get_notice_text( $post )
 		);
 	}
