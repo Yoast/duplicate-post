@@ -17,6 +17,7 @@ const render = () => (
 			<PluginPostStatusInfo>
 				<Button
 					isTertiary={ true }
+					className="dp-editor-post-copy-to-draft"
 					href={ duplicatePostLinks.new_draft_link }
 				>
 					{ __( 'Copy to a new draft', 'duplicate-post' ) }
@@ -27,6 +28,7 @@ const render = () => (
 			<PluginPostStatusInfo>
 				<Button
 					isTertiary={ true }
+					className="dp-editor-post-rewrite-republish"
 					href={ duplicatePostLinks.rewrite_and_republish_link }
 				>
 					{ __( 'Rewrite & Republish', 'duplicate-post' ) }
