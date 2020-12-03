@@ -127,41 +127,115 @@ class Permissions_Helper_Test extends TestCase {
 	}
 
 	/**
-	 * Tests the should_link_be_displayed function.
+	 * Tests the successful has_rewrite_and_republish_copy function.
 	 *
-	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::should_link_be_displayed
+	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::has_rewrite_and_republish_copy
 	 */
-	public function test_should_link_be_displayed_unsuccessful() {
-		$post            = Mockery::mock( \WP_Post::class );
-		$post->post_type = 'post';
+	public function test_has_rewrite_and_republish_copy_successful() {
+		$post     = Mockery::mock( \WP_Post::class );
+		$post->ID = 123;
 
-		$this->instance
-			->expects( 'is_rewrite_and_republish_copy' )
-			->with( $post )
-			->andReturnFalse();
+		Monkey\Functions\expect( '\get_post_meta' )
+			->with( $post->ID, '_dp_has_rewrite_republish_copy', true )
+			->andReturn( '124' );
 
-		$this->instance
-			->expects( 'is_current_user_allowed_to_copy' )
-			->andReturnTrue();
-
-		$this->instance
-			->expects( 'is_post_type_enabled' )
-			->with( $post->post_type )
-			->andReturnTrue();
-
-		$this->assertTrue( $this->instance->should_link_be_displayed( $post ) );
+		$this->assertTrue( $this->instance->has_rewrite_and_republish_copy( $post ) );
 	}
 
 	/**
-	 * Tests the is_valid_post_edit_screen function.
+	 * Tests the unsuccessful has_rewrite_and_republish_copy function.
 	 *
-	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::is_valid_post_edit_screen
-	 * @dataProvider is_valid_post_edit_screen_provider
+	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::has_rewrite_and_republish_copy
+	 */
+	public function test_has_rewrite_and_republish_copy_unsuccessful() {
+		$post     = Mockery::mock( \WP_Post::class );
+		$post->ID = 123;
+
+		Monkey\Functions\expect( '\get_post_meta' )
+			->with( $post->ID, '_dp_has_rewrite_republish_copy', true )
+			->andReturn( '' );
+
+		$this->assertFalse( $this->instance->has_rewrite_and_republish_copy( $post ) );
+	}
+
+	/**
+	 * Tests the successful has_scheduled_rewrite_and_republish_copy function.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::has_scheduled_rewrite_and_republish_copy
+	 */
+	public function test_has_scheduled_rewrite_and_republish_copy_successful() {
+		$post              = Mockery::mock( \WP_Post::class );
+		$post->ID          = 123;
+		$copy              = Mockery::mock( \WP_Post::class );
+		$copy->post_status = 'future';
+		$copy_id           = 321;
+
+		Monkey\Functions\expect( '\get_post_meta' )
+			->with( $post->ID, '_dp_has_rewrite_republish_copy', true )
+			->andReturn( $copy_id );
+
+		Monkey\Functions\expect( '\get_post' )
+			->with( $copy_id )
+			->andReturn( $copy );
+
+		$this->assertSame(
+			$copy,
+			$this->instance->has_scheduled_rewrite_and_republish_copy( $post )
+		);
+	}
+
+	/**
+	 * Tests has_scheduled_rewrite_and_republish_copy function when post has no R&R copy.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::has_scheduled_rewrite_and_republish_copy
+	 */
+	public function test_has_scheduled_rewrite_and_republish_copy_no_copy() {
+		$post     = Mockery::mock( \WP_Post::class );
+		$post->ID = 123;
+
+		Monkey\Functions\expect( '\get_post_meta' )
+			->with( $post->ID, '_dp_has_rewrite_republish_copy', true )
+			->andReturn( '' );
+
+		Monkey\Functions\expect( '\get_post' )
+			->never();
+
+		$this->assertFalse( $this->instance->has_scheduled_rewrite_and_republish_copy( $post ) );
+	}
+
+	/**
+	 * Tests has_scheduled_rewrite_and_republish_copy function when the copy is not scheduled.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::has_scheduled_rewrite_and_republish_copy
+	 */
+	public function test_has_scheduled_rewrite_and_republish_copy_not_scheduled() {
+		$post              = Mockery::mock( \WP_Post::class );
+		$post->ID          = 123;
+		$copy              = Mockery::mock( \WP_Post::class );
+		$copy->post_status = 'draft';
+		$copy_id           = 321;
+
+		Monkey\Functions\expect( '\get_post_meta' )
+			->with( $post->ID, '_dp_has_rewrite_republish_copy', true )
+			->andReturn( $copy_id );
+
+		Monkey\Functions\expect( '\get_post' )
+			->with( $copy_id )
+			->andReturn( $copy );
+
+		$this->assertFalse( $this->instance->has_scheduled_rewrite_and_republish_copy( $post ) );
+	}
+
+	/**
+	 * Tests the is_edit_post_screen function.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::is_edit_post_screen
+	 * @dataProvider is_edit_post_screen_provider
 	 *
 	 * @param mixed $original Input value.
 	 * @param mixed $expected Expected output.
 	 */
-	public function test_is_valid_post_edit_screen( $original, $expected ) {
+	public function test_is_edit_post_screen( $original, $expected ) {
 		$screen         = Mockery::mock( \WP_Screen::class );
 		$screen->base   = $original['base'];
 		$screen->action = $original['action'];
@@ -172,15 +246,15 @@ class Permissions_Helper_Test extends TestCase {
 		Monkey\Functions\expect( '\get_current_screen' )
 			->andReturn( $screen );
 
-		$this->assertSame( $expected, $this->instance->is_valid_post_edit_screen() );
+		$this->assertSame( $expected, $this->instance->is_edit_post_screen() );
 	}
 
 	/**
-	 * Data provider for test_is_valid_post_edit_screen_provider.
+	 * Data provider for test_is_edit_post_screen.
 	 *
 	 * @return array The test parameters.
 	 */
-	public function is_valid_post_edit_screen_provider() {
+	public function is_edit_post_screen_provider() {
 		return [
 			[
 				'original' => [
@@ -220,9 +294,245 @@ class Permissions_Helper_Test extends TestCase {
 					'base'     => 'not-post',
 					'action'   => 'not-add',
 				],
-				'expected' => true,
+				'expected' => false,
 			],
 		];
+	}
+
+	/**
+	 * Tests the is_new_post_screen function.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::is_new_post_screen
+	 * @dataProvider is_new_post_screen_provider
+	 *
+	 * @param mixed $original Input value.
+	 * @param mixed $expected Expected output.
+	 */
+	public function test_is_new_post_screen( $original, $expected ) {
+		$screen         = Mockery::mock( \WP_Screen::class );
+		$screen->base   = $original['base'];
+		$screen->action = $original['action'];
+
+		Monkey\Functions\expect( '\is_admin' )
+			->andReturn( $original['is_admin'] );
+
+		Monkey\Functions\expect( '\get_current_screen' )
+			->andReturn( $screen );
+
+		$this->assertSame( $expected, $this->instance->is_new_post_screen() );
+	}
+
+	/**
+	 * Data provider for test_is_new_post_screen.
+	 *
+	 * @return array The test parameters.
+	 */
+	public function is_new_post_screen_provider() {
+		return [
+			[
+				'original' => [
+					'is_admin' => true,
+					'base'     => 'post',
+					'action'   => 'not-add',
+				],
+				'expected' => false,
+			],
+			[
+				'original' => [
+					'is_admin' => true,
+					'base'     => 'not-post',
+					'action'   => 'add',
+				],
+				'expected' => false,
+			],
+			[
+				'original' => [
+					'is_admin' => true,
+					'base'     => 'post',
+					'action'   => 'add',
+				],
+				'expected' => true,
+			],
+			[
+				'original' => [
+					'is_admin' => true,
+					'base'     => 'not-post',
+					'action'   => 'not-add',
+				],
+				'expected' => false,
+			],
+			[
+				'original' => [
+					'is_admin' => false,
+					'base'     => 'not-post',
+					'action'   => 'not-add',
+				],
+				'expected' => false,
+			],
+		];
+	}
+
+	/**
+	 * Tests the is_classic_editor function.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::is_classic_editor
+	 * @dataProvider is_classic_editor_provider
+	 *
+	 * @param mixed $original Input value.
+	 * @param mixed $expected Expected output.
+	 */
+	public function test_is_classic_editor( $original, $expected ) {
+		$screen = Mockery::mock( \WP_Screen::class );
+
+		$this->instance->expects( 'is_edit_post_screen' )
+			->andReturn( $original['is_edit_post_screen'] );
+
+		$this->instance->allows( 'is_new_post_screen' )
+			->andReturn( $original['is_new_post_screen'] );
+
+		Monkey\Functions\expect( '\get_current_screen' )
+			->andReturn( $screen );
+
+		$screen->allows( 'is_block_editor' )
+			->andReturn( $original['is_block_editor'] );
+
+		$this->assertSame( $expected, $this->instance->is_classic_editor() );
+	}
+
+	/**
+	 * Data provider for test_is_new_post_screen.
+	 *
+	 * @return array The test parameters.
+	 */
+	public function is_classic_editor_provider() {
+		return [
+			[
+				'original' => [
+					'is_edit_post_screen' => true,
+					'is_new_post_screen'  => false,
+					'is_block_editor'     => false,
+				],
+				'expected' => true,
+			],
+			[
+				'original' => [
+					'is_edit_post_screen' => false,
+					'is_new_post_screen'  => true,
+					'is_block_editor'     => false,
+				],
+				'expected' => true,
+			],
+			[
+				'original' => [
+					'is_edit_post_screen' => true,
+					'is_new_post_screen'  => false,
+					'is_block_editor'     => true,
+				],
+				'expected' => false,
+			],
+			[
+				'original' => [
+					'is_edit_post_screen' => false,
+					'is_new_post_screen'  => true,
+					'is_block_editor'     => true,
+				],
+				'expected' => false,
+			],
+			[
+				'original' => [
+					'is_edit_post_screen' => false,
+					'is_new_post_screen'  => false,
+					'is_block_editor'     => false,
+				],
+				'expected' => false,
+			],
+		];
+	}
+
+	/**
+	 * Tests the successful has_original_changed function.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::has_original_changed
+	 * @runInSeparateProcess
+	 */
+	public function test_has_original_changed_successful() {
+		$utils                       = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
+		$post                        = Mockery::mock( \WP_Post::class );
+		$post->ID                    = 123;
+		$copy_creation_date_gmt      = '2020-12-01 12:35:55';
+		$original                    = Mockery::mock( \WP_Post::class );
+		$original->post_modified_gmt = '2020-12-02 11:30:45';
+
+		$this->instance
+			->expects( 'is_rewrite_and_republish_copy' )
+			->with( $post )
+			->andReturnTrue();
+
+		$utils->expects( 'get_original' )
+			->with( $post )
+			->andReturn( $original );
+
+		Monkey\Functions\expect( '\get_post_meta' )
+			->with( $post->ID, '_dp_creation_date_gmt', true )
+			->andReturn( $copy_creation_date_gmt );
+
+		$this->assertTrue( $this->instance->has_original_changed( $post ) );
+	}
+
+	/**
+	 * Tests the has_original_changed function when the original has not changed.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::has_original_changed
+	 * @runInSeparateProcess
+	 */
+	public function test_has_original_changed_no() {
+		$utils                       = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
+		$post                        = Mockery::mock( \WP_Post::class );
+		$post->ID                    = 123;
+		$copy_creation_date_gmt      = '2020-12-01 12:35:55';
+		$original                    = Mockery::mock( \WP_Post::class );
+		$original->post_modified_gmt = '2020-12-01 12:35:55';
+
+		$this->instance
+			->expects( 'is_rewrite_and_republish_copy' )
+			->with( $post )
+			->andReturnTrue();
+
+		$utils->expects( 'get_original' )
+			->with( $post )
+			->andReturn( $original );
+
+		Monkey\Functions\expect( '\get_post_meta' )
+			->with( $post->ID, '_dp_creation_date_gmt', true )
+			->andReturn( $copy_creation_date_gmt );
+
+		$this->assertFalse( $this->instance->has_original_changed( $post ) );
+	}
+
+	/**
+	 * Tests the should_link_be_displayed function.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::should_link_be_displayed
+	 */
+	public function test_should_link_be_displayed_unsuccessful() {
+		$post            = Mockery::mock( \WP_Post::class );
+		$post->post_type = 'post';
+
+		$this->instance
+			->expects( 'is_rewrite_and_republish_copy' )
+			->with( $post )
+			->andReturnFalse();
+
+		$this->instance
+			->expects( 'is_current_user_allowed_to_copy' )
+			->andReturnTrue();
+
+		$this->instance
+			->expects( 'is_post_type_enabled' )
+			->with( $post->post_type )
+			->andReturnTrue();
+
+		$this->assertTrue( $this->instance->should_link_be_displayed( $post ) );
 	}
 
 	/**
