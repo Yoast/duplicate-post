@@ -22,28 +22,28 @@ class Watchers {
 	protected $permissions_helper;
 
 	/**
-	 * Holds the permissions helper.
+	 * Holds the original post watcher.
 	 *
 	 * @var Original_Post_Watcher
 	 */
 	protected $original_post_watcher;
 
 	/**
-	 * Holds the permissions helper.
+	 * Holds the copied post watcher.
 	 *
 	 * @var Copied_Post_Watcher
 	 */
 	protected $copied_post_watcher;
 
 	/**
-	 * Holds the permissions helper.
+	 * Holds the bulk actions watcher.
 	 *
 	 * @var Bulk_Actions_Watcher
 	 */
 	protected $bulk_actions_watcher;
 
 	/**
-	 * Holds the permissions helper.
+	 * Holds the link actions watcher.
 	 *
 	 * @var Link_Actions_Watcher
 	 */
