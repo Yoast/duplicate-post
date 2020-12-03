@@ -13,27 +13,31 @@ class DuplicatePost {
 	}
 
 	handleRewritingPost() {
-		const isSavingPost = wp.data.select( 'core/editor' ).isSavingPost();
-		const isAutosavingPost = wp.data.select( 'core/editor' ).isAutosavingPost();
-		const didPostSaveRequestSucceed = wp.data.select( 'core/editor' ).didPostSaveRequestSucceed();
-		const currentPostStatus = wp.data.select( 'core/editor' ).getEditedPostAttribute( 'status' );
-
-		// These can be used to determine whether active metaboxes are saving.
-		const hasActiveMetaBoxes = wp.data.select( 'core/edit-post' ).hasMetaBoxes();
-		const isSavingMetaBoxes = wp.data.select( 'core/edit-post' ).isSavingMetaBoxes();
-
-//		console.log( { isSavingPost, currentPostStatus, hasActiveMetaBoxes, isSavingMetaBoxes } );
-		if (
-			! isSavingPost &&
-			! isAutosavingPost &&
-			didPostSaveRequestSucceed &&
-			! isSavingMetaBoxes &&
-			currentPostStatus === "rewrite_republish" &&
-			duplicatePostRewriteRepost.originalEditURL
-		) {
-			console.log( 'redirecting now' );
-//			window.location.href = duplicatePostRewriteRepost.originalEditURL;
+		if ( ! duplicatePostRewriteRepost.rewriting ) {
+			return;
 		}
+
+		const hasActiveMetaBoxes = select( 'core/edit-post' ).hasMetaBoxes();
+		let wasSavingPost        = false;
+		let wasSavingMetaboxes   = false;
+		let wasAutoSavingPost    = false;
+
+		subscribe( () => {
+			const isSavingPost      = select( 'core/editor' ).isSavingPost();
+			const isSavingMetaBoxes = select( 'core/edit-post' ).isSavingMetaBoxes();
+			const isAutosavingPost  = select( 'core/editor' ).isAutosavingPost();
+
+			if ( hasActiveMetaBoxes && ! isSavingMetaBoxes && wasSavingMetaboxes ) {
+				window.location.href = duplicatePostRewriteRepost.originalEditURL;
+			}
+			if ( ! hasActiveMetaBoxes && ! isSavingPost && wasSavingPost && ! wasAutoSavingPost ) {
+				window.location.href = duplicatePostRewriteRepost.originalEditURL;
+			}
+
+			wasSavingPost      = isSavingPost;
+			wasSavingMetaboxes = isSavingMetaBoxes;
+			wasAutoSavingPost  = isAutosavingPost;
+		} );
 	}
 
 	renderNotices() {
@@ -76,35 +80,8 @@ class DuplicatePost {
 	}
 }
 
-function createRedirectMiddleware() {
-	return ( options, next ) => {
-		// Don't run the middleware on GET requests, because it might interfere with the fetch-all middleware.
-		if ( typeof options.method === "undefined" || options.method === "GET" ) {
-			return next( options );
-		}
-
-		const nextOptions = {
-			...options,
-			parse: false,
-		};
-
-		return next( nextOptions ).then( ( response ) => {
-			const redirectHeader = response.headers.get( "X-Yoast-Meta-Stored" );
-
-			// This gets called one request too early.
-			if ( redirectHeader ) {
-				window.location.href = duplicatePostRewriteRepost.originalEditURL;
-			}
-
-			return response;
-		} );
-	};
-}
-
-apiFetch.use( createRedirectMiddleware() );
-
 const instance = new DuplicatePost();
-wp.data.subscribe( instance.handleRewritingPost );
+instance.handleRewritingPost();
 
 registerPlugin( 'duplicate-post', {
 	render: instance.render
