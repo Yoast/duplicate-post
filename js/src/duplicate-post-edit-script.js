@@ -24,8 +24,8 @@ class DuplicatePost {
 
 		subscribe( () => {
 			const isSavingPost      = select( 'core/editor' ).isSavingPost();
-			const isSavingMetaBoxes = select( 'core/edit-post' ).isSavingMetaBoxes();
 			const isAutosavingPost  = select( 'core/editor' ).isAutosavingPost();
+			const isSavingMetaBoxes = select( 'core/edit-post' ).isSavingMetaBoxes();
 
 			if ( hasActiveMetaBoxes && ! isSavingMetaBoxes && wasSavingMetaboxes ) {
 				window.location.href = duplicatePostRewriteRepost.originalEditURL;

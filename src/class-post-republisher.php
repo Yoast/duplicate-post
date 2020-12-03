@@ -8,6 +8,8 @@
 
 namespace Yoast\WP\Duplicate_Post;
 
+use WP_Screen;
+
 /**
  * Represents the Post Republisher class.
  */
@@ -117,18 +119,18 @@ class Post_Republisher {
 	}
 
 	/**
-	 * Republishes the original post with the passed post, when using the Block editor.
+	 * Executes the republish request.
 	 *
+	 * @param int      $post_id   The copy's post ID.
 	 * @param \WP_Post $post_data The copy's post object.
 	 *
 	 * @return void
 	 */
-	public function republish_after_rest_api_request( $post_data ) {
+	public function republish_request( $post_id, $post_data ) {
 		if ( $post_data->post_status !== 'rewrite_republish' ) {
 			return;
 		}
 
-		$post_id          = $post_data->ID;
 		$original_post_id = Utils::get_original_post_id( $post_id );
 
 		if ( ! $original_post_id ) {
@@ -138,13 +140,37 @@ class Post_Republisher {
 		// Republish taxonomies and meta.
 		$this->republish_post_taxonomies( $post_id, $post_data );
 		$this->republish_post_meta( $post_id, $post_data );
+
 		// Republish the post.
 		$this->republish_post_elements( $post_data, $original_post_id );
 
-		header( 'X-Yoast-Meta-Stored: 1' );
-		// This clean-up shhould run only when there are no meta boxes in Gutenberg.
-		// Otherwise, custom meta boxes values aren't copied.
+		// Delete the copy and redirect.
 		// $this->clean_up( $post_id, $original_post_id );
+
+		// Change this to trigger only if using classic editor.
+		if ( $this->is_classic_editor() ) {
+			$this->redirect( $original_post_id );
+		}
+	}
+
+	/**
+	 * Check if Classic Editor is being used.
+	 *
+	 * @return bool True if the current screen uses the Classic Editor. False otherwise.
+	 */
+	public function is_classic_editor() {
+		return WP_Screen::get()->is_block_editor() === false;
+	}
+
+	/**
+	 * Republishes the original post with the passed post, when using the Block editor.
+	 *
+	 * @param \WP_Post $post_data The copy's post object.
+	 *
+	 * @return void
+	 */
+	public function republish_after_rest_api_request( $post_data ) {
+		$this->republish_request( $post_data->ID, $post_data );
 	}
 
 	/**
@@ -159,32 +185,11 @@ class Post_Republisher {
 	 * @return void
 	 */
 	public function republish_after_post_request( $post_id, $post_data ) {
-		if ( $post_data->post_status !== 'rewrite_republish' ) {
-			return;
-		}
-
 		if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
 			return;
 		}
 
-		$original_post_id = Utils::get_original_post_id( $post_id );
-
-		if ( ! $original_post_id ) {
-			return;
-		}
-
-		// Republish taxonomies and meta.
-		$this->republish_post_taxonomies( $post_id, $post_data );
-		$this->republish_post_meta( $post_id, $post_data );
-		// Republish the post.
-		$this->republish_post_elements( $post_data, $original_post_id );
-
-		header( 'X-Yoast-Meta-Stored: 1' );
-
-
-		// Delete the copy and redirect.
-//		$this->clean_up( $post_id, $original_post_id );
-//		$this->redirect( $original_post_id );
+		$this->republish_request( $post_id, $post_data );
 	}
 
 	/**
