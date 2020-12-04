@@ -74,7 +74,7 @@ class DuplicatePost {
 
 		if ( parseInt( duplicatePostRewriteRepost.republished, 10 ) ) {
 			dispatch( 'core/notices' ).createNotice(
-				'warning',
+				'success',
 				duplicatePostRewriteRepost.republishedText,
 				{
 					isDismissible: true, // Whether the user can dismiss the notice.
