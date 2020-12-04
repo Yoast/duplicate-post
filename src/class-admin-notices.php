@@ -41,7 +41,6 @@ class Admin_Notices {
 	public function add_removable_query_args( $removable_query_args ) {
 		$removable_query_args[] = 'rewriting';
 		$removable_query_args[] = 'bulk_rewriting';
-		$removable_query_args[] = 'republished';
 		return $removable_query_args;
 	}
 
@@ -67,7 +66,7 @@ class Admin_Notices {
 	 * @return void
 	 */
 	public function republished_admin_notice() {
-		if ( ! empty( $_REQUEST['republished'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+		if ( ! empty( $_REQUEST['dprepublished'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			echo '<div id="message" class="notice notice-success is-dismissible"><p>';
 			echo \esc_html( Utils::get_republished_notice_text() );
 			echo '</p></div>';

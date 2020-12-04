@@ -51,6 +51,8 @@ class Post_Republisher {
 		// - In the Classic Editor, where there's only one request that updates everything.
 		// - In the Block Editor, only when there are custom meta boxes.
 		\add_action( 'wp_insert_post', [ $this, 'republish_after_post_request' ], 9999, 2 );
+		// Clean up after the redirect to the original post.
+		\add_action( 'load-post.php', [ $this, 'clean_up_after_redirect' ] );
 	}
 
 	/**
@@ -146,7 +148,7 @@ class Post_Republisher {
 
 		// Trigger the redirect in the Classic Editor.
 		if ( $this->is_classic_editor_post_request() ) {
-			$this->redirect( $original_post_id );
+			$this->redirect( $original_post_id, $post_data->ID );
 		}
 	}
 
@@ -253,31 +255,37 @@ class Post_Republisher {
 	/**
 	 * Deletes the copied post and temporary metadata.
 	 *
-	 * @param int $post_copy_id     The copy's ID.
-	 * @param int $original_post_id The original post ID.
-	 *
 	 * @return void
 	 */
-	protected function clean_up( $post_copy_id, $original_post_id ) {
-		// Deleting the copy bypassing the trash also deletes the post copy meta.
-		\wp_delete_post( $post_copy_id, true );
-		// Delete the meta that marks the original post has having a copy.
-		\delete_post_meta( $original_post_id, '_dp_has_rewrite_republish_copy' );
+	public function clean_up_after_redirect() {
+		if ( ! empty( $_GET['dprepublished'] ) && ! empty( $_GET['dpcopy'] ) && ! empty( $_GET['post'] ) ) {
+			$copy_id = \intval( \wp_unslash( $_GET['dpcopy'] ) );
+			$post_id = \intval( \wp_unslash( $_GET['post'] ) );
+
+			\check_admin_referer( 'dp-republish', 'nonce' );
+
+			// Delete the copy bypassing the trash so it also deletes the copy post meta.
+			\wp_delete_post( $copy_id, true );
+			// Delete the meta that marks the original post has having a copy.
+			\delete_post_meta( $post_id, '_dp_has_rewrite_republish_copy' );
+		}
 	}
 
 	/**
 	 * Redirects the user to the original post.
 	 *
-	 * @param int $original_post_id The original post to redirect to.
+	 * @param int $original_post_id The ID of the original post to redirect to.
+	 * @param int $copy_id          The ID of the copy post.
 	 *
 	 * @return void
 	 */
-	protected function redirect( $original_post_id ) {
-		// Add nonce verification here.
+	protected function redirect( $original_post_id, $copy_id ) {
 		\wp_safe_redirect(
 			\add_query_arg(
 				[
-					'republished' => 1,
+					'dprepublished' => 1,
+					'dpcopy'        => $copy_id,
+					'nonce'         => \wp_create_nonce( 'dp-republish' ),
 				],
 				\admin_url( 'post.php?action=edit&post=' . $original_post_id )
 			)

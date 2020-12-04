@@ -122,8 +122,8 @@ class User_Interface {
 				'permalink'        => $this->get_rewrite_republish_permalink(),
 				'rewriting'        => \get_post_meta( $this->post->ID, '_dp_is_rewrite_republish_copy', true ) ? 1 : 0,
 				'originalEditURL'  => $this->get_original_post_edit_url(),
-				'republished'      => ( ! empty( $_REQUEST['republished'] ) ) ? 1 : 0, // phpcs:ignore WordPress.Security.NonceVerification
-				'republishedText'  => ( ! empty( $_REQUEST['republished'] ) ) ? Utils::get_republished_notice_text() : '', // phpcs:ignore WordPress.Security.NonceVerification
+				'republished'      => ( ! empty( $_REQUEST['dprepublished'] ) ) ? 1 : 0, // phpcs:ignore WordPress.Security.NonceVerification
+				'republishedText'  => ( ! empty( $_REQUEST['dprepublished'] ) ) ? Utils::get_republished_notice_text() : '', // phpcs:ignore WordPress.Security.NonceVerification
 			]
 		);
 	}
@@ -146,7 +146,9 @@ class User_Interface {
 
 		return \add_query_arg(
 			[
-				'republished' => 1,
+				'dprepublished' => 1,
+				'dpcopy'        => $this->post->ID,
+				'nonce'         => \wp_create_nonce( 'dp-republish' ),
 			],
 			\admin_url( 'post.php?action=edit&post=' . $original_post_id )
 		);
