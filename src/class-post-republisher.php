@@ -198,9 +198,9 @@ class Post_Republisher {
 
 		// Republish original post.
 		$_POST['ID']       = $original_post_id;
-		$rewritten_post_id = \wp_update_post( \wp_slash( $post_to_be_rewritten ), true );
+		$rewritten_post_id = \wp_update_post( \wp_slash( $post_to_be_rewritten ) );
 
-		if ( 0 === $rewritten_post_id || \is_wp_error( $rewritten_post_id ) ) {
+		if ( 0 === $rewritten_post_id ) {
 			\wp_die( \esc_html__( 'An error occurred while republishing the post.', 'duplicate-post' ) );
 		}
 	}
