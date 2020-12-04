@@ -120,7 +120,7 @@ class User_Interface {
 			'duplicatePostRewriteRepost',
 			[
 				'permalink'        => $this->get_rewrite_republish_permalink(),
-				'rewriting'        => ( ! empty( $_REQUEST['rewriting'] ) ) ? 1 : 0, // phpcs:ignore WordPress.Security.NonceVerification
+				'rewriting'        => \get_post_meta( $this->post->ID, '_dp_is_rewrite_republish_copy', true ) ? 1 : 0,
 				'originalEditURL'  => $this->get_original_post_edit_url(),
 				'republished'      => ( ! empty( $_REQUEST['republished'] ) ) ? 1 : 0, // phpcs:ignore WordPress.Security.NonceVerification
 				'republishedText'  => ( ! empty( $_REQUEST['republished'] ) ) ? Utils::get_republished_notice_text() : '', // phpcs:ignore WordPress.Security.NonceVerification
