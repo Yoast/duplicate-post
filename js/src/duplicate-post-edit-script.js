@@ -18,7 +18,7 @@ class DuplicatePost {
 	 * @returns {void}
 	 */
 	handleRedirect() {
-		if ( ! duplicatePostRewriteRepost.rewriting ) {
+		if ( ! parseInt( duplicatePostRewriteRepost.rewriting, 10 ) ) {
 			return;
 		}
 
@@ -59,7 +59,7 @@ class DuplicatePost {
 	 * @returns {void}
 	 */
 	renderNotices() {
-		if ( parseInt( duplicatePostRewriteRepost.rewriting ) ) {
+		if ( parseInt( duplicatePostRewriteRepost.rewriting, 10 ) ) {
 			dispatch( 'core/notices' ).createNotice(
 				'warning',
 				__(
@@ -72,7 +72,7 @@ class DuplicatePost {
 			);
 		}
 
-		if ( parseInt( duplicatePostRewriteRepost.republished ) ) {
+		if ( parseInt( duplicatePostRewriteRepost.republished, 10 ) ) {
 			dispatch( 'core/notices' ).createNotice(
 				'warning',
 				duplicatePostRewriteRepost.republishedText,
