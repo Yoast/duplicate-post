@@ -58,7 +58,6 @@ class Admin_Notices {
 				'duplicate-post'
 			);
 			echo '</p></div>';
-			\remove_query_arg( 'rewriting' );
 		}
 	}
 
@@ -72,7 +71,6 @@ class Admin_Notices {
 			echo '<div id="message" class="notice notice-success is-dismissible"><p>';
 			echo \esc_html( Utils::get_republished_notice_text() );
 			echo '</p></div>';
-			\remove_query_arg( 'republished' );
 		}
 	}
 
@@ -98,7 +96,6 @@ class Admin_Notices {
 				\esc_html( $copied_posts )
 			);
 			echo '</p></div>';
-			\remove_query_arg( 'bulk_rewriting' );
 		}
 	}
 }
