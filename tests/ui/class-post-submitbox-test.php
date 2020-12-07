@@ -49,7 +49,8 @@ class Post_Submitbox_Test extends TestCase {
 		$this->link_builder       = Mockery::mock( Link_Builder::class );
 		$this->permissions_helper = Mockery::mock( Permissions_Helper::class );
 
-		$this->instance = new Post_Submitbox( $this->link_builder, $this->permissions_helper );
+		$this->instance = Mockery::mock( Post_Submitbox::class )->makePartial();
+		$this->instance->__construct( $this->link_builder, $this->permissions_helper );
 	}
 
 	/**
@@ -72,6 +73,10 @@ class Post_Submitbox_Test extends TestCase {
 
 		$this->assertNotFalse( \has_action( 'post_submitbox_start', [ $this->instance, 'add_new_draft_post_button' ] ), 'Does not have expected post_submitbox_start action' );
 		$this->assertNotFalse( \has_action( 'post_submitbox_start', [ $this->instance, 'add_rewrite_and_republish_post_button' ] ), 'Does not have expected post_submitbox_start action' );
+
+		$this->assertNotFalse( \has_filter( 'gettext', [ $this->instance, 'change_republish_strings_classic_editor' ] ), 'Does not have expected gettext filter' );
+		$this->assertNotFalse( \has_filter( 'gettext_with_context', [ $this->instance, 'change_schedule_strings_classic_editor' ] ), 'Does not have expected gettext_with_context filter' );
+		$this->assertNotFalse( \has_filter( 'post_updated_messages', [ $this->instance, 'change_scheduled_notice_classic_editor' ] ), 'Does not have expected post_updated_messages filter' );
 	}
 
 	/**
@@ -357,5 +362,343 @@ class Post_Submitbox_Test extends TestCase {
 		$this->setOutputCallback( function() {} );
 		$this->instance->add_rewrite_and_republish_post_button();
 		$this->assertTrue( Monkey\Filters\applied( 'duplicate_post_show_link' ) === 0 );
+	}
+
+	/**
+	 * Tests the change_republish_strings_classic_editor function when the copy should be changed.
+	 *
+	 * @covers Post_Submitbox::change_republish_strings_classic_editor
+	 */
+	public function test_should_change_republish_strings() {
+		$text = 'Publish';
+
+		$post            = Mockery::mock( \WP_Post::class );
+		$post->post_type = 'post';
+
+		Monkey\Functions\expect( '\get_post' )
+			->once()
+			->andReturn( $post );
+
+		$this->instance->expects( 'should_change_rewrite_republish_copy' )
+			->with( $post )
+			->once()
+			->andReturnTrue();
+
+		$this->assertEquals( $this->instance->change_republish_strings_classic_editor( '', $text ), 'Republish' );
+	}
+
+	/**
+	 * Tests the change_republish_strings_classic_editor function when the copy should not be changed.
+	 *
+	 * @covers Post_Submitbox::change_republish_strings_classic_editor
+	 */
+	public function test_should_not_change_republish_strings() {
+		$text = 'Publish';
+
+		$post            = Mockery::mock( \WP_Post::class );
+		$post->post_type = 'post';
+
+		Monkey\Functions\expect( '\get_post' )
+			->once()
+			->andReturn( $post );
+
+		$this->instance->expects( 'should_change_rewrite_republish_copy' )
+			->with( $post )
+			->once()
+			->andReturnFalse();
+
+		$this->assertEquals( $this->instance->change_republish_strings_classic_editor( '', $text ), 'Publish' );
+	}
+
+	/**
+	 * Tests the change_republish_strings_classic_editor function when the copy should not be changed,
+	 * because the copy is not 'Publish'.
+	 *
+	 * @covers Post_Submitbox::change_republish_strings_classic_editor
+	 */
+	public function test_should_not_change_republish_strings_other_text() {
+		$text        = 'Test';
+		$translation = 'Test';
+
+		$post            = Mockery::mock( \WP_Post::class );
+		$post->post_type = 'post';
+
+		Monkey\Functions\expect( '\get_post' )
+			->once()
+			->andReturn( $post );
+
+		$this->instance->expects( 'should_change_rewrite_republish_copy' )
+			->with( $post )
+			->once()
+			->andReturnTrue();
+
+		$this->assertEquals( $this->instance->change_republish_strings_classic_editor( $translation, $text ), 'Test' );
+	}
+
+	/**
+	 * Tests the change_schedule_strings_classic_editor function when the copy should be changed.
+	 *
+	 * @covers Post_Submitbox::change_schedule_strings_classic_editor
+	 */
+	public function test_should_change_schedule_strings() {
+		$text = 'Schedule';
+
+		$post            = Mockery::mock( \WP_Post::class );
+		$post->post_type = 'post';
+
+		Monkey\Functions\expect( '\get_post' )
+			->once()
+			->andReturn( $post );
+
+		$this->instance->expects( 'should_change_rewrite_republish_copy' )
+			->with( $post )
+			->once()
+			->andReturnTrue();
+
+		$this->assertEquals( $this->instance->change_schedule_strings_classic_editor( '', $text, '' ), 'Schedule republish' );
+	}
+
+	/**
+	 * Tests the change_schedule_strings_classic_editor function when the copy should not be changed.
+	 *
+	 * @covers Post_Submitbox::change_schedule_strings_classic_editor
+	 */
+	public function test_should_not_change_schedule_strings() {
+		$text = 'Schedule';
+
+		$post            = Mockery::mock( \WP_Post::class );
+		$post->post_type = 'post';
+
+		Monkey\Functions\expect( '\get_post' )
+			->once()
+			->andReturn( $post );
+
+		$this->instance->expects( 'should_change_rewrite_republish_copy' )
+			->with( $post )
+			->once()
+			->andReturnFalse();
+
+		$this->assertEquals( $this->instance->change_schedule_strings_classic_editor( '', $text, '' ), 'Schedule' );
+	}
+
+	/**
+	 * Tests the change_republish_strings_classic_editor function when the copy should not be changed,
+	 * because the copy is not 'Schedule'.
+	 *
+	 * @covers Post_Submitbox::change_schedule_strings_classic_editor
+	 */
+	public function test_should_not_change_schedule_strings_other_text() {
+		$text        = 'Test';
+		$translation = 'Test';
+
+		$post            = Mockery::mock( \WP_Post::class );
+		$post->post_type = 'post';
+
+		Monkey\Functions\expect( '\get_post' )
+			->once()
+			->andReturn( $post );
+
+		$this->instance->expects( 'should_change_rewrite_republish_copy' )
+			->with( $post )
+			->once()
+			->andReturnTrue();
+
+		$this->assertEquals( $this->instance->change_schedule_strings_classic_editor( $translation, $text, '' ), 'Test' );
+	}
+
+	/**
+	 * Tests the change_scheduled_notice_classic_editor function when the copy should be changed for a post.
+	 *
+	 * @covers Post_Submitbox::change_scheduled_notice_classic_editor
+	 */
+	public function test_should_change_scheduled_notice_post() {
+		$post             = Mockery::mock( \WP_Post::class );
+		$post->post_type  = 'post';
+		$post->post_title = 'example_post';
+		$post->ID         = 1;
+
+		$permalink      = 'http://basic.wordpress.test/example_post';
+		$date_format    = 'F j, Y';
+		$scheduled_date = 'December 18, 2020';
+
+		$messages['post'] = [
+			0  => '', // Unused. Messages start at index 1.
+			1  => 'Post updated.',
+			2  => 'Custom field updated.',
+			3  => 'Custom field deleted.',
+			4  => 'Post updated.',
+			5  => 'Post restored to revision.',
+			6  => 'Post published.',
+			7  => 'Post saved.',
+			8  => 'Post submitted.',
+			9  => 'Post scheduled for: <strong>' . $scheduled_date . '</strong>',
+			10 => 'Post draft updated.',
+		];
+		$messages['page'] = [
+			0  => '', // Unused. Messages start at index 1.
+			1  => 'Page updated.',
+			2  => 'Custom field updated.',
+			3  => 'Custom field deleted.',
+			4  => 'Page updated.',
+			5  => 'Page restored to revision.',
+			6  => 'Page published.',
+			7  => 'Page saved.',
+			8  => 'Page submitted.',
+			9  => 'Page scheduled for: <strong>' . $scheduled_date . '</strong>',
+			10 => 'Page draft updated.',
+		];
+
+		$new_copy = 'This rewritten post <a href="' . $permalink . '">' . $post->post_title . '</a> is now scheduled to replace the original post. It will be published on <strong>' . $scheduled_date . '</strong>';
+
+		$result['post'] = [
+			0  => '', // Unused. Messages start at index 1.
+			1  => 'Post updated.',
+			2  => 'Custom field updated.',
+			3  => 'Custom field deleted.',
+			4  => 'Post updated.',
+			5  => 'Post restored to revision.',
+			6  => 'Post published.',
+			7  => 'Post saved.',
+			8  => 'Post submitted.',
+			9  => $new_copy,
+			10 => 'Post draft updated.',
+		];
+		$result['page'] = [
+			0  => '', // Unused. Messages start at index 1.
+			1  => 'Page updated.',
+			2  => 'Custom field updated.',
+			3  => 'Custom field deleted.',
+			4  => 'Page updated.',
+			5  => 'Page restored to revision.',
+			6  => 'Page published.',
+			7  => 'Page saved.',
+			8  => 'Page submitted.',
+			9  => 'Page scheduled for: <strong>' . $scheduled_date . '</strong>',
+			10 => 'Page draft updated.',
+		];
+
+		Monkey\Functions\expect( '\get_post' )
+			->once()
+			->andReturn( $post );
+
+		$this->instance->expects( 'should_change_rewrite_republish_copy' )
+			->with( $post )
+			->once()
+			->andReturnTrue();
+
+		Monkey\Functions\expect( '\get_permalink' )
+			->once()
+			->with( $post->ID )
+			->andReturn( $permalink );
+
+		Monkey\Functions\expect( '\get_option' )
+			->once()
+			->with( 'date_format' )
+			->andReturn( $date_format );
+
+		Monkey\Functions\expect( '\get_the_time' )
+			->once()
+			->with( $date_format, $post )
+			->andReturn( $scheduled_date );
+
+		$this->assertEquals( $this->instance->change_scheduled_notice_classic_editor( $messages ), $result );
+	}
+
+	/**
+	 * Tests the change_scheduled_notice_classic_editor function when the copy should be changed for a page.
+	 *
+	 * @covers Post_Submitbox::change_scheduled_notice_classic_editor
+	 */
+	public function test_should_change_scheduled_notice_page() {
+		$post             = Mockery::mock( \WP_Post::class );
+		$post->post_type  = 'page';
+		$post->post_title = 'example_page';
+		$post->ID         = 1;
+
+		$permalink      = 'http://basic.wordpress.test/example_page';
+		$date_format    = 'F j, Y';
+		$scheduled_date = 'December 18, 2020';
+
+		$messages['post'] = [
+			0  => '', // Unused. Messages start at index 1.
+			1  => 'Post updated.',
+			2  => 'Custom field updated.',
+			3  => 'Custom field deleted.',
+			4  => 'Post updated.',
+			5  => 'Post restored to revision.',
+			6  => 'Post published.',
+			7  => 'Post saved.',
+			8  => 'Post submitted.',
+			9  => 'Post scheduled for: <strong>' . $scheduled_date . '</strong>',
+			10 => 'Post draft updated.',
+		];
+		$messages['page'] = [
+			0  => '', // Unused. Messages start at index 1.
+			1  => 'Page updated.',
+			2  => 'Custom field updated.',
+			3  => 'Custom field deleted.',
+			4  => 'Page updated.',
+			5  => 'Page restored to revision.',
+			6  => 'Page published.',
+			7  => 'Page saved.',
+			8  => 'Page submitted.',
+			9  => 'Page scheduled for: <strong>' . $scheduled_date . '</strong>',
+			10 => 'Page draft updated.',
+		];
+
+		$new_copy = 'This rewritten page <a href="' . $permalink . '">' . $post->post_title . '</a> is now scheduled to replace the original page. It will be published on <strong>' . $scheduled_date . '</strong>';
+
+		$result['post'] = [
+			0  => '', // Unused. Messages start at index 1.
+			1  => 'Post updated.',
+			2  => 'Custom field updated.',
+			3  => 'Custom field deleted.',
+			4  => 'Post updated.',
+			5  => 'Post restored to revision.',
+			6  => 'Post published.',
+			7  => 'Post saved.',
+			8  => 'Post submitted.',
+			9  => 'Post scheduled for: <strong>' . $scheduled_date . '</strong>',
+			10 => 'Post draft updated.',
+		];
+		$result['page'] = [
+			0  => '', // Unused. Messages start at index 1.
+			1  => 'Page updated.',
+			2  => 'Custom field updated.',
+			3  => 'Custom field deleted.',
+			4  => 'Page updated.',
+			5  => 'Page restored to revision.',
+			6  => 'Page published.',
+			7  => 'Page saved.',
+			8  => 'Page submitted.',
+			9  => $new_copy,
+			10 => 'Page draft updated.',
+		];
+
+		Monkey\Functions\expect( '\get_post' )
+			->once()
+			->andReturn( $post );
+
+		$this->instance->expects( 'should_change_rewrite_republish_copy' )
+			->with( $post )
+			->once()
+			->andReturnTrue();
+
+		Monkey\Functions\expect( '\get_permalink' )
+			->once()
+			->with( $post->ID )
+			->andReturn( $permalink );
+
+		Monkey\Functions\expect( '\get_option' )
+			->once()
+			->with( 'date_format' )
+			->andReturn( $date_format );
+
+		Monkey\Functions\expect( '\get_the_time' )
+			->once()
+			->with( $date_format, $post )
+			->andReturn( $scheduled_date );
+
+		$this->assertEquals( $this->instance->change_scheduled_notice_classic_editor( $messages ), $result );
 	}
 }
