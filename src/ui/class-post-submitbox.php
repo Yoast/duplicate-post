@@ -49,6 +49,9 @@ class Post_Submitbox {
 	public function register_hooks() {
 		\add_action( 'post_submitbox_start', [ $this, 'add_new_draft_post_button' ] );
 		\add_action( 'post_submitbox_start', [ $this, 'add_rewrite_and_republish_post_button' ] );
+		\add_filter( 'gettext', [ $this, 'change_republish_strings_classic_editor' ], 10, 2 );
+		\add_filter( 'gettext_with_context', [ $this, 'change_schedule_strings_classic_editor' ], 10, 3 );
+		\add_filter( 'post_updated_messages', [ $this, 'change_scheduled_notice_classic_editor' ], 10, 1 );
 	}
 
 	/**
@@ -123,4 +126,110 @@ class Post_Submitbox {
 			}
 		}
 	}
+
+	/**
+	 * Changes the 'Publish' copies in the submitbox to 'Republish' if a post is intended for republishing.
+	 *
+	 * @param string $translation The translated text.
+	 * @param string $text        The text to translate.
+	 *
+	 * @return string The to-be-used copy of the text.
+	 */
+	public function change_republish_strings_classic_editor( $translation, $text ) {
+		if ( ! $this->should_change_rewrite_republish_copy( \get_post() ) ) {
+			return $text;
+		}
+
+		if ( $text === 'Publish' ) {
+			return \__( 'Republish', 'duplicate-post' );
+		}
+
+		return $translation;
+	}
+
+	/**
+	 * Changes the 'Schedule' copy in the submitbox to 'Schedule republish' if a post is intended for republishing.
+	 *
+	 * @param string $translation The translated text.
+	 * @param string $text        The text to translate.
+	 * @param string $context     Context information for the translators.
+	 *
+	 * @return string The to-be-used copy of the text.
+	 */
+	public function change_schedule_strings_classic_editor( $translation, $text, $context ) {
+		if ( ! $this->should_change_rewrite_republish_copy( \get_post() ) ) {
+			return $text;
+		}
+
+		if ( $text === 'Schedule' ) {
+			return \__( 'Schedule republish', 'duplicate-post' );
+		}
+
+		return $translation;
+	}
+
+	/**
+	 * Changes the post-scheduled notice when a post or page intended for republishing is scheduled.
+	 *
+	 * @param array[] $messages Post updated messaged.
+	 *
+	 * @return array[] The to-be-used messages.
+	 */
+	public function change_scheduled_notice_classic_editor( $messages ) {
+		$post = \get_post();
+		if ( ! $this->should_change_rewrite_republish_copy( $post ) ) {
+			return $messages;
+		}
+
+		$scheduled_date = \sprintf(
+		/* translators: Publish box date string. 1: Date, 2: Time. */
+			\__( '%1$s at %2$s' ),
+			/* translators: Publish box date format, see https://www.php.net/date */
+			\date_i18n( \_x( 'M j, Y', 'publish box date format' ), \strtotime( $post->post_date ) ),
+			/* translators: Publish box time format, see https://www.php.net/date */
+			\date_i18n( \_x( 'H:i', 'publish box time format' ), \strtotime( $post->post_date ) )
+		);
+
+		$messages['post'] = [
+			9 => \sprintf(
+				/* translators: 1: The post title with a link to the frontend page, 2: The scheduled date. */
+				\esc_html__(
+					'This rewritten post %1$s is now scheduled to replace the original post. It will be published on %2$s',
+					'duplicate-post'
+				),
+				'<a href="' . \get_permalink( $post->ID ) . '">' . $post->post_title . '</a>',
+				'<strong>' . $scheduled_date . '</strong>'
+			),
+		];
+
+		$messages['page'] = [
+			9 => \sprintf(
+				/* translators: 1: The page title with a link to the frontend page, 2: The scheduled date. */
+				\esc_html__(
+					'This rewritten page %1$s is now scheduled to replace the original page. It will be published on %2$s',
+					'duplicate-post'
+				),
+				'<a href="' . \get_permalink( $post->ID ) . '">' . $post->post_title . '</a>',
+				'<strong>' . $scheduled_date . '</strong>'
+			),
+		];
+
+		return $messages;
+	}
+
+	/**
+	 * Determines if the rewrite and republish copies for the post or page should be used.
+	 *
+	 * @param \WP_Post $post The current post object.
+	 *
+	 * @return bool True if the rewrite and republish copies should be used.
+	 */
+	public function should_change_rewrite_republish_copy( $post ) {
+		if ( \is_null( $post ) ) {
+			return false;
+		}
+
+		return $this->permissions_helper->is_rewrite_and_republish_copy( $post );
+	}
+
 }
