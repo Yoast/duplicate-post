@@ -184,29 +184,30 @@ class Post_Submitbox {
 		$permalink      = \get_permalink( $post->ID );
 		$scheduled_date = \get_the_time( \get_option( 'date_format' ), $post );
 
-		$messages['post'] = [
-			9 => \sprintf(
-				/* translators: 1: The post title with a link to the frontend page, 2: The scheduled date. */
+		if ( $post->post_type === 'post' ) {
+			$messages['post'][9] = \sprintf(
+			/* translators: 1: The post title with a link to the frontend page, 2: The scheduled date. */
 				\esc_html__(
 					'This rewritten post %1$s is now scheduled to replace the original post. It will be published on %2$s',
 					'duplicate-post'
 				),
 				'<a href="' . $permalink . '">' . $post->post_title . '</a>',
 				'<strong>' . $scheduled_date . '</strong>'
-			),
-		];
+			);
+			return $messages;
+		}
 
-		$messages['page'] = [
-			9 => \sprintf(
-				/* translators: 1: The page title with a link to the frontend page, 2: The scheduled date. */
+		if ( $post->post_type === 'page' ) {
+			$messages['page'][9] = \sprintf(
+					/* translators: 1: The page title with a link to the frontend page, 2: The scheduled date. */
 				\esc_html__(
 					'This rewritten page %1$s is now scheduled to replace the original page. It will be published on %2$s',
 					'duplicate-post'
 				),
 				'<a href="' . $permalink . '">' . $post->post_title . '</a>',
 				'<strong>' . $scheduled_date . '</strong>'
-			),
-		];
+			);
+		}
 
 		return $messages;
 	}
@@ -219,6 +220,11 @@ class Post_Submitbox {
 	 * @return bool True if the rewrite and republish copies should be used.
 	 */
 	public function should_change_rewrite_republish_copy( $post ) {
+		global $pagenow;
+		if ( ! \in_array( $pagenow, [ 'post.php', 'post-new.php' ], true ) ) {
+			return false;
+		}
+
 		if ( \is_null( $post ) ) {
 			return false;
 		}
