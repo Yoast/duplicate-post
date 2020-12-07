@@ -40,6 +40,7 @@ class Post_Republisher {
 	public function register_hooks() {
 		\add_action( 'init', [ $this, 'register_post_statuses' ] );
 		\add_filter( 'wp_insert_post_data', [ $this, 'change_post_copy_status' ], 1, 2 );
+		\add_filter( 'removable_query_args', [ $this, 'add_removable_query_args' ] );
 
 		$enabled_post_types = Utils::get_enabled_post_types();
 		foreach ( $enabled_post_types as $enabled_post_type ) {
@@ -308,5 +309,20 @@ class Post_Republisher {
 		}
 
 		return isset( $_GET['meta-box-loader'] ) === false; // phpcs:ignore WordPress.Security.NonceVerification
+	}
+
+	/**
+	 * Adds variables to the removable query args.
+	 *
+	 * @param array $removable_query_args Array of query variables to remove from a URL.
+	 *
+	 * @return array The updated array of query variables to remove from a URL.
+	 */
+	public function add_removable_query_args( $removable_query_args ) {
+		$removable_query_args[] = 'dprepublished';
+		$removable_query_args[] = 'dpcopy';
+		$removable_query_args[] = 'nonce';
+
+		return $removable_query_args;
 	}
 }
