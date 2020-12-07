@@ -65,32 +65,33 @@ class Post_Republisher {
 	 * @return void
 	 */
 	public function register_post_statuses() {
-		$republish_args = [
-			'label'                     => __( 'Republish', 'duplicate-post' ),
-			'public'                    => true,
-			'exclude_from_search'       => false,
-			'show_in_admin_all_list'    => false,
-			'show_in_admin_status_list' => false,
+		$custom_post_statuses = [
+			'dp-rewrite-draft'     => [
+				'label'                     => __( 'Republish Draft', 'duplicate-post' ),
+				'public'                    => true,
+				'exclude_from_search'       => false,
+				'show_in_admin_all_list'    => false,
+				'show_in_admin_status_list' => false,
+			],
+			'dp-rewrite-republish' => [
+				'label'                     => __( 'Republish', 'duplicate-post' ),
+				'public'                    => true,
+				'exclude_from_search'       => false,
+				'show_in_admin_all_list'    => false,
+				'show_in_admin_status_list' => false,
+			],
+			'dp-rewrite-schedule'  => [
+				'label'                     => __( 'Future Republish', 'duplicate-post' ),
+				'public'                    => true,
+				'exclude_from_search'       => false,
+				'show_in_admin_all_list'    => false,
+				'show_in_admin_status_list' => false,
+			],
 		];
-		\register_post_status( 'rewrite_republish', $republish_args );
 
-		$schedule_args = [
-			'label'                     => __( 'Future Republish', 'duplicate-post' ),
-			'public'                    => true,
-			'exclude_from_search'       => false,
-			'show_in_admin_all_list'    => false,
-			'show_in_admin_status_list' => false,
-		];
-		\register_post_status( 'rewrite_schedule', $schedule_args );
-
-		$rewrite_args = [
-			'label'                     => __( 'Republish Draft', 'duplicate-post' ),
-			'public'                    => true,
-			'exclude_from_search'       => false,
-			'show_in_admin_all_list'    => false,
-			'show_in_admin_status_list' => false,
-		];
-		\register_post_status( 'rewrite_draft', $rewrite_args );
+		foreach ( $custom_post_statuses as $custom_post_status => $options ) {
+			register_post_status( $custom_post_status, $options );
+		}
 	}
 
 	/**
@@ -110,11 +111,11 @@ class Post_Republisher {
 		}
 
 		if ( $data['post_status'] === 'publish' ) {
-			$data['post_status'] = 'rewrite_republish';
+			$data['post_status'] = 'dp-rewrite-republish';
 		}
 
 		if ( $data['post_status'] === 'future' ) {
-			$data['post_status'] = 'rewrite_schedule';
+			$data['post_status'] = 'dp-rewrite-schedule';
 		}
 
 		return $data;
@@ -129,7 +130,7 @@ class Post_Republisher {
 	 * @return void
 	 */
 	public function republish_request( $post_id, $post_data ) {
-		if ( $post_data->post_status !== 'rewrite_republish' ) {
+		if ( $post_data->post_status !== 'dp-rewrite-republish' ) {
 			return;
 		}
 
@@ -166,7 +167,7 @@ class Post_Republisher {
 	/**
 	 * Republishes the original post with the passed post and redirects the user, when using the Classic editor.
 	 *
-	 * Runs on the post transition status to `rewrite_republish` in `wp_insert_post()`
+	 * Runs on the post transition status to `dp-rewrite-republish` in `wp_insert_post()`
 	 * when submitting the post copy.
 	 *
 	 * @param int      $post_id   The copy's post ID.
