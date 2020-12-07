@@ -43,7 +43,7 @@ class Post_Republisher {
 
 		$enabled_post_types = Utils::get_enabled_post_types();
 		foreach ( $enabled_post_types as $enabled_post_type ) {
-			// Called in the REST API for the Block Editor after the copy gets "published".
+			// Called in the REST API when submitting the post copy in the Block Editor.
 			// Runs the republishing of the copy onto the original.
 			\add_action( "rest_after_insert_{$enabled_post_type}", [ $this, 'republish_after_rest_api_request' ] );
 		}
@@ -130,7 +130,7 @@ class Post_Republisher {
 	 * @return void
 	 */
 	public function republish_request( $post_id, $post_data ) {
-		if ( $post_data->post_status !== 'dp-rewrite-republish' ) {
+		if ( ! Utils::is_copy_for_rewrite_republish( $post_id ) || $post_data->post_status !== 'dp-rewrite-republish' ) {
 			return;
 		}
 
@@ -154,7 +154,7 @@ class Post_Republisher {
 	}
 
 	/**
-	 * Republishes the original post with the passed post, when using the Block editor.
+	 * Republishes the original post with the passed post, when using the Block Editor.
 	 *
 	 * @param \WP_Post $post_data The copy's post object.
 	 *
@@ -165,10 +165,10 @@ class Post_Republisher {
 	}
 
 	/**
-	 * Republishes the original post with the passed post and redirects the user, when using the Classic editor.
+	 * Republishes the original post with the passed post, when using the Classic Editor.
 	 *
-	 * Runs on the post transition status to `dp-rewrite-republish` in `wp_insert_post()`
-	 * when submitting the post copy.
+	 * Runs also in the Block Editor to save the custom meta data only when there
+	 * are custom meta boxes.
 	 *
 	 * @param int      $post_id   The copy's post ID.
 	 * @param \WP_Post $post_data The copy's post object.
@@ -199,8 +199,11 @@ class Post_Republisher {
 		$post_to_be_rewritten['post_name']   = \get_post_field( 'post_name', $original_post_id );
 		$post_to_be_rewritten['post_status'] = 'publish';
 
-		// Republish original post.
-		$_POST['ID']       = $original_post_id;
+		// Yoast SEO and other plugins prevent from accidentally updating another post
+		// by checking the $_POST data ID with the post object ID. We need to overwrite
+		// the $_POST data ID to allow updating the original post.
+		$_POST['ID'] = $original_post_id;
+		// Republish the original post.
 		$rewritten_post_id = \wp_update_post( \wp_slash( $post_to_be_rewritten ) );
 
 		if ( 0 === $rewritten_post_id ) {
