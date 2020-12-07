@@ -352,7 +352,7 @@ class Post_Duplicator {
 			}
 		}
 
-		if ( $options['force_post_status'] ) {
+		if ( isset( $options['force_post_status'] ) ) {
 			return $options['force_post_status'];
 		}
 
