@@ -181,14 +181,8 @@ class Post_Submitbox {
 			return $messages;
 		}
 
-		$scheduled_date = \sprintf(
-		/* translators: Publish box date string. 1: Date, 2: Time. */
-			\__( '%1$s at %2$s' ),
-			/* translators: Publish box date format, see https://www.php.net/date */
-			\date_i18n( \_x( 'M j, Y', 'publish box date format' ), \strtotime( $post->post_date ) ),
-			/* translators: Publish box time format, see https://www.php.net/date */
-			\date_i18n( \_x( 'H:i', 'publish box time format' ), \strtotime( $post->post_date ) )
-		);
+		$permalink      = \get_permalink( $post->ID );
+		$scheduled_date = \get_the_time( \get_option( 'date_format' ), $post );
 
 		$messages['post'] = [
 			9 => \sprintf(
@@ -197,7 +191,7 @@ class Post_Submitbox {
 					'This rewritten post %1$s is now scheduled to replace the original post. It will be published on %2$s',
 					'duplicate-post'
 				),
-				'<a href="' . \get_permalink( $post->ID ) . '">' . $post->post_title . '</a>',
+				'<a href="' . $permalink . '">' . $post->post_title . '</a>',
 				'<strong>' . $scheduled_date . '</strong>'
 			),
 		];
@@ -209,7 +203,7 @@ class Post_Submitbox {
 					'This rewritten page %1$s is now scheduled to replace the original page. It will be published on %2$s',
 					'duplicate-post'
 				),
-				'<a href="' . \get_permalink( $post->ID ) . '">' . $post->post_title . '</a>',
+				'<a href="' . $permalink . '">' . $post->post_title . '</a>',
 				'<strong>' . $scheduled_date . '</strong>'
 			),
 		];
