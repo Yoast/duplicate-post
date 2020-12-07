@@ -89,8 +89,8 @@ class Block_Editor_Test extends TestCase {
 		Monkey\Functions\expect( '\get_post' )
 			->andReturn( $post );
 
-		Monkey\Functions\expect( '\get_post_meta' )
-			->with( $post->ID, '_dp_is_rewrite_republish_copy', true )
+		$this->permissions_helper->expects( 'is_rewrite_and_republish_copy' )
+			->with( $post )
 			->andReturn( $skip_assessment );
 
 		$this->instance->should_previously_used_keyword_assessment_run();
@@ -112,8 +112,8 @@ class Block_Editor_Test extends TestCase {
 		Monkey\Functions\expect( '\get_post' )
 			->andReturn( $post );
 
-		Monkey\Functions\expect( '\get_post_meta' )
-			->with( $post->ID, '_dp_is_rewrite_republish_copy', true )
+		$this->permissions_helper->expects( 'is_rewrite_and_republish_copy' )
+			->with( $post )
 			->andReturn( $skip_assessment );
 
 		$this->instance->should_previously_used_keyword_assessment_run();
