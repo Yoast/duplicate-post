@@ -2,7 +2,7 @@
 
 import { registerPlugin } from "@wordpress/plugins";
 import { PluginPostStatusInfo } from "@wordpress/edit-post";
-import { Fragment } from "@wordpress/element"
+import { Fragment } from "@wordpress/element";
 import { Button } from '@wordpress/components';
 import { __ } from "@wordpress/i18n";
 import { select, subscribe, dispatch } from "@wordpress/data";
