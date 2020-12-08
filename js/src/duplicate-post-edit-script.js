@@ -5,7 +5,6 @@ import { registerPlugin } from "@wordpress/plugins";
 import { PluginPostStatusInfo } from "@wordpress/edit-post";
 import { __ } from "@wordpress/i18n";
 import { select, subscribe, dispatch } from "@wordpress/data";
-import apiFetch from '@wordpress/api-fetch';
 
 class DuplicatePost {
 	constructor() {
