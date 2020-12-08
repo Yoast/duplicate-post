@@ -47,21 +47,32 @@ class Post_Republisher_Test extends TestCase {
 	 * @covers ::register_hooks
 	 */
 	public function test_register_hooks() {
-		Monkey\Functions\expect( '\get_option' )
-			->once()
+		Monkey\Functions\expect( 'get_option' )
 			->with( 'duplicate_post_types_enabled' )
 			->andReturn( [ 'post', 'page' ] );
 
+		Monkey\Filters\expectAdded( 'wp_insert_post_data' )
+			->with( [ $this->instance, 'change_post_copy_status' ], 1, 2 );
+
+		Monkey\Filters\expectAdded( 'removable_query_args' )
+			->with( [ $this->instance, 'add_removable_query_args' ] );
+
+		Monkey\Actions\expectAdded( 'init' )
+			->with( [ $this->instance, 'register_post_statuses' ] );
+
+		Monkey\Actions\expectAdded( 'rest_after_insert_post' )
+			->with( [ $this->instance, 'republish_after_rest_api_request' ] );
+
+		Monkey\Actions\expectAdded( 'rest_after_insert_page' )
+			->with( [ $this->instance, 'republish_after_rest_api_request' ] );
+
+		Monkey\Actions\expectAdded( 'wp_insert_post' )
+			->with( [ $this->instance, 'republish_after_post_request' ], 9999, 2 );
+
+		Monkey\Actions\expectAdded( 'load-post.php' )
+			->with( [ $this->instance, 'clean_up_after_redirect' ] );
+
 		$this->instance->register_hooks();
-
-		$this->assertNotFalse( \has_filter( 'wp_insert_post_data', [ $this->instance, 'change_post_copy_status' ] ), 'Does not have expected wp_insert_post_data filter' );
-		$this->assertNotFalse( \has_filter( 'removable_query_args', [ $this->instance, 'add_removable_query_args' ] ), 'Does not have expected removable_query_args filter' );
-
-		$this->assertNotFalse( \has_action( 'init', [ $this->instance, 'register_post_statuses' ] ), 'Does not have expected init action' );
-		$this->assertNotFalse( \has_action( 'rest_after_insert_post' , [ $this->instance, 'republish_after_rest_api_request' ] ), 'Does not have expected rest_after_insert_post action' );
-		$this->assertNotFalse( \has_action( 'rest_after_insert_page', [ $this->instance, 'republish_after_rest_api_request' ] ), 'Does not have expected rest_after_insert_page action' );
-		$this->assertNotFalse( \has_action( 'wp_insert_post', [ $this->instance, 'republish_after_post_request' ] ), 'Does not have expected wp_insert_post action' );
-		$this->assertNotFalse( \has_action( 'load-post.php', [ $this->instance, 'clean_up_after_redirect' ] ), 'Does not have expected load-post.php action' );
 	}
 
 	/**
