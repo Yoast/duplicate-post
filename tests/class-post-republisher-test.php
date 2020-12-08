@@ -63,9 +63,6 @@ class Post_Republisher_Test extends TestCase {
 		Monkey\Filters\expectAdded( 'wp_insert_post_data' )
 			->with( [ $this->instance, 'change_post_copy_status' ], 1, 2 );
 
-		Monkey\Filters\expectAdded( 'removable_query_args' )
-			->with( [ $this->instance, 'add_removable_query_args' ] );
-
 		Monkey\Actions\expectAdded( 'init' )
 			->with( [ $this->instance, 'register_post_statuses' ] );
 
@@ -82,78 +79,5 @@ class Post_Republisher_Test extends TestCase {
 			->with( [ $this->instance, 'clean_up_after_redirect' ] );
 
 		$this->instance->register_hooks();
-	}
-
-	/**
-	 * Tests the add_removable_query_args function.
-	 *
-	 * @covers ::add_removable_query_args
-	 */
-	public function test_add_removable_query_args() {
-		$array = [
-			'activate',
-			'activated',
-			'admin_email_remind_later',
-			'approved',
-			'deactivate',
-			'delete_count',
-			'deleted',
-			'disabled',
-			'doing_wp_cron',
-			'enabled',
-			'error',
-			'hotkeys_highlight_first',
-			'hotkeys_highlight_last',
-			'locked',
-			'message',
-			'same',
-			'saved',
-			'settings-updated',
-			'skipped',
-			'spammed',
-			'trashed',
-			'unspammed',
-			'untrashed',
-			'update',
-			'updated',
-			'wp-post-new-reload',
-			'cloned',
-		];
-
-		$this->assertEquals(
-			[
-				'activate',
-				'activated',
-				'admin_email_remind_later',
-				'approved',
-				'deactivate',
-				'delete_count',
-				'deleted',
-				'disabled',
-				'doing_wp_cron',
-				'enabled',
-				'error',
-				'hotkeys_highlight_first',
-				'hotkeys_highlight_last',
-				'locked',
-				'message',
-				'same',
-				'saved',
-				'settings-updated',
-				'skipped',
-				'spammed',
-				'trashed',
-				'unspammed',
-				'untrashed',
-				'update',
-				'updated',
-				'wp-post-new-reload',
-				'cloned',
-				'dprepublished',
-				'dpcopy',
-				'nonce',
-			],
-			$this->instance->add_removable_query_args( $array )
-		);
 	}
 }
