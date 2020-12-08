@@ -10,7 +10,7 @@ namespace Yoast\WP\Duplicate_Post\Tests;
 use \Yoast\WP\Duplicate_Post\Utils;
 
 /**
- * Test the User Interface class.
+ * Test the Utils class.
  */
 class Utils_Test extends TestCase {
 

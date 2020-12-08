@@ -1,8 +1,9 @@
-/* global duplicatePostRewriteRepost */
-/* global wp */
+/* global wp, duplicatePost */
 
 import { registerPlugin } from "@wordpress/plugins";
 import { PluginPostStatusInfo } from "@wordpress/edit-post";
+import { Fragment } from "@wordpress/element"
+import { Button } from '@wordpress/components';
 import { __ } from "@wordpress/i18n";
 import { select, subscribe, dispatch } from "@wordpress/data";
 
@@ -17,7 +18,7 @@ class DuplicatePost {
 	 * @returns {void}
 	 */
 	handleRedirect() {
-		if ( ! parseInt( duplicatePostRewriteRepost.rewriting, 10 ) ) {
+		if ( ! parseInt( duplicatePost.rewriting, 10 ) ) {
 			return;
 		}
 
@@ -38,12 +39,12 @@ class DuplicatePost {
 
 			// When there are custom meta boxes, redirect after they're saved.
 			if ( hasActiveMetaBoxes && ! isSavingMetaBoxes && wasSavingMetaboxes ) {
-				window.location.href = duplicatePostRewriteRepost.originalEditURL;
+				window.location.href = duplicatePost.originalEditURL;
 			}
 
 			// When there are no custom meta boxes, redirect after the post is saved.
 			if ( ! hasActiveMetaBoxes && ! isSavingPost && wasSavingPost && ! wasAutoSavingPost ) {
-				window.location.href = duplicatePostRewriteRepost.originalEditURL;
+				window.location.href = duplicatePost.originalEditURL;
 			}
 
 			wasSavingPost      = isSavingPost;
@@ -58,7 +59,7 @@ class DuplicatePost {
 	 * @returns {void}
 	 */
 	renderNotices() {
-		if ( parseInt( duplicatePostRewriteRepost.rewriting, 10 ) ) {
+		if ( parseInt( duplicatePost.rewriting, 10 ) ) {
 			dispatch( 'core/notices' ).createNotice(
 				'warning',
 				__(
@@ -71,10 +72,10 @@ class DuplicatePost {
 			);
 		}
 
-		if ( parseInt( duplicatePostRewriteRepost.republished, 10 ) ) {
+		if ( parseInt( duplicatePost.republished, 10 ) ) {
 			dispatch( 'core/notices' ).createNotice(
 				'success',
-				duplicatePostRewriteRepost.republishedText,
+				duplicatePost.republishedText,
 				{
 					isDismissible: true, // Whether the user can dismiss the notice.
 				}
@@ -83,16 +84,36 @@ class DuplicatePost {
 	}
 
 	/**
-	 * Renders the Rewrite & Republish link in the PluginPostStatusInfo component.
+	 * Renders the links in the PluginPostStatusInfo component.
 	 *
-	 * @returns {JSX.Element} The rendered link.
+	 * @returns {JSX.Element} The rendered links.
 	 */
 	render() {
 		return (
-			<PluginPostStatusInfo>
-				{ duplicatePostRewriteRepost.permalink !== '' &&
-				  <a href={ duplicatePostRewriteRepost.permalink }>{ __( 'Rewrite & Republish', 'duplicate-post' ) }</a> }
-			</PluginPostStatusInfo>
+			<Fragment>
+				{ duplicatePost.new_draft_link !== '' &&
+					<PluginPostStatusInfo>
+						<Button
+							isTertiary={ true }
+							className="dp-editor-post-copy-to-draft"
+							href={ duplicatePost.new_draft_link }
+						>
+							{ __( 'Copy to a new draft', 'duplicate-post' ) }
+						</Button>
+					</PluginPostStatusInfo>
+				}
+				{ duplicatePost.rewrite_and_republish_link !== '' &&
+					<PluginPostStatusInfo>
+						<Button
+							isTertiary={ true }
+							className="dp-editor-post-rewrite-republish"
+							href={ duplicatePost.rewrite_and_republish_link }
+						>
+							{ __( 'Rewrite & Republish', 'duplicate-post' ) }
+						</Button>
+					</PluginPostStatusInfo>
+				}
+			</Fragment>
 		);
 	}
 }

@@ -8,7 +8,9 @@
 
 namespace Yoast\WP\Duplicate_Post;
 
-use WP_Screen;
+use Yoast\WP\Duplicate_Post\Permissions_Helper;
+use Yoast\WP\Duplicate_Post\Post_Duplicator;
+use Yoast\WP\Duplicate_Post\Utils;
 
 /**
  * Represents the Post Republisher class.
@@ -20,15 +22,25 @@ class Post_Republisher {
 	 *
 	 * @var Post_Duplicator
 	 */
-	private $post_duplicator;
+	protected $post_duplicator;
+
+	/**
+	 * Holds the permissions helper.
+	 *
+	 * @var Permissions_Helper
+	 */
+	protected $permissions_helper;
 
 	/**
 	 * Initializes the class.
 	 *
-	 * @param Post_Duplicator $post_duplicator The Post_Duplicator object.
+	 * @param Post_Duplicator    $post_duplicator    The Post_Duplicator object.
+	 * @param Permissions_Helper $permissions_helper The Permissions Helper object.
 	 */
-	public function __construct( Post_Duplicator $post_duplicator ) {
-		$this->post_duplicator = $post_duplicator;
+	public function __construct( Post_Duplicator $post_duplicator, Permissions_Helper $permissions_helper ) {
+		$this->post_duplicator    = $post_duplicator;
+		$this->permissions_helper = $permissions_helper;
+
 		$this->register_hooks();
 	}
 
@@ -42,7 +54,7 @@ class Post_Republisher {
 		\add_filter( 'wp_insert_post_data', [ $this, 'change_post_copy_status' ], 1, 2 );
 		\add_filter( 'removable_query_args', [ $this, 'add_removable_query_args' ] );
 
-		$enabled_post_types = Utils::get_enabled_post_types();
+		$enabled_post_types = $this->permissions_helper->get_enabled_post_types();
 		foreach ( $enabled_post_types as $enabled_post_type ) {
 			// Called in the REST API when submitting the post copy in the Block Editor.
 			// Runs the republishing of the copy onto the original.

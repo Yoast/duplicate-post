@@ -55,16 +55,97 @@ class Utils {
 	}
 
 	/**
-	 * Returns the array of the enabled post types.
+	 * Gets the original post.
 	 *
-	 * @return array The array of post types.
+	 * @param int|\WP_Post|null $post   Optional. Post ID or Post object.
+	 * @param string            $output Optional, default is Object. Either OBJECT, ARRAY_A, or ARRAY_N.
+	 *
+	 * @return \WP_Post|null Post data if successful, null otherwise.
 	 */
-	public static function get_enabled_post_types() {
-		$duplicate_post_types_enabled = \get_option( 'duplicate_post_types_enabled', [ 'post', 'page' ] );
-		if ( ! \is_array( $duplicate_post_types_enabled ) ) {
-			$duplicate_post_types_enabled = [ $duplicate_post_types_enabled ];
+	public static function get_original( $post = null, $output = OBJECT ) {
+		$post = \get_post( $post );
+		if ( ! $post ) {
+			return null;
 		}
-		return $duplicate_post_types_enabled;
+
+		$original_id = \get_post_meta( $post->ID, '_dp_original' );
+		if ( empty( $original_id ) ) {
+			return null;
+		}
+
+		return \get_post( $original_id[0], $output );
+	}
+
+	/**
+	 * Determines if the post has ancestors marked for copy.
+	 *
+	 * If we are copying children, and the post has already an ancestor marked for copy, we have to filter it out.
+	 *
+	 * @param \WP_Post $post     The post object.
+	 * @param array    $post_ids The array of marked post IDs.
+	 *
+	 * @return bool Whether the post has ancestors marked for copy.
+	 */
+	public static function has_ancestors_marked( $post, $post_ids ) {
+		$ancestors_in_array = 0;
+		$parent             = \wp_get_post_parent_id( $post->ID );
+		while ( $parent ) {
+			if ( \in_array( $parent, $post_ids, true ) ) {
+				$ancestors_in_array++;
+			}
+			$parent = \wp_get_post_parent_id( $parent );
+		}
+		return ( $ancestors_in_array !== 0 );
+	}
+
+	/**
+	 * Returns a link to edit, preview or view a post, in accordance to user capabilities.
+	 *
+	 * @param \WP_Post $post Post ID or Post object.
+	 *
+	 * @return string|null The link to edit, preview or view a post.
+	 */
+	public static function get_edit_or_view_link( $post ) {
+		$post = \get_post( $post );
+		if ( ! $post ) {
+			return null;
+		}
+
+		$can_edit_post    = \current_user_can( 'edit_post', $post->ID );
+		$title            = \_draft_or_post_title( $post );
+		$post_type_object = \get_post_type_object( $post->post_type );
+
+		if ( $can_edit_post && $post->post_status !== 'trash' ) {
+			return \sprintf(
+				'<a href="%s" aria-label="%s">%s</a>',
+				\get_edit_post_link( $post->ID ),
+				/* translators: %s: post title */
+				\esc_attr( \sprintf( \__( 'Edit &#8220;%s&#8221;', 'default' ), $title ) ),
+				$title
+			);
+		} elseif ( \is_post_type_viewable( $post_type_object ) ) {
+			if ( \in_array( $post->post_status, [ 'pending', 'draft', 'future' ], true ) ) {
+				if ( $can_edit_post ) {
+					$preview_link = \get_preview_post_link( $post );
+					return \sprintf(
+						'<a href="%s" rel="bookmark" aria-label="%s">%s</a>',
+						\esc_url( $preview_link ),
+						/* translators: %s: post title */
+						\esc_attr( \sprintf( \__( 'Preview &#8220;%s&#8221;', 'default' ), $title ) ),
+						$title
+					);
+				}
+			} elseif ( $post->post_status !== 'trash' ) {
+				return \sprintf(
+					'<a href="%s" rel="bookmark" aria-label="%s">%s</a>',
+					\get_permalink( $post->ID ),
+					/* translators: %s: post title */
+					\esc_attr( \sprintf( __( 'View &#8220;%s&#8221;', 'default' ), $title ) ),
+					$title
+				);
+			}
+		}
+		return $title;
 	}
 
 	/**
@@ -92,7 +173,7 @@ class Utils {
 	/**
 	 * Gets the text for the republished notice.
 	 *
-	 * @return strong The republished notice text.
+	 * @return string The republished notice text.
 	 */
 	public static function get_republished_notice_text() {
 		return \__(

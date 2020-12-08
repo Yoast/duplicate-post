@@ -33,9 +33,44 @@ class Post_Duplicator_Test extends TestCase {
 	}
 
 	/**
+	 * Tests the get_default_options function.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Post_Duplicator::get_default_options
+	 */
+	public function test_get_default_options() {
+		$this->assertSame(
+			[
+				'copy_title'             => true,
+				'copy_date'              => false,
+				'copy_status'            => false,
+				'copy_name'              => false,
+				'copy_excerpt'           => true,
+				'copy_content'           => true,
+				'copy_thumbnail'         => true,
+				'copy_template'          => true,
+				'copy_format'            => true,
+				'copy_author'            => false,
+				'copy_password'          => false,
+				'copy_attachments'       => false,
+				'copy_children'          => false,
+				'copy_comments'          => false,
+				'copy_menu_order'        => true,
+				'title_prefix'           => '',
+				'title_suffix'           => '',
+				'increase_menu_order_by' => null,
+				'parent_id'              => null,
+				'meta_excludelist'       => [],
+				'taxonomies_excludelist' => [],
+				'use_filters'            => true,
+			],
+			$this->instance->get_default_options()
+		);
+	}
+
+	/**
 	 * Tests the generate_copy_title function.
 	 *
-	 * @covers ::generate_copy_title
+	 * @covers \Yoast\WP\Duplicate_Post\Post_Duplicator::generate_copy_title
 	 * @dataProvider generate_copy_title_provider
 	 *
 	 * @param mixed $original Input value.
@@ -121,7 +156,7 @@ class Post_Duplicator_Test extends TestCase {
 	/**
 	 * Tests the generate_copy_status function.
 	 *
-	 * @covers ::generate_copy_status
+	 * @covers \Yoast\WP\Duplicate_Post\Post_Duplicator::generate_copy_status
 	 * @dataProvider generate_copy_status_provider
 	 *
 	 * @param mixed $original Input value.
@@ -136,12 +171,12 @@ class Post_Duplicator_Test extends TestCase {
 		$options['copy_status'] = $original['copy_status'];
 
 		Monkey\Functions\expect( '\is_post_type_hierarchical' )
-			->with( 'post' )
-			->andReturn( false );
-
-		Monkey\Functions\expect( '\is_post_type_hierarchical' )
-			->with( 'page' )
-			->andReturn( false );
+			->with( $post->post_type )
+			->andReturnUsing(
+				function( $post_type ) {
+					return $post_type !== 'post' && $post_type === 'page';
+				}
+			);
 
 		Monkey\Functions\expect( '\current_user_can' )
 			->with( 'publish_posts' )
@@ -218,7 +253,7 @@ class Post_Duplicator_Test extends TestCase {
 	/**
 	 * Tests the generate_copy_author function.
 	 *
-	 * @covers ::generate_copy_author
+	 * @covers \Yoast\WP\Duplicate_Post\Post_Duplicator::generate_copy_author
 	 * @dataProvider generate_copy_author_provider
 	 *
 	 * @param mixed $original Input value.
@@ -240,19 +275,19 @@ class Post_Duplicator_Test extends TestCase {
 			->andReturn( $user );
 
 		Monkey\Functions\expect( '\is_post_type_hierarchical' )
-			->with( 'post' )
-			->andReturn( false );
-
-		Monkey\Functions\expect( '\is_post_type_hierarchical' )
-			->with( 'page' )
-			->andReturn( false );
+			->with( $post->post_type )
+			->andReturnUsing(
+				function( $post_type ) {
+					return $post_type !== 'post' && $post_type === 'page';
+				}
+			);
 
 		Monkey\Functions\expect( '\current_user_can' )
 			->with( 'edit_others_pages' )
 			->andReturn( $original['capability'] );
 
 		Monkey\Functions\expect( '\current_user_can' )
-			->with( 'edit_others_pages' )
+			->with( 'edit_others_posts' )
 			->andReturn( $original['capability'] );
 
 		$this->assertEquals( $expected, $this->instance->generate_copy_author( $post, $options ) );
@@ -313,5 +348,4 @@ class Post_Duplicator_Test extends TestCase {
 
 		return $data;
 	}
-
 }

@@ -11,6 +11,7 @@ use Brain\Monkey;
 use Mockery;
 use Yoast\WP\Duplicate_Post\Post_Republisher;
 use Yoast\WP\Duplicate_Post\Post_Duplicator;
+use Yoast\WP\Duplicate_Post\Permissions_Helper;
 
 /**
  * Test the Post_Republisher class.
@@ -32,13 +33,21 @@ class Post_Republisher_Test extends TestCase {
 	protected $post_duplicator;
 
 	/**
+	 * Holds the permissions helper.
+	 *
+	 * @var Permissions_Helper
+	 */
+	protected $permissions_helper;
+
+	/**
 	 * Sets the instance.
 	 */
 	public function setUp() {
 		parent::setUp();
 
-		$this->post_duplicator = Mockery::mock( Post_Duplicator::class );
-		$this->instance        = new Post_Republisher( $this->post_duplicator );
+		$this->post_duplicator    = Mockery::mock( Post_Duplicator::class );
+		$this->permissions_helper = Mockery::mock( Permissions_Helper::class );
+		$this->instance           = new Post_Republisher( $this->post_duplicator, $this->permissions_helper );
 	}
 
 	/**
