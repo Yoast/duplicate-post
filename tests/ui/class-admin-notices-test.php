@@ -124,7 +124,7 @@ class Admin_Notices_Test extends TestCase {
 				'bulk_rewriting',
 				'dprepublished',
 				'dpcopy',
-				'nonce',
+				'dpnonce',
 			],
 			$this->instance->add_removable_query_args( $array )
 		);

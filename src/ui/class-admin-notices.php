@@ -47,7 +47,7 @@ class Admin_Notices {
 		$removable_query_args[] = 'bulk_rewriting';
 		$removable_query_args[] = 'dprepublished';
 		$removable_query_args[] = 'dpcopy';
-		$removable_query_args[] = 'nonce';
+		$removable_query_args[] = 'dpnonce';
 
 		return $removable_query_args;
 	}

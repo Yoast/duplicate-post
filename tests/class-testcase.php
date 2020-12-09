@@ -7,7 +7,6 @@
 
 namespace Yoast\WP\Duplicate_Post\Tests;
 
-use Mockery;
 use Brain\Monkey;
 use PHPUnit\Framework\TestCase as BaseTestCase;
 
@@ -59,11 +58,6 @@ abstract class TestCase extends BaseTestCase {
 				},
 			)
 		);
-
-		Monkey\Functions\expect( 'get_option' )
-			->zeroOrMoreTimes()
-			->with( Mockery::anyOf( 'duplicate_post_types_enabled' ) )
-			->andReturn( [] );
 	}
 
 	/**

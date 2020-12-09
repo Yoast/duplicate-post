@@ -168,7 +168,7 @@ class Block_Editor {
 			[
 				'dprepublished' => 1,
 				'dpcopy'        => $post->ID,
-				'nonce'         => \wp_create_nonce( 'dp-republish' ),
+				'dpnonce'       => \wp_create_nonce( 'dp-republish' ),
 			],
 			\admin_url( 'post.php?action=edit&post=' . $original_post_id )
 		);

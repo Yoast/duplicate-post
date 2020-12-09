@@ -211,9 +211,10 @@ class Post_Republisher {
 		$post_to_be_rewritten['post_name']   = \get_post_field( 'post_name', $original_post_id );
 		$post_to_be_rewritten['post_status'] = 'publish';
 
-		// Yoast SEO and other plugins prevent from accidentally updating another post
-		// by checking the $_POST data ID with the post object ID. We need to overwrite
-		// the $_POST data ID to allow updating the original post.
+		// Yoast SEO and other plugins prevent from accidentally updating another
+		// post's data (e.g. the Yoast SEO metadata) by checking the $_POST data
+		// ID with the post object ID. We need to overwrite the $_POST data ID
+		// to allow updating the original post.
 		$_POST['ID'] = $original_post_id;
 		// Republish the original post.
 		$rewritten_post_id = \wp_update_post( \wp_slash( $post_to_be_rewritten ) );
@@ -277,7 +278,7 @@ class Post_Republisher {
 			$copy_id = \intval( \wp_unslash( $_GET['dpcopy'] ) );
 			$post_id = \intval( \wp_unslash( $_GET['post'] ) );
 
-			\check_admin_referer( 'dp-republish', 'nonce' );
+			\check_admin_referer( 'dp-republish', 'dpnonce' );
 
 			// Delete the copy bypassing the trash so it also deletes the copy post meta.
 			\wp_delete_post( $copy_id, true );
@@ -300,7 +301,7 @@ class Post_Republisher {
 				[
 					'dprepublished' => 1,
 					'dpcopy'        => $copy_id,
-					'nonce'         => \wp_create_nonce( 'dp-republish' ),
+					'dpnonce'       => \wp_create_nonce( 'dp-republish' ),
 				],
 				\admin_url( 'post.php?action=edit&post=' . $original_post_id )
 			)
