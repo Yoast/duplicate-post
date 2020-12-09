@@ -188,4 +188,65 @@ class Post_Republisher_Test extends TestCase {
 
 		$this->instance->register_post_statuses();
 	}
+
+	/**
+	 * Tests the change_post_copy_status function.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Post_Republisher::change_post_copy_status
+	 * @dataProvider change_post_copy_status_provider
+	 *
+	 * @param mixed $input    Input values.
+	 * @param mixed $expected Expected output.
+	 */
+	public function test_change_post_copy_status( $input, $expected ) {
+		$post              = Mockery::mock( \WP_Post::class );
+		$post->ID          = 123;
+		$post->post_status = $input['post_status'];
+		$postarr           = [];
+		$postarr['ID']     = 123;
+
+		Monkey\Functions\expect( '\get_post_meta' )
+			->with( $post->ID, '_dp_is_rewrite_republish_copy', true )
+			->andReturn( $input['is_copy'] );
+
+		$returned_post_data = $this->instance->change_post_copy_status( (array) $post, $postarr );
+		$this->assertEquals( $expected['post_status'], $returned_post_data['post_status'] );
+	}
+
+	/**
+	 * Data provider for test_change_post_copy_status.
+	 *
+	 * @return array
+	 */
+	public function change_post_copy_status_provider() {
+		return [
+			[
+				[
+					'post_status' => 'publish',
+					'is_copy'     => '0',
+				],
+				[
+					'post_status' => 'publish',
+				],
+			],
+			[
+				[
+					'post_status' => 'publish',
+					'is_copy'     => '1',
+				],
+				[
+					'post_status' => 'dp-rewrite-republish',
+				],
+			],
+			[
+				[
+					'post_status' => 'future',
+					'is_copy'     => '1',
+				],
+				[
+					'post_status' => 'dp-rewrite-schedule',
+				],
+			],
+		];
+	}
 }
