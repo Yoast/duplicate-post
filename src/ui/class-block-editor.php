@@ -83,7 +83,7 @@ class Block_Editor {
 				'wp-i18n',
 			],
 			DUPLICATE_POST_CURRENT_VERSION,
-			false
+			true
 		);
 		\wp_add_inline_script(
 			'duplicate_post_edit_script',
