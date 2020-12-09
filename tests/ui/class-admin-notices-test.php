@@ -194,4 +194,17 @@ class Admin_Notices_Test extends TestCase {
 
 		$this->expectOutputString( '<div id="message" class="notice notice-success fade"><p>2 posts duplicated. You can now start rewriting your posts in the duplicates of the original posts. Once you choose to republish them your changes will be merged back into the original post.</p></div>' );
 	}
+
+	/**
+	 * Tests the republished_admin_notice function when the original post is overwritten.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Admin_Notices::republished_admin_notice
+	 */
+	public function test_republished_admin_notice() {
+		$_REQUEST['dprepublished'] = '1';
+
+		$this->instance->republished_admin_notice();
+
+		$this->expectOutputString( '<div id="message" class="notice notice-success is-dismissible"><p>Your original post has been replaced with the rewritten post. You are now viewing the (rewritten) original post.</p></div>' );
+	}
 }

@@ -111,4 +111,36 @@ class Post_Republisher_Test extends TestCase {
 
 		$this->instance->register_hooks();
 	}
+
+	/**
+	 * Tests is_classic_editor_post_request when the request is the Block Editor REST API request.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Post_Republisher::is_classic_editor_post_request
+	 * @runInSeparateProcess
+	 */
+	public function test_is_classic_editor_post_request_when_rest_request() {
+		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound -- WordPress constant used in a test.
+		define( 'REST_REQUEST', true );
+		$this->assertFalse( $this->instance->is_classic_editor_post_request() );
+	}
+
+	/**
+	 * Tests is_classic_editor_post_request when the request is the Block Editor POST request to save custom meta.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Post_Republisher::is_classic_editor_post_request
+	 */
+	public function test_is_classic_editor_post_request_when_block_editor_saving_custom_meta_boxes() {
+		$_GET['meta-box-loader'] = '1';
+		$this->assertFalse( $this->instance->is_classic_editor_post_request() );
+		unset( $_GET['meta-box-loader'] ); // phpcs:ignore WordPress.Security.NonceVerification
+	}
+
+	/**
+	 * Tests is_classic_editor_post_request when the request is the Classic Editor POST request.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Post_Republisher::is_classic_editor_post_request
+	 */
+	public function test_is_classic_editor_post_request() {
+		$this->assertTrue( $this->instance->is_classic_editor_post_request() );
+	}
 }
