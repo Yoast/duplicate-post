@@ -143,4 +143,49 @@ class Post_Republisher_Test extends TestCase {
 	public function test_is_classic_editor_post_request() {
 		$this->assertTrue( $this->instance->is_classic_editor_post_request() );
 	}
+
+	/**
+	 * Tests register_post_statuses is called with expected arguments.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Post_Republisher::register_post_statuses
+	 */
+	public function test_register_post_statuses() {
+		$statuses = [
+			'dp-rewrite-draft'     => [
+				'label'                     => 'Republish Draft',
+				'public'                    => true,
+				'exclude_from_search'       => false,
+				'show_in_admin_all_list'    => false,
+				'show_in_admin_status_list' => false,
+			],
+			'dp-rewrite-republish' => [
+				'label'                     => 'Republish',
+				'public'                    => true,
+				'exclude_from_search'       => false,
+				'show_in_admin_all_list'    => false,
+				'show_in_admin_status_list' => false,
+			],
+			'dp-rewrite-schedule'  => [
+				'label'                     => 'Future Republish',
+				'public'                    => true,
+				'exclude_from_search'       => false,
+				'show_in_admin_all_list'    => false,
+				'show_in_admin_status_list' => false,
+			],
+		];
+
+		Monkey\Functions\expect( '\register_post_status' )
+			->once()
+			->with( 'dp-rewrite-draft', $statuses['dp-rewrite-draft'] );
+
+		Monkey\Functions\expect( '\register_post_status' )
+			->once()
+			->with( 'dp-rewrite-republish', $statuses['dp-rewrite-republish'] );
+
+		Monkey\Functions\expect( '\register_post_status' )
+			->once()
+			->with( 'dp-rewrite-schedule', $statuses['dp-rewrite-schedule'] );
+
+		$this->instance->register_post_statuses();
+	}
 }
