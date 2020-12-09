@@ -20,7 +20,7 @@ class Options {
 	 */
 	public function register_settings() {
 		foreach ( array_keys( $this->get_options() ) as $option ) {
-			register_setting( 'duplicate_post_group', $option );
+			\register_setting( 'duplicate_post_group', $option );
 		}
 	}
 
@@ -35,8 +35,10 @@ class Options {
 	 * @return array The options for the specified tab.
 	 */
 	public function get_options_for_tab( $tab, $fieldset = '' ) {
+		$options = $this->get_options();
+
 		$options = array_filter(
-			$this->get_options(),
+			$options,
 			function ( $option ) use ( $tab ) {
 				return array_key_exists( 'tab', $option ) && $option['tab'] === $tab;
 			}
@@ -76,6 +78,7 @@ class Options {
 	 * Gets the list of registered options.
 	 *
 	 * @return array The options.
+	 * @codeCoverageIgnore
 	 */
 	public function get_options() {
 		return [
