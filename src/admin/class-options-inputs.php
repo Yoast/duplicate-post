@@ -23,7 +23,7 @@ class Options_Inputs {
 	 *
 	 * @return string The input's HTML output.
 	 */
-	public function input( $type, $name, $value, $id, $attributes = '' ) {
+	protected function input( $type, $name, $value, $id, $attributes = '' ) {
 		return sprintf(
 			'<input type="%s" name="%s" id="%s" value="%s" %s />',
 			$type,
