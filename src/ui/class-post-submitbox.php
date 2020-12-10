@@ -55,29 +55,29 @@ class Post_Submitbox {
 		\add_filter( 'gettext_with_context', [ $this, 'change_schedule_strings_classic_editor' ], 10, 3 );
 		\add_filter( 'post_updated_messages', [ $this, 'change_scheduled_notice_classic_editor' ], 10, 1 );
 
-        \add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_classic_editor_scripts' ] );
+		\add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_classic_editor_scripts' ] );
 	}
 
-    /**
-     * Enqueues the necessary JavaScript code for the classic editor.
-     *
-     * @return void
-     */
+	/**
+	 * Enqueues the necessary JavaScript code for the classic editor.
+	 *
+	 * @return void
+	 */
 	public function enqueue_classic_editor_scripts() {
-	    \wp_enqueue_script(
-            'duplicate_post_strings',
-            \plugins_url(
-                \sprintf( 'js/dist/duplicate-post-strings-%s.js', Utils::flatten_version( DUPLICATE_POST_CURRENT_VERSION ) ),
-                DUPLICATE_POST_FILE
-            ),
-            [
-                'wp-element',
-                'wp-i18n',
-            ],
-            DUPLICATE_POST_CURRENT_VERSION,
-            true
-        );
-    }
+		\wp_enqueue_script(
+			'duplicate_post_strings',
+			\plugins_url(
+				\sprintf( 'js/dist/duplicate-post-strings-%s.js', Utils::flatten_version( DUPLICATE_POST_CURRENT_VERSION ) ),
+				DUPLICATE_POST_FILE
+			),
+			[
+				'wp-element',
+				'wp-i18n',
+			],
+			DUPLICATE_POST_CURRENT_VERSION,
+			true
+		);
+	}
 
 	/**
 	 * Adds a button in the post/page edit screen to create a clone

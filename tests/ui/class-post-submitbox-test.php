@@ -13,6 +13,7 @@ use Yoast\WP\Duplicate_Post\Permissions_Helper;
 use Yoast\WP\Duplicate_Post\Tests\TestCase;
 use Yoast\WP\Duplicate_Post\UI\Post_Submitbox;
 use Yoast\WP\Duplicate_Post\UI\Link_Builder;
+use Yoast\WP\Duplicate_Post\Utils;
 
 /**
  * Test the Post_Submitbox class.
@@ -77,6 +78,32 @@ class Post_Submitbox_Test extends TestCase {
 		$this->assertNotFalse( \has_filter( 'gettext', [ $this->instance, 'change_republish_strings_classic_editor' ] ), 'Does not have expected gettext filter' );
 		$this->assertNotFalse( \has_filter( 'gettext_with_context', [ $this->instance, 'change_schedule_strings_classic_editor' ] ), 'Does not have expected gettext_with_context filter' );
 		$this->assertNotFalse( \has_filter( 'post_updated_messages', [ $this->instance, 'change_scheduled_notice_classic_editor' ] ), 'Does not have expected post_updated_messages filter' );
+
+		$this->assertNotFalse( \has_action( 'admin_enqueue_scripts', [ $this->instance, 'enqueue_classic_editor_scripts' ] ), 'Does not have expected admin_enqueue_scripts action' );
+	}
+
+	/**
+	 * Tests the enqueue_classic_editor_scripts function.
+	 *
+	 * @covers Post_Submitbox::enqueue_classic_editor_scripts
+	 */
+	public function test_enqueue_classic_editor_scripts() {
+		\define( 'DUPLICATE_POST_CURRENT_VERSION', '4.0alpha' );
+		\define( 'DUPLICATE_POST_FILE', '/var/www/html/wp-content/plugins/duplicate-post/duplicate-post.php' );
+
+		$handle = 'duplicate_post_strings';
+		$src    = 'http://basic.wordpress.test/wp-content/plugins/duplicate-post/js/dist/duplicate-post-strings-40alpha.js';
+		$deps   = [ 'wp-element', 'wp-i18n' ];
+
+		Monkey\Functions\expect( '\plugins_url' )
+			->once()
+			->with( 'js/dist/duplicate-post-strings-40alpha.js', DUPLICATE_POST_FILE )
+			->andReturn( $src );
+
+		Monkey\Functions\expect( '\wp_enqueue_script' )
+			->with( $handle, $src, $deps, DUPLICATE_POST_CURRENT_VERSION, true );
+
+		$this->instance->enqueue_classic_editor_scripts();
 	}
 
 	/**
