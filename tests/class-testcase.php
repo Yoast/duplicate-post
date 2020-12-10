@@ -14,6 +14,7 @@ use PHPUnit\Framework\TestCase as BaseTestCase;
  * TestCase base class.
  */
 abstract class TestCase extends BaseTestCase {
+
 	/**
 	 * Test setup.
 	 */

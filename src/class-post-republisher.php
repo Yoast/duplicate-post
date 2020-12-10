@@ -59,7 +59,7 @@ class Post_Republisher {
 			// Runs the republishing of the copy onto the original.
 			\add_action( "rest_after_insert_{$enabled_post_type}", [ $this, 'republish_after_rest_api_request' ] );
 		}
-		// Called by the traditional post update flow, which runs in two cases:
+		// Called by `wp_insert_post()` when submitting the post copy, which runs in two cases:
 		// - In the Classic Editor, where there's only one request that updates everything.
 		// - In the Block Editor, only when there are custom meta boxes.
 		\add_action( 'wp_insert_post', [ $this, 'republish_after_post_request' ], 9999, 2 );
@@ -118,7 +118,9 @@ class Post_Republisher {
 	 * @return array An array of slashed, sanitized, and processed attachment post data.
 	 */
 	public function change_post_copy_status( $data, $postarr ) {
-		if ( ! isset( $postarr['ID'] ) || ! Utils::is_copy_for_rewrite_republish( $postarr['ID'] ) ) {
+		$post = \get_post( $postarr['ID'] );
+
+		if ( ! $post || ! $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
 			return $data;
 		}
 
@@ -142,7 +144,10 @@ class Post_Republisher {
 	 * @return void
 	 */
 	public function republish_request( $post_id, $post_data ) {
-		if ( ! Utils::is_copy_for_rewrite_republish( $post_id ) || $post_data->post_status !== 'dp-rewrite-republish' ) {
+		if (
+			! $this->permissions_helper->is_rewrite_and_republish_copy( $post_data )
+			|| $post_data->post_status !== 'dp-rewrite-republish'
+		) {
 			return;
 		}
 

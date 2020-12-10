@@ -158,27 +158,4 @@ class Utils {
 	public static function get_original_post_id( $post_id ) {
 		return (int) \get_post_meta( $post_id, '_dp_original', true );
 	}
-
-	/**
-	 * Checks whether a post is a copy for Rewrite & Republish.
-	 *
-	 * @param int $post_id The post ID.
-	 *
-	 * @return bool Whether a post is a copy for Rewrite & Republish.
-	 */
-	public static function is_copy_for_rewrite_republish( $post_id ) {
-		return (bool) \get_post_meta( $post_id, '_dp_is_rewrite_republish_copy', true );
-	}
-
-	/**
-	 * Gets the text for the republished notice.
-	 *
-	 * @return string The republished notice text.
-	 */
-	public static function get_republished_notice_text() {
-		return \__(
-			'Your original post has been replaced with the rewritten post. You are now viewing the (rewritten) original post.',
-			'duplicate-post'
-		);
-	}
 }

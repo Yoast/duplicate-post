@@ -89,7 +89,7 @@ class Post_Republisher_Test extends TestCase {
 
 		Monkey\Functions\expect( 'get_option' )
 			->with( 'duplicate_post_types_enabled' )
-			->andReturn( [ 'post', 'page' ] );
+			->andReturn( $enabled_post_types );
 
 		Monkey\Filters\expectAdded( 'wp_insert_post_data' )
 			->with( [ $this->instance, 'change_post_copy_status' ], 1, 2 );
@@ -205,8 +205,13 @@ class Post_Republisher_Test extends TestCase {
 		$postarr           = [];
 		$postarr['ID']     = 123;
 
-		Monkey\Functions\expect( '\get_post_meta' )
-			->with( $post->ID, '_dp_is_rewrite_republish_copy', true )
+		Monkey\Functions\expect( '\get_post' )
+			->with( $post->ID )
+			->andReturn( $post );
+
+		$this->permissions_helper
+			->expects( 'is_rewrite_and_republish_copy' )
+			->with( $post )
 			->andReturn( $input['is_copy'] );
 
 		$returned_post_data = $this->instance->change_post_copy_status( (array) $post, $postarr );
@@ -223,7 +228,7 @@ class Post_Republisher_Test extends TestCase {
 			[
 				[
 					'post_status' => 'publish',
-					'is_copy'     => '0',
+					'is_copy'     => false,
 				],
 				[
 					'post_status' => 'publish',
@@ -232,7 +237,7 @@ class Post_Republisher_Test extends TestCase {
 			[
 				[
 					'post_status' => 'publish',
-					'is_copy'     => '1',
+					'is_copy'     => true,
 				],
 				[
 					'post_status' => 'dp-rewrite-republish',
@@ -241,7 +246,7 @@ class Post_Republisher_Test extends TestCase {
 			[
 				[
 					'post_status' => 'future',
-					'is_copy'     => '1',
+					'is_copy'     => true,
 				],
 				[
 					'post_status' => 'dp-rewrite-schedule',
