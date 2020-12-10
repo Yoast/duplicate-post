@@ -793,7 +793,7 @@ class Post_Submitbox_Test extends TestCase {
 
 	/**
 	 * Tests the should_change_rewrite_republish_copy function when it should return false,
-	 * because the current post is not a rewrite and republish post.
+	 * because the current post is not a Rewrite & Republish post.
 	 *
 	 * @covers Post_Submitbox::should_change_rewrite_republish_copy
 	 */

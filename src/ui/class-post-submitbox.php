@@ -238,11 +238,11 @@ class Post_Submitbox {
 	}
 
 	/**
-	 * Determines if the rewrite and republish copies for the post or page should be used.
+	 * Determines if the Rewrite & Republish copies for the post should be used.
 	 *
 	 * @param \WP_Post $post The current post object.
 	 *
-	 * @return bool True if the rewrite and republish copies should be used.
+	 * @return bool True if the Rewrite & Republish copies should be used.
 	 */
 	public function should_change_rewrite_republish_copy( $post ) {
 		if ( ! $this->permissions_helper->is_edit_post_screen() && ! $this->permissions_helper->is_new_post_screen() ) {
