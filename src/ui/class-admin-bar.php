@@ -136,7 +136,7 @@ class Admin_Bar {
 		}
 
 		$show_duplicate_link = $this->permissions_helper->should_link_be_displayed( $post )
-							&& $this->permissions_helper->is_valid_post_edit_screen()
+							&& ( $this->permissions_helper->is_edit_post_screen() || \is_singular( $post->post_type ) )
 							&& $this->permissions_helper->post_type_has_admin_bar( $post->post_type );
 
 		/** This filter is documented in class-row-actions.php */

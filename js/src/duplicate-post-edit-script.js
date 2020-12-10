@@ -1,4 +1,4 @@
-/* global wp, duplicatePost */
+/* global duplicatePost, duplicatePostNotices */
 
 import { registerPlugin } from "@wordpress/plugins";
 import { PluginPostStatusInfo } from "@wordpress/edit-post";
@@ -59,27 +59,21 @@ class DuplicatePost {
 	 * @returns {void}
 	 */
 	renderNotices() {
-		if ( parseInt( duplicatePost.rewriting, 10 ) ) {
-			dispatch( 'core/notices' ).createNotice(
-				'warning',
-				__(
-					'You can now start rewriting your post in this duplicate of the original post. If you click "Republish", this rewritten post will replace the original post.',
-					'duplicate-post'
-				),
-				{
-					isDismissible: true, // Whether the user can dismiss the notice.
-				}
-			);
+		if ( ! duplicatePostNotices || ! ( duplicatePostNotices instanceof Object ) ) {
+			return;
 		}
 
-		if ( parseInt( duplicatePost.republished, 10 ) ) {
-			dispatch( 'core/notices' ).createNotice(
-				'success',
-				duplicatePost.republishedText,
-				{
-					isDismissible: true, // Whether the user can dismiss the notice.
-				}
-			);
+		for ( const [ key, notice ] of Object.entries( duplicatePostNotices ) ){
+			let noticeObj = JSON.parse( notice );
+			if ( noticeObj.status && noticeObj.text ) {
+				dispatch( 'core/notices' ).createNotice(
+					noticeObj.status,
+					noticeObj.text,
+					{
+						isDismissible: noticeObj.isDismissible || true,
+					}
+				);
+			}
 		}
 	}
 

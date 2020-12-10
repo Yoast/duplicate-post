@@ -57,13 +57,6 @@ class User_Interface {
 	protected $bulk_actions;
 
 	/**
-	 * Admin notices object.
-	 *
-	 * @var Admin_Notices
-	 */
-	protected $admin_notices;
-
-	/**
 	 * Post states object.
 	 *
 	 * @var Post_States
@@ -104,7 +97,6 @@ class User_Interface {
 		$this->block_editor       = new Block_Editor( $this->link_builder, $this->permissions_helper );
 		$this->admin_bar          = new Admin_Bar( $this->link_builder, $this->permissions_helper );
 		$this->bulk_actions       = new Bulk_Actions( $this->permissions_helper );
-		$this->admin_notices      = new Admin_Notices();
 		$this->post_states        = new Post_States();
 		$this->metabox            = new Metabox( $this->permissions_helper );
 		$this->column             = new Column( $this->permissions_helper );
