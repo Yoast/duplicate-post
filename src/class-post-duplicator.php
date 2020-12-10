@@ -167,6 +167,7 @@ class Post_Duplicator {
 
 			\update_post_meta( $new_post_id, '_dp_is_rewrite_republish_copy', 1 );
 			\update_post_meta( $post->ID, '_dp_has_rewrite_republish_copy', $new_post_id );
+			\update_post_meta( $new_post_id, '_dp_creation_date_gmt', \current_time( 'mysql', 1 ) );
 		}
 
 		return $new_post_id;

@@ -58,21 +58,13 @@ class Block_Editor {
 	 * @return void
 	 */
 	public function should_previously_used_keyword_assessment_run() {
-		global $pagenow;
-		if ( ! \in_array( $pagenow, [ 'post.php', 'post-new.php' ], true ) ) {
-			return;
-		}
+		if ( $this->permissions_helper->is_edit_post_screen() || $this->permissions_helper->is_new_post_screen() ) {
 
-		$post = \get_post();
+			$post = \get_post();
 
-		if ( \is_null( $post ) ) {
-			return;
-		}
-
-		$skip_assessment = $this->permissions_helper->is_rewrite_and_republish_copy( $post );
-
-		if ( ! empty( $skip_assessment ) ) {
-			\add_filter( 'wpseo_previously_used_keyword_active', '__return_false' );
+			if ( ! \is_null( $post ) && $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
+				\add_filter( 'wpseo_previously_used_keyword_active', '__return_false' );
+			}
 		}
 	}
 
@@ -93,14 +85,18 @@ class Block_Editor {
 			DUPLICATE_POST_CURRENT_VERSION,
 			true
 		);
+		\wp_add_inline_script(
+			'duplicate_post_edit_script',
+			'let duplicatePostNotices = {};',
+			'before'
+		);
 
 		\wp_localize_script(
 			'duplicate_post_edit_script',
-			'duplicatePost',
+			'duplicatePostLinks',
 			[
 				'new_draft_link'             => $this->get_new_draft_permalink(),
 				'rewrite_and_republish_link' => $this->get_rewrite_republish_permalink(),
-				'rewriting'                  => ( ! empty( $_REQUEST['rewriting'] ) ) ? 1 : 0,  // phpcs:ignore WordPress.Security.NonceVerification
 			]
 		);
 

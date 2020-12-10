@@ -75,49 +75,85 @@ class Block_Editor_Test extends TestCase {
 	}
 
 	/**
-	 * Tests the should_previously_used_keyword_assessment_run function when the assessment should be disabled.
+	 * Tests the should_previously_used_keyword_assessment_run function.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Block_Editor::should_previously_used_keyword_assessment_run
+	 * @dataProvider should_previously_used_keyword_assessment_run_provider
+	 *
+	 * @param mixed $original Input value.
+	 * @param mixed $expected Expected output.
 	 */
-	public function test_should_previously_used_keyword_assessment_run_yes() {
-		global $pagenow;
-		$pagenow         = 'post.php'; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Intended, to be able to test the method.
-		$post            = Mockery::mock( \WP_Post::class );
-		$post->ID        = 123;
-		$skip_assessment = '1';
+	public function test_should_previously_used_keyword_assessment_run( $original, $expected ) {
+		$post = Mockery::mock( \WP_Post::class );
 
-		Monkey\Functions\expect( '\get_post' )
-			->andReturn( $post );
+		$this->permissions_helper
+			->expects( 'is_edit_post_screen' )
+			->andReturn( $original['is_edit_post_screen'] );
 
-		$this->permissions_helper->expects( 'is_rewrite_and_republish_copy' )
+		$this->permissions_helper
+			->allows( 'is_new_post_screen' )
+			->andReturn( $original['is_new_post_screen'] );
+
+		Monkey\Functions\when( '\get_post' )
+			->justReturn( $post );
+
+		$this->permissions_helper
+			->allows( 'is_rewrite_and_republish_copy' )
 			->with( $post )
-			->andReturn( $skip_assessment );
+			->andReturn( $original['is_rewrite_and_republish_copy'] );
 
 		$this->instance->should_previously_used_keyword_assessment_run();
-		$this->assertNotFalse( \has_filter( 'wpseo_previously_used_keyword_active' ) );
+		$this->assertSame( $expected, \has_filter( 'wpseo_previously_used_keyword_active' ) );
 	}
 
 	/**
-	 * Tests the should_previously_used_keyword_assessment_run function when the assessment should not be disabled.
+	 * Data provider for test_is_edit_post_screen.
 	 *
-	 * @covers \Yoast\WP\Duplicate_Post\UI\Block_Editor::should_previously_used_keyword_assessment_run
+	 * @return array The test parameters.
 	 */
-	public function test_should_previously_used_keyword_assessment_run_no() {
-		global $pagenow;
-		$pagenow         = 'post.php'; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Intended, to be able to test the method.
-		$post            = Mockery::mock( \WP_Post::class );
-		$post->ID        = 123;
-		$skip_assessment = '';
-
-		Monkey\Functions\expect( '\get_post' )
-			->andReturn( $post );
-
-		$this->permissions_helper->expects( 'is_rewrite_and_republish_copy' )
-			->with( $post )
-			->andReturn( $skip_assessment );
-
-		$this->instance->should_previously_used_keyword_assessment_run();
-		$this->assertFalse( \has_filter( 'wpseo_previously_used_keyword_active' ) );
+	public function should_previously_used_keyword_assessment_run_provider() {
+		return [
+			[
+				'original' => [
+					'is_edit_post_screen'           => true,
+					'is_new_post_screen'            => false,
+					'is_rewrite_and_republish_copy' => true,
+				],
+				'expected' => true,
+			],
+			[
+				'original' => [
+					'is_edit_post_screen'           => false,
+					'is_new_post_screen'            => true,
+					'is_rewrite_and_republish_copy' => true,
+				],
+				'expected' => true,
+			],
+			[
+				'original' => [
+					'is_edit_post_screen'           => false,
+					'is_new_post_screen'            => false,
+					'is_rewrite_and_republish_copy' => null,
+				],
+				'expected' => false,
+			],
+			[
+				'original' => [
+					'is_edit_post_screen'           => true,
+					'is_new_post_screen'            => false,
+					'is_rewrite_and_republish_copy' => false,
+				],
+				'expected' => false,
+			],
+			[
+				'original' => [
+					'is_edit_post_screen'           => false,
+					'is_new_post_screen'            => true,
+					'is_rewrite_and_republish_copy' => false,
+				],
+				'expected' => false,
+			],
+		];
 	}
 
 	/**
