@@ -39,8 +39,6 @@ class Options_Form_Generator {
 	 * @return string The HTML output.
 	 */
 	public function generate_options_input( array $options, $parent_option = '' ) {
-		global $wp_version;
-
 		$output = '';
 
 		foreach ( $options as $option => $option_values ) {
@@ -49,7 +47,7 @@ class Options_Form_Generator {
 				continue;
 			}
 
-			if ( array_key_exists( 'version', $option_values ) && version_compare( $wp_version, $option_values['version'] ) < 0 ) {
+			if ( array_key_exists( 'version', $option_values ) && version_compare( \get_bloginfo( 'version' ), $option_values['version'] ) < 0 ) {
 				continue;
 			}
 
@@ -70,10 +68,10 @@ class Options_Form_Generator {
 				continue;
 			}
 
-			$id = ( array_key_exists( 'id', $option_values ) ? $option_values['id'] : str_replace( '_', '-', $option ) );
+			$id = ( array_key_exists( 'id', $option_values ) ? $option_values['id'] : $this->prepare_input_id( $option ) );
 
 			if ( $parent_option !== '' ) {
-				$id     = sprintf( '%s-%s', $parent_option, $id );
+				$id     = sprintf( '%s-%s', $this->prepare_input_id( $parent_option ), $id );
 				$option = sprintf( '%s[%s]', $parent_option, $option );
 			}
 
@@ -133,7 +131,7 @@ class Options_Form_Generator {
 			return sprintf( '<span id="%s-description">(%s)</span>', $id, $description );
 		}
 
-		return sprintf( '<p id="%s-description">(%s)</p>', $id, implode( '<br />', $description ) );
+		return sprintf( '<p id="%s-description">%s</p>', $id, implode( '<br />', $description ) );
 	}
 
 	/**
@@ -142,11 +140,11 @@ class Options_Form_Generator {
 	 * @return string The generated taxonomies list.
 	 */
 	public function generate_taxonomy_exclusion_list() {
-		$taxonomies = get_taxonomies( [], 'objects' );
+		$taxonomies = \get_taxonomies( [], 'objects' );
 
 		usort( $taxonomies, [ $this, 'sort_taxonomy_objects' ] );
 
-		$taxonomies_blacklist = get_option( 'duplicate_post_taxonomies_blacklist' );
+		$taxonomies_blacklist = \get_option( 'duplicate_post_taxonomies_blacklist' );
 
 		if ( ! is_array( $taxonomies_blacklist ) ) {
 			$taxonomies_blacklist = [];
@@ -167,7 +165,7 @@ class Options_Form_Generator {
 				[
 					'duplicate_post_taxonomies_blacklist[]' => [
 						'type'    => 'checkbox',
-						'id'      => 'duplicate-post-' . $name,
+						'id'      => 'duplicate-post-' . $this->prepare_input_id( $name ),
 						'value'   => $name,
 						'checked' => in_array( $taxonomy->name, $taxonomies_blacklist, true ),
 						'label'   => esc_html( $taxonomy->labels->name . ' [' . $taxonomy->name . ']' ),
@@ -186,9 +184,7 @@ class Options_Form_Generator {
 	 * @return string The generated roles list.
 	 */
 	public function generate_roles_permission_list() {
-		global $wp_roles;
-
-		$roles             = $wp_roles->get_names();
+		$roles             = $this->get_roles();
 		$post_types        = \get_post_types( [ 'show_ui' => true ], 'objects' );
 		$edit_capabilities = [ 'edit_posts' => true ];
 
@@ -206,10 +202,10 @@ class Options_Form_Generator {
 					[
 						'duplicate_post_roles[]' => [
 							'type'    => 'checkbox',
-							'id'      => 'duplicate-post-' . $name,
+							'id'      => 'duplicate-post-' . $this->prepare_input_id( $name ),
 							'value'   => $name,
 							'checked' => $role->has_cap( 'copy_posts' ),
-							'label'   => esc_html( translate_user_role( $display_name ) ),
+							'label'   => \esc_html( \translate_user_role( $display_name ) ),
 						],
 					]
 				);
@@ -225,7 +221,7 @@ class Options_Form_Generator {
 	 * @return string The generated post types list.
 	 */
 	public function generate_post_types_list() {
-		$post_types = get_post_types( [ 'show_ui' => true ], 'objects' );
+		$post_types = \get_post_types( [ 'show_ui' => true ], 'objects' );
 		$output     = '';
 
 		foreach ( $post_types as $post_type_object ) {
@@ -233,16 +229,16 @@ class Options_Form_Generator {
 				continue;
 			}
 
-			$name = esc_attr( $post_type_object->name );
+			$name = \esc_attr( $post_type_object->name );
 
 			$output .= $this->generate_options_input(
 				[
 					'duplicate_post_types_enabled[]' => [
 						'type'    => 'checkbox',
-						'id'      => 'duplicate-post-' . $name,
+						'id'      => 'duplicate-post-' . $this->prepare_input_id( $name ),
 						'value'   => $name,
 						'checked' => duplicate_post_is_post_type_enabled( $post_type_object->name ),
-						'label'   => esc_html( $post_type_object->labels->name ),
+						'label'   => \esc_html( $post_type_object->labels->name ),
 					],
 				]
 			);
@@ -268,13 +264,36 @@ class Options_Form_Generator {
 		// Check for serialized options.
 		$saved_option = ! empty( $parent_option ) ? \get_option( $parent_option ) : \get_option( $option );
 
-		if ( is_array( $saved_option ) ) {
-			// Clean up the sub-option's name.
-			$cleaned_option = trim( str_replace( $parent_option, '', $option ), '[]' );
-
-			return array_key_exists( $cleaned_option, $saved_option ) && (int) $saved_option[ $cleaned_option ] === 1;
+		if ( ! is_array( $saved_option ) ) {
+			return (int) $saved_option === 1;
 		}
 
-		return (int) \get_option( $option ) === 1;
+		// Clean up the sub-option's name.
+		$cleaned_option = trim( str_replace( $parent_option, '', $option ), '[]' );
+
+		return array_key_exists( $cleaned_option, $saved_option ) && (int) $saved_option[ $cleaned_option ] === 1;
+	}
+
+	/**
+	 * Prepares the passed ID so it's properly formatted.
+	 *
+	 * @param string $id The ID to prepare.
+	 *
+	 * @return string The prepared input ID.
+	 */
+	public function prepare_input_id( $id ) {
+		return str_replace( '_', '-', $id );
+	}
+
+	/**
+	 * Gets the registered roles.
+	 *
+	 * @return array The roles.
+	 * @codeCoverageIgnore As this is a simple wrapper method for a built-in WordPress method, we don't have to test it.
+	 */
+	public function get_roles() {
+		global $wp_roles;
+
+		return $wp_roles->get_names();
 	}
 }
