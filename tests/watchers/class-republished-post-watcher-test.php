@@ -88,14 +88,9 @@ class Republished_Post_Watcher_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Republished_Post_Watcher::add_admin_notice
 	 */
 	public function test_add_admin_notice_classic() {
-		$post = \Mockery::mock( \WP_Post::class );
-
 		$this->permissions_helper
 			->expects( 'is_classic_editor' )
 			->andReturnTrue();
-
-		Monkey\Functions\expect( '\get_post' )
-			->andReturn( $post );
 
 		$this->instance
 			->expects( 'get_notice_text' )
@@ -130,11 +125,6 @@ class Republished_Post_Watcher_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Republished_Post_Watcher::add_block_editor_notice
 	 */
 	public function test_add_block_editor_notice() {
-		$post = \Mockery::mock( \WP_Post::class );
-
-		Monkey\Functions\expect( '\get_post' )
-			->andReturn( $post );
-
 		$this->instance
 			->expects( 'get_notice_text' )
 			->andReturn( 'notice' );

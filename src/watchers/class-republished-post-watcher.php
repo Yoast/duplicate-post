@@ -81,15 +81,9 @@ class Republished_Post_Watcher {
 			return;
 		}
 
-		$post = \get_post();
-
-		if ( ! $post ) {
-			return;
-		}
-
 		if ( ! empty( $_REQUEST['dprepublished'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			echo '<div id="message" class="notice notice-success is-dismissible"><p>' .
-				\esc_html( $this->get_notice_text( $post ) ) .
+				\esc_html( $this->get_notice_text() ) .
 				'</p></div>';
 		}
 	}
@@ -100,15 +94,9 @@ class Republished_Post_Watcher {
 	 * @return void
 	 */
 	public function add_block_editor_notice() {
-		$post = \get_post();
-
-		if ( ! $post ) {
-			return;
-		}
-
 		if ( ! empty( $_REQUEST['dprepublished'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			$notice = [
-				'text'          => \wp_slash( $this->get_notice_text( $post ) ),
+				'text'          => \wp_slash( $this->get_notice_text() ),
 				'status'        => 'success',
 				'isDismissible' => true,
 			];
