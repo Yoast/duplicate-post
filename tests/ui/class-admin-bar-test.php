@@ -316,7 +316,7 @@ class Admin_Bar_Test extends TestCase {
 			->andReturnTrue();
 
 		$this->permissions_helper
-			->expects( 'is_valid_post_edit_screen' )
+			->expects( 'is_edit_post_screen' )
 			->andReturnTrue();
 
 		$this->permissions_helper
@@ -355,7 +355,7 @@ class Admin_Bar_Test extends TestCase {
 			->andReturnTrue();
 
 		$this->permissions_helper
-			->expects( 'is_valid_post_edit_screen' )
+			->expects( 'is_edit_post_screen' )
 			->andReturnTrue();
 
 		$this->permissions_helper
@@ -393,7 +393,7 @@ class Admin_Bar_Test extends TestCase {
 			->never();
 
 		$this->permissions_helper
-			->expects( 'is_valid_post_edit_screen' )
+			->expects( 'is_edit_post_screen' )
 			->never();
 
 		$this->permissions_helper
@@ -431,7 +431,7 @@ class Admin_Bar_Test extends TestCase {
 			->never();
 
 		$this->permissions_helper
-			->expects( 'is_valid_post_edit_screen' )
+			->expects( 'is_edit_post_screen' )
 			->never();
 
 		$this->permissions_helper
@@ -470,7 +470,7 @@ class Admin_Bar_Test extends TestCase {
 			->andReturnFalse();
 
 		$this->permissions_helper
-			->expects( 'is_valid_post_edit_screen' )
+			->expects( 'is_edit_post_screen' )
 			->never();
 
 		$this->permissions_helper

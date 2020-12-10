@@ -10,6 +10,7 @@ namespace Yoast\WP\Duplicate_Post;
 
 use Yoast\WP\Duplicate_Post\Handlers\Handler;
 use Yoast\WP\Duplicate_Post\UI\User_Interface;
+use Yoast\WP\Duplicate_Post\Watchers\Watchers;
 
 /**
  * Represents the Duplicate Post main class.
@@ -45,6 +46,13 @@ class Duplicate_Post {
 	protected $handler;
 
 	/**
+	 * Watchers object.
+	 *
+	 * @var Watchers
+	 */
+	protected $watchers;
+
+	/**
 	 * Initializes the main class.
 	 */
 	public function __construct() {
@@ -52,5 +60,6 @@ class Duplicate_Post {
 		$this->user_interface     = new User_Interface( $this->permissions_helper );
 		$this->post_duplicator    = new Post_Duplicator();
 		$this->handler            = new Handler( $this->post_duplicator, $this->permissions_helper );
+		$this->watchers           = new Watchers( $this->permissions_helper );
 	}
 }
