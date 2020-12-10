@@ -8,6 +8,7 @@
 namespace Yoast\WP\Duplicate_Post\UI;
 
 use Yoast\WP\Duplicate_Post\Permissions_Helper;
+use Yoast\WP\Duplicate_Post\Utils;
 
 /**
  * Represents the Post_Submitbox class.
@@ -49,10 +50,34 @@ class Post_Submitbox {
 	public function register_hooks() {
 		\add_action( 'post_submitbox_start', [ $this, 'add_new_draft_post_button' ] );
 		\add_action( 'post_submitbox_start', [ $this, 'add_rewrite_and_republish_post_button' ] );
+
 		\add_filter( 'gettext', [ $this, 'change_republish_strings_classic_editor' ], 10, 2 );
 		\add_filter( 'gettext_with_context', [ $this, 'change_schedule_strings_classic_editor' ], 10, 3 );
 		\add_filter( 'post_updated_messages', [ $this, 'change_scheduled_notice_classic_editor' ], 10, 1 );
+
+        \add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_classic_editor_scripts' ] );
 	}
+
+    /**
+     * Enqueues the necessary JavaScript code for the classic editor.
+     *
+     * @return void
+     */
+	public function enqueue_classic_editor_scripts() {
+	    \wp_enqueue_script(
+            'duplicate_post_strings',
+            \plugins_url(
+                \sprintf( 'js/dist/duplicate-post-strings-%s.js', Utils::flatten_version( DUPLICATE_POST_CURRENT_VERSION ) ),
+                DUPLICATE_POST_FILE
+            ),
+            [
+                'wp-element',
+                'wp-i18n',
+            ],
+            DUPLICATE_POST_CURRENT_VERSION,
+            true
+        );
+    }
 
 	/**
 	 * Adds a button in the post/page edit screen to create a clone
@@ -230,5 +255,4 @@ class Post_Submitbox {
 
 		return $this->permissions_helper->is_rewrite_and_republish_copy( $post );
 	}
-
 }
