@@ -701,4 +701,91 @@ class Post_Submitbox_Test extends TestCase {
 
 		$this->assertEquals( $this->instance->change_scheduled_notice_classic_editor( $messages ), $result );
 	}
+
+	/**
+	 * Tests the should_change_rewrite_republish_copy function when it should return true.
+	 *
+	 * @covers Post_Submitbox::should_change_rewrite_republish_copy
+	 */
+	public function test_should_change_rewrite_republish_copy() {
+        $post            = Mockery::mock( \WP_Post::class );
+        $post->post_type = 'post';
+
+        $this->permissions_helper->expects( 'is_edit_post_screen' )
+            ->once()
+            ->andReturnTrue();
+
+        $this->permissions_helper->expects( 'is_new_post_screen' )
+            ->never();
+
+        $this->permissions_helper->expects( 'is_rewrite_and_republish_copy' )
+            ->once()
+            ->with( $post )
+            ->andReturnTrue();
+
+        $this->assertTrue( $this->instance->should_change_rewrite_republish_copy( $post ) );
+	}
+
+    /**
+     * Tests the should_change_rewrite_republish_copy function when it should return false,
+     * because the current page is not a post edit screen.
+     *
+     * @covers Post_Submitbox::should_change_rewrite_republish_copy
+     */
+    public function test_should_not_change_rewrite_republish_copy_not_post_edit_screen() {
+        $post            = Mockery::mock( \WP_Post::class );
+        $post->post_type = 'xx';
+
+        $this->permissions_helper->expects( 'is_edit_post_screen' )
+            ->once()
+            ->andReturnFalse();
+
+        $this->permissions_helper->expects( 'is_new_post_screen' )
+            ->once()
+            ->andReturnFalse();
+
+        $this->assertFalse( $this->instance->should_change_rewrite_republish_copy( $post ) );
+    }
+
+    /**
+     * Tests the should_change_rewrite_republish_copy function when it should return false,
+     * because the current post is null.
+     *
+     * @covers Post_Submitbox::should_change_rewrite_republish_copy
+     */
+    public function test_should_not_change_rewrite_republish_copy_post_is_null() {
+        $this->permissions_helper->expects( 'is_edit_post_screen' )
+            ->once()
+            ->andReturnTrue();
+
+        $this->permissions_helper->expects( 'is_new_post_screen' )
+            ->never();
+
+        $this->assertFalse( $this->instance->should_change_rewrite_republish_copy( null ) );
+    }
+
+    /**
+     * Tests the should_change_rewrite_republish_copy function when it should return false,
+     * because the current post is not a rewrite and republish post.
+     *
+     * @covers Post_Submitbox::should_change_rewrite_republish_copy
+     */
+    public function test_should_not_change_rewrite_republish_copy_not_republish_copy() {
+        $post            = Mockery::mock( \WP_Post::class );
+        $post->post_type = 'post';
+
+        $this->permissions_helper->expects( 'is_edit_post_screen' )
+            ->once()
+            ->andReturnTrue();
+
+        $this->permissions_helper->expects( 'is_new_post_screen' )
+            ->never();
+
+        $this->permissions_helper->expects( 'is_rewrite_and_republish_copy' )
+            ->once()
+            ->with( $post )
+            ->andReturnFalse();
+
+        $this->assertFalse( $this->instance->should_change_rewrite_republish_copy( $post ) );
+    }
 }
