@@ -32,6 +32,10 @@ class DuplicatePost {
 		 * @returns {void}
 		 */
 		subscribe( () => {
+			if ( ! this.isSafeRedirectURL( duplicatePost.originalEditURL ) ) {
+				return;
+			}
+
 			const isSavingPost       = select( 'core/editor' ).isSavingPost();
 			const isAutosavingPost   = select( 'core/editor' ).isAutosavingPost();
 			const hasActiveMetaBoxes = select( 'core/edit-post' ).hasMetaBoxes();
@@ -51,6 +55,29 @@ class DuplicatePost {
 			wasSavingMetaboxes = isSavingMetaBoxes;
 			wasAutoSavingPost  = isAutosavingPost;
 		} );
+	}
+
+	/**
+	 * Checks whether the URL for the redirect from the copy to the original matches the expected format.
+	 *
+	 * Allows only URLs with a http(s) protocol, a pathname matching the admin
+	 * post.php page and a parameter string with the expected parameters.
+	 *
+	 * @returns {bool} Whether the redirect URL matches the expected format.
+	 */
+	isSafeRedirectURL( url ) {
+		const parser = document.createElement( 'a' );
+		parser.href  = url;
+
+		if (
+			/^https?:$/.test( parser.protocol ) &&
+			/\/wp-admin\/post\.php$/.test( parser.pathname ) &&
+			/\?action=edit&post=([0-9]+)&dprepublished=1&dpcopy=([0-9]+)&dpnonce=([0-9]+)/.test( parser.search )
+		) {
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
