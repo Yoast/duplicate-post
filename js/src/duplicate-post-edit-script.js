@@ -39,12 +39,12 @@ class DuplicatePost {
 
 			// When there are custom meta boxes, redirect after they're saved.
 			if ( hasActiveMetaBoxes && ! isSavingMetaBoxes && wasSavingMetaboxes ) {
-				window.location.href = duplicatePost.originalEditURL;
+				window.location.assign( duplicatePost.originalEditURL );
 			}
 
 			// When there are no custom meta boxes, redirect after the post is saved.
 			if ( ! hasActiveMetaBoxes && ! isSavingPost && wasSavingPost && ! wasAutoSavingPost ) {
-				window.location.href = duplicatePost.originalEditURL;
+				window.location.assign( duplicatePost.originalEditURL );
 			}
 
 			wasSavingPost      = isSavingPost;
