@@ -51,7 +51,9 @@ class Check_Changes_Handler {
 	public function check_changes_action_handler() {
 		if ( ! ( isset( $_GET['post'] ) || isset( $_POST['post'] ) || // Input var okay.
 			( isset( $_REQUEST['action'] ) && 'duplicate_post_check_changes' === $_REQUEST['action'] ) ) ) { // Input var okay.
-			\wp_die( \esc_html__( 'No post has been supplied!', 'duplicate-post' ) );
+			\wp_die(
+				\esc_html__( 'No post has been supplied!', 'duplicate-post' )
+			);
 		}
 
 		$id = ( isset( $_GET['post'] ) ? \intval( \wp_unslash( $_GET['post'] ) ) : \intval( \wp_unslash( $_POST['post'] ) ) ); // Input var okay.
@@ -81,9 +83,9 @@ class Check_Changes_Handler {
 				)
 			);
 		}
-		$post_edit_link = get_edit_post_link( $post->ID );
+		$post_edit_link = \get_edit_post_link( $post->ID );
 
-		require_once ABSPATH . 'wp-admin/admin-header.php';
+		$this->require_wordpress_header();
 		?>
 		<div class="wrap">
 			<h1 class="long-header">
@@ -140,6 +142,28 @@ class Check_Changes_Handler {
 			</div>
 		</div>
 		<?php
+		$this->require_wordpress_footer();
+	}
+
+	/**
+	 * Requires the WP admin header.
+	 *
+	 * @codeCoverageIgnore
+	 *
+	 * @return void
+	 */
+	public function require_wordpress_header() {
+		require_once ABSPATH . 'wp-admin/admin-header.php';
+	}
+
+	/**
+	 * Requires the WP admin footer.
+	 *
+	 * @codeCoverageIgnore
+	 *
+	 * @return void
+	 */
+	public function require_wordpress_footer() {
 		require_once ABSPATH . 'wp-admin/admin-footer.php';
 	}
 }
