@@ -145,7 +145,7 @@ class Copied_Post_Watcher_Test extends TestCase {
 	/**
 	 * Tests the add_admin_notice function when not on the Classic editor.
 	 *
-	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Link_Actions_Watcher::add_admin_notice
+	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Copied_Post_Watcher::add_admin_notice
 	 */
 	public function test_add_admin_notice_not_classic() {
 		$this->permissions_helper
@@ -160,7 +160,7 @@ class Copied_Post_Watcher_Test extends TestCase {
 	 *
 	 * Tests the add_admin_notice function when the post does not have a copy intended for Rewrite & Republish.
 	 *
-	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Link_Actions_Watcher::add_admin_notice
+	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Copied_Post_Watcher::add_admin_notice
 	 */
 	public function test_add_admin_notice_not_rewrite_and_republish() {
 		$post = \Mockery::mock( \WP_Post::class );
