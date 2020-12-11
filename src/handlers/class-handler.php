@@ -52,6 +52,13 @@ class Handler {
 	protected $save_post_handler;
 
 	/**
+	 * The link actions handler.
+	 *
+	 * @var Changes_Check_Handler
+	 */
+	protected $check_handler;
+
+	/**
 	 * Initializes the class.
 	 *
 	 * @param Post_Duplicator    $post_duplicator    The Post_Duplicator object.
@@ -63,6 +70,7 @@ class Handler {
 
 		$this->bulk_handler      = new Bulk_Handler( $this->post_duplicator, $this->permissions_helper );
 		$this->link_handler      = new Link_Handler( $this->post_duplicator, $this->permissions_helper );
+		$this->check_handler     = new Changes_Check_Handler( $this->permissions_helper );
 		$this->save_post_handler = new Save_Post_Handler( $this->permissions_helper );
 	}
 }
