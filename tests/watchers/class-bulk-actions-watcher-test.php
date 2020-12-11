@@ -34,7 +34,7 @@ class Bulk_Actions_Watcher_Test extends TestCase {
 	/**
 	 * Tests the constructor.
 	 *
-	 * @covers \Yoast\WP\Duplicate_Post\UI\Bulk_Actions_Watcher::__construct
+	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Bulk_Actions_Watcher::__construct
 	 */
 	public function test_constructor() {
 		$this->instance->expects( 'register_hooks' )->once();
