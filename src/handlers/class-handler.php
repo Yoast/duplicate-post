@@ -54,7 +54,7 @@ class Handler {
 	/**
 	 * The link actions handler.
 	 *
-	 * @var Changes_Check_Handler
+	 * @var Check_Changes_Handler
 	 */
 	protected $check_handler;
 
@@ -70,7 +70,7 @@ class Handler {
 
 		$this->bulk_handler      = new Bulk_Handler( $this->post_duplicator, $this->permissions_helper );
 		$this->link_handler      = new Link_Handler( $this->post_duplicator, $this->permissions_helper );
-		$this->check_handler     = new Changes_Check_Handler( $this->permissions_helper );
+		$this->check_handler     = new Check_Changes_Handler( $this->permissions_helper );
 		$this->save_post_handler = new Save_Post_Handler( $this->permissions_helper );
 	}
 }
