@@ -12,9 +12,9 @@ use Yoast\WP\Duplicate_Post\Permissions_Helper;
 use Yoast\WP\Duplicate_Post\Utils;
 
 /**
- * Represents the handler for duplication actions from links.
+ * Represents the handler for checking the changes between a copy and the original post.
  */
-class Changes_Check_Handler {
+class Check_Changes_Handler {
 
 	/**
 	 * Holds the permissions helper.
@@ -88,15 +88,15 @@ class Changes_Check_Handler {
 		<div class="wrap">
 			<h1 class="long-header">
 				<?php
-				echo sprintf(
+				echo \sprintf(
 						/* translators: %s: original item link (to view or edit) or title. */
-					esc_html__( 'Compare changes of duplicated post with the original (%s)', 'duplicate-post' ),
+					\esc_html__( 'Compare changes of duplicated post with the original (%s)', 'duplicate-post' ),
 					Utils::get_edit_or_view_link( $original ) // phpcs:ignore WordPress.Security.EscapeOutput
 				);
 				?>
 			</h1>
-			<a href="<?php echo esc_url( $post_edit_link ); ?>">
-				<?php esc_html_e( '&larr; Return to editor', 'default' ); ?>
+			<a href="<?php echo \esc_url( $post_edit_link ); ?>">
+				<?php \esc_html_e( '&larr; Return to editor', 'default' ); ?>
 			</a>
 			<div class="revisions">
 				<div class="revisions-control-frame">
@@ -108,9 +108,9 @@ class Changes_Check_Handler {
 		<?php
 
 		$fields = [
-			__( 'Title', 'default' )   => 'post_title',
-			__( 'Content', 'default' ) => 'post_content',
-			__( 'Excerpt', 'default' ) => 'post_excerpt',
+			\__( 'Title', 'default' )   => 'post_title',
+			\__( 'Content', 'default' ) => 'post_content',
+			\__( 'Excerpt', 'default' ) => 'post_excerpt',
 		];
 
 		foreach ( $fields as $name => $field ) {
