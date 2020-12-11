@@ -54,6 +54,7 @@ class Check_Changes_Handler {
 			\wp_die(
 				\esc_html__( 'No post has been supplied!', 'duplicate-post' )
 			);
+			return;
 		}
 
 		$id = ( isset( $_GET['post'] ) ? \intval( \wp_unslash( $_GET['post'] ) ) : \intval( \wp_unslash( $_POST['post'] ) ) ); // Input var okay.
@@ -72,6 +73,7 @@ class Check_Changes_Handler {
 					)
 				)
 			);
+			return;
 		}
 
 		$original = Utils::get_original( $post );
@@ -82,6 +84,7 @@ class Check_Changes_Handler {
 					\__( 'Changes overview failed, could not find original post.', 'duplicate-post' )
 				)
 			);
+			return;
 		}
 		$post_edit_link = \get_edit_post_link( $post->ID );
 
@@ -89,17 +92,15 @@ class Check_Changes_Handler {
 		?>
 		<div class="wrap">
 			<h1 class="long-header">
-				<?php
+			<?php
 				echo \sprintf(
 						/* translators: %s: original item link (to view or edit) or title. */
 					\esc_html__( 'Compare changes of duplicated post with the original (%s)', 'duplicate-post' ),
 					Utils::get_edit_or_view_link( $original ) // phpcs:ignore WordPress.Security.EscapeOutput
 				);
-				?>
-			</h1>
-			<a href="<?php echo \esc_url( $post_edit_link ); ?>">
-				<?php \esc_html_e( '&larr; Return to editor', 'default' ); ?>
-			</a>
+			?>
+				</h1>
+			<a href="<?php echo \esc_url( $post_edit_link ); ?>"><?php \esc_html_e( '&larr; Return to editor', 'default' ); ?></a>
 			<div class="revisions">
 				<div class="revisions-control-frame">
 					<div class="revisions-controls"></div>
@@ -107,35 +108,33 @@ class Check_Changes_Handler {
 				<div class="revisions-diff-frame">
 					<div class="revisions-diff">
 						<div class="diff">
-		<?php
+						<?php
+						$fields = [
+							\__( 'Title', 'default' )   => 'post_title',
+							\__( 'Content', 'default' ) => 'post_content',
+							\__( 'Excerpt', 'default' ) => 'post_excerpt',
+						];
 
-		$fields = [
-			\__( 'Title', 'default' )   => 'post_title',
-			\__( 'Content', 'default' ) => 'post_content',
-			\__( 'Excerpt', 'default' ) => 'post_excerpt',
-		];
+						foreach ( $fields as $name => $field ) {
+							$diff = \wp_text_diff( $original->$field, $post->$field );
 
-		foreach ( $fields as $name => $field ) {
-			$diff = \wp_text_diff( $original->$field, $post->$field );
+							if ( ! $diff && 'post_title' === $field ) {
+								// It's a better user experience to still show the Title, even if it didn't change.
+								$diff  = '<table class="diff"><colgroup><col class="content diffsplit left"><col class="content diffsplit middle"><col class="content diffsplit right"></colgroup><tbody><tr>';
+								$diff .= '<td>' . \esc_html( $original->post_title ) . '</td><td></td><td>' . \esc_html( $post->post_title ) . '</td>';
+								$diff .= '</tr></tbody>';
+								$diff .= '</table>';
+							}
 
-			if ( ! $diff && 'post_title' === $field ) {
-				// It's a better user experience to still show the Title, even if it didn't change.
-				$diff  = '<table class="diff"><colgroup><col class="content diffsplit left"><col class="content diffsplit middle"><col class="content diffsplit right"></colgroup><tbody><tr>';
-				$diff .= '<td>' . \esc_html( $original->post_title ) . '</td><td></td><td>' . \esc_html( $post->post_title ) . '</td>';
-				$diff .= '</tr></tbody>';
-				$diff .= '</table>';
-			}
-
-			if ( $diff ) {
-				?>
+							if ( $diff ) {
+								?>
 								<h3><?php echo \esc_html( $name ); ?></h3>
 								<?php
 									echo $diff; // phpcs:ignore WordPress.Security.EscapeOutput
-								?>
-				<?php
-			}
-		}
-		?>
+							}
+						}
+						?>
+
 						</div>
 					</div>
 				</div>
