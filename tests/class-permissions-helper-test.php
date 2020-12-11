@@ -510,6 +510,22 @@ class Permissions_Helper_Test extends TestCase {
 	}
 
 	/**
+	 * Tests the has_original_changed function when the post is not meant for Rewrite & Republish.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::has_original_changed
+	 */
+	public function test_has_original_changed_not_rewrite_and_republish() {
+		$post = Mockery::mock( \WP_Post::class );
+
+		$this->instance
+			->expects( 'is_rewrite_and_republish_copy' )
+			->with( $post )
+			->andReturnFalse();
+
+		$this->assertFalse( $this->instance->has_original_changed( $post ) );
+	}
+
+	/**
 	 * Tests the should_link_be_displayed function.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::should_link_be_displayed
