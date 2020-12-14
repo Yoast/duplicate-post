@@ -740,20 +740,36 @@ class Post_Submitbox_Test extends TestCase {
 	}
 
 	/**
-	 * Tests the should_change_rewrite_republish_copy function when it should return true.
+	 * Tests the should_change_rewrite_republish_copy function when it should return true for a post.
 	 *
 	 * @covers Post_Submitbox::should_change_rewrite_republish_copy
 	 */
-	public function test_should_change_rewrite_republish_copy() {
+	public function test_should_change_rewrite_republish_copy_post() {
+		global $pagenow;
+		$pagenow = 'post.php'; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Intended, to be able to test the method.
+
 		$post            = Mockery::mock( \WP_Post::class );
 		$post->post_type = 'post';
 
-		$this->permissions_helper->expects( 'is_edit_post_screen' )
+		$this->permissions_helper->expects( 'is_rewrite_and_republish_copy' )
 			->once()
+			->with( $post )
 			->andReturnTrue();
 
-		$this->permissions_helper->expects( 'is_new_post_screen' )
-			->never();
+		$this->assertTrue( $this->instance->should_change_rewrite_republish_copy( $post ) );
+	}
+
+	/**
+	 * Tests the should_change_rewrite_republish_copy function when it should return true for a new post.
+	 *
+	 * @covers Post_Submitbox::should_change_rewrite_republish_copy
+	 */
+	public function test_should_change_rewrite_republish_copy_new_post() {
+		global $pagenow;
+		$pagenow = 'post-new.php'; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Intended, to be able to test the method.
+
+		$post            = Mockery::mock( \WP_Post::class );
+		$post->post_type = 'post';
 
 		$this->permissions_helper->expects( 'is_rewrite_and_republish_copy' )
 			->once()
@@ -770,16 +786,11 @@ class Post_Submitbox_Test extends TestCase {
 	 * @covers Post_Submitbox::should_change_rewrite_republish_copy
 	 */
 	public function test_should_not_change_rewrite_republish_copy_not_post_edit_screen() {
+		global $pagenow;
+		$pagenow = 'xx.php'; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Intended, to be able to test the method.
+
 		$post            = Mockery::mock( \WP_Post::class );
-		$post->post_type = 'xx';
-
-		$this->permissions_helper->expects( 'is_edit_post_screen' )
-			->once()
-			->andReturnFalse();
-
-		$this->permissions_helper->expects( 'is_new_post_screen' )
-			->once()
-			->andReturnFalse();
+		$post->post_type = 'post';
 
 		$this->assertFalse( $this->instance->should_change_rewrite_republish_copy( $post ) );
 	}
@@ -791,12 +802,8 @@ class Post_Submitbox_Test extends TestCase {
 	 * @covers Post_Submitbox::should_change_rewrite_republish_copy
 	 */
 	public function test_should_not_change_rewrite_republish_copy_post_is_null() {
-		$this->permissions_helper->expects( 'is_edit_post_screen' )
-			->once()
-			->andReturnTrue();
-
-		$this->permissions_helper->expects( 'is_new_post_screen' )
-			->never();
+		global $pagenow;
+		$pagenow = 'post.php'; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Intended, to be able to test the method.
 
 		$this->assertFalse( $this->instance->should_change_rewrite_republish_copy( null ) );
 	}
@@ -808,15 +815,11 @@ class Post_Submitbox_Test extends TestCase {
 	 * @covers Post_Submitbox::should_change_rewrite_republish_copy
 	 */
 	public function test_should_not_change_rewrite_republish_copy_not_republish_copy() {
+		global $pagenow;
+		$pagenow = 'post.php'; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Intended, to be able to test the method.
+
 		$post            = Mockery::mock( \WP_Post::class );
 		$post->post_type = 'post';
-
-		$this->permissions_helper->expects( 'is_edit_post_screen' )
-			->once()
-			->andReturnTrue();
-
-		$this->permissions_helper->expects( 'is_new_post_screen' )
-			->never();
 
 		$this->permissions_helper->expects( 'is_rewrite_and_republish_copy' )
 			->once()

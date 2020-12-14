@@ -247,7 +247,8 @@ class Post_Submitbox {
 	 * @return bool True if the Rewrite & Republish copies should be used.
 	 */
 	public function should_change_rewrite_republish_copy( $post ) {
-		if ( ! $this->permissions_helper->is_edit_post_screen() && ! $this->permissions_helper->is_new_post_screen() ) {
+		global $pagenow;
+		if ( ! \in_array( $pagenow, [ 'post.php', 'post-new.php' ], true ) ) {
 			return false;
 		}
 
