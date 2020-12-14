@@ -7,6 +7,8 @@
 
 namespace Yoast\WP\Duplicate_Post\Admin;
 
+use Yoast\WP\Duplicate_Post\Utils;
+
 /**
  * Class Options_Form_Generator
  *
@@ -184,7 +186,6 @@ class Options_Form_Generator {
 	 * @return string The generated roles list.
 	 */
 	public function generate_roles_permission_list() {
-		$roles             = $this->get_roles();
 		$post_types        = \get_post_types( [ 'show_ui' => true ], 'objects' );
 		$edit_capabilities = [ 'edit_posts' => true ];
 
@@ -194,7 +195,7 @@ class Options_Form_Generator {
 
 		$output = '';
 
-		foreach ( $roles as $name => $display_name ) {
+		foreach ( Utils::get_roles() as $name => $display_name ) {
 			$role = \get_role( $name );
 
 			if ( count( array_intersect_key( $role->capabilities, $edit_capabilities ) ) > 0 ) {
@@ -283,18 +284,6 @@ class Options_Form_Generator {
 	 */
 	public function prepare_input_id( $id ) {
 		return str_replace( '_', '-', $id );
-	}
-
-	/**
-	 * Gets the registered roles.
-	 *
-	 * @return array The roles.
-	 * @codeCoverageIgnore As this is a simple wrapper method for a built-in WordPress method, we don't have to test it.
-	 */
-	public function get_roles() {
-		global $wp_roles;
-
-		return $wp_roles->get_names();
 	}
 
 	/**

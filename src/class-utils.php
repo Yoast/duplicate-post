@@ -147,4 +147,16 @@ class Utils {
 		}
 		return $title;
 	}
+
+	/**
+	 * Gets the registered WordPress roles.
+	 *
+	 * @return array The roles.
+	 * @codeCoverageIgnore As this is a simple wrapper method for a built-in WordPress method, we don't have to test it.
+	 */
+	public static function get_roles() {
+		global $wp_roles;
+
+		return $wp_roles->get_names();
+	}
 }

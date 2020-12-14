@@ -17,7 +17,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit();
 }
 
-new Options_Page(
+$options_page = new Options_Page(
 	new Options(),
 	new Options_Form_Generator( new Options_Inputs() )
 );
+
+$options_page->register_hooks();

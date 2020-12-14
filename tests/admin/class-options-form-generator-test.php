@@ -62,42 +62,9 @@ class Options_Form_Generator_Test extends TestCase {
 		$post_type2->labels  = $labels;
 		$post_type2->cap     = (object) $caps;
 
-		$role1               = Mockery::mock( 'WP_Role' );
-		$role1->name         = 'Editor';
-		$role1->capabilities = $caps;
-		$role1->allows()
-			  ->has_cap()
-			  ->with( 'copy_posts' )
-			  ->andReturnTrue();
-
-		$role2               = Mockery::mock( 'WP_Role' );
-		$role2->name         = 'Administrator';
-		$role2->capabilities = $caps;
-		$role2->allows()
-			  ->has_cap()
-			  ->with( 'copy_posts' )
-			  ->andReturnTrue();
-
-		$role3               = Mockery::mock( 'WP_Role' );
-		$role3->name         = 'Subscriber';
-		$role3->capabilities = [];
-		$role3->allows()
-			  ->has_cap()
-			  ->with( 'copy_posts' )
-			  ->andReturnFalse();
-
-		$role_objects = [
-			'editor'        => $role1,
-			'administrator' => $role2,
-			'subscriber'    => $role3,
-		];
-
 		Monkey\Functions\stubs(
 			[
 				'get_post_types'      => [ $post_type1, $post_type2 ],
-				'get_role'            => function( $name ) use ( $role_objects ) {
-					return $role_objects[ $name ];
-				},
 				'translate_user_role' => function( $role ) {
 					return $role;
 				},
@@ -353,9 +320,12 @@ class Options_Form_Generator_Test extends TestCase {
 	 * Tests the generate_roles_permission_list callback method.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Admin\Options_Form_Generator::generate_roles_permission_list
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
 	 */
 	public function test_generate_roles_permission_list() {
-		$this->instance
+		$utils       = \Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
+		$utils
 			->expects( 'get_roles' )
 			->once()
 			->andReturn(

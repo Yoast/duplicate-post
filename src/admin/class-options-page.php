@@ -36,8 +36,6 @@ class Options_Page {
 	public function __construct( Options $options, Options_Form_Generator $generator ) {
 		$this->options   = $options;
 		$this->generator = $generator;
-
-		$this->register_hooks();
 	}
 
 	/**
@@ -58,9 +56,9 @@ class Options_Page {
 	 * @return void
 	 */
 	public function load_assets() {
-		wp_enqueue_style(
+		\wp_enqueue_style(
 			'duplicate-post-options',
-			plugins_url( '/duplicate-post-options.css', __FILE__ ),
+			\plugins_url( '/duplicate-post-options.css', __FILE__ ),
 			[],
 			DUPLICATE_POST_CURRENT_VERSION
 		);
@@ -86,7 +84,7 @@ class Options_Page {
 	 * @return void
 	 */
 	public function register_menu() {
-		$page_hook = add_options_page(
+		$page_hook = \add_options_page(
 			__( 'Duplicate Post Options', 'duplicate-post' ),
 			__( 'Duplicate Post', 'duplicate-post' ),
 			'manage_options',
@@ -94,7 +92,7 @@ class Options_Page {
 			[ $this, 'generate_page' ]
 		);
 
-		add_action( $page_hook, [ $this, 'load_assets' ] );
+		\add_action( $page_hook, [ $this, 'load_assets' ] );
 	}
 
 	/**
@@ -104,6 +102,7 @@ class Options_Page {
 	 * @param string $fieldset The fieldset to get the configuration for. Optional.
 	 *
 	 * @return string The HTML output for the controls present on the tab / fieldset.
+	 * @codeCoverageIgnore As this is a simple wrapper for two functions that are already tested elsewhere, we can skip testing.
 	 */
 	public function generate_tab_inputs( $tab, $fieldset = '' ) {
 		$options = $this->options->get_options_for_tab( $tab, $fieldset );
@@ -117,6 +116,7 @@ class Options_Page {
 	 * @param string $option The option configuration to base the input on.
 	 *
 	 * @return string The input HTML.
+	 * @codeCoverageIgnore As this is a simple wrapper for two functions that are already tested elsewhere, we can skip testing.
 	 */
 	public function generate_input( $option ) {
 		return $this->generator->generate_options_input( $this->options->get_option( $option ) );
@@ -128,23 +128,21 @@ class Options_Page {
 	 * @return void
 	 */
 	public function register_roles() {
-		global $wp_roles;
-
-		if ( ! current_user_can( 'promote_users' ) || ! $this->settings_updated() ) {
+		if ( ! \current_user_can( 'promote_users' ) || ! $this->settings_updated() ) {
 			return;
 		}
 
 		$dp_roles = $this->get_roles();
 
-		foreach ( $wp_roles->get_names() as $name => $display_name ) {
-			$role = get_role( $name );
+		foreach ( Utils::get_roles() as $name => $display_name ) {
+			$role = \get_role( $name );
 
-			if ( ! $role->has_cap( 'copy_posts' ) && in_array( $name, $dp_roles, true ) ) {
+			if ( ! $role->has_cap( 'copy_posts' ) && \in_array( $name, $dp_roles, true ) ) {
 				/* If the role doesn't have the capability and it was selected, add it. */
 				$role->add_cap( 'copy_posts' );
 			}
 
-			if ( $role->has_cap( 'copy_posts' ) && ! in_array( $name, $dp_roles, true ) ) {
+			if ( $role->has_cap( 'copy_posts' ) && ! \in_array( $name, $dp_roles, true ) ) {
 				/* If the role has the capability and it wasn't selected, remove it. */
 				$role->remove_cap( 'copy_posts' );
 			}
@@ -177,7 +175,7 @@ class Options_Page {
 	 * @return array The roles. Returns an empty array if there are none.
 	 */
 	protected function get_roles() {
-		$roles = get_option( 'duplicate_post_roles' );
+		$roles = \get_option( 'duplicate_post_roles' );
 
 		if ( empty( $roles ) ) {
 			$roles = [];

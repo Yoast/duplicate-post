@@ -1,0 +1,210 @@
+<?php
+/**
+ * Duplicate Post test file.
+ *
+ * @package Duplicate_Post\Tests
+ */
+
+namespace Yoast\WP\Duplicate_Post\Tests\Admin;
+
+use Brain\Monkey;
+use Mockery;
+use Yoast\WP\Duplicate_Post\Admin\Options;
+use Yoast\WP\Duplicate_Post\Admin\Options_Form_Generator;
+use Yoast\WP\Duplicate_Post\Admin\Options_Page;
+use Yoast\WP\Duplicate_Post\Tests\TestCase;
+use Yoast\WP\Duplicate_Post\Utils;
+
+/**
+ * Test the Options_Page class.
+ */
+class Options_Page_Test extends TestCase {
+
+	/**
+	 * The instance.
+	 *
+	 * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Options_Page
+	 */
+	protected $instance;
+
+	/**
+	 * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Options
+	 */
+	protected $options;
+
+	/**
+	 * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Options_Form_Generator
+	 */
+	protected $form_generator;
+
+
+	/**
+	 * Sets the instance.
+	 */
+	public function setUp() {
+		parent::setUp();
+
+		$this->options        = Mockery::mock( Options::class )->makePartial();
+		$this->form_generator = Mockery::mock( Options_Form_Generator::class )->makePartial();
+		$this->instance       = Mockery::mock(
+			Options_Page::class,
+			[ $this->options, $this->form_generator ]
+		)->makePartial()
+		 ->shouldAllowMockingProtectedMethods();
+	}
+
+	/**
+	 * Tests the constructor of the class.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Admin\Options_Page::__construct
+	 */
+	public function test_constructor() {
+		$this->instance->__construct( $this->options, $this->form_generator );
+
+		$this->assertAttributeInstanceOf( Options::class, 'options', $this->instance );
+		$this->assertAttributeInstanceOf( Options_Form_Generator::class, 'generator', $this->instance );
+	}
+
+	/**
+	 * Tests the registration of the hooks when in the admin.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Admin\Options_Page::register_hooks
+	 */
+	public function test_register_hooks_when_in_admin() {
+		Monkey\Functions\stubs( [ 'is_admin' => true ] );
+
+		Monkey\Actions\expectAdded( 'admin_menu' )
+			->with( [ $this->instance, 'register_menu' ] )
+			->once();
+		Monkey\Actions\expectAdded( 'admin_init' )
+			->with( [ $this->options, 'register_settings' ] )
+			->once();
+
+		$this->instance->register_hooks();
+	}
+
+	/**
+	 * Tests the registration of the hooks doesn't fire when not in the admin.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Admin\Options_Page::register_hooks
+	 */
+	public function test_no_register_hooks_when_not_in_admin() {
+		Monkey\Functions\stubs( [ 'is_admin' => false ] );
+
+		Monkey\Actions\expectAdded( 'admin_menu' )
+			->with( [ $this->instance, 'register_menu' ] )
+			->never();
+		Monkey\Actions\expectAdded( 'admin_init' )
+			->with( [ $this->options, 'register_settings' ] )
+			->never();
+
+		$this->instance->register_hooks();
+	}
+
+	/**
+	 * Tests the loading of the assets.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Admin\Options_Page::load_assets
+	 */
+	public function test_loading_of_assets() {
+		Monkey\Functions\stubs(
+			[
+				'plugins_url' => '',
+			]
+		);
+
+		Monkey\Functions\expect( '\wp_enqueue_style' )
+			->with(
+				[
+					'duplicate-post-options',
+					\plugins_url( '/duplicate-post-options.css', __FILE__ ),
+					[],
+					DUPLICATE_POST_CURRENT_VERSION,
+				]
+			)
+			->once();
+
+		Monkey\Functions\expect( '\wp_enqueue_script' )
+			->with(
+				'duplicate_post_options_script',
+				\plugins_url(
+					\sprintf(
+						'js/dist/duplicate-post-options-%s.js',
+						Utils::flatten_version( DUPLICATE_POST_CURRENT_VERSION )
+					),
+					DUPLICATE_POST_FILE
+				),
+				[ 'jquery' ],
+				DUPLICATE_POST_CURRENT_VERSION,
+				true
+			)
+			->once();
+
+		$this->instance->load_assets();
+	}
+
+	/**
+	 * Tests the loading of the assets.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Admin\Options_Page::register_menu
+	 */
+	public function test_register_menu() {
+		Monkey\Functions\expect( '\add_options_page' )
+			->with(
+				[
+					__( 'Duplicate Post Options', 'duplicate-post' ),
+					__( 'Duplicate Post', 'duplicate-post' ),
+					'manage_options',
+					'duplicatepost',
+					[ $this, 'generate_page' ],
+				]
+			)
+			->once()
+			->andReturn( 'duplicatepost_page_hook' );
+
+		Monkey\Actions\expectAdded( 'duplicatepost_page_hook' )
+			->with( [ $this->instance, 'load_assets' ] )
+			->once();
+
+		$this->instance->register_menu();
+	}
+
+	/**
+	 * Tests the registering of the roles.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Admin\Options_Page::register_roles
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_register_roles() {
+		$utils = \Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
+
+		Monkey\Functions\expect( '\current_user_can' )
+			->with( 'promote_users' )
+			->once()
+			->andReturnTrue();
+
+		$this->instance
+			->expects('settings_updated')
+			->once()
+			->andReturnTrue();
+
+		$utils
+			->expects( 'get_roles' )
+			->once()
+			->andReturn(
+				[
+					'editor'        => 'Editor',
+					'administrator' => 'Administrator',
+					'subscriber'    => 'Subscriber',
+				]
+			);
+
+		Monkey\Functions\expect( '\get_option' )
+			->with( 'duplicate_post_roles' )
+			->once()
+			->andReturn(['administrator', 'editor']);
+
+		$this->instance->register_roles();
+	}
+}
