@@ -39,18 +39,6 @@ class Link_Builder {
 	}
 
 	/**
-	 * Builds URL for the "Check Changes" action.
-	 *
-	 * @param int|\WP_Post $post        The post object or ID.
-	 * @param string       $context     The context in which the URL will be used.
-	 *
-	 * @return string The URL for the link.
-	 */
-	public function build_check_link( $post, $context = 'display' ) {
-		return $this->build_link( $post, $context, 'duplicate_post_check_changes' );
-	}
-
-	/**
 	 * Builds URL for the "Copy to a new draft" action.
 	 *
 	 * @param int|\WP_Post $post        The post object or ID.
@@ -60,6 +48,18 @@ class Link_Builder {
 	 */
 	public function build_new_draft_link( $post, $context = 'display' ) {
 		return $this->build_link( $post, $context, 'duplicate_post_new_draft' );
+	}
+
+	/**
+	 * Builds URL for the "Check Changes" action.
+	 *
+	 * @param int|\WP_Post $post        The post object or ID.
+	 * @param string       $context     The context in which the URL will be used.
+	 *
+	 * @return string The URL for the link.
+	 */
+	public function build_check_link( $post, $context = 'display' ) {
+		return $this->build_link( $post, $context, 'duplicate_post_check_changes' );
 	}
 
 	/**
