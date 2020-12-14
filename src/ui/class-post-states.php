@@ -7,6 +7,8 @@
 
 namespace Yoast\WP\Duplicate_Post\UI;
 
+use Yoast\WP\Duplicate_Post\Permissions_Helper;
+
 use Yoast\WP\Duplicate_Post\Utils;
 
 /**
@@ -15,9 +17,20 @@ use Yoast\WP\Duplicate_Post\Utils;
 class Post_States {
 
 	/**
-	 * Initializes the class.
+	 * Holds the permissions helper.
+	 *
+	 * @var Permissions_Helper
 	 */
-	public function __construct() {
+	protected $permissions_helper;
+
+	/**
+	 * Initializes the class.
+	 *
+	 * @param Permissions_Helper $permissions_helper The Permissions helper object.
+	 */
+	public function __construct( Permissions_Helper $permissions_helper ) {
+		$this->permissions_helper = $permissions_helper;
+
 		$this->register_hooks();
 	}
 
@@ -27,9 +40,7 @@ class Post_States {
 	 * @return void
 	 */
 	public function register_hooks() {
-		if ( \intval( \get_option( 'duplicate_post_show_original_in_post_states' ) ) === 1 ) {
-			\add_filter( 'display_post_states', [ $this, 'show_original_in_post_states' ], 10, 2 );
-		}
+		\add_filter( 'display_post_states', [ $this, 'show_original_in_post_states' ], 10, 2 );
 	}
 
 	/**
@@ -41,11 +52,24 @@ class Post_States {
 	 * @return array The updated post states array.
 	 */
 	public function show_original_in_post_states( $post_states, $post ) {
-		$original_item = Utils::get_original( $post );
-		if ( $original_item ) {
-			/* translators: Original item link (to view or edit) or title. */
+		$original_item                 = Utils::get_original( $post );
+		$is_rewrite_and_republish_copy = $this->permissions_helper->is_rewrite_and_republish_copy( $post );
+
+		if ( ! $original_item ) {
+			return $post_states;
+		}
+
+		if ( $is_rewrite_and_republish_copy ) {
+			/* translators: %s: Original item link (to view or edit) or title. */
+			$post_states['duplicate_post_original_item'] = \sprintf( \esc_html__( 'Rewrite & Republish of %s', 'duplicate-post' ), Utils::get_edit_or_view_link( $original_item ) );
+			return $post_states;
+		}
+
+		if ( \intval( \get_option( 'duplicate_post_show_original_in_post_states' ) ) === 1 ) {
+			/* translators: %s: Original item link (to view or edit) or title. */
 			$post_states['duplicate_post_original_item'] = \sprintf( __( 'Original: %s', 'duplicate-post' ), Utils::get_edit_or_view_link( $original_item ) );
 		}
+
 		return $post_states;
 	}
 }

@@ -97,7 +97,7 @@ class User_Interface {
 		$this->block_editor       = new Block_Editor( $this->link_builder, $this->permissions_helper );
 		$this->admin_bar          = new Admin_Bar( $this->link_builder, $this->permissions_helper );
 		$this->bulk_actions       = new Bulk_Actions( $this->permissions_helper );
-		$this->post_states        = new Post_States();
+		$this->post_states        = new Post_States( $this->permissions_helper );
 		$this->metabox            = new Metabox( $this->permissions_helper );
 		$this->column             = new Column( $this->permissions_helper );
 
