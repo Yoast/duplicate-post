@@ -13,7 +13,6 @@ use Yoast\WP\Duplicate_Post\Permissions_Helper;
 use Yoast\WP\Duplicate_Post\Tests\TestCase;
 use Yoast\WP\Duplicate_Post\UI\Post_Submitbox;
 use Yoast\WP\Duplicate_Post\UI\Link_Builder;
-use Yoast\WP\Duplicate_Post\Utils;
 
 /**
  * Test the Post_Submitbox class.
