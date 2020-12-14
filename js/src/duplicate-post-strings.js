@@ -9,8 +9,7 @@ const republishStrings = {
         __( 'Are you ready to republish your post?', 'duplicate-post' ),
     'Double-check your settings before publishing.':
         createInterpolateElement(
-            __( 'After republishing your changes will be merged into the original post and you\'ll be redirected there.' +
-                '<br /><br /><a>Do you want to double-check your changes before merging?</a>',
+            __( 'After republishing your changes will be merged into the original post and you\'ll be redirected there.<br /><br /><a>Do you want to double-check your changes before merging?</a>',
                 'duplicate-post' ),
             { a: <a href="#" />,
                 br: <br /> }
@@ -23,8 +22,7 @@ const republishStrings = {
         __( 'Are you ready to schedule the republishing of your post?', 'duplicate-post' ),
     'Your work will be published at the specified date and time.':
         createInterpolateElement(
-            __( 'You\'re about to replace the original with this rewritten post at the specified date and time.' +
-                '<br /><br /><a>Do you want to double-check your changes before merging?</a>',
+            __( 'You\'re about to replace the original with this rewritten post at the specified date and time.<br /><br /><a>Do you want to double-check your changes before merging?</a>',
                 'duplicate-post' ),
             {
                 a: <a href="#" />,
