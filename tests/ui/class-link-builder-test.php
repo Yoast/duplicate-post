@@ -97,6 +97,27 @@ class Link_Builder_Test extends TestCase {
 	}
 
 	/**
+	 * Tests the build_check_link function.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Link_Builder::build_check_link
+	 */
+	public function test_build_check_link() {
+		$post    = Mockery::mock( \WP_Post::class );
+		$context = 'display';
+		$url     = 'http://basic.wordpress.test/wp-admin/admin.php?action=duplicate_post_check_changes&amp;post=123';
+
+		$this->instance
+			->expects( 'build_link' )
+			->with( $post, $context, 'duplicate_post_check_changes' )
+			->andReturn( $url );
+
+		$this->assertSame(
+			$url,
+			$this->instance->build_check_link( $post, $context )
+		);
+	}
+
+	/**
 	 * Tests the build_link function.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Link_Builder::build_link
