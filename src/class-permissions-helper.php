@@ -125,7 +125,7 @@ class Permissions_Helper {
 		// Required as get_current_screen is not always available, e.g. for Post_Submitbox::should_change_rewrite_republish_copy.
 		if ( ! function_exists( 'get_current_screen' ) ) {
 			global $pagenow;
-			return $pagenow === 'post.php';
+			return $pagenow === 'post-new.php';
 		}
 
 		$current_screen = \get_current_screen();
