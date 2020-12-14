@@ -39,8 +39,70 @@ class Options_Form_Generator_Test extends TestCase {
 		parent::setUp();
 
 		$this->options_inputs = Mockery::mock( Options_Inputs::class )->makePartial();
+		$this->instance       = Mockery::mock( Options_Form_Generator::class, [ $this->options_inputs ] )->makePartial();
 
-		$this->instance = Mockery::mock( Options_Form_Generator::class, [ $this->options_inputs ] )->makePartial();
+		$labels       = new \stdClass();
+		$labels->name = 'Custom Type';
+
+		$caps = [
+			'read'       => 'read',
+			'edit_books' => 'edit_books',
+			'edit_posts' => 'edit_posts',
+		];
+
+		$post_type1          = Mockery::mock( 'WP_Post_Type' );
+		$post_type1->name    = 'Books';
+		$post_type1->show_ui = true;
+		$post_type1->labels  = $labels;
+		$post_type1->cap     = (object) $caps;
+
+		$post_type2          = Mockery::mock( 'WP_Post_Type' );
+		$post_type2->name    = 'Movies';
+		$post_type2->show_ui = true;
+		$post_type2->labels  = $labels;
+		$post_type2->cap     = (object) $caps;
+
+		$role1               = Mockery::mock( 'WP_Role' );
+		$role1->name         = 'Editor';
+		$role1->capabilities = $caps;
+		$role1->allows()
+			  ->has_cap()
+			  ->with( 'copy_posts' )
+			  ->andReturnTrue();
+
+		$role2               = Mockery::mock( 'WP_Role' );
+		$role2->name         = 'Administrator';
+		$role2->capabilities = $caps;
+		$role2->allows()
+			  ->has_cap()
+			  ->with( 'copy_posts' )
+			  ->andReturnTrue();
+
+		$role3               = Mockery::mock( 'WP_Role' );
+		$role3->name         = 'Subscriber';
+		$role3->capabilities = [];
+		$role3->allows()
+			  ->has_cap()
+			  ->with( 'copy_posts' )
+			  ->andReturnFalse();
+
+		$role_objects = [
+			'editor'        => $role1,
+			'administrator' => $role2,
+			'subscriber'    => $role3,
+		];
+
+		Monkey\Functions\stubs(
+			[
+				'get_post_types'      => [ $post_type1, $post_type2 ],
+				'get_role'            => function( $name ) use ( $role_objects ) {
+					return $role_objects[ $name ];
+				},
+				'translate_user_role' => function( $role ) {
+					return $role;
+				},
+			]
+		);
 	}
 
 	/**
@@ -254,27 +316,27 @@ class Options_Form_Generator_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Admin\Options_Form_Generator::generate_taxonomy_exclusion_list
 	 */
 	public function test_generate_taxonomy_exclusion_list() {
-		$fake_labels       = new \stdClass();
-		$fake_labels->name = 'Custom Taxonomy';
+		$labels       = new \stdClass();
+		$labels->name = 'Custom Taxonomy';
 
-		$fake_taxonomy1         = new \stdClass();
-		$fake_taxonomy1->name   = 'custom_taxonomy';
-		$fake_taxonomy1->public = true;
-		$fake_taxonomy1->labels = $fake_labels;
+		$taxonomy1         = Mockery::mock( 'WP_Taxonomy' );
+		$taxonomy1->name   = 'custom_taxonomy';
+		$taxonomy1->public = true;
+		$taxonomy1->labels = $labels;
 
-		$fake_taxonomy2         = new \stdClass();
-		$fake_taxonomy2->name   = 'custom_taxonomy_2';
-		$fake_taxonomy2->public = false;
-		$fake_taxonomy2->labels = $fake_labels;
+		$taxonomy2         = Mockery::mock( 'WP_Taxonomy' );
+		$taxonomy2->name   = 'custom_taxonomy_2';
+		$taxonomy2->public = false;
+		$taxonomy2->labels = $labels;
 
-		$fake_taxonomies = [
-			$fake_taxonomy1,
-			$fake_taxonomy2,
+		$taxonomies = [
+			$taxonomy1,
+			$taxonomy2,
 		];
 
 		Monkey\Functions\expect( '\get_taxonomies' )
 			->with( [], 'objects' )
-			->andReturn( $fake_taxonomies );
+			->andReturn( $taxonomies );
 
 		Monkey\Functions\expect( '\get_option' )
 			->with( 'duplicate_post_taxonomies_blacklist' )
@@ -293,7 +355,21 @@ class Options_Form_Generator_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Admin\Options_Form_Generator::generate_roles_permission_list
 	 */
 	public function test_generate_roles_permission_list() {
+		$this->instance
+			->expects( 'get_roles' )
+			->once()
+			->andReturn(
+				[
+					'editor'        => 'Editor',
+					'administrator' => 'Administrator',
+					'subscriber'    => 'Subscriber',
+				]
+			);
 
+		$this->assertEquals(
+			'<input type="checkbox" name="duplicate_post_roles[]" id="duplicate-post-editor" value="editor" checked="checked" /><label for="duplicate-post-editor">Editor</label><br /><input type="checkbox" name="duplicate_post_roles[]" id="duplicate-post-administrator" value="administrator" checked="checked" /><label for="duplicate-post-administrator">Administrator</label><br />',
+			$this->instance->generate_roles_permission_list()
+		);
 	}
 
 	/**
@@ -302,7 +378,20 @@ class Options_Form_Generator_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Admin\Options_Form_Generator::generate_post_types_list
 	 */
 	public function test_generate_post_types_list() {
+		$this->instance
+			->expects( 'is_post_type_enabled' )
+			->with( 'Books' )
+			->andReturnTrue();
 
+		$this->instance
+			->expects( 'is_post_type_enabled' )
+			->with( 'Movies' )
+			->andReturnFalse();
+
+		$this->assertEquals(
+			'<input type="checkbox" name="duplicate_post_types_enabled[]" id="duplicate-post-Books" value="Books" checked="checked" /><label for="duplicate-post-Books">Custom Type</label><br /><input type="checkbox" name="duplicate_post_types_enabled[]" id="duplicate-post-Movies" value="Movies"  /><label for="duplicate-post-Movies">Custom Type</label><br />',
+			$this->instance->generate_post_types_list()
+		);
 	}
 
 	/**

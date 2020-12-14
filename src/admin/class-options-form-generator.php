@@ -237,7 +237,7 @@ class Options_Form_Generator {
 						'type'    => 'checkbox',
 						'id'      => 'duplicate-post-' . $this->prepare_input_id( $name ),
 						'value'   => $name,
-						'checked' => duplicate_post_is_post_type_enabled( $post_type_object->name ),
+						'checked' => $this->is_post_type_enabled( $post_type_object->name ),
 						'label'   => \esc_html( $post_type_object->labels->name ),
 					],
 				]
@@ -295,5 +295,17 @@ class Options_Form_Generator {
 		global $wp_roles;
 
 		return $wp_roles->get_names();
+	}
+
+	/**
+	 * Checks whether or not a post type is enabled.
+	 *
+	 * @param string $post_type The post type.
+	 *
+	 * @return bool Whether or not the post type is enabled.
+	 * @codeCoverageIgnore As this is a simple wrapper for a function that is also being used elsewhere, we can skip testing for now.
+	 */
+	public function is_post_type_enabled( $post_type ) {
+		return duplicate_post_is_post_type_enabled( $post_type );
 	}
 }
