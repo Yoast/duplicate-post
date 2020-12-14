@@ -64,19 +64,21 @@ class Post_Submitbox {
 	 * @return void
 	 */
 	public function enqueue_classic_editor_scripts() {
-		\wp_enqueue_script(
-			'duplicate_post_strings',
-			\plugins_url(
-				\sprintf( 'js/dist/duplicate-post-strings-%s.js', Utils::flatten_version( DUPLICATE_POST_CURRENT_VERSION ) ),
-				DUPLICATE_POST_FILE
-			),
-			[
-				'wp-element',
-				'wp-i18n',
-			],
-			DUPLICATE_POST_CURRENT_VERSION,
-			true
-		);
+		if ( $this->should_change_rewrite_republish_copy( \get_post() ) ) {
+			\wp_enqueue_script(
+				'duplicate_post_strings',
+				\plugins_url(
+					\sprintf( 'js/dist/duplicate-post-strings-%s.js', Utils::flatten_version( DUPLICATE_POST_CURRENT_VERSION ) ),
+					DUPLICATE_POST_FILE
+				),
+				[
+					'wp-element',
+					'wp-i18n',
+				],
+				DUPLICATE_POST_CURRENT_VERSION,
+				true
+			);
+		}
 	}
 
 	/**

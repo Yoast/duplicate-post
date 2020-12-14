@@ -91,6 +91,17 @@ class Post_Submitbox_Test extends TestCase {
 		\define( 'DUPLICATE_POST_CURRENT_VERSION', '4.0alpha' );
 		\define( 'DUPLICATE_POST_FILE', '/var/www/html/wp-content/plugins/duplicate-post/duplicate-post.php' );
 
+		$post = Mockery::mock( \WP_Post::class );
+
+		Monkey\Functions\expect( '\get_post' )
+			->once()
+			->andReturn( $post );
+
+		$this->instance->expects( 'should_change_rewrite_republish_copy' )
+			->with( $post )
+			->once()
+			->andReturnTrue();
+
 		$handle = 'duplicate_post_strings';
 		$src    = 'http://basic.wordpress.test/wp-content/plugins/duplicate-post/js/dist/duplicate-post-strings-40alpha.js';
 		$deps   = [ 'wp-element', 'wp-i18n' ];
