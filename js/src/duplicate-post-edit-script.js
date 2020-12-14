@@ -72,7 +72,7 @@ class DuplicatePost {
 		if (
 			/^https?:$/.test( parser.protocol ) &&
 			/\/wp-admin\/post\.php$/.test( parser.pathname ) &&
-			/\?action=edit&post=([0-9]+)&dprepublished=1&dpcopy=([0-9]+)&dpnonce=([0-9]+)/.test( parser.search )
+			/\?action=edit&post=[0-9]+&dprepublished=1&dpcopy=[0-9]+&dpnonce=[a-z0-9]+/i.test( parser.search )
 		) {
 			return true;
 		}
