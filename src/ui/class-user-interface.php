@@ -100,10 +100,18 @@ class User_Interface {
 		$this->permissions_helper = $permissions_helper;
 		$this->link_builder       = new Link_Builder();
 		$this->row_actions        = new Row_Actions( $this->link_builder, $this->permissions_helper );
+		$this->row_actions->register_hooks();
+
 		$this->post_submitbox     = new Post_Submitbox( $this->link_builder, $this->permissions_helper );
+		$this->post_submitbox->register_hooks();
+
 		$this->block_editor       = new Block_Editor( $this->link_builder, $this->permissions_helper );
 		$this->admin_bar          = new Admin_Bar( $this->link_builder, $this->permissions_helper );
+		$this->admin_bar->register_hooks();
+
 		$this->bulk_actions       = new Bulk_Actions( $this->permissions_helper );
+		$this->bulk_actions->register_hooks();
+
 		$this->admin_notices      = new Admin_Notices();
 		$this->post_states        = new Post_States();
 		$this->metabox            = new Metabox( $this->permissions_helper );

@@ -99,6 +99,7 @@ class Block_Editor {
 			'duplicatePost',
 			[
 				'new_draft_link'             => $this->get_new_draft_permalink(),
+				'show_links'                 => Utils::get_option( 'duplicate_post_show_link' ),
 				'rewrite_and_republish_link' => $this->get_rewrite_republish_permalink(),
 				'rewriting'                  => ( ! empty( $_REQUEST['rewriting'] ) ) ? 1 : 0,  // phpcs:ignore WordPress.Security.NonceVerification
 			]

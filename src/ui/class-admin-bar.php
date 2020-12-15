@@ -38,8 +38,6 @@ class Admin_Bar {
 	public function __construct( Link_Builder $link_builder, Permissions_Helper $permissions_helper ) {
 		$this->link_builder       = $link_builder;
 		$this->permissions_helper = $permissions_helper;
-
-		$this->register_hooks();
 	}
 
 	/**

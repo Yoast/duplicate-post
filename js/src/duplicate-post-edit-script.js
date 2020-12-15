@@ -13,7 +13,7 @@ import { __ } from "@wordpress/i18n";
  */
 const render = () => (
 	<Fragment>
-		{ duplicatePost.new_draft_link !== '' &&
+		{ ( duplicatePost.new_draft_link !== '' && duplicatePost.show_links.new_draft === '1' ) &&
 			<PluginPostStatusInfo>
 				<Button
 					isTertiary={ true }
@@ -23,7 +23,7 @@ const render = () => (
 				</Button>
 			</PluginPostStatusInfo>
 		}
-		{ duplicatePost.rewrite_and_republish_link !== '' &&
+		{ ( duplicatePost.rewrite_and_republish_link !== '' && duplicatePost.show_links.rewrite_republish === '1' ) &&
 			<PluginPostStatusInfo>
 				<Button
 					isTertiary={ true }

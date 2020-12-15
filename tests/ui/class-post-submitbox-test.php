@@ -49,7 +49,7 @@ class Post_Submitbox_Test extends TestCase {
 		$this->link_builder       = Mockery::mock( Link_Builder::class );
 		$this->permissions_helper = Mockery::mock( Permissions_Helper::class );
 
-		$this->instance = new Post_Submitbox( $this->link_builder, $this->permissions_helper );
+		$this->instance = Mockery::mock( Post_Submitbox::class, [ $this->link_builder, $this->permissions_helper ] )->makePartial();
 	}
 
 	/**
@@ -66,8 +66,27 @@ class Post_Submitbox_Test extends TestCase {
 	 * Tests the registration of the hooks.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Post_Submitbox::register_hooks
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
 	 */
 	public function test_register_hooks() {
+		$utils = \Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
+
+		$utils->expects( 'get_option' )
+			  ->with( 'duplicate_post_show_link_in', 'submitbox' )
+			  ->once()
+			  ->andReturn( '1' );
+
+		$utils->expects( 'get_option' )
+			  ->with( 'duplicate_post_show_link', 'new_draft' )
+			  ->once()
+			  ->andReturn( '1' );
+
+		$utils->expects( 'get_option' )
+			  ->with( 'duplicate_post_show_link', 'rewrite_republish' )
+			  ->once()
+			  ->andReturn( '1' );
+
 		$this->instance->register_hooks();
 
 		$this->assertNotFalse( \has_action( 'post_submitbox_start', [ $this->instance, 'add_new_draft_post_button' ] ), 'Does not have expected post_submitbox_start action' );
