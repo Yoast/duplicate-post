@@ -72,5 +72,10 @@ class Handler {
 		$this->link_handler      = new Link_Handler( $this->post_duplicator, $this->permissions_helper );
 		$this->check_handler     = new Check_Changes_Handler( $this->permissions_helper );
 		$this->save_post_handler = new Save_Post_Handler( $this->permissions_helper );
+
+		$this->bulk_handler->register_hooks();
+		$this->link_handler->register_hooks();
+		$this->check_handler->register_hooks();
+		$this->save_post_handler->register_hooks();
 	}
 }
