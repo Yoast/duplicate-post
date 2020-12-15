@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Duplicate Post test file.
  *
@@ -8,7 +7,6 @@
 
 namespace Yoast\WP\Duplicate_Post\Tests\Admin;
 
-use Brain\Monkey;
 use Mockery;
 use Yoast\WP\Duplicate_Post\Admin\Options_Inputs;
 use Yoast\WP\Duplicate_Post\Tests\TestCase;

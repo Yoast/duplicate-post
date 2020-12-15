@@ -28,15 +28,18 @@ class Options_Page_Test extends TestCase {
 	protected $instance;
 
 	/**
+	 * The Options instance.
+	 *
 	 * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Options
 	 */
 	protected $options;
 
 	/**
+	 * The Options_Form_Generator instance.
+	 *
 	 * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Options_Form_Generator
 	 */
 	protected $form_generator;
-
 
 	/**
 	 * Sets the instance.
@@ -49,8 +52,9 @@ class Options_Page_Test extends TestCase {
 		$this->instance       = Mockery::mock(
 			Options_Page::class,
 			[ $this->options, $this->form_generator ]
-		)->makePartial()
-		 ->shouldAllowMockingProtectedMethods();
+		)
+		->makePartial()
+		->shouldAllowMockingProtectedMethods();
 	}
 
 	/**
@@ -172,7 +176,7 @@ class Options_Page_Test extends TestCase {
 	/**
 	 * Tests the registering of the roles.
 	 *
-	 * @covers \Yoast\WP\Duplicate_Post\Admin\Options_Page::register_roles
+	 * @covers \Yoast\WP\Duplicate_Post\Admin\Options_Page::register_capabilities
 	 * @runInSeparateProcess
 	 * @preserveGlobalState disabled
 	 */
@@ -185,26 +189,29 @@ class Options_Page_Test extends TestCase {
 			->andReturnTrue();
 
 		$this->instance
-			->expects('settings_updated')
+			->expects( 'settings_updated' )
 			->once()
 			->andReturnTrue();
+
+		$expected_roles = [
+			'editor'        => 'Editor',
+			'administrator' => 'Administrator',
+			'subscriber'    => 'Subscriber',
+		];
 
 		$utils
 			->expects( 'get_roles' )
 			->once()
+			->andReturn( $expected_roles );
+
+		$this->instance->expects( 'get_duplicate_post_roles' )
 			->andReturn(
 				[
-					'editor'        => 'Editor',
-					'administrator' => 'Administrator',
-					'subscriber'    => 'Subscriber',
+					'administrator',
+					'editor',
 				]
 			);
 
-		Monkey\Functions\expect( '\get_option' )
-			->with( 'duplicate_post_roles' )
-			->once()
-			->andReturn(['administrator', 'editor']);
-
-		$this->instance->register_roles();
+		$this->instance->register_capabilities();
 	}
 }

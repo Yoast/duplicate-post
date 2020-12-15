@@ -8,6 +8,7 @@
 namespace Yoast\WP\Duplicate_Post\UI;
 
 use Yoast\WP\Duplicate_Post\Permissions_Helper;
+use Yoast\WP\Duplicate_Post\Utils;
 
 /**
  * Represents the Bulk_Actions class.
@@ -38,6 +39,10 @@ class Bulk_Actions {
 	 * @return void
 	 */
 	public function register_hooks() {
+		if ( \intval( Utils::get_option( 'duplicate_post_show_link_in', 'bulkactions' ) ) === 0 ) {
+			return;
+		}
+
 		\add_action( 'admin_init', [ $this, 'add_bulk_filters' ] );
 	}
 
@@ -47,9 +52,6 @@ class Bulk_Actions {
 	 * @return void
 	 */
 	public function add_bulk_filters() {
-		if ( \intval( \get_option( 'duplicate_post_show_bulkactions' ) ) !== 1 ) {
-			return;
-		}
 		if ( ! $this->permissions_helper->is_current_user_allowed_to_copy() ) {
 			return;
 		}
@@ -68,8 +70,13 @@ class Bulk_Actions {
 	 * @return array The bulk actions array.
 	 */
 	public function register_bulk_action( $bulk_actions ) {
-		$bulk_actions['duplicate_post_bulk_clone']             = \esc_html__( 'Clone', 'duplicate-post' );
-		$bulk_actions['duplicate_post_bulk_rewrite_republish'] = \esc_html__( 'Rewrite & Republish', 'duplicate-post' );
+		if ( \intval( Utils::get_option( 'duplicate_post_show_link', 'clone' ) ) === 1 ) {
+			$bulk_actions['duplicate_post_bulk_clone'] = \esc_html__( 'Clone', 'duplicate-post' );
+		}
+
+		if ( \intval( Utils::get_option( 'duplicate_post_show_link', 'rewrite_republish' ) ) === 1 ) {
+			$bulk_actions['duplicate_post_bulk_rewrite_republish'] = \esc_html__( 'Rewrite & Republish', 'duplicate-post' );
+		}
 
 		return $bulk_actions;
 	}

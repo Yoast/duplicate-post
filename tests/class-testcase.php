@@ -17,6 +17,13 @@ use PHPUnit\Framework\TestCase as BaseTestCase;
 abstract class TestCase extends BaseTestCase {
 
 	/**
+	 * Holds an array of dummy roles.
+	 *
+	 * @var array
+	 */
+	protected $roles;
+
+	/**
 	 * Test setup.
 	 */
 	protected function setUp() {
@@ -25,7 +32,7 @@ abstract class TestCase extends BaseTestCase {
 		Monkey\setUp();
 
 		// Mock roles to use across several tests.
-		$role1               = Mockery::mock( 'WP_Role' );
+		$role1               = Mockery::mock( 'WP_Role' )->makePartial();
 		$role1->name         = 'Editor';
 		$role1->capabilities = [
 			'read'       => 'read',
@@ -37,7 +44,7 @@ abstract class TestCase extends BaseTestCase {
 				'has_cap' => function( $cap ) {
 					return true;
 				},
-				'add_cap'=> function( $cap ) {
+				'add_cap' => function( $cap ) {
 					return true;
 				},
 				'remove_cap' => function( $cap ) {
@@ -45,7 +52,7 @@ abstract class TestCase extends BaseTestCase {
 			]
 		);
 
-		$role2               = Mockery::mock( 'WP_Role' );
+		$role2               = Mockery::mock( 'WP_Role' )->makePartial();
 		$role2->name         = 'Administrator';
 		$role2->capabilities = [
 			'read'       => 'read',
@@ -57,7 +64,7 @@ abstract class TestCase extends BaseTestCase {
 				'has_cap' => function( $cap ) {
 					return false;
 				},
-				'add_cap'=> function( $cap ) {
+				'add_cap' => function( $cap ) {
 					return true;
 				},
 				'remove_cap' => function( $cap ) {
@@ -65,7 +72,7 @@ abstract class TestCase extends BaseTestCase {
 			]
 		);
 
-		$role3               = Mockery::mock( 'WP_Role' );
+		$role3               = Mockery::mock( 'WP_Role' )->makePartial();
 		$role3->name         = 'Subscriber';
 		$role3->capabilities = [];
 		$role3->allows(
@@ -73,7 +80,7 @@ abstract class TestCase extends BaseTestCase {
 				'has_cap' => function( $cap ) {
 					return false;
 				},
-				'add_cap'=> function( $cap ) {
+				'add_cap' => function( $cap ) {
 					return true;
 				},
 				'remove_cap' => function( $cap ) {
@@ -87,9 +94,7 @@ abstract class TestCase extends BaseTestCase {
 			'subscriber'    => $role3,
 		];
 
-
-
-
+		$this->roles = $role_objects;
 
 		Monkey\Functions\stubs(
 			[
@@ -125,7 +130,7 @@ abstract class TestCase extends BaseTestCase {
 				'wp_parse_args'  => function ( $settings, $defaults ) {
 					return \array_merge( $defaults, $settings );
 				},
-				'get_role'            => function( $name ) use ( $role_objects ) {
+				'get_role'       => function( $name ) use ( $role_objects ) {
 					return $role_objects[ $name ];
 				},
 			]

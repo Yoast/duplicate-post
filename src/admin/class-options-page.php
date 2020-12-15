@@ -123,26 +123,26 @@ class Options_Page {
 	}
 
 	/**
-	 * Sets the proper roles and capabilities.
+	 * Registers the proper capabilities.
 	 *
 	 * @return void
 	 */
-	public function register_roles() {
+	public function register_capabilities() {
 		if ( ! \current_user_can( 'promote_users' ) || ! $this->settings_updated() ) {
 			return;
 		}
 
-		$dp_roles = $this->get_roles();
+		$roles = $this->get_duplicate_post_roles();
 
 		foreach ( Utils::get_roles() as $name => $display_name ) {
 			$role = \get_role( $name );
 
-			if ( ! $role->has_cap( 'copy_posts' ) && \in_array( $name, $dp_roles, true ) ) {
+			if ( ! $role->has_cap( 'copy_posts' ) && \in_array( $name, $roles, true ) ) {
 				/* If the role doesn't have the capability and it was selected, add it. */
 				$role->add_cap( 'copy_posts' );
 			}
 
-			if ( $role->has_cap( 'copy_posts' ) && ! \in_array( $name, $dp_roles, true ) ) {
+			if ( $role->has_cap( 'copy_posts' ) && ! \in_array( $name, $roles, true ) ) {
 				/* If the role has the capability and it wasn't selected, remove it. */
 				$role->remove_cap( 'copy_posts' );
 			}
@@ -153,9 +153,10 @@ class Options_Page {
 	 * Generates the options page.
 	 *
 	 * @return void
+	 * @codeCoverageIgnore
 	 */
 	public function generate_page() {
-		$this->register_roles();
+		$this->register_capabilities();
 
 		require_once DUPLICATE_POST_PATH . 'src/admin/views/options.php';
 	}
@@ -174,7 +175,7 @@ class Options_Page {
 	 *
 	 * @return array The roles. Returns an empty array if there are none.
 	 */
-	protected function get_roles() {
+	protected function get_duplicate_post_roles() {
 		$roles = \get_option( 'duplicate_post_roles' );
 
 		if ( empty( $roles ) ) {

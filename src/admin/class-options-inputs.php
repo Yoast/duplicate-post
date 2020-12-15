@@ -26,10 +26,10 @@ class Options_Inputs {
 	protected function input( $type, $name, $value, $id, $attributes = '' ) {
 		return sprintf(
 			'<input type="%s" name="%s" id="%s" value="%s" %s />',
-			$type,
-			$name,
-			$id,
-			$value,
+			\esc_attr( $type ),
+			\esc_attr( $name ),
+			\esc_attr( $id ),
+			\esc_attr( $value ),
 			$attributes
 		);
 	}

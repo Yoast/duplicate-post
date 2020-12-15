@@ -8,6 +8,7 @@
 namespace Yoast\WP\Duplicate_Post\UI;
 
 use Yoast\WP\Duplicate_Post\Permissions_Helper;
+use Yoast\WP\Duplicate_Post\Utils;
 
 /**
  * Represents the Post_Submitbox class.
@@ -47,8 +48,17 @@ class Post_Submitbox {
 	 * @return void
 	 */
 	public function register_hooks() {
-		\add_action( 'post_submitbox_start', [ $this, 'add_new_draft_post_button' ] );
-		\add_action( 'post_submitbox_start', [ $this, 'add_rewrite_and_republish_post_button' ] );
+		if ( \intval( Utils::get_option( 'duplicate_post_show_link_in', 'submitbox' ) ) === 0 ) {
+			return;
+		}
+
+		if ( \intval( Utils::get_option( 'duplicate_post_show_link', 'new_draft' ) ) === 1 ) {
+			\add_action( 'post_submitbox_start', [ $this, 'add_new_draft_post_button' ] );
+		}
+
+		if ( \intval( Utils::get_option( 'duplicate_post_show_link', 'rewrite_republish' ) ) === 1 ) {
+			\add_action( 'post_submitbox_start', [ $this, 'add_rewrite_and_republish_post_button' ] );
+		}
 	}
 
 	/**
@@ -59,10 +69,6 @@ class Post_Submitbox {
 	 * @return void
 	 */
 	public function add_new_draft_post_button( $post = null ) {
-		if ( \intval( \get_option( 'duplicate_post_show_submitbox' ) ) !== 1 ) {
-			return;
-		}
-
 		if ( \is_null( $post ) ) {
 			if ( isset( $_GET['post'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 				$id   = \intval( \wp_unslash( $_GET['post'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
@@ -96,10 +102,6 @@ class Post_Submitbox {
 	 * @return void
 	 */
 	public function add_rewrite_and_republish_post_button( $post = null ) {
-		if ( \intval( \get_option( 'duplicate_post_show_submitbox' ) ) !== 1 ) {
-			return;
-		}
-
 		if ( \is_null( $post ) ) {
 			if ( isset( $_GET['post'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 				$id   = \intval( \wp_unslash( $_GET['post'] ) ); // phpcs:ignore WordPress.Security.NonceVerification

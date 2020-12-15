@@ -123,7 +123,7 @@ class Options_Form_Generator_Test extends TestCase {
 		];
 
 		$output   = $this->instance->generate_options_input( $options );
-		$expected = '<input type="checkbox" /><label for="option-1">Show field</label><span id="option-1-description">(test description)</span><br /><input type="checkbox" /><label for="option-2">Disable editing</label><br /><input type="text" /><br />';
+		$expected = '<input type="checkbox" /><label for="option-1">Show field</label> <span id="option-1-description">(test description)</span><br /><input type="checkbox" /><label for="option-2">Disable editing</label><br /><input type="text" /><br />';
 		$this->assertEquals( $expected, $output );
 	}
 
@@ -324,7 +324,7 @@ class Options_Form_Generator_Test extends TestCase {
 	 * @preserveGlobalState disabled
 	 */
 	public function test_generate_roles_permission_list() {
-		$utils       = \Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
+		$utils = \Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
 		$utils
 			->expects( 'get_roles' )
 			->once()

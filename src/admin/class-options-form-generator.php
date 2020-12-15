@@ -49,6 +49,7 @@ class Options_Form_Generator {
 				continue;
 			}
 
+			// Check for support of the current WordPress version.
 			if ( array_key_exists( 'version', $option_values ) && version_compare( \get_bloginfo( 'version' ), $option_values['version'] ) < 0 ) {
 				continue;
 			}
@@ -86,7 +87,7 @@ class Options_Form_Generator {
 						$this->is_checked( $option, $option_values, $parent_option )
 					);
 
-					$output .= sprintf( '<label for="%s">%s</label>', $id, $option_values['label'] );
+					$output .= sprintf( '<label for="%s">%s</label>', $id, \esc_html( $option_values['label'] ) );
 					break;
 				case 'text':
 					$output .= $this->inputs->text( $option, $option_values['value'], $id );
@@ -98,7 +99,7 @@ class Options_Form_Generator {
 			}
 
 			if ( array_key_exists( 'description', $option_values ) ) {
-				$output .= $this->extract_description( $option_values['description'], $id );
+				$output .= ' ' . $this->extract_description( $option_values['description'], $id );
 			}
 
 			$output .= '<br />';
@@ -130,10 +131,10 @@ class Options_Form_Generator {
 	 */
 	public function extract_description( $description, $id ) {
 		if ( ! is_array( $description ) ) {
-			return sprintf( '<span id="%s-description">(%s)</span>', $id, $description );
+			return sprintf( '<span id="%s-description">(%s)</span>', $id, \esc_html( $description ) );
 		}
 
-		return sprintf( '<p id="%s-description">%s</p>', $id, implode( '<br />', $description ) );
+		return sprintf( '<p id="%s-description">%s</p>', $id, \esc_html( implode( '<br />', $description ) ) );
 	}
 
 	/**

@@ -159,4 +159,26 @@ class Utils {
 
 		return $wp_roles->get_names();
 	}
+
+	/**
+	 * Gets a Duplicate Post option from the database.
+	 *
+	 * @param string $option The option to get.
+	 * @param string $key The key to retrieve, if the option is an array.
+	 *
+	 * @return mixed The option.
+	 */
+	public static function get_option( $option, $key = '' ) {
+		$option = \get_option( $option );
+
+		if ( ! is_array( $option ) || empty( $key ) ) {
+			return $option;
+		}
+
+		if ( ! array_key_exists( $key, $option ) ) {
+			return '';
+		}
+
+		return $option[ $key ];
+	}
 }

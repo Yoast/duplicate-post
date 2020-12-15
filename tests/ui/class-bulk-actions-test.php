@@ -11,6 +11,7 @@ use Brain\Monkey;
 use Yoast\WP\Duplicate_Post\Permissions_Helper;
 use Yoast\WP\Duplicate_Post\Tests\TestCase;
 use Yoast\WP\Duplicate_Post\UI\Bulk_Actions;
+use Yoast\WP\Duplicate_Post\Utils;
 
 /**
  * Test the Bulk_Actions class.
@@ -38,16 +39,24 @@ class Bulk_Actions_Test extends TestCase {
 		parent::setUp();
 
 		$this->permissions_helper = \Mockery::mock( Permissions_Helper::class );
-
-		$this->instance = new Bulk_Actions( $this->permissions_helper );
+		$this->instance           = new Bulk_Actions( $this->permissions_helper );
 	}
 
 	/**
 	 * Tests if the needed attributes are set correctly.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Bulk_Actions::__construct
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
 	 */
 	public function test_constructor() {
+		$utils = \Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
+
+		$utils->expects( 'get_option' )
+			  ->with( 'duplicate_post_show_link_in', 'bulkactions' )
+			  ->once()
+			  ->andReturn( 1 );
+
 		$this->assertAttributeInstanceOf( Permissions_Helper::class, 'permissions_helper', $this->instance );
 	}
 
