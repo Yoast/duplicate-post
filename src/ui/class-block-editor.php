@@ -103,7 +103,7 @@ class Block_Editor {
 			[
 				'new_draft_link'             => $this->get_new_draft_permalink(),
 				'rewrite_and_republish_link' => $this->get_rewrite_republish_permalink(),
-				'rewriting'                  => \get_post_meta( $post->ID, '_dp_is_rewrite_republish_copy', true ) ? 1 : 0,
+				'rewriting'                  => $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ? 1 : 0,
 				'originalEditURL'            => $this->get_original_post_edit_url(),
 			]
 		);

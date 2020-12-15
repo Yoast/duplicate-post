@@ -147,15 +147,14 @@ class Post_Duplicator {
 	 */
 	public function create_duplicate_for_rewrite_and_republish( \WP_Post $post ) {
 		$options  = [
-			'copy_title'        => true,
-			'copy_date'         => true,
-			'copy_name'         => true,
-			'copy_content'      => true,
-			'copy_excerpt'      => true,
-			'copy_author'       => true,
-			'copy_menu_order'   => true,
-			'use_filters'       => false,
-			'force_post_status' => 'dp-rewrite-draft',
+			'copy_title'      => true,
+			'copy_date'       => true,
+			'copy_name'       => true,
+			'copy_content'    => true,
+			'copy_excerpt'    => true,
+			'copy_author'     => true,
+			'copy_menu_order' => true,
+			'use_filters'     => false,
 		];
 		$defaults = $this->get_default_options();
 		$options  = \wp_parse_args( $options, $defaults );
@@ -351,10 +350,6 @@ class Post_Duplicator {
 					}
 				}
 			}
-		}
-
-		if ( isset( $options['force_post_status'] ) ) {
-			return $options['force_post_status'];
 		}
 
 		return $new_post_status;

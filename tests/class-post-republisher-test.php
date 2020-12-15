@@ -104,7 +104,7 @@ class Post_Republisher_Test extends TestCase {
 			->with( [ $this->instance, 'republish_after_rest_api_request' ] );
 
 		Monkey\Actions\expectAdded( 'wp_insert_post' )
-			->with( [ $this->instance, 'republish_after_post_request' ], 9999, 2 );
+			->with( [ $this->instance, 'republish_after_post_request' ], \PHP_INT_MAX, 2 );
 
 		Monkey\Actions\expectAdded( 'load-post.php' )
 			->with( [ $this->instance, 'clean_up_after_redirect' ] );
@@ -151,13 +151,6 @@ class Post_Republisher_Test extends TestCase {
 	 */
 	public function test_register_post_statuses() {
 		$statuses = [
-			'dp-rewrite-draft'     => [
-				'label'                     => 'Republish Draft',
-				'public'                    => true,
-				'exclude_from_search'       => false,
-				'show_in_admin_all_list'    => false,
-				'show_in_admin_status_list' => false,
-			],
 			'dp-rewrite-republish' => [
 				'label'                     => 'Republish',
 				'public'                    => true,
@@ -173,10 +166,6 @@ class Post_Republisher_Test extends TestCase {
 				'show_in_admin_status_list' => false,
 			],
 		];
-
-		Monkey\Functions\expect( '\register_post_status' )
-			->once()
-			->with( 'dp-rewrite-draft', $statuses['dp-rewrite-draft'] );
 
 		Monkey\Functions\expect( '\register_post_status' )
 			->once()

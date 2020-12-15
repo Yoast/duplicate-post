@@ -62,7 +62,7 @@ class Post_Republisher {
 		// Called by `wp_insert_post()` when submitting the post copy, which runs in two cases:
 		// - In the Classic Editor, where there's only one request that updates everything.
 		// - In the Block Editor, only when there are custom meta boxes.
-		\add_action( 'wp_insert_post', [ $this, 'republish_after_post_request' ], 9999, 2 );
+		\add_action( 'wp_insert_post', [ $this, 'republish_after_post_request' ], \PHP_INT_MAX, 2 );
 		// Clean up after the redirect to the original post.
 		\add_action( 'load-post.php', [ $this, 'clean_up_after_redirect' ] );
 	}
@@ -78,13 +78,6 @@ class Post_Republisher {
 	 */
 	public function register_post_statuses() {
 		$custom_post_statuses = [
-			'dp-rewrite-draft'     => [
-				'label'                     => __( 'Republish Draft', 'duplicate-post' ),
-				'public'                    => true,
-				'exclude_from_search'       => false,
-				'show_in_admin_all_list'    => false,
-				'show_in_admin_status_list' => false,
-			],
 			'dp-rewrite-republish' => [
 				'label'                     => __( 'Republish', 'duplicate-post' ),
 				'public'                    => true,
@@ -138,47 +131,46 @@ class Post_Republisher {
 	/**
 	 * Executes the republish request.
 	 *
-	 * @param int      $post_id   The copy's post ID.
-	 * @param \WP_Post $post_data The copy's post object.
+	 * @param \WP_Post $post The copy's post object.
 	 *
 	 * @return void
 	 */
-	public function republish_request( $post_id, $post_data ) {
+	public function republish_request( $post ) {
 		if (
-			! $this->permissions_helper->is_rewrite_and_republish_copy( $post_data )
-			|| $post_data->post_status !== 'dp-rewrite-republish'
+			! $this->permissions_helper->is_rewrite_and_republish_copy( $post )
+			|| $post->post_status !== 'dp-rewrite-republish'
 		) {
 			return;
 		}
 
-		$original_post_id = Utils::get_original_post_id( $post_id );
+		$original_post_id = Utils::get_original_post_id( $post->ID );
 
 		if ( ! $original_post_id ) {
 			return;
 		}
 
 		// Republish taxonomies and meta.
-		$this->republish_post_taxonomies( $post_id, $post_data );
-		$this->republish_post_meta( $post_id, $post_data );
+		$this->republish_post_taxonomies( $post );
+		$this->republish_post_meta( $post );
 
 		// Republish the post.
-		$this->republish_post_elements( $post_data, $original_post_id );
+		$this->republish_post_elements( $post, $original_post_id );
 
 		// Trigger the redirect in the Classic Editor.
 		if ( $this->is_classic_editor_post_request() ) {
-			$this->redirect( $original_post_id, $post_data->ID );
+			$this->redirect( $original_post_id, $post->ID );
 		}
 	}
 
 	/**
 	 * Republishes the original post with the passed post, when using the Block Editor.
 	 *
-	 * @param \WP_Post $post_data The copy's post object.
+	 * @param \WP_Post $post The copy's post object.
 	 *
 	 * @return void
 	 */
-	public function republish_after_rest_api_request( $post_data ) {
-		$this->republish_request( $post_data->ID, $post_data );
+	public function republish_after_rest_api_request( $post ) {
+		$this->republish_request( $post );
 	}
 
 	/**
@@ -187,17 +179,17 @@ class Post_Republisher {
 	 * Runs also in the Block Editor to save the custom meta data only when there
 	 * are custom meta boxes.
 	 *
-	 * @param int      $post_id   The copy's post ID.
-	 * @param \WP_Post $post_data The copy's post object.
+	 * @param int      $post_id The copy's post ID.
+	 * @param \WP_Post $post    The copy's post object.
 	 *
 	 * @return void
 	 */
-	public function republish_after_post_request( $post_id, $post_data ) {
+	public function republish_after_post_request( $post_id, $post ) {
 		if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
 			return;
 		}
 
-		$this->republish_request( $post_id, $post_data );
+		$this->republish_request( $post );
 	}
 
 	/**
@@ -232,32 +224,30 @@ class Post_Republisher {
 	/**
 	 * Republishes the post taxonomies overwriting the ones of the original post.
 	 *
-	 * @param int      $post_id   The copy's post ID.
-	 * @param \WP_Post $post_data The copy's post object.
+	 * @param \WP_Post $post The copy's post object.
 	 *
 	 * @return void
 	 */
-	protected function republish_post_taxonomies( $post_id, $post_data ) {
-		$original_post_id = Utils::get_original_post_id( $post_id );
+	protected function republish_post_taxonomies( $post ) {
+		$original_post_id = Utils::get_original_post_id( $post->ID );
 
 		$copy_taxonomies_options = [
 			'taxonomies_excludelist' => [],
 			'use_filters'            => false,
 			'copy_format'            => true,
 		];
-		$this->post_duplicator->copy_post_taxonomies( $original_post_id, $post_data, $copy_taxonomies_options );
+		$this->post_duplicator->copy_post_taxonomies( $original_post_id, $post, $copy_taxonomies_options );
 	}
 
 	/**
 	 * Republishes the post meta overwriting the ones of the original post.
 	 *
-	 * @param int      $post_id   The copy's post ID.
-	 * @param \WP_Post $post_data The copy's post object.
+	 * @param \WP_Post $post The copy's post object.
 	 *
 	 * @return void
 	 */
-	protected function republish_post_meta( $post_id, $post_data ) {
-		$original_post_id = Utils::get_original_post_id( $post_id );
+	protected function republish_post_meta( $post ) {
+		$original_post_id = Utils::get_original_post_id( $post->ID );
 
 		$copy_meta_options = [
 			'meta_excludelist' => [
@@ -270,7 +260,7 @@ class Post_Republisher {
 			'copy_thumbnail'   => true,
 			'copy_template'    => true,
 		];
-		$this->post_duplicator->copy_post_meta_info( $original_post_id, $post_data, $copy_meta_options );
+		$this->post_duplicator->copy_post_meta_info( $original_post_id, $post, $copy_meta_options );
 	}
 
 	/**
