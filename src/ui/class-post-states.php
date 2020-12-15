@@ -8,7 +8,6 @@
 namespace Yoast\WP\Duplicate_Post\UI;
 
 use Yoast\WP\Duplicate_Post\Permissions_Helper;
-
 use Yoast\WP\Duplicate_Post\Utils;
 
 /**
@@ -52,14 +51,13 @@ class Post_States {
 	 * @return array The updated post states array.
 	 */
 	public function show_original_in_post_states( $post_states, $post ) {
-		$original_item                 = Utils::get_original( $post );
-		$is_rewrite_and_republish_copy = $this->permissions_helper->is_rewrite_and_republish_copy( $post );
+		$original_item = Utils::get_original( $post );
 
 		if ( ! $original_item ) {
 			return $post_states;
 		}
 
-		if ( $is_rewrite_and_republish_copy ) {
+		if ( $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
 			/* translators: %s: Original item link (to view or edit) or title. */
 			$post_states['duplicate_post_original_item'] = \sprintf( \esc_html__( 'Rewrite & Republish of %s', 'duplicate-post' ), Utils::get_edit_or_view_link( $original_item ) );
 			return $post_states;

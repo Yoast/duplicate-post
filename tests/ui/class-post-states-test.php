@@ -129,8 +129,7 @@ class Post_States_Test extends TestCase {
 
 		$this->permissions_helper
 			->expects( 'is_rewrite_and_republish_copy' )
-			->with( $post )
-			->andReturnFalse();
+			->never();
 
 		Monkey\Functions\expect( '\get_option' )
 			->with( 'duplicate_post_show_original_in_post_states' )
@@ -213,8 +212,7 @@ class Post_States_Test extends TestCase {
 
 		$this->permissions_helper
 			->expects( 'is_rewrite_and_republish_copy' )
-			->with( $post )
-			->andReturnFalse();
+			->never();
 
 		$utils->expects( 'get_edit_or_view_link' )
 			->never();
