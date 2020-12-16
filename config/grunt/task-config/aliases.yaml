@@ -11,6 +11,11 @@
 clean:build-assets:
   - 'clean:build-assets-js'
 
+# Update all versions except the stable tag
+'update-version-trunk':
+  - 'update-version:pluginFile'
+  - 'update-version:initializer'
+
 # Default task
 default:
-  - 'wp_readme_to_markdown'
+  - 'build'

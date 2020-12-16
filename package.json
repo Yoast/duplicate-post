@@ -1,6 +1,5 @@
 {
   "name": "duplicate-post",
-  "version": "4.0alpha",
   "description": "Duplicate Post plugin for WordPress",
   "main": "duplicate-post.php",
   "repository": {
@@ -20,6 +19,7 @@
   "homepage": "https://github.com/Yoast/duplicate-post#readme",
   "devDependencies": {
     "@wordpress/dependency-extraction-webpack-plugin": "^2.8.0",
+    "@yoast/grunt-plugin-tasks": "^1.7.2",
     "babel-core": "^6.26.3",
     "babel-eslint": "^10.1.0",
     "babel-loader": "7",
@@ -42,5 +42,8 @@
   "dependencies": {
     "@wordpress/edit-post": "^3.25.2",
     "@wordpress/plugins": "^2.23.0"
+  },
+  "yoast": {
+    "pluginVersion": "4.0alpha"
   }
 }

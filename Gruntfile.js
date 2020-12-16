@@ -5,11 +5,12 @@ const path = require( "path" );
 module.exports = function( grunt ) {
 	'use strict';
 
-	const pkg = grunt.file.readJSON( './package.json' );
-	const pluginVersion = pkg.version;
+	const pkg = grunt.file.readJSON( 'package.json' );
+	const pluginVersion = pkg.yoast.pluginVersion;
 
 	const project = {
-		pluginVersion: flattenVersionForFile( pluginVersion ),
+		pluginVersion,
+		pluginVersionSlug: flattenVersionForFile( pluginVersion ),
 		pluginSlug: "duplicate-post",
 		pluginMainFile: "duplicate-post.php",
 		paths: {
@@ -33,26 +34,22 @@ module.exports = function( grunt ) {
 			},
 			grunt: 'Gruntfile.js'
 		},
+		versionFiles: [
+			"package.json",
+			"duplicate-post.php",
+		],
 		pkg,
-		wp_readme_to_markdown: {
-			your_target: {
-				files: {
-					'README.wordpress.md': 'readme.txt'
-				},
-			},
-			options: {
-				screenshot_url: 'assets/{screenshot}.jpg'
-			}
-		},
 	};
 
 	// Load Grunt configurations and tasks
 	require( 'load-grunt-config' )( grunt, {
-		configPath: path.join( process.cwd(), project.paths.config ),
+		configPath: path.join( process.cwd(), "node_modules/@yoast/grunt-plugin-tasks/config/" ),
+		overridePath: path.join( process.cwd(), project.paths.config ),
 		data: project,
 		jitGrunt: {
 			staticMappings: {
-				wp_readme_to_markdown: 'grunt-wp-readme-to-markdown',
+				"set-version": "@yoast/grunt-plugin-tasks",
+				"update-version": "@yoast/grunt-plugin-tasks",
 			},
 			customTasksDir: 'config/grunt/custom-tasks',
 		}
