@@ -2,6 +2,15 @@
   "name": "duplicate-post",
   "description": "Duplicate Post plugin for WordPress",
   "main": "duplicate-post.php",
+  "plugin": {
+    "glotpress": "http://translate.wordpress.org",
+    "textdomain": "duplicate-post"
+  },
+  "pot": {
+    "reportmsgidbugsto": "https://github.com/yoast/duplicate-post/issues",
+    "languageteam": "Yoast Translate <translations@yoast.com>",
+    "lasttranslator": "Yoast Translate Team <translations@yoast.com>"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/Yoast/duplicate-post.git"
