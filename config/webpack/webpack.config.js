@@ -102,11 +102,6 @@ module.exports = ( env = { environment: "production" } ) => {
 		plugins: [
 			new CaseSensitivePathsPlugin(),
 		],
-		optimization: {
-			runtimeChunk: {
-				name: "commons",
-			},
-		},
 	};
 
 	if ( mode === "development" ) {
