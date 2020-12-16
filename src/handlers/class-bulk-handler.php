@@ -135,6 +135,6 @@ class Bulk_Handler {
 				}
 			}
 		}
-		return \add_query_arg( 'cloned', $counter, $redirect_to );
+		return \add_query_arg( 'bulk_cloned', $counter, $redirect_to );
 	}
 }

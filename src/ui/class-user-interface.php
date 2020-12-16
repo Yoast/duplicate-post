@@ -57,13 +57,6 @@ class User_Interface {
 	protected $bulk_actions;
 
 	/**
-	 * Admin notices object.
-	 *
-	 * @var Admin_Notices
-	 */
-	protected $admin_notices;
-
-	/**
 	 * Post states object.
 	 *
 	 * @var Post_States
@@ -110,6 +103,7 @@ class User_Interface {
 		$this->admin_bar->register_hooks();
 
 		$this->bulk_actions       = new Bulk_Actions( $this->permissions_helper );
+		$this->post_states        = new Post_States( $this->permissions_helper );
 		$this->bulk_actions->register_hooks();
 
 		$this->admin_notices      = new Admin_Notices();

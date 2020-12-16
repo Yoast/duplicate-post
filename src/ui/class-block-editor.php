@@ -58,21 +58,13 @@ class Block_Editor {
 	 * @return void
 	 */
 	public function should_previously_used_keyword_assessment_run() {
-		global $pagenow;
-		if ( ! \in_array( $pagenow, [ 'post.php', 'post-new.php' ], true ) ) {
-			return;
-		}
+		if ( $this->permissions_helper->is_edit_post_screen() || $this->permissions_helper->is_new_post_screen() ) {
 
-		$post = \get_post();
+			$post = \get_post();
 
-		if ( \is_null( $post ) ) {
-			return;
-		}
-
-		$skip_assessment = \get_post_meta( $post->ID, '_dp_is_rewrite_republish_copy', true );
-
-		if ( ! empty( $skip_assessment ) ) {
-			\add_filter( 'wpseo_previously_used_keyword_active', '__return_false' );
+			if ( ! \is_null( $post ) && $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
+				\add_filter( 'wpseo_previously_used_keyword_active', '__return_false' );
+			}
 		}
 	}
 
@@ -82,6 +74,12 @@ class Block_Editor {
 	 * @return void
 	 */
 	public function enqueue_block_editor_scripts() {
+		$post = \get_post();
+
+		if ( ! $post ) {
+			return;
+		}
+
 		\wp_enqueue_script(
 			'duplicate_post_edit_script',
 			\plugins_url( \sprintf( 'js/dist/duplicate-post-edit-%s.js', Utils::flatten_version( DUPLICATE_POST_CURRENT_VERSION ) ), DUPLICATE_POST_FILE ),
@@ -93,6 +91,11 @@ class Block_Editor {
 			DUPLICATE_POST_CURRENT_VERSION,
 			true
 		);
+		\wp_add_inline_script(
+			'duplicate_post_edit_script',
+			'let duplicatePostNotices = {};',
+			'before'
+		);
 
 		\wp_localize_script(
 			'duplicate_post_edit_script',
@@ -101,7 +104,8 @@ class Block_Editor {
 				'new_draft_link'             => $this->get_new_draft_permalink(),
 				'show_links'                 => Utils::get_option( 'duplicate_post_show_link' ),
 				'rewrite_and_republish_link' => $this->get_rewrite_republish_permalink(),
-				'rewriting'                  => ( ! empty( $_REQUEST['rewriting'] ) ) ? 1 : 0,  // phpcs:ignore WordPress.Security.NonceVerification
+				'rewriting'                  => $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ? 1 : 0,
+				'originalEditURL'            => $this->get_original_post_edit_url(),
 			]
 		);
 	}
@@ -136,5 +140,33 @@ class Block_Editor {
 		}
 
 		return $this->link_builder->build_rewrite_and_republish_link( $post );
+	}
+
+	/**
+	 * Generates a URL to the original post edit screen.
+	 *
+	 * @return string The URL. Empty if the copy post doesn't have an original.
+	 */
+	public function get_original_post_edit_url() {
+		$post = \get_post();
+
+		if ( \is_null( $post ) ) {
+			return '';
+		}
+
+		$original_post_id = Utils::get_original_post_id( $post->ID );
+
+		if ( ! $original_post_id ) {
+			return '';
+		}
+
+		return \add_query_arg(
+			[
+				'dprepublished' => 1,
+				'dpcopy'        => $post->ID,
+				'dpnonce'       => \wp_create_nonce( 'dp-republish' ),
+			],
+			\admin_url( 'post.php?action=edit&post=' . $original_post_id )
+		);
 	}
 }

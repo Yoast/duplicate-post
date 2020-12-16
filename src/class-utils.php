@@ -149,6 +149,17 @@ class Utils {
 	}
 
 	/**
+	 * Gets the ID of the original post intended to be rewritten with the copy for Rewrite & Republish.
+	 *
+	 * @param int $post_id The copy post ID.
+	 *
+	 * @return int The original post id of a copy for Rewrite & Republish.
+	 */
+	public static function get_original_post_id( $post_id ) {
+		return (int) \get_post_meta( $post_id, '_dp_original', true );
+	}
+
+	/**
 	 * Gets the registered WordPress roles.
 	 *
 	 * @return array The roles.

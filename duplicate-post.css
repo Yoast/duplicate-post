@@ -4,6 +4,27 @@
 	top: 2px;
 }
 
+/* Copy links in the classic editor. */
+#duplicate-action {
+	margin-bottom: 12px;
+}
+
+#rewrite-republish-action {
+	margin-bottom: -2px;
+}
+
+#rewrite-republish-action + #delete-action {
+	margin-top: 8px;
+}
+
+/* Copy links in the block editor. */
+.components-button.dp-editor-post-copy-to-draft,
+.components-button.dp-editor-post-rewrite-republish {
+	margin-left: -6px;
+	text-decoration: underline;
+}
+
+
 @media screen and (max-width: 782px){
 	#wpadminbar li#wp-admin-bar-new_draft{
 		display: block;
@@ -27,6 +48,10 @@
 		text-align: center;
 		-webkit-font-smoothing: antialiased;
 		-moz-osx-font-smoothing: grayscale;
+	}
+
+	#rewrite-republish-action + #delete-action {
+		margin-top: 0;
 	}
 }
 
