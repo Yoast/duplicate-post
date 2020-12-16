@@ -33,10 +33,6 @@ module.exports = function( grunt ) {
 			command: "composer install",
 		},
 
-		"composer-update-yoast-dependencies": {
-			command: "composer update yoast/license-manager yoast/i18n-module",
-		},
-
 		"composer-reset-config": {
 			command: "git checkout composer.json",
 			options: {
