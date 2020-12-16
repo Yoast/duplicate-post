@@ -34,6 +34,7 @@ module.exports = function( grunt ) {
 				'js/src/*.js',
 				'!js/dist/*.min.js'
 			],
+			artifact: "artifact",
 			get config() {
 				return project.paths.config + '*.js';
 			},
