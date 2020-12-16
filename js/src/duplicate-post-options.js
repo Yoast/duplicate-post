@@ -46,6 +46,8 @@ function addListeners( index ) {
 				// Activate first tab
 				activateTab( tabs[0] );
 				break;
+			default:
+				break;
 		}
 	} );
 	tabs[index].addEventListener( "keyup", function ( event ) {
