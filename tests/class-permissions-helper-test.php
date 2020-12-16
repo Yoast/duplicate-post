@@ -454,6 +454,7 @@ class Permissions_Helper_Test extends TestCase {
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::has_original_changed
 	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
 	 */
 	public function test_has_original_changed_successful() {
 		$utils                       = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
@@ -484,6 +485,7 @@ class Permissions_Helper_Test extends TestCase {
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::has_original_changed
 	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
 	 */
 	public function test_has_original_changed_no() {
 		$utils                       = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
