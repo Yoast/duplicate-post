@@ -73,19 +73,19 @@ class Post_Submitbox_Test extends TestCase {
 		$utils = \Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
 
 		$utils->expects( 'get_option' )
-			  ->with( 'duplicate_post_show_link_in', 'submitbox' )
-			  ->once()
-			  ->andReturn( '1' );
+			->with( 'duplicate_post_show_link_in', 'submitbox' )
+			->once()
+			->andReturn( '1' );
 
 		$utils->expects( 'get_option' )
-			  ->with( 'duplicate_post_show_link', 'new_draft' )
-			  ->once()
-			  ->andReturn( '1' );
+			->with( 'duplicate_post_show_link', 'new_draft' )
+			->once()
+			->andReturn( '1' );
 
 		$utils->expects( 'get_option' )
-			  ->with( 'duplicate_post_show_link', 'rewrite_republish' )
-			  ->once()
-			  ->andReturn( '1' );
+			->with( 'duplicate_post_show_link', 'rewrite_republish' )
+			->once()
+			->andReturn( '1' );
 
 		$this->instance->register_hooks();
 

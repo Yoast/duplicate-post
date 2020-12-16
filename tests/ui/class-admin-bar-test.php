@@ -76,9 +76,9 @@ class Admin_Bar_Test extends TestCase {
 		$utils = \Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
 
 		$utils->expects( 'get_option' )
-			  ->with( 'duplicate_post_show_link_in', 'adminbar' )
-			  ->once()
-			  ->andReturn( '1' );
+			->with( 'duplicate_post_show_link_in', 'adminbar' )
+			->once()
+			->andReturn( '1' );
 
 		$this->instance->register_hooks();
 
@@ -118,14 +118,14 @@ class Admin_Bar_Test extends TestCase {
 		$utils = \Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
 
 		$utils->expects( 'get_option' )
-			  ->with( 'duplicate_post_show_link', 'new_draft' )
-			  ->once()
-			  ->andReturn( '1' );
+			->with( 'duplicate_post_show_link', 'new_draft' )
+			->once()
+			->andReturn( '1' );
 
 		$utils->expects( 'get_option' )
-			  ->with( 'duplicate_post_show_link', 'rewrite_republish' )
-			  ->once()
-			  ->andReturn( '1' );
+			->with( 'duplicate_post_show_link', 'rewrite_republish' )
+			->once()
+			->andReturn( '1' );
 
 		$wp_admin_bar
 			->expects( 'add_menu' )
@@ -166,14 +166,14 @@ class Admin_Bar_Test extends TestCase {
 		$utils = \Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
 
 		$utils->expects( 'get_option' )
-			  ->with( 'duplicate_post_show_link', 'new_draft' )
-			  ->once()
-			  ->andReturn( '1' );
+			->with( 'duplicate_post_show_link', 'new_draft' )
+			->once()
+			->andReturn( '1' );
 
 		$utils->expects( 'get_option' )
-			  ->with( 'duplicate_post_show_link', 'rewrite_republish' )
-			  ->once()
-			  ->andReturn( '0' );
+			->with( 'duplicate_post_show_link', 'rewrite_republish' )
+			->once()
+			->andReturn( '0' );
 
 		$wp_admin_bar
 			->expects( 'add_menu' )

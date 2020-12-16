@@ -62,9 +62,9 @@ class Bulk_Actions_Test extends TestCase {
 		$utils = \Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
 
 		$utils->expects( 'get_option' )
-			  ->with( 'duplicate_post_show_link_in', 'bulkactions' )
-			  ->once()
-			  ->andReturn( '1' );
+			->with( 'duplicate_post_show_link_in', 'bulkactions' )
+			->once()
+			->andReturn( '1' );
 
 		$this->instance->register_hooks();
 
@@ -147,14 +147,14 @@ class Bulk_Actions_Test extends TestCase {
 		$utils = \Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
 
 		$utils->expects( 'get_option' )
-			  ->with( 'duplicate_post_show_link', 'clone' )
-			  ->once()
-			  ->andReturn( '1' );
+			->with( 'duplicate_post_show_link', 'clone' )
+			->once()
+			->andReturn( '1' );
 
 		$utils->expects( 'get_option' )
-			  ->with( 'duplicate_post_show_link', 'rewrite_republish' )
-			  ->once()
-			  ->andReturn( '1' );
+			->with( 'duplicate_post_show_link', 'rewrite_republish' )
+			->once()
+			->andReturn( '1' );
 
 		$array = [
 			'edit'  => 'Edit',
