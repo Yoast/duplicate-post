@@ -21,7 +21,7 @@ class Options_Form_Generator {
 	 *
 	 * @var Options_Inputs
 	 */
-	protected $inputs;
+	protected $options_inputs;
 
 	/**
 	 * Options_Form_Generator constructor.
@@ -29,7 +29,7 @@ class Options_Form_Generator {
 	 * @param Options_Inputs $inputs The Options_Inputs instance.
 	 */
 	public function __construct( Options_Inputs $inputs ) {
-		$this->inputs = $inputs;
+		$this->options_inputs = $inputs;
 	}
 
 	/**
@@ -80,7 +80,7 @@ class Options_Form_Generator {
 
 			switch ( $option_values['type'] ) {
 				case 'checkbox':
-					$output .= $this->inputs->checkbox(
+					$output .= $this->options_inputs->checkbox(
 						$option,
 						$option_values['value'],
 						$id,
@@ -90,10 +90,10 @@ class Options_Form_Generator {
 					$output .= sprintf( '<label for="%s">%s</label>', $id, \esc_html( $option_values['label'] ) );
 					break;
 				case 'text':
-					$output .= $this->inputs->text( $option, $option_values['value'], $id );
+					$output .= $this->options_inputs->text( $option, $option_values['value'], $id );
 					break;
 				case 'number':
-					$output .= $this->inputs->number( $option, $option_values['value'], $id );
+					$output .= $this->options_inputs->number( $option, $option_values['value'], $id );
 
 					break;
 			}
