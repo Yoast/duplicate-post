@@ -163,11 +163,7 @@ class Post_Submitbox {
 	 * @return string The to-be-used copy of the text.
 	 */
 	public function change_republish_strings_classic_editor( $translation, $text ) {
-		if ( ! $this->should_change_rewrite_republish_copy( \get_post() ) ) {
-			return $text;
-		}
-
-		if ( $text === 'Publish' ) {
+		if ( $this->should_change_rewrite_republish_copy( \get_post() ) && $text === 'Publish' ) {
 			return \__( 'Republish', 'duplicate-post' );
 		}
 
@@ -179,16 +175,11 @@ class Post_Submitbox {
 	 *
 	 * @param string $translation The translated text.
 	 * @param string $text        The text to translate.
-	 * @param string $context     Context information for the translators.
 	 *
 	 * @return string The to-be-used copy of the text.
 	 */
-	public function change_schedule_strings_classic_editor( $translation, $text, $context ) {
-		if ( ! $this->should_change_rewrite_republish_copy( \get_post() ) ) {
-			return $text;
-		}
-
-		if ( $text === 'Schedule' ) {
+	public function change_schedule_strings_classic_editor( $translation, $text ) {
+		if ( $this->should_change_rewrite_republish_copy( \get_post() ) && $text === 'Schedule' ) {
 			return \__( 'Schedule republish', 'duplicate-post' );
 		}
 

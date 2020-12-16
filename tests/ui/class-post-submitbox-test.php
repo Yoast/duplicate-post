@@ -430,7 +430,8 @@ class Post_Submitbox_Test extends TestCase {
 	 * @covers Post_Submitbox::change_republish_strings_classic_editor
 	 */
 	public function test_should_not_change_republish_strings() {
-		$text = 'Publish';
+		$text        = 'Publish';
+		$translation = 'Publish';
 
 		$post            = Mockery::mock( \WP_Post::class );
 		$post->post_type = 'post';
@@ -444,7 +445,7 @@ class Post_Submitbox_Test extends TestCase {
 			->once()
 			->andReturnFalse();
 
-		$this->assertEquals( $this->instance->change_republish_strings_classic_editor( '', $text ), 'Publish' );
+		$this->assertEquals( $this->instance->change_republish_strings_classic_editor( $translation, $text ), 'Publish' );
 	}
 
 	/**
@@ -492,7 +493,7 @@ class Post_Submitbox_Test extends TestCase {
 			->once()
 			->andReturnTrue();
 
-		$this->assertEquals( $this->instance->change_schedule_strings_classic_editor( '', $text, '' ), 'Schedule republish' );
+		$this->assertEquals( $this->instance->change_schedule_strings_classic_editor( '', $text ), 'Schedule republish' );
 	}
 
 	/**
@@ -501,7 +502,8 @@ class Post_Submitbox_Test extends TestCase {
 	 * @covers Post_Submitbox::change_schedule_strings_classic_editor
 	 */
 	public function test_should_not_change_schedule_strings() {
-		$text = 'Schedule';
+		$text        = 'Schedule';
+		$translation = 'Schedule';
 
 		$post            = Mockery::mock( \WP_Post::class );
 		$post->post_type = 'post';
@@ -515,7 +517,7 @@ class Post_Submitbox_Test extends TestCase {
 			->once()
 			->andReturnFalse();
 
-		$this->assertEquals( $this->instance->change_schedule_strings_classic_editor( '', $text, '' ), 'Schedule' );
+		$this->assertEquals( $this->instance->change_schedule_strings_classic_editor( $translation, $text ), 'Schedule' );
 	}
 
 	/**
@@ -540,7 +542,7 @@ class Post_Submitbox_Test extends TestCase {
 			->once()
 			->andReturnTrue();
 
-		$this->assertEquals( $this->instance->change_schedule_strings_classic_editor( $translation, $text, '' ), 'Test' );
+		$this->assertEquals( $this->instance->change_schedule_strings_classic_editor( $translation, $text ), 'Test' );
 	}
 
 	/**
