@@ -15,8 +15,8 @@ const republishStrings = {
 				br: <br /> }
 		),
 
-	'Schedule'  : __( 'Schedule Republish', 'duplicate-post' ),
-	'Schedule…' : __( 'Schedule Republish', 'duplicate-post' ),
+	'Schedule'  : __( 'Schedule republish', 'duplicate-post' ),
+	'Schedule…' : __( 'Schedule republish', 'duplicate-post' ),
 
 	'Are you ready to schedule?':
 		__( 'Are you ready to schedule the republishing of your post?', 'duplicate-post' ),
