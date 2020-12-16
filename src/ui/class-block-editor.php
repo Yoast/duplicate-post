@@ -74,6 +74,12 @@ class Block_Editor {
 	 * @return void
 	 */
 	public function enqueue_block_editor_scripts() {
+		$post = \get_post();
+
+		if ( ! $post ) {
+			return;
+		}
+
 		\wp_enqueue_script(
 			'duplicate_post_edit_script',
 			\plugins_url( \sprintf( 'js/dist/duplicate-post-edit-%s.js', Utils::flatten_version( DUPLICATE_POST_CURRENT_VERSION ) ), DUPLICATE_POST_FILE ),
@@ -93,10 +99,12 @@ class Block_Editor {
 
 		\wp_localize_script(
 			'duplicate_post_edit_script',
-			'duplicatePostLinks',
+			'duplicatePost',
 			[
 				'new_draft_link'             => $this->get_new_draft_permalink(),
 				'rewrite_and_republish_link' => $this->get_rewrite_republish_permalink(),
+				'rewriting'                  => $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ? 1 : 0,
+				'originalEditURL'            => $this->get_original_post_edit_url(),
 			]
 		);
 	}
@@ -131,5 +139,33 @@ class Block_Editor {
 		}
 
 		return $this->link_builder->build_rewrite_and_republish_link( $post );
+	}
+
+	/**
+	 * Generates a URL to the original post edit screen.
+	 *
+	 * @return string The URL. Empty if the copy post doesn't have an original.
+	 */
+	public function get_original_post_edit_url() {
+		$post = \get_post();
+
+		if ( \is_null( $post ) ) {
+			return '';
+		}
+
+		$original_post_id = Utils::get_original_post_id( $post->ID );
+
+		if ( ! $original_post_id ) {
+			return '';
+		}
+
+		return \add_query_arg(
+			[
+				'dprepublished' => 1,
+				'dpcopy'        => $post->ID,
+				'dpnonce'       => \wp_create_nonce( 'dp-republish' ),
+			],
+			\admin_url( 'post.php?action=edit&post=' . $original_post_id )
+		);
 	}
 }

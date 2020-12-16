@@ -46,6 +46,13 @@ class Duplicate_Post {
 	protected $handler;
 
 	/**
+	 * Post_Republisher object.
+	 *
+	 * @var Post_Republisher
+	 */
+	protected $post_republisher;
+
+	/**
 	 * Watchers object.
 	 *
 	 * @var Watchers
@@ -60,6 +67,7 @@ class Duplicate_Post {
 		$this->user_interface     = new User_Interface( $this->permissions_helper );
 		$this->post_duplicator    = new Post_Duplicator();
 		$this->handler            = new Handler( $this->post_duplicator, $this->permissions_helper );
+		$this->post_republisher   = new Post_Republisher( $this->post_duplicator, $this->permissions_helper );
 		$this->watchers           = new Watchers( $this->permissions_helper );
 	}
 }

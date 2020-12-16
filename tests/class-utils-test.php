@@ -15,7 +15,7 @@ use \Yoast\WP\Duplicate_Post\Utils;
 class Utils_Test extends TestCase {
 
 	/**
-	 * Tests the duplicate_post_flatten_version function.
+	 * Tests the flatten_version function.
 	 *
 	 * @covers       Utils::flatten_version
 	 * @dataProvider flatten_version_provider
