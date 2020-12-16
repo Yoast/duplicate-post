@@ -559,6 +559,8 @@ class Post_Submitbox_Test extends TestCase {
 		$permalink      = 'http://basic.wordpress.test/example_post';
 		$date_format    = 'F j, Y';
 		$scheduled_date = 'December 18, 2020';
+		$time_format    = 'g:i a';
+		$scheduled_time = '2:30 pm';
 
 		$messages['post'] = [
 			0  => '', // Unused. Messages start at index 1.
@@ -570,7 +572,7 @@ class Post_Submitbox_Test extends TestCase {
 			6  => 'Post published.',
 			7  => 'Post saved.',
 			8  => 'Post submitted.',
-			9  => 'Post scheduled for: <strong>' . $scheduled_date . '</strong>',
+			9  => 'Post scheduled for: <strong>' . $scheduled_date . ' ' . $scheduled_time . '</strong>',
 			10 => 'Post draft updated.',
 		];
 		$messages['page'] = [
@@ -583,11 +585,11 @@ class Post_Submitbox_Test extends TestCase {
 			6  => 'Page published.',
 			7  => 'Page saved.',
 			8  => 'Page submitted.',
-			9  => 'Page scheduled for: <strong>' . $scheduled_date . '</strong>',
+			9  => 'Page scheduled for: <strong>' . $scheduled_date . ' ' . $scheduled_time . '</strong>',
 			10 => 'Page draft updated.',
 		];
 
-		$new_copy = 'This rewritten post <a href="' . $permalink . '">' . $post->post_title . '</a> is now scheduled to replace the original post. It will be published on <strong>' . $scheduled_date . '</strong>';
+		$new_copy = 'This rewritten post <a href="' . $permalink . '">' . $post->post_title . '</a> is now scheduled to replace the original post. It will be published on <strong>' . $scheduled_date . ' ' . $scheduled_time . '</strong>.';
 
 		$result['post'] = [
 			0  => '', // Unused. Messages start at index 1.
@@ -612,7 +614,7 @@ class Post_Submitbox_Test extends TestCase {
 			6  => 'Page published.',
 			7  => 'Page saved.',
 			8  => 'Page submitted.',
-			9  => 'Page scheduled for: <strong>' . $scheduled_date . '</strong>',
+			9  => 'Page scheduled for: <strong>' . $scheduled_date . ' ' . $scheduled_time . '</strong>',
 			10 => 'Page draft updated.',
 		];
 
@@ -635,10 +637,20 @@ class Post_Submitbox_Test extends TestCase {
 			->with( 'date_format' )
 			->andReturn( $date_format );
 
+		Monkey\Functions\expect( '\get_option' )
+			->once()
+			->with( 'time_format' )
+			->andReturn( $time_format );
+
 		Monkey\Functions\expect( '\get_the_time' )
 			->once()
 			->with( $date_format, $post )
 			->andReturn( $scheduled_date );
+
+		Monkey\Functions\expect( '\get_the_time' )
+			->once()
+			->with( $time_format, $post )
+			->andReturn( $scheduled_time );
 
 		$this->assertEquals( $this->instance->change_scheduled_notice_classic_editor( $messages ), $result );
 	}
@@ -657,6 +669,8 @@ class Post_Submitbox_Test extends TestCase {
 		$permalink      = 'http://basic.wordpress.test/example_page';
 		$date_format    = 'F j, Y';
 		$scheduled_date = 'December 18, 2020';
+		$time_format    = 'g:i a';
+		$scheduled_time = '2:30 pm';
 
 		$messages['post'] = [
 			0  => '', // Unused. Messages start at index 1.
@@ -668,7 +682,7 @@ class Post_Submitbox_Test extends TestCase {
 			6  => 'Post published.',
 			7  => 'Post saved.',
 			8  => 'Post submitted.',
-			9  => 'Post scheduled for: <strong>' . $scheduled_date . '</strong>',
+			9  => 'Post scheduled for: <strong>' . $scheduled_date . ' ' . $scheduled_time . '</strong>',
 			10 => 'Post draft updated.',
 		];
 		$messages['page'] = [
@@ -681,11 +695,11 @@ class Post_Submitbox_Test extends TestCase {
 			6  => 'Page published.',
 			7  => 'Page saved.',
 			8  => 'Page submitted.',
-			9  => 'Page scheduled for: <strong>' . $scheduled_date . '</strong>',
+			9  => 'Page scheduled for: <strong>' . $scheduled_date . ' ' . $scheduled_time . '</strong>',
 			10 => 'Page draft updated.',
 		];
 
-		$new_copy = 'This rewritten page <a href="' . $permalink . '">' . $post->post_title . '</a> is now scheduled to replace the original page. It will be published on <strong>' . $scheduled_date . '</strong>';
+		$new_copy = 'This rewritten page <a href="' . $permalink . '">' . $post->post_title . '</a> is now scheduled to replace the original page. It will be published on <strong>' . $scheduled_date . ' ' . $scheduled_time . '</strong>.';
 
 		$result['post'] = [
 			0  => '', // Unused. Messages start at index 1.
@@ -697,7 +711,7 @@ class Post_Submitbox_Test extends TestCase {
 			6  => 'Post published.',
 			7  => 'Post saved.',
 			8  => 'Post submitted.',
-			9  => 'Post scheduled for: <strong>' . $scheduled_date . '</strong>',
+			9  => 'Post scheduled for: <strong>' . $scheduled_date . ' ' . $scheduled_time . '</strong>',
 			10 => 'Post draft updated.',
 		];
 		$result['page'] = [
@@ -733,10 +747,20 @@ class Post_Submitbox_Test extends TestCase {
 			->with( 'date_format' )
 			->andReturn( $date_format );
 
+		Monkey\Functions\expect( '\get_option' )
+			->once()
+			->with( 'time_format' )
+			->andReturn( $time_format );
+
 		Monkey\Functions\expect( '\get_the_time' )
 			->once()
 			->with( $date_format, $post )
 			->andReturn( $scheduled_date );
+
+		Monkey\Functions\expect( '\get_the_time' )
+			->once()
+			->with( $time_format, $post )
+			->andReturn( $scheduled_time );
 
 		$this->assertEquals( $this->instance->change_scheduled_notice_classic_editor( $messages ), $result );
 	}
