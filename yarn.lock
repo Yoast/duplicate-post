@@ -5181,11 +5181,6 @@ grunt-wp-i18n@^1.0.3:
     grunt "^1.0.3"
     node-wp-i18n "^1.2.2"
 
-grunt-wp-readme-to-markdown@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/grunt-wp-readme-to-markdown/-/grunt-wp-readme-to-markdown-2.0.1.tgz#406cd5e98988580dc1d16e805c4e2e6092568552"
-  integrity sha1-QGzV6YmIWA3B0W6AXE4uYJJWhVI=
-
 grunt@^1.0.3, grunt@^1.1, grunt@^1.3.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/grunt/-/grunt-1.3.0.tgz#55db6ccd80c6fb53722e496f680620a2e681f809"

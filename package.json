@@ -44,7 +44,6 @@
     "grunt-contrib-clean": "^2.0.0",
     "grunt-shell": "^3.0.1",
     "grunt-webpack": "^4.0.2",
-    "grunt-wp-readme-to-markdown": "^2.0.1",
     "load-grunt-config": "^3.0.1",
     "webpack": "^4.20.2"
   },
