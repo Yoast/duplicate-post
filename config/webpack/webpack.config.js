@@ -53,7 +53,7 @@ const wordpressExternals = wordpressPackages.reduce( ( memo, packageName ) => {
 
 
 function getOutputFilename( mode ) {
-	const pluginVersionSlug = paths.flattenVersionForFile( pkg.version );
+	const pluginVersionSlug = paths.flattenVersionForFile( pkg.yoast.pluginVersion );
 
 	return "[name]-" + pluginVersionSlug + ".js";
 }
