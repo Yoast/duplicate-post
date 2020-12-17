@@ -1,8 +1,16 @@
 {
   "name": "duplicate-post",
-  "version": "4.0alpha",
   "description": "Duplicate Post plugin for WordPress",
   "main": "duplicate-post.php",
+  "plugin": {
+    "glotpress": "http://translate.wordpress.org",
+    "textdomain": "duplicate-post"
+  },
+  "pot": {
+    "reportmsgidbugsto": "https://github.com/yoast/duplicate-post/issues",
+    "languageteam": "Yoast Translate <translations@yoast.com>",
+    "lasttranslator": "Yoast Translate Team <translations@yoast.com>"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/Yoast/duplicate-post.git"
@@ -21,6 +29,7 @@
   "devDependencies": {
     "@wordpress/data": "^4.25.0",
     "@wordpress/dependency-extraction-webpack-plugin": "^2.8.0",
+    "@yoast/grunt-plugin-tasks": "^1.7.2",
     "babel-core": "^6.26.3",
     "babel-eslint": "^10.1.0",
     "babel-loader": "7",
@@ -36,12 +45,14 @@
     "grunt-contrib-clean": "^2.0.0",
     "grunt-shell": "^3.0.1",
     "grunt-webpack": "^4.0.2",
-    "grunt-wp-readme-to-markdown": "^2.0.1",
     "load-grunt-config": "^3.0.1",
     "webpack": "^4.20.2"
   },
   "dependencies": {
     "@wordpress/edit-post": "^3.25.2",
     "@wordpress/plugins": "^2.23.0"
+  },
+  "yoast": {
+    "pluginVersion": "4.0alpha"
   }
 }

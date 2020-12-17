@@ -108,6 +108,19 @@ class Block_Editor {
 				'originalEditURL'            => $this->get_original_post_edit_url(),
 			]
 		);
+
+		if ( $this->permissions_helper->is_rewrite_and_republish_copy( \get_post() ) ) {
+			\wp_enqueue_script(
+				'duplicate_post_strings',
+				\plugins_url( \sprintf( 'js/dist/duplicate-post-strings-%s.js', Utils::flatten_version( DUPLICATE_POST_CURRENT_VERSION ) ), DUPLICATE_POST_FILE ),
+				[
+					'wp-element',
+					'wp-i18n',
+				],
+				DUPLICATE_POST_CURRENT_VERSION,
+				true
+			);
+		}
 	}
 
 	/**

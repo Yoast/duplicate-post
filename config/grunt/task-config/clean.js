@@ -3,4 +3,7 @@ module.exports = {
 	"build-assets-js": [
 		"js/dist/*.js",
 	],
+	artifact: [
+		"<%= files.artifact %>",
+	],
 };

@@ -53,7 +53,7 @@ const wordpressExternals = wordpressPackages.reduce( ( memo, packageName ) => {
 
 
 function getOutputFilename( mode ) {
-	const pluginVersionSlug = paths.flattenVersionForFile( pkg.version );
+	const pluginVersionSlug = paths.flattenVersionForFile( pkg.yoast.pluginVersion );
 
 	return "[name]-" + pluginVersionSlug + ".js";
 }
@@ -102,11 +102,6 @@ module.exports = ( env = { environment: "production" } ) => {
 		plugins: [
 			new CaseSensitivePathsPlugin(),
 		],
-		optimization: {
-			runtimeChunk: {
-				name: "commons",
-			},
-		},
 	};
 
 	if ( mode === "development" ) {

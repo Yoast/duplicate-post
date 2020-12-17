@@ -11,6 +11,38 @@
 clean:build-assets:
   - 'clean:build-assets-js'
 
+# Update all versions except the stable tag
+'update-version-trunk':
+  - 'update-version:pluginFile'
+  - 'update-version:initializer'
+
+'artifact':
+  - 'shell:production-prefix-dependencies'
+  - 'shell:composer-install-production'
+  # Build like we normally would
+  - 'release'
+  # Remove build folder
+  - 'clean:artifact'
+  # Copy only the relevant files to the folder
+  - 'copy:artifact'
+  # Create a zip file
+  - 'compress:artifact'
+  - 'clean:artifact'
+  - 'restore-environment-after-artifact'
+
+'restore-environment-after-artifact':
+  - 'shell:composer-reset-config'
+  - 'shell:composer-reset-lock'
+  - 'shell:composer-install'
+
+# Get the project ready for release
+release:
+  - 'clean:build-assets'
+  - 'release:js'
+
+'release:js':
+  - 'webpack:buildProd'
+
 # Default task
 default:
-  - 'wp_readme_to_markdown'
+  - 'build'
