@@ -120,8 +120,16 @@ class Block_Editor {
 				DUPLICATE_POST_CURRENT_VERSION,
 				true
 			);
+
+			\wp_localize_script(
+				'duplicate_post_strings',
+				'duplicatePostStrings',
+				[
+					'check_link'            => $this->get_check_permalink(),
+				]
+			);
 		}
-	}
+}
 
 	/**
 	 * Generates a New Draft permalink for the current post.
@@ -153,6 +161,21 @@ class Block_Editor {
 		}
 
 		return $this->link_builder->build_rewrite_and_republish_link( $post );
+	}
+
+	/**
+	 * Generates a Check Changes permalink for the current post, if it's intended for Rewrite & Republish.
+	 *
+	 * @return string The permalink. Returns empty if the post does not exist or it's not a Rewrite & Republish copy.
+	 */
+	public function get_check_permalink() {
+		$post = \get_post();
+
+		if ( ! $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
+			return '';
+		}
+
+		return $this->link_builder->build_check_link( $post );
 	}
 
 	/**

@@ -1,3 +1,5 @@
+/* global duplicatePostStrings */
+
 import { createInterpolateElement } from "@wordpress/element";
 import { __, setLocaleData } from "@wordpress/i18n";
 
@@ -11,8 +13,10 @@ const republishStrings = {
 		createInterpolateElement(
 			__( 'After republishing your changes will be merged into the original post and you\'ll be redirected there.<br /><br /><a>Do you want to double-check your changes before merging?</a>',
 				'duplicate-post' ),
-			{ a: <a href="#" />,
-				br: <br /> }
+			{
+				a: <a href={ duplicatePostStrings.check_link } />,
+				br: <br />
+			}
 		),
 
 	'Schedule'  : __( 'Schedule republish', 'duplicate-post' ),
