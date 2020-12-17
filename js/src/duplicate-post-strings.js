@@ -16,7 +16,7 @@ const republishStrings = {
 		),
 
 	'Schedule'  : __( 'Schedule republish', 'duplicate-post' ),
-	'Schedule…' : __( 'Schedule republish', 'duplicate-post' ),
+	'Schedule…' : __( 'Schedule republish…', 'duplicate-post' ),
 	'post action/button label\u0004Schedule' : __( 'Schedule republish', 'duplicate-post' ),
 
 	'Are you ready to schedule?':
