@@ -4,6 +4,7 @@ import { __, setLocaleData } from "@wordpress/i18n";
 const republishStrings = {
 	'Publish'  : __( 'Republish', 'duplicate-post' ),
 	'Publish…' : __( 'Republish', 'duplicate-post' ),
+	'Publish:' : __( 'Republish:', 'duplicate-post' ),
 
 	'Are you ready to publish?':
 		__( 'Are you ready to republish your post?', 'duplicate-post' ),
