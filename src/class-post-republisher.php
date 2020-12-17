@@ -138,7 +138,7 @@ class Post_Republisher {
 	public function republish_request( $post ) {
 		if (
 			! $this->permissions_helper->is_rewrite_and_republish_copy( $post )
-			|| $post->post_status !== 'dp-rewrite-republish'
+			|| ! $this->permissions_helper->is_copy_allowed_to_be_republished( $post )
 		) {
 			return;
 		}
@@ -203,10 +203,12 @@ class Post_Republisher {
 	protected function republish_post_elements( $post, $original_post_id ) {
 		// Cast to array and not alter the original object.
 		$post_to_be_rewritten = (array) $post;
+		// Determine the new post status.
+		$new_post_status = $post_to_be_rewritten['post_status'] === 'private' ? 'private' : 'publish';
 		// Prepare post data for republishing.
 		$post_to_be_rewritten['ID']          = $original_post_id;
 		$post_to_be_rewritten['post_name']   = \get_post_field( 'post_name', $original_post_id );
-		$post_to_be_rewritten['post_status'] = 'publish';
+		$post_to_be_rewritten['post_status'] = $new_post_status;
 
 		// Yoast SEO and other plugins prevent from accidentally updating another
 		// post's data (e.g. the Yoast SEO metadata) by checking the $_POST data
