@@ -106,8 +106,8 @@ class User_Interface {
 		$this->post_states  = new Post_States( $this->permissions_helper );
 		$this->bulk_actions->register_hooks();
 
-		$this->metabox     = new Metabox( $this->permissions_helper );
-		$this->column      = new Column( $this->permissions_helper );
+		$this->metabox = new Metabox( $this->permissions_helper );
+		$this->column  = new Column( $this->permissions_helper );
 
 		$this->register_hooks();
 	}

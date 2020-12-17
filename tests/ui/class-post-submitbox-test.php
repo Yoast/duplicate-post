@@ -49,7 +49,10 @@ class Post_Submitbox_Test extends TestCase {
 		$this->link_builder       = Mockery::mock( Link_Builder::class );
 		$this->permissions_helper = Mockery::mock( Permissions_Helper::class );
 
-		$this->instance = Mockery::mock( Post_Submitbox::class, [ $this->link_builder, $this->permissions_helper ] )->makePartial();
+		$this->instance = Mockery::mock(
+			Post_Submitbox::class,
+			[ $this->link_builder, $this->permissions_helper ]
+		)->makePartial();
 	}
 
 	/**
@@ -105,9 +108,6 @@ class Post_Submitbox_Test extends TestCase {
 	 * @covers Post_Submitbox::enqueue_classic_editor_scripts
 	 */
 	public function test_enqueue_classic_editor_scripts() {
-		\define( 'DUPLICATE_POST_CURRENT_VERSION', '4.0alpha' );
-		\define( 'DUPLICATE_POST_FILE', '/var/www/html/wp-content/plugins/duplicate-post/duplicate-post.php' );
-
 		$post = Mockery::mock( \WP_Post::class );
 
 		Monkey\Functions\expect( '\get_post' )
@@ -120,12 +120,12 @@ class Post_Submitbox_Test extends TestCase {
 			->andReturnTrue();
 
 		$handle = 'duplicate_post_strings';
-		$src    = 'http://basic.wordpress.test/wp-content/plugins/duplicate-post/js/dist/duplicate-post-strings-40alpha.js';
+		$src    = 'http://basic.wordpress.test/wp-content/plugins/duplicate-post/js/dist/duplicate-post-strings-40.js';
 		$deps   = [ 'wp-element', 'wp-i18n' ];
 
 		Monkey\Functions\expect( '\plugins_url' )
+			->with( 'js/dist/duplicate-post-strings-40.js', DUPLICATE_POST_FILE )
 			->once()
-			->with( 'js/dist/duplicate-post-strings-40alpha.js', DUPLICATE_POST_FILE )
 			->andReturn( $src );
 
 		Monkey\Functions\expect( '\wp_enqueue_script' )
