@@ -41,6 +41,10 @@ class DuplicatePost {
 			const hasActiveMetaBoxes = select( 'core/edit-post' ).hasMetaBoxes();
 			const isSavingMetaBoxes  = select( 'core/edit-post' ).isSavingMetaBoxes();
 
+			if ( ! this.is_copy_allowed_to_be_republished() ) {
+				return;
+			}
+
 			// When there are custom meta boxes, redirect after they're saved.
 			if ( hasActiveMetaBoxes && ! isSavingMetaBoxes && wasSavingMetaboxes ) {
 				window.location.assign( duplicatePost.originalEditURL );
@@ -74,6 +78,21 @@ class DuplicatePost {
 			/\/wp-admin\/post\.php$/.test( parser.pathname ) &&
 			/\?action=edit&post=[0-9]+&dprepublished=1&dpcopy=[0-9]+&dpnonce=[a-z0-9]+/i.test( parser.search )
 		) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Determines whether a Rewrite & Republish copy can be republished.
+	 *
+	 * @return bool Whether the Rewrite & Republish copy can be republished.
+	 */
+	is_copy_allowed_to_be_republished() {
+		const currentPostStatus = select( 'core/editor' ).getEditedPostAttribute( 'status' );
+
+		if ( currentPostStatus === 'dp-rewrite-republish' || currentPostStatus === 'private' ) {
 			return true;
 		}
 
