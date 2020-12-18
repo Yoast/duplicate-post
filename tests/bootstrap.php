@@ -7,7 +7,6 @@
 
 // phpcs:disable WordPress.NamingConventions.PrefixAllGlobals -- Reason: CS configuration is not complete yet.
 \define( 'ABSPATH', true );
-\define( 'WPSEO_INDEXABLES', true );
 
 \define( 'MINUTE_IN_SECONDS', 60 );
 \define( 'HOUR_IN_SECONDS', 3600 );
