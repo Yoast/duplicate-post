@@ -88,16 +88,16 @@ class Block_Editor {
 		}
 
 		$js_object = [
-			'new_draft_link'             => $this->get_new_draft_permalink(),
-			'rewrite_and_republish_link' => $this->get_rewrite_republish_permalink(),
-			'rewriting'                  => $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ? 1 : 0,
-			'originalEditURL'            => $this->get_original_post_edit_url(),
+			'newDraftLink'            => $this->get_new_draft_permalink(),
+			'rewriteAndRepublishLink' => $this->get_rewrite_republish_permalink(),
+			'rewriting'               => $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ? 1 : 0,
+			'originalEditURL'         => $this->get_original_post_edit_url(),
 		];
 		$this->asset_manager->enqueue_script( 'edit', $js_object );
 
-		if ( $this->permissions_helper->is_rewrite_and_republish_copy( \get_post() ) ) {
+		if ( $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
 			$js_object = [
-				'check_link' => $this->get_check_permalink(),
+				'checkLink' => $this->get_check_permalink(),
 			];
 			$this->asset_manager->enqueue_strings_script( $js_object );
 		}

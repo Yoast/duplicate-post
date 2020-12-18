@@ -14,7 +14,7 @@ const republishStrings = {
 			__( 'After republishing your changes will be merged into the original post and you\'ll be redirected there.<br /><br /><a>Do you want to compare your changes with the original version before merging?</a>',
 				'duplicate-post' ),
 			{
-				a: <a href={ duplicatePostStrings.check_link } />,
+				a: <a href={ duplicatePostStrings.checkLink } />,
 				br: <br />
 			}
 		),
@@ -30,7 +30,7 @@ const republishStrings = {
 			__( 'You\'re about to replace the original with this rewritten post at the specified date and time.<br /><br /><a>Do you want to compare your changes with the original version before merging?</a>',
 				'duplicate-post' ),
 			{
-				a: <a href={ duplicatePostStrings.check_link } />,
+				a: <a href={ duplicatePostStrings.checkLink } />,
 				br: <br />
 			}
 		),
