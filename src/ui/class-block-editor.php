@@ -30,16 +30,23 @@ class Block_Editor {
 	protected $permissions_helper;
 
 	/**
+	 * Holds the asset manager.
+	 *
+	 * @var Asset_Manager
+	 */
+	protected $asset_manager;
+
+	/**
 	 * Initializes the class.
 	 *
 	 * @param Link_Builder       $link_builder       The link builder.
 	 * @param Permissions_Helper $permissions_helper The permissions helper.
+	 * @param Asset_Manager      $asset_manager      The asset manager.
 	 */
-	public function __construct( Link_Builder $link_builder, Permissions_Helper $permissions_helper ) {
+	public function __construct( Link_Builder $link_builder, Permissions_Helper $permissions_helper, Asset_Manager $asset_manager ) {
 		$this->link_builder       = $link_builder;
 		$this->permissions_helper = $permissions_helper;
-
-		$this->register_hooks();
+		$this->asset_manager      = $asset_manager;
 	}
 
 	/**
@@ -80,56 +87,22 @@ class Block_Editor {
 			return;
 		}
 
-		\wp_enqueue_script(
-			'duplicate_post_edit_script',
-			\plugins_url( \sprintf( 'js/dist/duplicate-post-edit-%s.js', Utils::flatten_version( DUPLICATE_POST_CURRENT_VERSION ) ), DUPLICATE_POST_FILE ),
-			[
-				'wp-blocks',
-				'wp-element',
-				'wp-i18n',
-			],
-			DUPLICATE_POST_CURRENT_VERSION,
-			true
-		);
-		\wp_add_inline_script(
-			'duplicate_post_edit_script',
-			'let duplicatePostNotices = {};',
-			'before'
-		);
-
-		\wp_localize_script(
-			'duplicate_post_edit_script',
-			'duplicatePost',
-			[
-				'new_draft_link'             => $this->get_new_draft_permalink(),
-				'show_links'                 => Utils::get_option( 'duplicate_post_show_link' ),
-				'rewrite_and_republish_link' => $this->get_rewrite_republish_permalink(),
-				'rewriting'                  => $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ? 1 : 0,
-				'originalEditURL'            => $this->get_original_post_edit_url(),
-			]
-		);
+		$js_object = [
+			'new_draft_link'             => $this->get_new_draft_permalink(),
+			'rewrite_and_republish_link' => $this->get_rewrite_republish_permalink(),
+			'show_links'                 => Utils::get_option( 'duplicate_post_show_link' ),
+			'rewriting'                  => $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ? 1 : 0,
+			'originalEditURL'            => $this->get_original_post_edit_url(),
+		];
+		$this->asset_manager->enqueue_script( 'edit', $js_object );
 
 		if ( $this->permissions_helper->is_rewrite_and_republish_copy( \get_post() ) ) {
-			\wp_enqueue_script(
-				'duplicate_post_strings',
-				\plugins_url( \sprintf( 'js/dist/duplicate-post-strings-%s.js', Utils::flatten_version( DUPLICATE_POST_CURRENT_VERSION ) ), DUPLICATE_POST_FILE ),
-				[
-					'wp-element',
-					'wp-i18n',
-				],
-				DUPLICATE_POST_CURRENT_VERSION,
-				true
-			);
-
-			\wp_localize_script(
-				'duplicate_post_strings',
-				'duplicatePostStrings',
-				[
-					'check_link'            => $this->get_check_permalink(),
-				]
-			);
+			$js_object = [
+				'check_link' => $this->get_check_permalink(),
+			];
+			$this->asset_manager->enqueue_strings_script( $js_object );
 		}
-}
+	}
 
 	/**
 	 * Generates a New Draft permalink for the current post.
