@@ -175,7 +175,7 @@ class Utils {
 	 * Gets a Duplicate Post option from the database.
 	 *
 	 * @param string $option The option to get.
-	 * @param string $key The key to retrieve, if the option is an array.
+	 * @param string $key    The key to retrieve, if the option is an array.
 	 *
 	 * @return mixed The option.
 	 */

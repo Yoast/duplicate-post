@@ -15,6 +15,7 @@ use Yoast\WP\Duplicate_Post\Tests\TestCase;
  * Test the Options_Inputs_Test class.
  */
 class Options_Inputs_Test extends TestCase {
+
 	/**
 	 * The instance.
 	 *

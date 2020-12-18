@@ -112,13 +112,13 @@ class Options_Form_Generator {
 	 * Sorts taxonomy objects based on being public, followed by being private.
 	 *
 	 * @param WP_Taxonomy $taxonomy1 First taxonomy object.
-	 * @param WP_Taxonomy $taxonmy2  Second taxonomy object.
+	 * @param WP_Taxonomy $taxonomy2  Second taxonomy object.
 	 *
 	 * @return bool True when the first taxonomy is public.
 	 * @ignore
 	 */
-	public function sort_taxonomy_objects( $taxonomy1, $taxonmy2 ) {
-		return ( $taxonomy1->public < $taxonmy2->public );
+	public function sort_taxonomy_objects( $taxonomy1, $taxonomy2 ) {
+		return ( $taxonomy1->public < $taxonomy2->public );
 	}
 
 	/**
@@ -170,8 +170,8 @@ class Options_Form_Generator {
 						'type'    => 'checkbox',
 						'id'      => 'duplicate-post-' . $this->prepare_input_id( $name ),
 						'value'   => $name,
-						'checked' => in_array( $taxonomy->name, $taxonomies_blacklist, true ),
-						'label'   => esc_html( $taxonomy->labels->name . ' [' . $taxonomy->name . ']' ),
+						'checked' => \in_array( $taxonomy->name, $taxonomies_blacklist, true ),
+						'label'   => \esc_html( $taxonomy->labels->name . ' [' . $taxonomy->name . ']' ),
 					],
 				]
 			);
@@ -199,7 +199,7 @@ class Options_Form_Generator {
 		foreach ( Utils::get_roles() as $name => $display_name ) {
 			$role = \get_role( $name );
 
-			if ( count( array_intersect_key( $role->capabilities, $edit_capabilities ) ) > 0 ) {
+			if ( count( \array_intersect_key( $role->capabilities, $edit_capabilities ) ) > 0 ) {
 				$output .= $this->generate_options_input(
 					[
 						'duplicate_post_roles[]' => [

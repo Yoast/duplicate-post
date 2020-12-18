@@ -44,18 +44,18 @@ class Options_Page {
 	 * @return void
 	 */
 	public function register_hooks() {
-		if ( is_admin() ) {
-			add_action( 'admin_menu', [ $this, 'register_menu' ] );
-			add_action( 'admin_init', [ $this->options, 'register_settings' ] );
+		if ( \is_admin() ) {
+			\add_action( 'admin_menu', [ $this, 'register_menu' ] );
+			\add_action( 'admin_init', [ $this->options, 'register_settings' ] );
 		}
 	}
 
 	/**
-	 * Loads the assets.
+	 * Enqueues the assets.
 	 *
 	 * @return void
 	 */
-	public function load_assets() {
+	public function enqueue_assets() {
 		\wp_enqueue_style(
 			'duplicate-post-options',
 			\plugins_url( '/duplicate-post-options.css', __FILE__ ),
@@ -85,14 +85,14 @@ class Options_Page {
 	 */
 	public function register_menu() {
 		$page_hook = \add_options_page(
-			__( 'Duplicate Post Options', 'duplicate-post' ),
-			__( 'Duplicate Post', 'duplicate-post' ),
+			\__( 'Duplicate Post Options', 'duplicate-post' ),
+			\__( 'Duplicate Post', 'duplicate-post' ),
 			'manage_options',
 			'duplicatepost',
 			[ $this, 'generate_page' ]
 		);
 
-		\add_action( $page_hook, [ $this, 'load_assets' ] );
+		\add_action( $page_hook, [ $this, 'enqueue_assets' ] );
 	}
 
 	/**

@@ -108,7 +108,7 @@ class Options_Page_Test extends TestCase {
 	/**
 	 * Tests the loading of the assets.
 	 *
-	 * @covers \Yoast\WP\Duplicate_Post\Admin\Options_Page::load_assets
+	 * @covers \Yoast\WP\Duplicate_Post\Admin\Options_Page::enqueue_assets
 	 */
 	public function test_loading_of_assets() {
 		Monkey\Functions\stubs(
@@ -144,7 +144,7 @@ class Options_Page_Test extends TestCase {
 			)
 			->once();
 
-		$this->instance->load_assets();
+		$this->instance->enqueue_assets();
 	}
 
 	/**
@@ -167,7 +167,7 @@ class Options_Page_Test extends TestCase {
 			->andReturn( 'duplicatepost_page_hook' );
 
 		Monkey\Actions\expectAdded( 'duplicatepost_page_hook' )
-			->with( [ $this->instance, 'load_assets' ] )
+			->with( [ $this->instance, 'enqueue_assets' ] )
 			->once();
 
 		$this->instance->register_menu();

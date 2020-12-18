@@ -58,6 +58,8 @@ function addListeners( index ) {
 			case keys.right:
 				switchTabOnArrowPress( event );
 				break;
+			default:
+				break;
 		}
 	} );
 
