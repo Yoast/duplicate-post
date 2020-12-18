@@ -39,9 +39,11 @@ class Asset_Manager {
 	 * @return void
 	 */
 	public function register_scripts() {
+		$flattened_version = Utils::flatten_version( DUPLICATE_POST_CURRENT_VERSION );
+
 		\wp_register_script(
 			'duplicate_post_edit_script',
-			\plugins_url( \sprintf( 'js/dist/duplicate-post-edit-%s.js', Utils::flatten_version( DUPLICATE_POST_CURRENT_VERSION ) ), DUPLICATE_POST_FILE ),
+			\plugins_url( \sprintf( 'js/dist/duplicate-post-edit-%s.js', $flattened_version ), DUPLICATE_POST_FILE ),
 			[
 				'wp-blocks',
 				'wp-element',
@@ -53,7 +55,7 @@ class Asset_Manager {
 
 		\wp_register_script(
 			'duplicate_post_strings',
-			\plugins_url( \sprintf( 'js/dist/duplicate-post-strings-%s.js', Utils::flatten_version( DUPLICATE_POST_CURRENT_VERSION ) ), DUPLICATE_POST_FILE ),
+			\plugins_url( \sprintf( 'js/dist/duplicate-post-strings-%s.js', $flattened_version ), DUPLICATE_POST_FILE ),
 			[
 				'wp-element',
 				'wp-i18n',
@@ -64,7 +66,7 @@ class Asset_Manager {
 
 		\wp_register_script(
 			'duplicate_post_quick_edit_script',
-			\plugins_url( \sprintf( 'js/dist/duplicate-post-quick-edit-%s.js', Utils::flatten_version( DUPLICATE_POST_CURRENT_VERSION ) ), DUPLICATE_POST_FILE ),
+			\plugins_url( \sprintf( 'js/dist/duplicate-post-quick-edit-%s.js', $flattened_version ), DUPLICATE_POST_FILE ),
 			[ 'jquery' ],
 			DUPLICATE_POST_CURRENT_VERSION,
 			true
@@ -91,7 +93,7 @@ class Asset_Manager {
 		$handle = 'duplicate_post_edit_script';
 		\wp_enqueue_script( $handle );
 		\wp_add_inline_script(
-			'duplicate_post_edit_script',
+			$handle,
 			'let duplicatePostNotices = {};',
 			'before'
 		);
@@ -126,32 +128,5 @@ class Asset_Manager {
 	 */
 	public function enqueue_quick_edit_script() {
 		\wp_enqueue_script( 'duplicate_post_quick_edit_script' );
-	}
-
-	/**
-	 * Enqueues the desired script and passes the object to it.
-	 *
-	 * @param string $name   The shortcut name for the script handle.
-	 * @param array  $object The object to pass to the script.
-	 *
-	 * @return void
-	 */
-	public function enqueue_script( $name, $object = [] ) {
-		switch ( $name ) {
-			case 'edit':
-				$this->enqueue_edit_script( $object );
-				break;
-
-			case 'strings':
-				$this->enqueue_strings_script( $object );
-				break;
-
-			case 'quick-edit':
-				$this->enqueue_quick_edit_script();
-				break;
-
-			default:
-				break;
-		}
 	}
 }

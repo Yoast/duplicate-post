@@ -11,6 +11,7 @@ use Brain\Monkey;
 use Mockery;
 use Yoast\WP\Duplicate_Post\Permissions_Helper;
 use Yoast\WP\Duplicate_Post\Tests\TestCase;
+use Yoast\WP\Duplicate_Post\UI\Asset_Manager;
 use Yoast\WP\Duplicate_Post\UI\Column;
 
 /**
@@ -26,6 +27,13 @@ class Column_Test extends TestCase {
 	protected $permissions_helper;
 
 	/**
+	 * Holds the asset manager.
+	 *
+	 * @var Asset_Manager
+	 */
+	protected $asset_manager;
+
+	/**
 	 * The instance.
 	 *
 	 * @var Column
@@ -39,21 +47,9 @@ class Column_Test extends TestCase {
 		parent::setUp();
 
 		$this->permissions_helper = Mockery::mock( Permissions_Helper::class );
+		$this->asset_manager      = Mockery::mock( Asset_Manager::class );
 
-		$this->instance = Mockery::mock(
-			Column::class
-		)->makePartial();
-
-		$enabled_post_types = [ 'post', 'page' ];
-
-		Monkey\Functions\expect( '\get_option' )
-			->with( 'duplicate_post_show_original_column' )
-			->andReturn( '1' );
-
-		$this->permissions_helper
-			->expects( 'get_enabled_post_types' )
-			->andReturn( $enabled_post_types );
-		$this->instance->__construct( $this->permissions_helper );
+		$this->instance = new Column( $this->permissions_helper, $this->asset_manager );
 	}
 
 	/**
@@ -63,6 +59,7 @@ class Column_Test extends TestCase {
 	 */
 	public function test_constructor() {
 		$this->assertAttributeInstanceOf( Permissions_Helper::class, 'permissions_helper', $this->instance );
+		$this->assertAttributeInstanceOf( Asset_Manager::class, 'asset_manager', $this->instance );
 	}
 
 	/**

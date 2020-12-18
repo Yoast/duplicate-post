@@ -87,20 +87,22 @@ class Block_Editor {
 			return;
 		}
 
-		$js_object = [
-			'new_draft_link'             => $this->get_new_draft_permalink(),
-			'rewrite_and_republish_link' => $this->get_rewrite_republish_permalink(),
-			'show_links'                 => Utils::get_option( 'duplicate_post_show_link' ),
-			'rewriting'                  => $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ? 1 : 0,
-			'originalEditURL'            => $this->get_original_post_edit_url(),
-		];
-		$this->asset_manager->enqueue_script( 'edit', $js_object );
+		$is_rewrite_and_republish_copy = $this->permissions_helper->is_rewrite_and_republish_copy( $post );
 
-		if ( $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
-			$js_object = [
+		$edit_js_object = [
+			'newDraftLink'            => $this->get_new_draft_permalink(),
+			'rewriteAndRepublishLink' => $this->get_rewrite_republish_permalink(),
+			'showLinks'               => Utils::get_option( 'duplicate_post_show_link' ),
+			'rewriting'               => $is_rewrite_and_republish_copy ? 1 : 0,
+			'originalEditURL'         => $this->get_original_post_edit_url(),
+		];
+		$this->asset_manager->enqueue_edit_script( $edit_js_object );
+
+		if ( $is_rewrite_and_republish_copy ) {
+			$string_js_object = [
 				'checkLink' => $this->get_check_permalink(),
 			];
-			$this->asset_manager->enqueue_strings_script( $js_object );
+			$this->asset_manager->enqueue_strings_script( $string_js_object );
 		}
 	}
 
