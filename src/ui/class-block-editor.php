@@ -96,9 +96,9 @@ class Block_Editor {
 		];
 		$this->asset_manager->enqueue_script( 'edit', $js_object );
 
-		if ( $this->permissions_helper->is_rewrite_and_republish_copy( \get_post() ) ) {
+		if ( $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
 			$js_object = [
-				'check_link' => $this->get_check_permalink(),
+				'checkLink' => $this->get_check_permalink(),
 			];
 			$this->asset_manager->enqueue_strings_script( $js_object );
 		}
