@@ -29,16 +29,23 @@ class Admin_Bar {
 	protected $permissions_helper;
 
 	/**
+	 * Holds the asset manager.
+	 *
+	 * @var Asset_Manager
+	 */
+	protected $asset_manager;
+
+	/**
 	 * Initializes the class.
 	 *
 	 * @param Link_Builder       $link_builder       The link builder.
 	 * @param Permissions_Helper $permissions_helper The permissions helper.
+	 * @param Asset_Manager      $asset_manager      The asset manager.
 	 */
-	public function __construct( Link_Builder $link_builder, Permissions_Helper $permissions_helper ) {
+	public function __construct( Link_Builder $link_builder, Permissions_Helper $permissions_helper, Asset_Manager $asset_manager ) {
 		$this->link_builder       = $link_builder;
 		$this->permissions_helper = $permissions_helper;
-
-		$this->register_hooks();
+		$this->asset_manager      = $asset_manager;
 	}
 
 	/**
@@ -112,7 +119,7 @@ class Admin_Bar {
 			return;
 		}
 
-		\wp_enqueue_style( 'duplicate-post' );
+		$this->asset_manager->enqueue_styles();
 	}
 
 	/**
