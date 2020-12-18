@@ -152,7 +152,7 @@ class Column {
 	 */
 	public function admin_enqueue_scripts( $hook ) {
 		if ( 'edit.php' === $hook ) {
-			$this->asset_manager->enqueue_script( 'quick-edit' );
+			$this->asset_manager->enqueue_quick_edit_script();
 		}
 	}
 

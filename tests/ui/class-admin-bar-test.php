@@ -12,6 +12,7 @@ use Mockery;
 use Yoast\WP\Duplicate_Post\Permissions_Helper;
 use Yoast\WP\Duplicate_Post\Tests\TestCase;
 use Yoast\WP\Duplicate_Post\UI\Admin_Bar;
+use Yoast\WP\Duplicate_Post\UI\Asset_Manager;
 use Yoast\WP\Duplicate_Post\UI\Link_Builder;
 
 /**
@@ -34,6 +35,13 @@ class Admin_Bar_Test extends TestCase {
 	protected $permissions_helper;
 
 	/**
+	 * Holds the asset manager.
+	 *
+	 * @var Asset_Manager
+	 */
+	protected $asset_manager;
+
+	/**
 	 * The instance.
 	 *
 	 * @var Admin_Bar
@@ -48,15 +56,16 @@ class Admin_Bar_Test extends TestCase {
 
 		$this->link_builder       = Mockery::mock( Link_Builder::class );
 		$this->permissions_helper = Mockery::mock( Permissions_Helper::class );
+		$this->asset_manager      = Mockery::mock( Asset_Manager::class );
 
 		$this->instance = Mockery::mock(
-			Admin_Bar::class
+			Admin_Bar::class,
+			[
+				$this->link_builder,
+				$this->permissions_helper,
+				$this->asset_manager,
+			]
 		)->makePartial();
-
-		Monkey\Functions\expect( '\get_option' )
-			->with( 'duplicate_post_show_adminbar' )
-			->andReturn( '1' );
-		$this->instance->__construct( $this->link_builder, $this->permissions_helper );
 	}
 
 	/**
@@ -67,6 +76,7 @@ class Admin_Bar_Test extends TestCase {
 	public function test_constructor() {
 		$this->assertAttributeInstanceOf( Link_Builder::class, 'link_builder', $this->instance );
 		$this->assertAttributeInstanceOf( Permissions_Helper::class, 'permissions_helper', $this->instance );
+		$this->assertAttributeInstanceOf( Asset_Manager::class, 'asset_manager', $this->instance );
 	}
 
 	/**
@@ -239,8 +249,7 @@ class Admin_Bar_Test extends TestCase {
 		$this->instance->expects( 'get_current_post' )
 			->andReturn( $post );
 
-		Monkey\Functions\expect( '\wp_enqueue_style' )
-			->with( 'duplicate-post' );
+		$this->asset_manager->expects( 'enqueue_styles' );
 
 		$this->instance->enqueue_styles();
 	}
@@ -261,8 +270,7 @@ class Admin_Bar_Test extends TestCase {
 			->andReturn( $post )
 			->never();
 
-		Monkey\Functions\expect( '\wp_enqueue_style' )
-			->with( 'duplicate-post' )
+		$this->asset_manager->expects( 'enqueue_styles' )
 			->never();
 
 		$this->instance->enqueue_styles();
@@ -283,8 +291,7 @@ class Admin_Bar_Test extends TestCase {
 		$this->instance->expects( 'get_current_post' )
 			->andReturn( false );
 
-		Monkey\Functions\expect( '\wp_enqueue_style' )
-			->with( 'duplicate-post' )
+		$this->asset_manager->expects( 'enqueue_styles' )
 			->never();
 
 		$this->instance->enqueue_styles();

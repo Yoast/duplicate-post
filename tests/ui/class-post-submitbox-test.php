@@ -11,6 +11,7 @@ use Brain\Monkey;
 use Mockery;
 use Yoast\WP\Duplicate_Post\Permissions_Helper;
 use Yoast\WP\Duplicate_Post\Tests\TestCase;
+use Yoast\WP\Duplicate_Post\UI\Asset_Manager;
 use Yoast\WP\Duplicate_Post\UI\Post_Submitbox;
 use Yoast\WP\Duplicate_Post\UI\Link_Builder;
 
@@ -34,6 +35,13 @@ class Post_Submitbox_Test extends TestCase {
 	protected $permissions_helper;
 
 	/**
+	 * Holds the asset manager.
+	 *
+	 * @var Asset_Manager
+	 */
+	protected $asset_manager;
+
+	/**
 	 * The instance.
 	 *
 	 * @var Post_Submitbox
@@ -48,9 +56,16 @@ class Post_Submitbox_Test extends TestCase {
 
 		$this->link_builder       = Mockery::mock( Link_Builder::class );
 		$this->permissions_helper = Mockery::mock( Permissions_Helper::class );
+		$this->asset_manager      = Mockery::mock( Asset_Manager::class );
 
-		$this->instance = Mockery::mock( Post_Submitbox::class )->makePartial();
-		$this->instance->__construct( $this->link_builder, $this->permissions_helper );
+		$this->instance = Mockery::mock(
+			Post_Submitbox::class,
+			[
+				$this->link_builder,
+				$this->permissions_helper,
+				$this->asset_manager,
+			]
+		)->makePartial();
 	}
 
 	/**
@@ -73,47 +88,66 @@ class Post_Submitbox_Test extends TestCase {
 
 		$this->assertNotFalse( \has_action( 'post_submitbox_start', [ $this->instance, 'add_new_draft_post_button' ] ), 'Does not have expected post_submitbox_start action' );
 		$this->assertNotFalse( \has_action( 'post_submitbox_start', [ $this->instance, 'add_rewrite_and_republish_post_button' ] ), 'Does not have expected post_submitbox_start action' );
+		$this->assertNotFalse( \has_action( 'post_submitbox_misc_actions', [ $this->instance, 'add_check_changes_link' ] ), 'Does not have expected post_submitbox_misc_actions action' );
 
 		$this->assertNotFalse( \has_filter( 'gettext', [ $this->instance, 'change_republish_strings_classic_editor' ] ), 'Does not have expected gettext filter' );
 		$this->assertNotFalse( \has_filter( 'gettext_with_context', [ $this->instance, 'change_schedule_strings_classic_editor' ] ), 'Does not have expected gettext_with_context filter' );
 		$this->assertNotFalse( \has_filter( 'post_updated_messages', [ $this->instance, 'change_scheduled_notice_classic_editor' ] ), 'Does not have expected post_updated_messages filter' );
 
-		$this->assertNotFalse( \has_action( 'admin_enqueue_scripts', [ $this->instance, 'enqueue_classic_editor_scripts' ] ), 'Does not have expected admin_enqueue_scripts action' );
+		$this->assertNotFalse( \has_action( 'admin_enqueue_scripts', [ $this->instance, 'enqueue_classic_editor_scripts' ] ), 'Does not have expected admin_enqueue_scripts action (scripts)' );
+		$this->assertNotFalse( \has_action( 'admin_enqueue_scripts', [ $this->instance, 'enqueue_classic_editor_styles' ] ), 'Does not have expected admin_enqueue_scripts action (styles)' );
 	}
 
 	/**
-	 * Tests the enqueue_classic_editor_scripts function.
+	 * Tests the successful enqueue_classic_editor_scripts function.
 	 *
-	 * @covers Post_Submitbox::enqueue_classic_editor_scripts
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Post_Submitbox::enqueue_classic_editor_scripts
 	 */
 	public function test_enqueue_classic_editor_scripts() {
-		\define( 'DUPLICATE_POST_CURRENT_VERSION', '4.0alpha' );
-		\define( 'DUPLICATE_POST_FILE', '/var/www/html/wp-content/plugins/duplicate-post/duplicate-post.php' );
+		$_GET['post'] = '123';
+		$post         = Mockery::mock( \WP_Post::class );
 
-		$post = Mockery::mock( \WP_Post::class );
-
-		Monkey\Functions\expect( '\get_post' )
-			->once()
-			->andReturn( $post );
-
-		$this->instance->expects( 'should_change_rewrite_republish_copy' )
-			->with( $post )
-			->once()
+		$this->permissions_helper->expects( 'is_classic_editor' )
 			->andReturnTrue();
 
-		$handle = 'duplicate_post_strings';
-		$src    = 'http://basic.wordpress.test/wp-content/plugins/duplicate-post/js/dist/duplicate-post-strings-40alpha.js';
-		$deps   = [ 'wp-element', 'wp-i18n' ];
+		Monkey\Functions\expect( '\get_post' )
+			->with( 123 )
+			->andReturn( $post );
 
-		Monkey\Functions\expect( '\plugins_url' )
-			->once()
-			->with( 'js/dist/duplicate-post-strings-40alpha.js', DUPLICATE_POST_FILE )
-			->andReturn( $src );
+		$this->permissions_helper->expects( 'is_rewrite_and_republish_copy' )
+			->with( $post )
+			->andReturnTrue();
 
-		Monkey\Functions\expect( '\wp_enqueue_script' )
-			->with( $handle, $src, $deps, DUPLICATE_POST_CURRENT_VERSION, true );
+		$this->asset_manager
+			->expects( 'enqueue_strings_script' );
 
 		$this->instance->enqueue_classic_editor_scripts();
+	}
+
+	/**
+	 * Tests the successful enqueue_classic_editor_scripts function.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Post_Submitbox::enqueue_classic_editor_styles
+	 */
+	public function test_enqueue_classic_editor_styles() {
+		$_GET['post'] = '123';
+		$post         = Mockery::mock( \WP_Post::class );
+
+		$this->permissions_helper->expects( 'is_classic_editor' )
+			->andReturnTrue();
+
+		Monkey\Functions\expect( '\get_post' )
+			->with( 123 )
+			->andReturn( $post );
+
+		$this->permissions_helper->expects( 'is_rewrite_and_republish_copy' )
+			->with( $post )
+			->andReturnTrue();
+
+		$this->asset_manager
+			->expects( 'enqueue_styles' );
+
+		$this->instance->enqueue_classic_editor_styles();
 	}
 
 	/**
@@ -404,7 +438,7 @@ class Post_Submitbox_Test extends TestCase {
 	/**
 	 * Tests the change_republish_strings_classic_editor function when the copy should be changed.
 	 *
-	 * @covers Post_Submitbox::change_republish_strings_classic_editor
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Post_Submitbox::change_republish_strings_classic_editor
 	 */
 	public function test_should_change_republish_strings() {
 		$text = 'Publish';
@@ -427,7 +461,7 @@ class Post_Submitbox_Test extends TestCase {
 	/**
 	 * Tests the change_republish_strings_classic_editor function when the copy should not be changed.
 	 *
-	 * @covers Post_Submitbox::change_republish_strings_classic_editor
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Post_Submitbox::change_republish_strings_classic_editor
 	 */
 	public function test_should_not_change_republish_strings() {
 		$text        = 'Publish';
@@ -452,7 +486,7 @@ class Post_Submitbox_Test extends TestCase {
 	 * Tests the change_republish_strings_classic_editor function when the copy should not be changed,
 	 * because the copy is not 'Publish'.
 	 *
-	 * @covers Post_Submitbox::change_republish_strings_classic_editor
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Post_Submitbox::change_republish_strings_classic_editor
 	 */
 	public function test_should_not_change_republish_strings_other_text() {
 		$text        = 'Test';
@@ -476,7 +510,7 @@ class Post_Submitbox_Test extends TestCase {
 	/**
 	 * Tests the change_schedule_strings_classic_editor function when the copy should be changed.
 	 *
-	 * @covers Post_Submitbox::change_schedule_strings_classic_editor
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Post_Submitbox::change_schedule_strings_classic_editor
 	 */
 	public function test_should_change_schedule_strings() {
 		$text = 'Schedule';
@@ -499,7 +533,7 @@ class Post_Submitbox_Test extends TestCase {
 	/**
 	 * Tests the change_schedule_strings_classic_editor function when the copy should not be changed.
 	 *
-	 * @covers Post_Submitbox::change_schedule_strings_classic_editor
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Post_Submitbox::change_schedule_strings_classic_editor
 	 */
 	public function test_should_not_change_schedule_strings() {
 		$text        = 'Schedule';
@@ -524,7 +558,7 @@ class Post_Submitbox_Test extends TestCase {
 	 * Tests the change_republish_strings_classic_editor function when the copy should not be changed,
 	 * because the copy is not 'Schedule'.
 	 *
-	 * @covers Post_Submitbox::change_schedule_strings_classic_editor
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Post_Submitbox::change_schedule_strings_classic_editor
 	 */
 	public function test_should_not_change_schedule_strings_other_text() {
 		$text        = 'Test';
@@ -548,7 +582,7 @@ class Post_Submitbox_Test extends TestCase {
 	/**
 	 * Tests the change_scheduled_notice_classic_editor function when the copy should be changed for a post.
 	 *
-	 * @covers Post_Submitbox::change_scheduled_notice_classic_editor
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Post_Submitbox::change_scheduled_notice_classic_editor
 	 */
 	public function test_should_change_scheduled_notice_post() {
 		$post             = Mockery::mock( \WP_Post::class );
@@ -658,7 +692,7 @@ class Post_Submitbox_Test extends TestCase {
 	/**
 	 * Tests the change_scheduled_notice_classic_editor function when the copy should be changed for a page.
 	 *
-	 * @covers Post_Submitbox::change_scheduled_notice_classic_editor
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Post_Submitbox::change_scheduled_notice_classic_editor
 	 */
 	public function test_should_change_scheduled_notice_page() {
 		$post             = Mockery::mock( \WP_Post::class );
@@ -768,7 +802,7 @@ class Post_Submitbox_Test extends TestCase {
 	/**
 	 * Tests the should_change_rewrite_republish_copy function when it should return true for a post.
 	 *
-	 * @covers Post_Submitbox::should_change_rewrite_republish_copy
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Post_Submitbox::should_change_rewrite_republish_copy
 	 */
 	public function test_should_change_rewrite_republish_copy_post() {
 		global $pagenow;
@@ -788,7 +822,7 @@ class Post_Submitbox_Test extends TestCase {
 	/**
 	 * Tests the should_change_rewrite_republish_copy function when it should return true for a new post.
 	 *
-	 * @covers Post_Submitbox::should_change_rewrite_republish_copy
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Post_Submitbox::should_change_rewrite_republish_copy
 	 */
 	public function test_should_change_rewrite_republish_copy_new_post() {
 		global $pagenow;
@@ -809,7 +843,7 @@ class Post_Submitbox_Test extends TestCase {
 	 * Tests the should_change_rewrite_republish_copy function when it should return false,
 	 * because the current page is not a post edit screen.
 	 *
-	 * @covers Post_Submitbox::should_change_rewrite_republish_copy
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Post_Submitbox::should_change_rewrite_republish_copy
 	 */
 	public function test_should_not_change_rewrite_republish_copy_not_post_edit_screen() {
 		global $pagenow;
@@ -825,7 +859,7 @@ class Post_Submitbox_Test extends TestCase {
 	 * Tests the should_change_rewrite_republish_copy function when it should return false,
 	 * because the current post is null.
 	 *
-	 * @covers Post_Submitbox::should_change_rewrite_republish_copy
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Post_Submitbox::should_change_rewrite_republish_copy
 	 */
 	public function test_should_not_change_rewrite_republish_copy_post_is_null() {
 		global $pagenow;
@@ -838,7 +872,7 @@ class Post_Submitbox_Test extends TestCase {
 	 * Tests the should_change_rewrite_republish_copy function when it should return false,
 	 * because the current post is not a Rewrite & Republish post.
 	 *
-	 * @covers Post_Submitbox::should_change_rewrite_republish_copy
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Post_Submitbox::should_change_rewrite_republish_copy
 	 */
 	public function test_should_not_change_rewrite_republish_copy_not_republish_copy() {
 		global $pagenow;

@@ -76,8 +76,8 @@ class Post_Submitbox {
 			$id   = \intval( \wp_unslash( $_GET['post'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
 			$post = \get_post( $id );
 
-			if ( ! \is_null( $post ) && $this->should_change_rewrite_republish_copy( $post ) ) {
-				$this->asset_manager->enqueue_script( 'strings' );
+			if ( ! \is_null( $post ) && $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
+				$this->asset_manager->enqueue_strings_script();
 			}
 		}
 	}
@@ -93,7 +93,7 @@ class Post_Submitbox {
 			$id   = \intval( \wp_unslash( $_GET['post'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
 			$post = \get_post( $id );
 
-			if ( ! \is_null( $post ) && $this->permissions_helper->is_rewrite_and_republish_copy( \get_post() ) ) {
+			if ( ! \is_null( $post ) && $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
 				$this->asset_manager->enqueue_styles();
 			}
 		}

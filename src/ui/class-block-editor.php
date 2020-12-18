@@ -87,19 +87,21 @@ class Block_Editor {
 			return;
 		}
 
-		$js_object = [
+		$is_rewrite_and_republish_copy = $this->permissions_helper->is_rewrite_and_republish_copy( $post );
+
+		$edit_js_object = [
 			'newDraftLink'            => $this->get_new_draft_permalink(),
 			'rewriteAndRepublishLink' => $this->get_rewrite_republish_permalink(),
-			'rewriting'               => $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ? 1 : 0,
+			'rewriting'               => $is_rewrite_and_republish_copy ? 1 : 0,
 			'originalEditURL'         => $this->get_original_post_edit_url(),
 		];
-		$this->asset_manager->enqueue_script( 'edit', $js_object );
+		$this->asset_manager->enqueue_edit_script( $edit_js_object );
 
-		if ( $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
-			$js_object = [
+		if ( $is_rewrite_and_republish_copy ) {
+			$string_js_object = [
 				'checkLink' => $this->get_check_permalink(),
 			];
-			$this->asset_manager->enqueue_strings_script( $js_object );
+			$this->asset_manager->enqueue_strings_script( $string_js_object );
 		}
 	}
 

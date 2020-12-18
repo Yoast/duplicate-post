@@ -40,9 +40,7 @@ class Post_States_Test extends TestCase {
 
 		$this->permissions_helper = Mockery::mock( Permissions_Helper::class );
 
-		$this->instance = \Mockery::mock( Post_States::class )->makePartial();
-
-		$this->instance->__construct( $this->permissions_helper );
+		$this->instance = new Post_States( $this->permissions_helper );
 	}
 
 	/**
@@ -52,9 +50,6 @@ class Post_States_Test extends TestCase {
 	 */
 	public function test_constructor() {
 		$this->assertAttributeInstanceOf( Permissions_Helper::class, 'permissions_helper', $this->instance );
-
-		$this->instance->expects( 'register_hooks' )->once();
-		$this->instance->__construct( $this->permissions_helper );
 	}
 
 	/**
@@ -76,9 +71,9 @@ class Post_States_Test extends TestCase {
 	 * @preserveGlobalState disabled
 	 */
 	public function test_show_original_in_post_states_successful() {
-		$utils       = \Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
-		$post        = \Mockery::mock( \WP_Post::class );
-		$original    = \Mockery::mock( \WP_Post::class );
+		$utils       = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
+		$post        = Mockery::mock( \WP_Post::class );
+		$original    = Mockery::mock( \WP_Post::class );
 		$post_states = [
 			'draft' => 'Draft',
 		];
@@ -117,8 +112,8 @@ class Post_States_Test extends TestCase {
 	 * @preserveGlobalState disabled
 	 */
 	public function test_show_original_in_post_states_unsuccessful() {
-		$utils       = \Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
-		$post        = \Mockery::mock( \WP_Post::class );
+		$utils       = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
+		$post        = Mockery::mock( \WP_Post::class );
 		$post_states = [
 			'draft' => 'Draft',
 		];
@@ -154,9 +149,9 @@ class Post_States_Test extends TestCase {
 	 * @preserveGlobalState disabled
 	 */
 	public function test_show_original_in_rewrite_republish_post_successful() {
-		$utils       = \Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
-		$post        = \Mockery::mock( \WP_Post::class );
-		$original    = \Mockery::mock( \WP_Post::class );
+		$utils       = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
+		$post        = Mockery::mock( \WP_Post::class );
+		$original    = Mockery::mock( \WP_Post::class );
 		$post_states = [
 			'draft' => 'Draft',
 		];
@@ -195,9 +190,8 @@ class Post_States_Test extends TestCase {
 	 * @preserveGlobalState disabled
 	 */
 	public function test_show_original_in_rewrite_republish_post_unsuccessful() {
-		$utils       = \Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
-		$post        = \Mockery::mock( \WP_Post::class );
-		$original    = \Mockery::mock( \WP_Post::class );
+		$utils       = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
+		$post        = Mockery::mock( \WP_Post::class );
 		$post_states = [
 			'draft' => 'Draft',
 		];
