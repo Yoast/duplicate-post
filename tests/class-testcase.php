@@ -8,12 +8,20 @@
 namespace Yoast\WP\Duplicate_Post\Tests;
 
 use Brain\Monkey;
+use Mockery;
 use PHPUnit\Framework\TestCase as BaseTestCase;
 
 /**
  * TestCase base class.
  */
 abstract class TestCase extends BaseTestCase {
+
+	/**
+	 * Holds an array of dummy roles.
+	 *
+	 * @var array
+	 */
+	protected $roles;
 
 	/**
 	 * Test setup.
@@ -23,8 +31,73 @@ abstract class TestCase extends BaseTestCase {
 		parent::setUp();
 		Monkey\setUp();
 
+		// Mock roles to use across several tests.
+		$role1               = Mockery::mock( 'WP_Role' )->makePartial();
+		$role1->name         = 'Editor';
+		$role1->capabilities = [
+			'read'       => 'read',
+			'edit_books' => 'edit_books',
+			'edit_posts' => 'edit_posts',
+		];
+		$role1->allows(
+			[
+				'has_cap' => function( $cap ) {
+					return true;
+				},
+				'add_cap' => function( $cap ) {
+					return true;
+				},
+				'remove_cap' => function( $cap ) {
+				},
+			]
+		);
+
+		$role2               = Mockery::mock( 'WP_Role' )->makePartial();
+		$role2->name         = 'Administrator';
+		$role2->capabilities = [
+			'read'       => 'read',
+			'edit_books' => 'edit_books',
+			'edit_posts' => 'edit_posts',
+		];
+		$role2->allows(
+			[
+				'has_cap' => function( $cap ) {
+					return false;
+				},
+				'add_cap' => function( $cap ) {
+					return true;
+				},
+				'remove_cap' => function( $cap ) {
+				},
+			]
+		);
+
+		$role3               = Mockery::mock( 'WP_Role' )->makePartial();
+		$role3->name         = 'Subscriber';
+		$role3->capabilities = [];
+		$role3->allows(
+			[
+				'has_cap' => function( $cap ) {
+					return false;
+				},
+				'add_cap' => function( $cap ) {
+					return true;
+				},
+				'remove_cap' => function( $cap ) {
+				},
+			]
+		);
+
+		$role_objects = [
+			'editor'        => $role1,
+			'administrator' => $role2,
+			'subscriber'    => $role3,
+		];
+
+		$this->roles = $role_objects;
+
 		Monkey\Functions\stubs(
-			array(
+			[
 				// Passing "null" makes the function return its first argument.
 				'esc_attr'       => null,
 				'esc_html'       => null,
@@ -57,7 +130,10 @@ abstract class TestCase extends BaseTestCase {
 				'wp_parse_args'  => function ( $settings, $defaults ) {
 					return \array_merge( $defaults, $settings );
 				},
-			)
+				'get_role'       => function( $name ) use ( $role_objects ) {
+					return $role_objects[ $name ];
+				},
+			]
 		);
 	}
 

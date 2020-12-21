@@ -50,13 +50,9 @@ class Admin_Bar_Test extends TestCase {
 		$this->permissions_helper = Mockery::mock( Permissions_Helper::class );
 
 		$this->instance = Mockery::mock(
-			Admin_Bar::class
+			Admin_Bar::class,
+			[ $this->link_builder, $this->permissions_helper ]
 		)->makePartial();
-
-		Monkey\Functions\expect( '\get_option' )
-			->with( 'duplicate_post_show_adminbar' )
-			->andReturn( '1' );
-		$this->instance->__construct( $this->link_builder, $this->permissions_helper );
 	}
 
 	/**
@@ -73,10 +69,15 @@ class Admin_Bar_Test extends TestCase {
 	 * Tests the registration of the hooks.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Admin_Bar::register_hooks
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
 	 */
 	public function test_register_hooks() {
-		Monkey\Functions\expect( '\get_option' )
-			->with( 'duplicate_post_show_adminbar' )
+		$utils = \Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
+
+		$utils->expects( 'get_option' )
+			->with( 'duplicate_post_show_link_in', 'adminbar' )
+			->once()
 			->andReturn( '1' );
 
 		$this->instance->register_hooks();
@@ -90,6 +91,8 @@ class Admin_Bar_Test extends TestCase {
 	 * Tests the admin_bar_render function when both links are displayed.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Admin_Bar::admin_bar_render
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
 	 */
 	public function test_admin_bar_render_successful_both() {
 		global $wp_admin_bar;
@@ -112,6 +115,18 @@ class Admin_Bar_Test extends TestCase {
 			->expects( 'build_rewrite_and_republish_link' )
 			->with( $post );
 
+		$utils = \Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
+
+		$utils->expects( 'get_option' )
+			->with( 'duplicate_post_show_link', 'new_draft' )
+			->once()
+			->andReturn( '1' );
+
+		$utils->expects( 'get_option' )
+			->with( 'duplicate_post_show_link', 'rewrite_republish' )
+			->once()
+			->andReturn( '1' );
+
 		$wp_admin_bar
 			->expects( 'add_menu' )
 			->twice();
@@ -123,6 +138,8 @@ class Admin_Bar_Test extends TestCase {
 	 * Tests the admin_bar_render function when only the "Copy to a new draft" link is displayed.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Admin_Bar::admin_bar_render
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
 	 */
 	public function test_admin_bar_render_successful_one() {
 		global $wp_admin_bar;
@@ -145,6 +162,18 @@ class Admin_Bar_Test extends TestCase {
 			->expects( 'build_rewrite_and_republish_link' )
 			->with( $post )
 			->never();
+
+		$utils = \Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
+
+		$utils->expects( 'get_option' )
+			->with( 'duplicate_post_show_link', 'new_draft' )
+			->once()
+			->andReturn( '1' );
+
+		$utils->expects( 'get_option' )
+			->with( 'duplicate_post_show_link', 'rewrite_republish' )
+			->once()
+			->andReturn( '0' );
 
 		$wp_admin_bar
 			->expects( 'add_menu' )

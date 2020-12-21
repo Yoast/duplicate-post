@@ -102,6 +102,7 @@ class Block_Editor {
 			'duplicatePost',
 			[
 				'new_draft_link'             => $this->get_new_draft_permalink(),
+				'show_links'                 => Utils::get_option( 'duplicate_post_show_link' ),
 				'rewrite_and_republish_link' => $this->get_rewrite_republish_permalink(),
 				'rewriting'                  => $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ? 1 : 0,
 				'originalEditURL'            => $this->get_original_post_edit_url(),

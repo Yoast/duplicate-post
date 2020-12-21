@@ -158,4 +158,38 @@ class Utils {
 	public static function get_original_post_id( $post_id ) {
 		return (int) \get_post_meta( $post_id, '_dp_original', true );
 	}
+
+	/**
+	 * Gets the registered WordPress roles.
+	 *
+	 * @return array The roles.
+	 * @codeCoverageIgnore As this is a simple wrapper method for a built-in WordPress method, we don't have to test it.
+	 */
+	public static function get_roles() {
+		global $wp_roles;
+
+		return $wp_roles->get_names();
+	}
+
+	/**
+	 * Gets a Duplicate Post option from the database.
+	 *
+	 * @param string $option The option to get.
+	 * @param string $key    The key to retrieve, if the option is an array.
+	 *
+	 * @return mixed The option.
+	 */
+	public static function get_option( $option, $key = '' ) {
+		$option = \get_option( $option );
+
+		if ( ! is_array( $option ) || empty( $key ) ) {
+			return $option;
+		}
+
+		if ( ! array_key_exists( $key, $option ) ) {
+			return '';
+		}
+
+		return $option[ $key ];
+	}
 }

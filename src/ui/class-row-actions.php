@@ -8,6 +8,7 @@
 namespace Yoast\WP\Duplicate_Post\UI;
 
 use Yoast\WP\Duplicate_Post\Permissions_Helper;
+use Yoast\WP\Duplicate_Post\Utils;
 
 /**
  * Represents the Row_Action class.
@@ -37,8 +38,6 @@ class Row_Actions {
 	public function __construct( Link_Builder $link_builder, Permissions_Helper $permissions_helper ) {
 		$this->link_builder       = $link_builder;
 		$this->permissions_helper = $permissions_helper;
-
-		$this->register_hooks();
 	}
 
 	/**
@@ -47,14 +46,25 @@ class Row_Actions {
 	 * @return void
 	 */
 	public function register_hooks() {
-		if ( \intval( \get_option( 'duplicate_post_show_row' ) ) === 1 ) {
+		if ( \intval( Utils::get_option( 'duplicate_post_show_link_in', 'row' ) ) === 0 ) {
+			return;
+		}
+
+		if ( \intval( Utils::get_option( 'duplicate_post_show_link', 'clone' ) ) === 1 ) {
 			\add_filter( 'post_row_actions', [ $this, 'add_clone_action_link' ], 10, 2 );
 			\add_filter( 'page_row_actions', [ $this, 'add_clone_action_link' ], 10, 2 );
+		}
+
+		if ( \intval( Utils::get_option( 'duplicate_post_show_link', 'new_draft' ) ) === 1 ) {
 			\add_filter( 'post_row_actions', [ $this, 'add_new_draft_action_link' ], 10, 2 );
 			\add_filter( 'page_row_actions', [ $this, 'add_new_draft_action_link' ], 10, 2 );
+		}
+
+		if ( \intval( Utils::get_option( 'duplicate_post_show_link', 'rewrite_republish' ) ) === 1 ) {
 			\add_filter( 'post_row_actions', [ $this, 'add_rewrite_and_republish_action_link' ], 10, 2 );
 			\add_filter( 'page_row_actions', [ $this, 'add_rewrite_and_republish_action_link' ], 10, 2 );
 		}
+
 	}
 
 	/**

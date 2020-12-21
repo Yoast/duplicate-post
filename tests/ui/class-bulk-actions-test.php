@@ -11,6 +11,7 @@ use Brain\Monkey;
 use Yoast\WP\Duplicate_Post\Permissions_Helper;
 use Yoast\WP\Duplicate_Post\Tests\TestCase;
 use Yoast\WP\Duplicate_Post\UI\Bulk_Actions;
+use Yoast\WP\Duplicate_Post\Utils;
 
 /**
  * Test the Bulk_Actions class.
@@ -38,8 +39,7 @@ class Bulk_Actions_Test extends TestCase {
 		parent::setUp();
 
 		$this->permissions_helper = \Mockery::mock( Permissions_Helper::class );
-
-		$this->instance = new Bulk_Actions( $this->permissions_helper );
+		$this->instance           = \Mockery::mock( Bulk_Actions::class, [ $this->permissions_helper ] )->makePartial();
 	}
 
 	/**
@@ -55,8 +55,17 @@ class Bulk_Actions_Test extends TestCase {
 	 * Tests the registration of the hooks.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Bulk_Actions::register_hooks
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
 	 */
 	public function test_register_hooks() {
+		$utils = \Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
+
+		$utils->expects( 'get_option' )
+			->with( 'duplicate_post_show_link_in', 'bulkactions' )
+			->once()
+			->andReturn( '1' );
+
 		$this->instance->register_hooks();
 
 		$this->assertNotFalse( \has_action( 'admin_init', [ $this->instance, 'add_bulk_filters' ] ), 'Does not have expected admin_init action' );
@@ -69,10 +78,6 @@ class Bulk_Actions_Test extends TestCase {
 	 */
 	public function test_add_bulk_filters_successful() {
 		$duplicate_post_types_enabled = [ 'post', 'page' ];
-
-		Monkey\Functions\expect( '\get_option' )
-			->with( 'duplicate_post_show_bulkactions' )
-			->andReturn( '1' );
 
 		$this->permissions_helper->expects( 'is_current_user_allowed_to_copy' )
 			->andReturnTrue();
@@ -135,8 +140,22 @@ class Bulk_Actions_Test extends TestCase {
 	 * Tests the register_bulk_action function.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Bulk_Actions::register_bulk_action
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
 	 */
 	public function test_register_bulk_action() {
+		$utils = \Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
+
+		$utils->expects( 'get_option' )
+			->with( 'duplicate_post_show_link', 'clone' )
+			->once()
+			->andReturn( '1' );
+
+		$utils->expects( 'get_option' )
+			->with( 'duplicate_post_show_link', 'rewrite_republish' )
+			->once()
+			->andReturn( '1' );
+
 		$array = [
 			'edit'  => 'Edit',
 			'trash' => 'Move to Trash',

@@ -8,6 +8,7 @@
 namespace Yoast\WP\Duplicate_Post\UI;
 
 use Yoast\WP\Duplicate_Post\Permissions_Helper;
+use Yoast\WP\Duplicate_Post\Utils;
 
 /**
  * Represents the Admin_Bar class.
@@ -37,8 +38,6 @@ class Admin_Bar {
 	public function __construct( Link_Builder $link_builder, Permissions_Helper $permissions_helper ) {
 		$this->link_builder       = $link_builder;
 		$this->permissions_helper = $permissions_helper;
-
-		$this->register_hooks();
 	}
 
 	/**
@@ -47,7 +46,7 @@ class Admin_Bar {
 	 * @return void
 	 */
 	public function register_hooks() {
-		if ( \intval( \get_option( 'duplicate_post_show_adminbar' ) ) === 1 ) {
+		if ( \intval( Utils::get_option( 'duplicate_post_show_link_in', 'adminbar' ) ) === 1 ) {
 			\add_action( 'wp_before_admin_bar_render', [ $this, 'admin_bar_render' ] );
 			\add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_styles' ] );
 			\add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_styles' ] );
@@ -74,19 +73,26 @@ class Admin_Bar {
 			return;
 		}
 
-		$wp_admin_bar->add_menu(
-			[
-				'id'    => 'new_draft',
-				'title' => \esc_attr__( 'Copy to a new draft', 'duplicate-post' ),
-				'href'  => $this->link_builder->build_new_draft_link( $post ),
-			]
-		);
+		// By default this is false, as we generally always want to show.
+		$parent = false;
 
-		if ( $post->post_status === 'publish' ) {
+		if ( \intval( Utils::get_option( 'duplicate_post_show_link', 'new_draft' ) ) === 1 ) {
+			$parent = true;
+			$wp_admin_bar->add_menu(
+				[
+					'id'    => 'new_draft',
+					'title' => \esc_attr__( 'Copy to a new draft', 'duplicate-post' ),
+					'href'  => $this->link_builder->build_new_draft_link( $post ),
+				]
+			);
+		}
+
+		if ( \intval( Utils::get_option( 'duplicate_post_show_link', 'rewrite_republish' ) ) === 1
+			&& $post->post_status === 'publish' ) {
 			$wp_admin_bar->add_menu(
 				[
 					'id'     => 'rewrite_republish',
-					'parent' => 'new_draft',
+					'parent' => ( $parent ) ? 'new_draft' : false,
 					'title'  => \esc_attr__( 'Rewrite & Republish', 'duplicate-post' ),
 					'href'   => $this->link_builder->build_rewrite_and_republish_link( $post ),
 				]

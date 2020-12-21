@@ -38,8 +38,6 @@ class Post_Submitbox {
 	public function __construct( Link_Builder $link_builder, Permissions_Helper $permissions_helper ) {
 		$this->link_builder       = $link_builder;
 		$this->permissions_helper = $permissions_helper;
-
-		$this->register_hooks();
 	}
 
 	/**
@@ -48,8 +46,17 @@ class Post_Submitbox {
 	 * @return void
 	 */
 	public function register_hooks() {
-		\add_action( 'post_submitbox_start', [ $this, 'add_new_draft_post_button' ] );
-		\add_action( 'post_submitbox_start', [ $this, 'add_rewrite_and_republish_post_button' ] );
+		if ( \intval( Utils::get_option( 'duplicate_post_show_link_in', 'submitbox' ) ) === 0 ) {
+			return;
+		}
+
+		if ( \intval( Utils::get_option( 'duplicate_post_show_link', 'new_draft' ) ) === 1 ) {
+			\add_action( 'post_submitbox_start', [ $this, 'add_new_draft_post_button' ] );
+		}
+
+		if ( \intval( Utils::get_option( 'duplicate_post_show_link', 'rewrite_republish' ) ) === 1 ) {
+			\add_action( 'post_submitbox_start', [ $this, 'add_rewrite_and_republish_post_button' ] );
+		}
 
 		\add_filter( 'gettext', [ $this, 'change_republish_strings_classic_editor' ], 10, 2 );
 		\add_filter( 'gettext_with_context', [ $this, 'change_schedule_strings_classic_editor' ], 10, 3 );
@@ -89,10 +96,6 @@ class Post_Submitbox {
 	 * @return void
 	 */
 	public function add_new_draft_post_button( $post = null ) {
-		if ( \intval( \get_option( 'duplicate_post_show_submitbox' ) ) !== 1 ) {
-			return;
-		}
-
 		if ( \is_null( $post ) ) {
 			if ( isset( $_GET['post'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 				$id   = \intval( \wp_unslash( $_GET['post'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
@@ -126,10 +129,6 @@ class Post_Submitbox {
 	 * @return void
 	 */
 	public function add_rewrite_and_republish_post_button( $post = null ) {
-		if ( \intval( \get_option( 'duplicate_post_show_submitbox' ) ) !== 1 ) {
-			return;
-		}
-
 		if ( \is_null( $post ) ) {
 			if ( isset( $_GET['post'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 				$id   = \intval( \wp_unslash( $_GET['post'] ) ); // phpcs:ignore WordPress.Security.NonceVerification

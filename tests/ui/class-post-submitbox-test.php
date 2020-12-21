@@ -49,8 +49,10 @@ class Post_Submitbox_Test extends TestCase {
 		$this->link_builder       = Mockery::mock( Link_Builder::class );
 		$this->permissions_helper = Mockery::mock( Permissions_Helper::class );
 
-		$this->instance = Mockery::mock( Post_Submitbox::class )->makePartial();
-		$this->instance->__construct( $this->link_builder, $this->permissions_helper );
+		$this->instance = Mockery::mock(
+			Post_Submitbox::class,
+			[ $this->link_builder, $this->permissions_helper ]
+		)->makePartial();
 	}
 
 	/**
@@ -67,8 +69,27 @@ class Post_Submitbox_Test extends TestCase {
 	 * Tests the registration of the hooks.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Post_Submitbox::register_hooks
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
 	 */
 	public function test_register_hooks() {
+		$utils = \Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
+
+		$utils->expects( 'get_option' )
+			->with( 'duplicate_post_show_link_in', 'submitbox' )
+			->once()
+			->andReturn( '1' );
+
+		$utils->expects( 'get_option' )
+			->with( 'duplicate_post_show_link', 'new_draft' )
+			->once()
+			->andReturn( '1' );
+
+		$utils->expects( 'get_option' )
+			->with( 'duplicate_post_show_link', 'rewrite_republish' )
+			->once()
+			->andReturn( '1' );
+
 		$this->instance->register_hooks();
 
 		$this->assertNotFalse( \has_action( 'post_submitbox_start', [ $this->instance, 'add_new_draft_post_button' ] ), 'Does not have expected post_submitbox_start action' );
@@ -87,9 +108,6 @@ class Post_Submitbox_Test extends TestCase {
 	 * @covers Post_Submitbox::enqueue_classic_editor_scripts
 	 */
 	public function test_enqueue_classic_editor_scripts() {
-		\define( 'DUPLICATE_POST_CURRENT_VERSION', '4.0alpha' );
-		\define( 'DUPLICATE_POST_FILE', '/var/www/html/wp-content/plugins/duplicate-post/duplicate-post.php' );
-
 		$post = Mockery::mock( \WP_Post::class );
 
 		Monkey\Functions\expect( '\get_post' )
@@ -102,12 +120,12 @@ class Post_Submitbox_Test extends TestCase {
 			->andReturnTrue();
 
 		$handle = 'duplicate_post_strings';
-		$src    = 'http://basic.wordpress.test/wp-content/plugins/duplicate-post/js/dist/duplicate-post-strings-40alpha.js';
+		$src    = 'http://basic.wordpress.test/wp-content/plugins/duplicate-post/js/dist/duplicate-post-strings-40.js';
 		$deps   = [ 'wp-element', 'wp-i18n' ];
 
 		Monkey\Functions\expect( '\plugins_url' )
+			->with( 'js/dist/duplicate-post-strings-40.js', DUPLICATE_POST_FILE )
 			->once()
-			->with( 'js/dist/duplicate-post-strings-40alpha.js', DUPLICATE_POST_FILE )
 			->andReturn( $src );
 
 		Monkey\Functions\expect( '\wp_enqueue_script' )

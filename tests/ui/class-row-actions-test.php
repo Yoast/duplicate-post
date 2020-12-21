@@ -49,14 +49,8 @@ class Row_Actions_Test extends TestCase {
 		$this->link_builder       = Mockery::mock( Link_Builder::class );
 		$this->permissions_helper = Mockery::mock( Permissions_Helper::class );
 
-		$this->instance = Mockery::mock(
-			Row_Actions::class
-		)->makePartial();
-
-		Monkey\Functions\expect( '\get_option' )
-			->with( 'duplicate_post_show_row' )
-			->andReturn( '1' );
-		$this->instance->__construct( $this->link_builder, $this->permissions_helper );
+		$this->instance = Mockery::mock( Row_Actions::class, [ $this->link_builder, $this->permissions_helper ] )
+								->makePartial();
 	}
 
 	/**
@@ -73,10 +67,30 @@ class Row_Actions_Test extends TestCase {
 	 * Tests the registration of the hooks.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Row_Actions::register_hooks
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
 	 */
 	public function test_register_hooks() {
-		Monkey\Functions\expect( '\get_option' )
-			->with( 'duplicate_post_show_row' )
+		$utils = \Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
+
+		$utils->expects( 'get_option' )
+			->with( 'duplicate_post_show_link_in', 'row' )
+			->once()
+			->andReturn( '1' );
+
+		$utils->expects( 'get_option' )
+			->with( 'duplicate_post_show_link', 'clone' )
+			->once()
+			->andReturn( '1' );
+
+		$utils->expects( 'get_option' )
+			->with( 'duplicate_post_show_link', 'new_draft' )
+			->once()
+			->andReturn( '1' );
+
+		$utils->expects( 'get_option' )
+			->with( 'duplicate_post_show_link', 'rewrite_republish' )
+			->once()
 			->andReturn( '1' );
 
 		$this->instance->register_hooks();

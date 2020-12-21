@@ -123,6 +123,13 @@ function duplicate_post_plugin_upgrade() {
 		}
 	}
 
+	$show_links_in_defaults = [
+		'row'         => '1',
+		'adminbar'    => '1',
+		'submitbox'   => '1',
+		'bulkactions' => '1',
+	];
+
 	add_option( 'duplicate_post_copytitle', '1' );
 	add_option( 'duplicate_post_copydate', '0' );
 	add_option( 'duplicate_post_copystatus', '0' );
@@ -141,13 +148,18 @@ function duplicate_post_plugin_upgrade() {
 	add_option( 'duplicate_post_taxonomies_blacklist', array() );
 	add_option( 'duplicate_post_blacklist', '' );
 	add_option( 'duplicate_post_types_enabled', array( 'post', 'page' ) );
-	add_option( 'duplicate_post_show_row', '1' );
-	add_option( 'duplicate_post_show_adminbar', '1' );
-	add_option( 'duplicate_post_show_submitbox', '1' );
-	add_option( 'duplicate_post_show_bulkactions', '1' );
 	add_option( 'duplicate_post_show_original_column', '0' );
 	add_option( 'duplicate_post_show_original_in_post_states', '0' );
 	add_option( 'duplicate_post_show_original_meta_box', '0' );
+	add_option(
+		'duplicate_post_show_link',
+		[
+			'new_draft'         => '1',
+			'clone'             => '1',
+			'rewrite_republish' => '1',
+		]
+	);
+	add_option( 'duplicate_post_show_link_in', $show_links_in_defaults );
 
 	$taxonomies_blacklist = get_option( 'duplicate_post_taxonomies_blacklist' );
 	if ( '' === $taxonomies_blacklist ) {
@@ -184,8 +196,36 @@ function duplicate_post_plugin_upgrade() {
 		update_site_option( 'duplicate_post_show_notice', 1 );
 	}
 
+	// Migrate the 'Show links in' options to the new array-based structure.
+	duplicate_post_migrate_show_links_in_options( $show_links_in_defaults );
+
 	delete_site_option( 'duplicate_post_version' );
 	update_option( 'duplicate_post_version', duplicate_post_get_current_version() );
+}
+
+/**
+ * Runs the upgrade routine for version 4.0 to update the options in the database.
+ *
+ * @param array $defaults The default options to fall back on.
+ *
+ * @return void
+ */
+function duplicate_post_migrate_show_links_in_options( $defaults ) {
+	$options_to_migrate = [
+		'duplicate_post_show_row'         => 'row',
+		'duplicate_post_show_adminbar'    => 'adminbar',
+		'duplicate_post_show_submitbox'   => 'submitbox',
+		'duplicate_post_show_bulkactions' => 'bulkactions',
+	];
+
+	$new_options = [];
+	foreach ( $options_to_migrate as $old => $new ) {
+		$new_options[ $new ] = \get_option( $old, $defaults[ $new ] );
+
+		\delete_option( $old );
+	}
+
+	\update_option( 'duplicate_post_show_link_in', $new_options );
 }
 
 /**

@@ -8,6 +8,7 @@ const jsSrcPath = path.resolve( "js", "src" );
 const entry = {
 	"duplicate-post-edit": "./duplicate-post-edit-script.js",
 	"duplicate-post-strings": "./duplicate-post-strings.js",
+	"duplicate-post-options": "./duplicate-post-options.js",
 };
 
 /**

@@ -38,6 +38,10 @@ if ( ! defined( 'DUPLICATE_POST_FILE' ) ) {
 	define( 'DUPLICATE_POST_FILE', __FILE__ );
 }
 
+if ( ! defined( 'DUPLICATE_POST_PATH' ) ) {
+	define( 'DUPLICATE_POST_PATH', plugin_dir_path( __FILE__ ) );
+}
+
 define( 'DUPLICATE_POST_CURRENT_VERSION', '4.0alpha' );
 
 $duplicate_post_autoload_file = __DIR__ . '/vendor/autoload.php';
