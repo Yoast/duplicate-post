@@ -628,4 +628,42 @@ class Permissions_Helper_Test extends TestCase {
 
 		$this->assertSame( false, $this->instance->post_type_has_admin_bar( $post_type ) );
 	}
+
+	/**
+	 * Tests the is_copy_allowed_to_be_republished function.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::is_copy_allowed_to_be_republished
+	 * @dataProvider is_copy_allowed_to_be_republished_provider
+	 *
+	 * @param mixed $post_status Input value.
+	 * @param mixed $expected    Expected output.
+	 */
+	public function test_is_copy_allowed_to_be_republished( $post_status, $expected ) {
+		$post              = Mockery::mock( \WP_Post::class );
+		$post->post_status = $post_status;
+
+		$this->assertEquals( $expected, $this->instance->is_copy_allowed_to_be_republished( $post ) );
+	}
+
+	/**
+	 * Data provider for test_is_copy_allowed_to_be_republished.
+	 *
+	 * @return array The test parameters.
+	 */
+	public function is_copy_allowed_to_be_republished_provider() {
+		return [
+			[
+				'post_status' => 'dp-rewrite-republish',
+				'expected'    => true,
+			],
+			[
+				'post_status' => 'private',
+				'expected'    => true,
+			],
+			[
+				'post_status' => 'draft',
+				'expected'    => false,
+			],
+		];
+	}
 }

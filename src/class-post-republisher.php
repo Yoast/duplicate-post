@@ -52,6 +52,7 @@ class Post_Republisher {
 	public function register_hooks() {
 		\add_action( 'init', [ $this, 'register_post_statuses' ] );
 		\add_filter( 'wp_insert_post_data', [ $this, 'change_post_copy_status' ], 1, 2 );
+		\add_filter( 'display_post_states', [ $this, 'add_rewrite_schedule_display_state' ], 9, 2 );
 
 		$enabled_post_types = $this->permissions_helper->get_enabled_post_types();
 		foreach ( $enabled_post_types as $enabled_post_type ) {
@@ -138,7 +139,7 @@ class Post_Republisher {
 	public function republish_request( $post ) {
 		if (
 			! $this->permissions_helper->is_rewrite_and_republish_copy( $post )
-			|| $post->post_status !== 'dp-rewrite-republish'
+			|| ! $this->permissions_helper->is_copy_allowed_to_be_republished( $post )
 		) {
 			return;
 		}
@@ -203,10 +204,12 @@ class Post_Republisher {
 	protected function republish_post_elements( $post, $original_post_id ) {
 		// Cast to array and not alter the original object.
 		$post_to_be_rewritten = (array) $post;
+		// Determine the new post status.
+		$new_post_status = $post_to_be_rewritten['post_status'] === 'private' ? 'private' : 'publish';
 		// Prepare post data for republishing.
 		$post_to_be_rewritten['ID']          = $original_post_id;
 		$post_to_be_rewritten['post_name']   = \get_post_field( 'post_name', $original_post_id );
-		$post_to_be_rewritten['post_status'] = 'publish';
+		$post_to_be_rewritten['post_status'] = $new_post_status;
 
 		// Yoast SEO and other plugins prevent from accidentally updating another
 		// post's data (e.g. the Yoast SEO metadata) by checking the $_POST data
@@ -315,5 +318,21 @@ class Post_Republisher {
 		}
 
 		return isset( $_GET['meta-box-loader'] ) === false; // phpcs:ignore WordPress.Security.NonceVerification
+	}
+
+	/**
+	 * Adds the default post display states used in the posts list table.
+	 *
+	 * @param string[] $post_states An array of post display states.
+	 * @param WP_Post  $post        The current post object.
+	 *
+	 * @return string[] An array of filtered display post states.
+	 */
+	public function add_rewrite_schedule_display_state( $post_states, $post ) {
+		if ( $post->post_status === 'dp-rewrite-schedule' ) {
+			$post_states['dp-rewrite-schedule'] = \esc_html__( 'Scheduled', 'duplicate-post' );
+		}
+
+		return $post_states;
 	}
 }
