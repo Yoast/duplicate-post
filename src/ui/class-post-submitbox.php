@@ -183,10 +183,6 @@ class Post_Submitbox {
 	 * @return void
 	 */
 	public function add_check_changes_link( $post = null ) {
-		if ( \intval( \get_option( 'duplicate_post_show_submitbox' ) ) !== 1 ) {
-			return;
-		}
-
 		if ( \is_null( $post ) ) {
 			if ( isset( $_GET['post'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 				$id   = \intval( \wp_unslash( $_GET['post'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
