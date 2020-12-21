@@ -13,7 +13,7 @@ use Yoast\WP\Duplicate_Post\Admin\Options;
 use Yoast\WP\Duplicate_Post\Admin\Options_Form_Generator;
 use Yoast\WP\Duplicate_Post\Admin\Options_Page;
 use Yoast\WP\Duplicate_Post\Tests\TestCase;
-use Yoast\WP\Duplicate_Post\Utils;
+use Yoast\WP\Duplicate_Post\UI\Asset_Manager;
 
 /**
  * Test the Options_Page class.
@@ -42,6 +42,13 @@ class Options_Page_Test extends TestCase {
 	protected $form_generator;
 
 	/**
+	 * The Asset_Manager instance.
+	 *
+	 * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Asset_Manager
+	 */
+	protected $asset_manager;
+
+	/**
 	 * Sets the instance.
 	 */
 	public function setUp() {
@@ -49,9 +56,10 @@ class Options_Page_Test extends TestCase {
 
 		$this->options        = Mockery::mock( Options::class )->makePartial();
 		$this->form_generator = Mockery::mock( Options_Form_Generator::class )->makePartial();
+		$this->asset_manager  = Mockery::mock( Asset_Manager::class );
 		$this->instance       = Mockery::mock(
 			Options_Page::class,
-			[ $this->options, $this->form_generator ]
+			[ $this->options, $this->form_generator, $this->asset_manager ]
 		)
 		->makePartial()
 		->shouldAllowMockingProtectedMethods();
@@ -63,7 +71,7 @@ class Options_Page_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Admin\Options_Page::__construct
 	 */
 	public function test_constructor() {
-		$this->instance->__construct( $this->options, $this->form_generator );
+		$this->instance->__construct( $this->options, $this->form_generator, $this->asset_manager );
 
 		$this->assertAttributeInstanceOf( Options::class, 'options', $this->instance );
 		$this->assertAttributeInstanceOf( Options_Form_Generator::class, 'generator', $this->instance );
@@ -111,38 +119,11 @@ class Options_Page_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Admin\Options_Page::enqueue_assets
 	 */
 	public function test_loading_of_assets() {
-		Monkey\Functions\stubs(
-			[
-				'plugins_url' => '',
-			]
-		);
+		$this->asset_manager
+			->expects( 'enqueue_options_styles' );
 
-		Monkey\Functions\expect( '\wp_enqueue_style' )
-			->with(
-				[
-					'duplicate-post-options',
-					\plugins_url( '/duplicate-post-options.css', __FILE__ ),
-					[],
-					DUPLICATE_POST_CURRENT_VERSION,
-				]
-			)
-			->once();
-
-		Monkey\Functions\expect( '\wp_enqueue_script' )
-			->with(
-				'duplicate_post_options_script',
-				\plugins_url(
-					\sprintf(
-						'js/dist/duplicate-post-options-%s.js',
-						Utils::flatten_version( DUPLICATE_POST_CURRENT_VERSION )
-					),
-					DUPLICATE_POST_FILE
-				),
-				[ 'jquery' ],
-				DUPLICATE_POST_CURRENT_VERSION,
-				true
-			)
-			->once();
+		$this->asset_manager
+			->expects( 'enqueue_options_script' );
 
 		$this->instance->enqueue_assets();
 	}
@@ -181,7 +162,7 @@ class Options_Page_Test extends TestCase {
 	 * @preserveGlobalState disabled
 	 */
 	public function test_register_roles() {
-		$utils = \Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
+		$utils = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
 
 		Monkey\Functions\expect( '\current_user_can' )
 			->with( 'promote_users' )

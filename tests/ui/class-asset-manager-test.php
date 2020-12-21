@@ -51,16 +51,25 @@ class Asset_Manager_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Asset_Manager::register_styles
 	 */
 	public function test_register_styles() {
-		$styles_url = 'http://basic.wordpress.test/wp-content/plugins/duplicate-post/duplicate-post.css';
+		$styles_url         = 'http://basic.wordpress.test/wp-content/plugins/duplicate-post/css/duplicate-post.css';
+		$options_styles_url = 'http://basic.wordpress.test/wp-content/plugins/duplicate-post/css/duplicate-post-options.css';
 
 		Monkey\Functions\expect( '\plugins_url' )
-			->with( '/duplicate-post.css', DUPLICATE_POST_FILE )
-			->andReturn( $styles_url );
+			->twice()
+			->andReturn( $styles_url, $options_styles_url );
 
 		Monkey\Functions\expect( '\wp_register_style' )
 			->with(
 				'duplicate-post',
 				$styles_url,
+				[],
+				DUPLICATE_POST_CURRENT_VERSION
+			);
+
+		Monkey\Functions\expect( '\wp_register_style' )
+			->with(
+				'duplicate-post-options',
+				$options_styles_url,
 				[],
 				DUPLICATE_POST_CURRENT_VERSION
 			);
@@ -81,13 +90,14 @@ class Asset_Manager_Test extends TestCase {
 		$edit_script_url       = 'http://basic.wordpress.test/wp-content/plugins/duplicate-post/js/dist/duplicate-post-edit-40.js';
 		$strings_script_url    = 'http://basic.wordpress.test/wp-content/plugins/duplicate-post/js/dist/duplicate-post-strings-40.js';
 		$quick_edit_script_url = 'http://basic.wordpress.test/wp-content/plugins/duplicate-post/js/dist/duplicate-post-quick-edit-40.js';
+		$options_script_url    = 'http://basic.wordpress.test/wp-content/plugins/duplicate-post/js/dist/duplicate-post-options-40.js';
 
 		$utils->expects( 'flatten_version' )
 			->with( DUPLICATE_POST_CURRENT_VERSION )
 			->andReturn( $flattened_version );
 
 		Monkey\Functions\expect( '\plugins_url' )
-			->andReturn( $edit_script_url, $strings_script_url, $quick_edit_script_url );
+			->andReturn( $edit_script_url, $strings_script_url, $quick_edit_script_url, $options_script_url );
 
 		Monkey\Functions\expect( '\wp_register_script' )
 			->with(
@@ -101,6 +111,7 @@ class Asset_Manager_Test extends TestCase {
 				DUPLICATE_POST_CURRENT_VERSION,
 				true
 			);
+
 		Monkey\Functions\expect( '\wp_register_script' )
 			->with(
 				'duplicate_post_strings',
@@ -112,10 +123,20 @@ class Asset_Manager_Test extends TestCase {
 				DUPLICATE_POST_CURRENT_VERSION,
 				true
 			);
+
 		Monkey\Functions\expect( '\wp_register_script' )
 			->with(
 				'duplicate_post_quick_edit_script',
 				$quick_edit_script_url,
+				[ 'jquery' ],
+				DUPLICATE_POST_CURRENT_VERSION,
+				true
+			);
+
+		Monkey\Functions\expect( '\wp_register_script' )
+			->with(
+				'duplicate_post_options_script',
+				$options_script_url,
 				[ 'jquery' ],
 				DUPLICATE_POST_CURRENT_VERSION,
 				true

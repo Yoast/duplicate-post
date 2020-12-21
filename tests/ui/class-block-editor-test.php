@@ -176,13 +176,23 @@ class Block_Editor_Test extends TestCase {
 	 * Tests the enqueueing of the scripts on a post that is not a Rewrite & Republish copy.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Block_Editor::enqueue_block_editor_scripts
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
 	 */
 	public function test_get_new_draft_permalink_normal() {
+		$utils                      = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
 		$post                       = Mockery::mock( \WP_Post::class );
 		$new_draft_link             = 'http://fakeu.rl/new_draft';
 		$rewrite_and_republish_link = 'http://fakeu.rl/rewrite_and_republish';
 		$rewriting                  = 0;
 		$original_edit_url          = 'http://fakeu.rl/original';
+
+		$show_links = [
+			'row'         => '1',
+			'adminbar'    => '1',
+			'submitbox'   => '1',
+			'bulkactions' => '1',
+		];
 
 		Monkey\Functions\expect( '\get_post' )
 			->andReturn( $post );
@@ -200,6 +210,9 @@ class Block_Editor_Test extends TestCase {
 			->expects( 'get_rewrite_republish_permalink' )
 			->andReturn( $rewrite_and_republish_link );
 
+		$utils->expects( 'get_option' )
+			->andReturn( $show_links );
+
 		$this->instance
 			->expects( 'get_original_post_edit_url' )
 			->andReturn( $original_edit_url );
@@ -207,6 +220,7 @@ class Block_Editor_Test extends TestCase {
 		$edit_js_object = [
 			'newDraftLink'            => $new_draft_link,
 			'rewriteAndRepublishLink' => $rewrite_and_republish_link,
+			'showLinks'               => $show_links,
 			'rewriting'               => $rewriting,
 			'originalEditURL'         => $original_edit_url,
 		];
@@ -226,14 +240,24 @@ class Block_Editor_Test extends TestCase {
 	 * Tests the enqueueing of the scripts on a post that is a Rewrite & Republish copy.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Block_Editor::enqueue_block_editor_scripts
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
 	 */
 	public function test_get_new_draft_permalink_rewrite_and_republish() {
+		$utils                      = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
 		$post                       = Mockery::mock( \WP_Post::class );
 		$new_draft_link             = 'http://fakeu.rl/new_draft';
 		$rewrite_and_republish_link = 'http://fakeu.rl/rewrite_and_republish';
 		$rewriting                  = 1;
 		$original_edit_url          = 'http://fakeu.rl/original';
 		$check_link                 = 'http://fakeu.rl/check';
+
+		$show_links = [
+			'row'         => '1',
+			'adminbar'    => '1',
+			'submitbox'   => '1',
+			'bulkactions' => '1',
+		];
 
 		Monkey\Functions\expect( '\get_post' )
 			->andReturn( $post );
@@ -251,6 +275,10 @@ class Block_Editor_Test extends TestCase {
 			->expects( 'get_rewrite_republish_permalink' )
 			->andReturn( $rewrite_and_republish_link );
 
+		$utils
+			->expects( 'get_option' )
+			->andReturn( $show_links );
+
 		$this->instance
 			->expects( 'get_original_post_edit_url' )
 			->andReturn( $original_edit_url );
@@ -258,6 +286,7 @@ class Block_Editor_Test extends TestCase {
 		$edit_js_object = [
 			'newDraftLink'            => $new_draft_link,
 			'rewriteAndRepublishLink' => $rewrite_and_republish_link,
+			'showLinks'               => $show_links,
 			'rewriting'               => $rewriting,
 			'originalEditURL'         => $original_edit_url,
 		];

@@ -112,8 +112,7 @@ class DuplicatePost {
 	render() {
 		return (
 			<Fragment>
-				{ duplicatePost.newDraftLink !== '' &&
-				{ ( duplicatePost.new_draft_link !== '' && duplicatePost.show_links.new_draft === '1' ) &&
+				{ ( duplicatePost.newDraftLink !== '' && duplicatePost.showLinks.new_draft === '1' ) &&
 					<PluginPostStatusInfo>
 						<Button
 							isTertiary={ true }
@@ -124,8 +123,7 @@ class DuplicatePost {
 						</Button>
 					</PluginPostStatusInfo>
 				}
-				{ duplicatePost.rewriteAndRepublishLink !== '' &&
-				{ ( duplicatePost.rewrite_and_republish_link !== '' && duplicatePost.show_links.rewrite_republish === '1' ) &&
+				{ ( duplicatePost.rewriteAndRepublishLink !== '' && duplicatePost.showLinks.rewrite_republish === '1' ) &&
 					<PluginPostStatusInfo>
 						<Button
 							isTertiary={ true }

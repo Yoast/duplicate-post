@@ -7,6 +7,7 @@
 
 namespace Yoast\WP\Duplicate_Post\Admin;
 
+use Yoast\WP\Duplicate_Post\UI\Asset_Manager;
 use Yoast\WP\Duplicate_Post\Utils;
 
 /**
@@ -28,14 +29,23 @@ class Options_Page {
 	protected $generator;
 
 	/**
+	 * Holds the asset manager.
+	 *
+	 * @var Asset_Manager
+	 */
+	protected $asset_manager;
+
+	/**
 	 * Options_Page constructor.
 	 *
-	 * @param Options                $options   The Options class instance.
-	 * @param Options_Form_Generator $generator The Options Form_Generator class instance.
+	 * @param Options                $options       The Options class instance.
+	 * @param Options_Form_Generator $generator     The Options_Form_Generator class instance.
+	 * @param Asset_Manager          $asset_manager The Asset_Manager class instance.
 	 */
-	public function __construct( Options $options, Options_Form_Generator $generator ) {
-		$this->options   = $options;
-		$this->generator = $generator;
+	public function __construct( Options $options, Options_Form_Generator $generator, Asset_Manager $asset_manager ) {
+		$this->options       = $options;
+		$this->generator     = $generator;
+		$this->asset_manager = $asset_manager;
 	}
 
 	/**
@@ -56,26 +66,8 @@ class Options_Page {
 	 * @return void
 	 */
 	public function enqueue_assets() {
-		\wp_enqueue_style(
-			'duplicate-post-options',
-			\plugins_url( '/duplicate-post-options.css', __FILE__ ),
-			[],
-			DUPLICATE_POST_CURRENT_VERSION
-		);
-
-		\wp_enqueue_script(
-			'duplicate_post_options_script',
-			\plugins_url(
-				\sprintf(
-					'js/dist/duplicate-post-options-%s.js',
-					Utils::flatten_version( DUPLICATE_POST_CURRENT_VERSION )
-				),
-				DUPLICATE_POST_FILE
-			),
-			[ 'jquery' ],
-			DUPLICATE_POST_CURRENT_VERSION,
-			true
-		);
+		$this->asset_manager->enqueue_options_styles();
+		$this->asset_manager->enqueue_options_script();
 	}
 
 	/**

@@ -30,7 +30,8 @@ class Asset_Manager {
 	 * @return void
 	 */
 	public function register_styles() {
-		\wp_register_style( 'duplicate-post', \plugins_url( '/duplicate-post.css', DUPLICATE_POST_FILE ), [], DUPLICATE_POST_CURRENT_VERSION );
+		\wp_register_style( 'duplicate-post', \plugins_url( '/css/duplicate-post.css', DUPLICATE_POST_FILE ), [], DUPLICATE_POST_CURRENT_VERSION );
+		\wp_register_style( 'duplicate-post-options', \plugins_url( '/css/duplicate-post-options.css', DUPLICATE_POST_FILE ), [], DUPLICATE_POST_CURRENT_VERSION );
 	}
 
 	/**
@@ -71,6 +72,14 @@ class Asset_Manager {
 			DUPLICATE_POST_CURRENT_VERSION,
 			true
 		);
+
+		\wp_register_script(
+			'duplicate_post_options_script',
+			\plugins_url( \sprintf( 'js/dist/duplicate-post-options-%s.js', $flattened_version ), DUPLICATE_POST_FILE ),
+			[ 'jquery' ],
+			DUPLICATE_POST_CURRENT_VERSION,
+			true
+		);
 	}
 
 	/**
@@ -80,6 +89,15 @@ class Asset_Manager {
 	 */
 	public function enqueue_styles() {
 		\wp_enqueue_style( 'duplicate-post' );
+	}
+
+	/**
+	 * Enqueues the styles for the options page.
+	 *
+	 * @return void
+	 */
+	public function enqueue_options_styles() {
+		\wp_enqueue_style( 'duplicate-post-options' );
 	}
 
 	/**
@@ -128,5 +146,14 @@ class Asset_Manager {
 	 */
 	public function enqueue_quick_edit_script() {
 		\wp_enqueue_script( 'duplicate_post_quick_edit_script' );
+	}
+
+	/**
+	 * Enqueues the script for the Options page.
+	 *
+	 * @return void
+	 */
+	public function enqueue_options_script() {
+		\wp_enqueue_script( 'duplicate_post_options_script' );
 	}
 }
