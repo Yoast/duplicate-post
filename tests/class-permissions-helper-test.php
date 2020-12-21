@@ -650,4 +650,50 @@ class Permissions_Helper_Test extends TestCase {
 			],
 		];
 	}
+
+	/**
+	 * Tests the has_trashed_rewrite_and_republish_copy function when the post has a trashed Rewrite & Republisb copy.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::has_trashed_rewrite_and_republish_copy
+	 */
+	public function test_has_trashed_rewrite_and_republish_copy() {
+		$post              = Mockery::mock( \WP_Post::class );
+		$post->ID          = 123;
+		$copy              = Mockery::mock( \WP_Post::class );
+		$copy->post_status = 'trash';
+		$copy_id           = 321;
+
+		Monkey\Functions\expect( '\get_post_meta' )
+			->with( $post->ID, '_dp_has_rewrite_republish_copy', true )
+			->andReturn( $copy_id );
+
+		Monkey\Functions\expect( '\get_post' )
+			->with( $copy_id )
+			->andReturn( $copy );
+
+		$this->assertTrue( $this->instance->has_trashed_rewrite_and_republish_copy( $post ) );
+	}
+
+	/**
+	 * Tests the has_trashed_rewrite_and_republish_copy function when the post has a non-trashed Rewrite & Republisb copy.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::has_trashed_rewrite_and_republish_copy
+	 */
+	public function test_does_not_have_trashed_rewrite_and_republish_copy() {
+		$post              = Mockery::mock( \WP_Post::class );
+		$post->ID          = 123;
+		$copy              = Mockery::mock( \WP_Post::class );
+		$copy->post_status = 'draft';
+		$copy_id           = 321;
+
+		Monkey\Functions\expect( '\get_post_meta' )
+			->with( $post->ID, '_dp_has_rewrite_republish_copy', true )
+			->andReturn( $copy_id );
+
+		Monkey\Functions\expect( '\get_post' )
+			->with( $copy_id )
+			->andReturn( $copy );
+
+		$this->assertFalse( $this->instance->has_trashed_rewrite_and_republish_copy( $post ) );
+	}
 }
