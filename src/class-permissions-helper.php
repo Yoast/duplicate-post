@@ -192,4 +192,15 @@ class Permissions_Helper {
 
 		return $post_type_object->public && $post_type_object->show_in_admin_bar;
 	}
+
+	/**
+	 * Determines whether a Rewrite & Republish copy can be republished.
+	 *
+	 * @param \WP_Post $post The post object.
+	 *
+	 * @return bool Whether the Rewrite & Republish copy can be republished.
+	 */
+	public function is_copy_allowed_to_be_republished( \WP_Post $post ) {
+		return \in_array( $post->post_status, [ 'dp-rewrite-republish', 'private' ], true );
+	}
 }
