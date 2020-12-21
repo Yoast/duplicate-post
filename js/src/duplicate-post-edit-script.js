@@ -41,7 +41,7 @@ class DuplicatePost {
 			const hasActiveMetaBoxes = select( 'core/edit-post' ).hasMetaBoxes();
 			const isSavingMetaBoxes  = select( 'core/edit-post' ).isSavingMetaBoxes();
 
-			if ( ! this.is_copy_allowed_to_be_republished() ) {
+			if ( ! this.isCopyAllowedToBeRepublished() ) {
 				return;
 			}
 
@@ -89,7 +89,7 @@ class DuplicatePost {
 	 *
 	 * @return bool Whether the Rewrite & Republish copy can be republished.
 	 */
-	is_copy_allowed_to_be_republished() {
+	isCopyAllowedToBeRepublished() {
 		const currentPostStatus = select( 'core/editor' ).getEditedPostAttribute( 'status' );
 
 		if ( currentPostStatus === 'dp-rewrite-republish' || currentPostStatus === 'private' ) {

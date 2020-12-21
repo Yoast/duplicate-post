@@ -201,10 +201,6 @@ class Permissions_Helper {
 	 * @return bool Whether the Rewrite & Republish copy can be republished.
 	 */
 	public function is_copy_allowed_to_be_republished( \WP_Post $post ) {
-		if ( $post->post_status === 'dp-rewrite-republish' || $post->post_status === 'private' ) {
-			return true;
-		}
-
-		return false;
+		return \in_array( $post->post_status, [ 'dp-rewrite-republish', 'private' ], true );
 	}
 }
