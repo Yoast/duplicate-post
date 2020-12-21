@@ -203,4 +203,27 @@ class Permissions_Helper {
 	public function is_copy_allowed_to_be_republished( \WP_Post $post ) {
 		return \in_array( $post->post_status, [ 'dp-rewrite-republish', 'private' ], true );
 	}
+
+	/**
+	 * Determines if the post has a trashed copy intended for Rewrite & Republish.
+	 *
+	 * @param \WP_Post $post The post object.
+	 *
+	 * @return bool Whether the post has a trashed copy intended for Rewrite & Republish.
+	 */
+	public function has_trashed_rewrite_and_republish_copy( \WP_Post $post ) {
+		$copy_id = \get_post_meta( $post->ID, '_dp_has_rewrite_republish_copy', true );
+
+		if ( ! $copy_id ) {
+			return false;
+		}
+
+		$copy = \get_post( $copy_id );
+
+		if ( $copy && $copy->post_status === 'trash' ) {
+			return true;
+		}
+
+		return false;
+	}
 }

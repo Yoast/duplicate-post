@@ -50,6 +50,13 @@ class Copied_Post_Watcher {
 	 * @return string The translated text for the notice.
 	 */
 	public function get_notice_text( $post ) {
+		if ( $this->permissions_helper->has_trashed_rewrite_and_republish_copy( $post ) ) {
+			return __(
+				'A duplicate of this post was made. The duplicate is in the trash.',
+				'duplicate-post'
+			);
+		}
+
 		$scheduled_copy = $this->permissions_helper->has_scheduled_rewrite_and_republish_copy( $post );
 		if ( ! $scheduled_copy ) {
 			return __(
