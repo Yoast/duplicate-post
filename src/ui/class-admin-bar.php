@@ -89,12 +89,21 @@ class Admin_Bar {
 
 		if ( \intval( Utils::get_option( 'duplicate_post_show_link', 'rewrite_republish' ) ) === 1
 			&& $post->post_status === 'publish' ) {
+			$link = $this->link_builder->build_rewrite_and_republish_link( $post );
 			$wp_admin_bar->add_menu(
 				[
 					'id'     => 'rewrite_republish',
 					'parent' => ( $parent ) ? 'new_draft' : false,
 					'title'  => \esc_attr__( 'Rewrite & Republish', 'duplicate-post' ),
-					'href'   => $this->link_builder->build_rewrite_and_republish_link( $post ),
+					'href'   => $link,
+				]
+			);
+			$wp_admin_bar->add_menu(
+				[
+					'id'     => 'rewrite_republish_mobile',
+					'parent' => ( $parent ) ? 'new_draft' : false,
+					'title'  => \esc_attr__( 'R&R', 'duplicate-post' ),
+					'href'   => $link,
 				]
 			);
 		}

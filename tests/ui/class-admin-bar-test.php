@@ -129,7 +129,7 @@ class Admin_Bar_Test extends TestCase {
 
 		$wp_admin_bar
 			->expects( 'add_menu' )
-			->twice();
+			->times( 3 );
 
 		$this->instance->admin_bar_render();
 	}
