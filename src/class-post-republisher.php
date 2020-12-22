@@ -67,7 +67,7 @@ class Post_Republisher {
 		// Clean up after the redirect to the original post.
 		\add_action( 'load-post.php', [ $this, 'clean_up_after_redirect' ] );
 		// Clean up the original when the copy is manually deleted from the trash.
-		\add_action( 'before_delete_post', [ $this, 'clean_up_after_copy_manually_deleted' ] );
+		\add_action( 'before_delete_post', [ $this, 'clean_up_when_copy_manually_deleted' ] );
 	}
 
 	/**
@@ -345,7 +345,7 @@ class Post_Republisher {
 	 *
 	 * @return void
 	 */
-	public function clean_up_after_copy_manually_deleted( $post_id ) {
+	public function clean_up_when_copy_manually_deleted( $post_id ) {
 		$post = \get_post( $post_id );
 
 		if ( ! $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {

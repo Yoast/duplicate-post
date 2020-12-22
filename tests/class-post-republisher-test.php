@@ -113,7 +113,7 @@ class Post_Republisher_Test extends TestCase {
 			->with( [ $this->instance, 'clean_up_after_redirect' ] );
 
 		Monkey\Actions\expectAdded( 'before_delete_post' )
-			->with( [ $this->instance, 'clean_up_after_copy_manually_deleted' ] );
+			->with( [ $this->instance, 'clean_up_when_copy_manually_deleted' ] );
 
 		$this->instance->register_hooks();
 	}

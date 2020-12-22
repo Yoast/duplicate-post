@@ -340,7 +340,7 @@ class Admin_Bar_Test extends TestCase {
 			->never();
 
 		$this->permissions_helper
-			->expects( 'should_link_be_displayed' )
+			->expects( 'should_links_be_displayed' )
 			->with( $post )
 			->andReturnTrue();
 
@@ -379,7 +379,7 @@ class Admin_Bar_Test extends TestCase {
 			->andReturn( $post );
 
 		$this->permissions_helper
-			->expects( 'should_link_be_displayed' )
+			->expects( 'should_links_be_displayed' )
 			->with( $post )
 			->andReturnTrue();
 
@@ -417,7 +417,7 @@ class Admin_Bar_Test extends TestCase {
 			->never();
 
 		$this->permissions_helper
-			->expects( 'should_link_be_displayed' )
+			->expects( 'should_links_be_displayed' )
 			->with( $post )
 			->never();
 
@@ -455,7 +455,7 @@ class Admin_Bar_Test extends TestCase {
 			->andReturn( $post );
 
 		$this->permissions_helper
-			->expects( 'should_link_be_displayed' )
+			->expects( 'should_links_be_displayed' )
 			->with( $post )
 			->never();
 
@@ -494,7 +494,7 @@ class Admin_Bar_Test extends TestCase {
 			->never();
 
 		$this->permissions_helper
-			->expects( 'should_link_be_displayed' )
+			->expects( 'should_links_be_displayed' )
 			->with( $post )
 			->andReturnFalse();
 

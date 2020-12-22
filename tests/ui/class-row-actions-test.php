@@ -122,7 +122,7 @@ class Row_Actions_Test extends TestCase {
 		$url              = 'http://basic.wordpress.test/wp-admin/admin.php?action=duplicate_post_clone&amp;post=464';
 
 		$this->permissions_helper
-			->expects( 'should_link_be_displayed' )
+			->expects( 'should_links_be_displayed' )
 			->with( $post )
 			->andReturnTrue();
 
@@ -167,7 +167,7 @@ class Row_Actions_Test extends TestCase {
 		$post    = Mockery::mock( \WP_Post::class );
 
 		$this->permissions_helper
-			->expects( 'should_link_be_displayed' )
+			->expects( 'should_links_be_displayed' )
 			->with( $post )
 			->andReturnFalse();
 
@@ -209,7 +209,7 @@ class Row_Actions_Test extends TestCase {
 		$url              = 'http://basic.wordpress.test/wp-admin/admin.php?action=duplicate_post_new_draft&amp;post=464';
 
 		$this->permissions_helper
-			->expects( 'should_link_be_displayed' )
+			->expects( 'should_links_be_displayed' )
 			->with( $post )
 			->andReturnTrue();
 
@@ -254,7 +254,7 @@ class Row_Actions_Test extends TestCase {
 		$post    = Mockery::mock( \WP_Post::class );
 
 		$this->permissions_helper
-			->expects( 'should_link_be_displayed' )
+			->expects( 'should_links_be_displayed' )
 			->with( $post )
 			->andReturnFalse();
 
@@ -297,7 +297,7 @@ class Row_Actions_Test extends TestCase {
 		$url               = 'http://basic.wordpress.test/wp-admin/admin.php?action=duplicate_post_rewrite&amp;post=464';
 
 		$this->permissions_helper
-			->expects( 'should_link_be_displayed' )
+			->expects( 'should_links_be_displayed' )
 			->with( $post )
 			->andReturnTrue();
 
@@ -343,7 +343,7 @@ class Row_Actions_Test extends TestCase {
 		$post->post_status = 'publish';
 
 		$this->permissions_helper
-			->expects( 'should_link_be_displayed' )
+			->expects( 'should_links_be_displayed' )
 			->with( $post )
 			->andReturnFalse();
 
@@ -382,7 +382,7 @@ class Row_Actions_Test extends TestCase {
 		$post->post_status = 'draft';
 
 		$this->permissions_helper
-			->expects( 'should_link_be_displayed' )
+			->expects( 'should_links_be_displayed' )
 			->never();
 
 		Monkey\Functions\expect( '\_draft_or_post_title' )

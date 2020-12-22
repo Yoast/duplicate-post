@@ -168,7 +168,7 @@ class Block_Editor_Test extends TestCase {
 		Monkey\Functions\expect( '\get_post' )
 			->andReturn( $post );
 
-		$this->permissions_helper->expects( 'should_link_be_displayed' )
+		$this->permissions_helper->expects( 'should_links_be_displayed' )
 			->with( $post )
 			->andReturnTrue();
 
@@ -191,7 +191,7 @@ class Block_Editor_Test extends TestCase {
 		Monkey\Functions\expect( '\get_post' )
 			->andReturn( $post );
 
-		$this->permissions_helper->expects( 'should_link_be_displayed' )
+		$this->permissions_helper->expects( 'should_links_be_displayed' )
 			->with( $post )
 			->andReturnFalse();
 
@@ -216,7 +216,7 @@ class Block_Editor_Test extends TestCase {
 		Monkey\Functions\expect( '\get_post' )
 			->andReturn( $post );
 
-		$this->permissions_helper->expects( 'should_link_be_displayed' )
+		$this->permissions_helper->expects( 'should_links_be_displayed' )
 			->with( $post )
 			->andReturnTrue();
 
@@ -240,7 +240,7 @@ class Block_Editor_Test extends TestCase {
 		Monkey\Functions\expect( '\get_post' )
 			->andReturn( $post );
 
-		$this->permissions_helper->expects( 'should_link_be_displayed' )
+		$this->permissions_helper->expects( 'should_links_be_displayed' )
 			->with( $post )
 			->never();
 
@@ -264,7 +264,7 @@ class Block_Editor_Test extends TestCase {
 		Monkey\Functions\expect( '\get_post' )
 			->andReturn( $post );
 
-		$this->permissions_helper->expects( 'should_link_be_displayed' )
+		$this->permissions_helper->expects( 'should_links_be_displayed' )
 			->with( $post )
 			->andReturnFalse();
 

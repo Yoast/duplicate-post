@@ -153,7 +153,7 @@ class Post_Submitbox_Test extends TestCase {
 			->never();
 
 		$this->permissions_helper
-			->expects( 'should_link_be_displayed' )
+			->expects( 'should_links_be_displayed' )
 			->with( $post )
 			->andReturnTrue();
 
@@ -187,7 +187,7 @@ class Post_Submitbox_Test extends TestCase {
 			->andReturn( $post );
 
 		$this->permissions_helper
-			->expects( 'should_link_be_displayed' )
+			->expects( 'should_links_be_displayed' )
 			->with( $post )
 			->andReturnTrue();
 
@@ -217,7 +217,7 @@ class Post_Submitbox_Test extends TestCase {
 			->never();
 
 		$this->permissions_helper
-			->expects( 'should_link_be_displayed' )
+			->expects( 'should_links_be_displayed' )
 			->never();
 
 		$this->link_builder
@@ -247,7 +247,7 @@ class Post_Submitbox_Test extends TestCase {
 			->never();
 
 		$this->permissions_helper
-			->expects( 'should_link_be_displayed' )
+			->expects( 'should_links_be_displayed' )
 			->with( $post )
 			->andReturnFalse();
 
@@ -280,7 +280,7 @@ class Post_Submitbox_Test extends TestCase {
 			->never();
 
 		$this->permissions_helper
-			->expects( 'should_link_be_displayed' )
+			->expects( 'should_links_be_displayed' )
 			->with( $post )
 			->andReturnTrue();
 
@@ -315,7 +315,7 @@ class Post_Submitbox_Test extends TestCase {
 			->andReturn( $post );
 
 		$this->permissions_helper
-			->expects( 'should_link_be_displayed' )
+			->expects( 'should_links_be_displayed' )
 			->with( $post )
 			->andReturnTrue();
 
@@ -345,7 +345,7 @@ class Post_Submitbox_Test extends TestCase {
 			->never();
 
 		$this->permissions_helper
-			->expects( 'should_link_be_displayed' )
+			->expects( 'should_links_be_displayed' )
 			->never();
 
 		$this->link_builder
@@ -376,7 +376,7 @@ class Post_Submitbox_Test extends TestCase {
 			->never();
 
 		$this->permissions_helper
-			->expects( 'should_link_be_displayed' )
+			->expects( 'should_links_be_displayed' )
 			->with( $post )
 			->andReturnFalse();
 
@@ -407,7 +407,7 @@ class Post_Submitbox_Test extends TestCase {
 			->never();
 
 		$this->permissions_helper
-			->expects( 'should_link_be_displayed' )
+			->expects( 'should_links_be_displayed' )
 			->never();
 
 		$this->link_builder

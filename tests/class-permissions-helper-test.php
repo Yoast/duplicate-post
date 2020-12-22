@@ -512,11 +512,11 @@ class Permissions_Helper_Test extends TestCase {
 	}
 
 	/**
-	 * Tests the should_link_be_displayed function.
+	 * Tests the should_links_be_displayed function.
 	 *
-	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::should_link_be_displayed
+	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::should_links_be_displayed
 	 */
-	public function test_should_link_be_displayed_unsuccessful() {
+	public function test_should_links_be_displayed_unsuccessful() {
 		$post            = Mockery::mock( \WP_Post::class );
 		$post->post_type = 'post';
 
@@ -534,7 +534,7 @@ class Permissions_Helper_Test extends TestCase {
 			->with( $post->post_type )
 			->andReturnTrue();
 
-		$this->assertTrue( $this->instance->should_link_be_displayed( $post ) );
+		$this->assertTrue( $this->instance->should_links_be_displayed( $post ) );
 	}
 
 	/**

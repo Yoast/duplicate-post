@@ -107,7 +107,7 @@ class Post_Submitbox {
 			/** This filter is documented in class-row-action.php */
 			if ( \apply_filters(
 				'duplicate_post_show_link',
-				$this->permissions_helper->should_link_be_displayed( $post ),
+				$this->permissions_helper->should_links_be_displayed( $post ),
 				$post
 			) ) {
 				?>
@@ -137,10 +137,10 @@ class Post_Submitbox {
 		}
 
 		if ( ! \is_null( $post ) && $post->post_status === 'publish' ) {
-			/** This filter is documented in duplicate-post-admin.php */
+			/** This filter is documented in class-row-actions.php */
 			if ( \apply_filters(
 				'duplicate_post_show_link',
-				$this->permissions_helper->should_link_be_displayed( $post ),
+				$this->permissions_helper->should_links_be_displayed( $post ),
 				$post
 			) ) {
 				?>

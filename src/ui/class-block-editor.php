@@ -132,7 +132,7 @@ class Block_Editor {
 		$post = \get_post();
 
 		/** This filter is documented in class-row-actions.php */
-		if ( ! apply_filters( 'duplicate_post_show_link', $this->permissions_helper->should_link_be_displayed( $post ), $post ) ) {
+		if ( ! apply_filters( 'duplicate_post_show_link', $this->permissions_helper->should_links_be_displayed( $post ), $post ) ) {
 			return '';
 		}
 
@@ -148,7 +148,7 @@ class Block_Editor {
 		$post = \get_post();
 
 		/** This filter is documented in class-row-actions.php */
-		if ( $post->post_status !== 'publish' || ! apply_filters( 'duplicate_post_show_link', $this->permissions_helper->should_link_be_displayed( $post ), $post ) ) {
+		if ( $post->post_status !== 'publish' || ! apply_filters( 'duplicate_post_show_link', $this->permissions_helper->should_links_be_displayed( $post ), $post ) ) {
 			return '';
 		}
 

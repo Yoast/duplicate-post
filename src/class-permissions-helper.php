@@ -170,7 +170,7 @@ class Permissions_Helper {
 	 *
 	 * @return bool Whether the links can be displayed.
 	 */
-	public function should_link_be_displayed( \WP_Post $post ) {
+	public function should_links_be_displayed( \WP_Post $post ) {
 		return ! $this->is_rewrite_and_republish_copy( $post )
 			&& $this->is_current_user_allowed_to_copy()
 			&& $this->is_post_type_enabled( $post->post_type );
