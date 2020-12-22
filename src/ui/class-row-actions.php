@@ -64,7 +64,6 @@ class Row_Actions {
 			\add_filter( 'post_row_actions', [ $this, 'add_rewrite_and_republish_action_link' ], 10, 2 );
 			\add_filter( 'page_row_actions', [ $this, 'add_rewrite_and_republish_action_link' ], 10, 2 );
 		}
-
 	}
 
 	/**
@@ -76,15 +75,7 @@ class Row_Actions {
 	 * @return array The updated array of actions.
 	 */
 	public function add_clone_action_link( array $actions, \WP_Post $post ) {
-		/**
-		 * Filter allowing displaying duplicate post link for current post.
-		 *
-		 * @param bool     $show_duplicate_link Whether the duplicate link will be displayed.
-		 * @param \WP_Post $post                The post object.
-		 *
-		 * @return bool Whether or not to display the duplicate post link.
-		 */
-		if ( ! apply_filters( 'duplicate_post_show_link', $this->permissions_helper->should_links_be_displayed( $post ), $post ) ) {
+		if ( ! $this->permissions_helper->should_links_be_displayed( $post ) ) {
 			return $actions;
 		}
 
@@ -109,15 +100,7 @@ class Row_Actions {
 	 * @return array The updated array of actions.
 	 */
 	public function add_new_draft_action_link( array $actions, \WP_Post $post ) {
-		/**
-		 * Filter allowing displaying duplicate post link for current post.
-		 *
-		 * @param bool     $show_duplicate_link Whether the duplicate link will be displayed.
-		 * @param \WP_Post $post                The post object.
-		 *
-		 * @return bool Whether or not to display the duplicate post link.
-		 */
-		if ( ! \apply_filters( 'duplicate_post_show_link', $this->permissions_helper->should_links_be_displayed( $post ), $post ) ) {
+		if ( ! $this->permissions_helper->should_links_be_displayed( $post ) ) {
 			return $actions;
 		}
 
@@ -143,15 +126,9 @@ class Row_Actions {
 	 * @return array The updated array of actions.
 	 */
 	public function add_rewrite_and_republish_action_link( array $actions, \WP_Post $post ) {
-		/**
-		 * Filter allowing displaying duplicate post links for current post.
-		 *
-		 * @param bool     $show_duplicate_link Whether the duplicate links will be displayed.
-		 * @param \WP_Post $post                The post object.
-		 *
-		 * @return bool Whether or not to display the duplicate post links.
-		 */
-		if ( $post->post_status !== 'publish' || ! apply_filters( 'duplicate_post_show_link', $this->permissions_helper->should_links_be_displayed( $post ), $post )
+		if (
+			! $this->permissions_helper->should_rewrite_and_republish_link_be_displayed( $post )
+			|| ! $this->permissions_helper->should_links_be_displayed( $post )
 		) {
 			return $actions;
 		}

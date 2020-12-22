@@ -171,9 +171,30 @@ class Permissions_Helper {
 	 * @return bool Whether the links can be displayed.
 	 */
 	public function should_links_be_displayed( \WP_Post $post ) {
-		return ! $this->is_rewrite_and_republish_copy( $post )
-			&& $this->is_current_user_allowed_to_copy()
-			&& $this->is_post_type_enabled( $post->post_type );
+		$display_links = $this->is_current_user_allowed_to_copy() && $this->is_post_type_enabled( $post->post_type );
+
+		/**
+		 * Filter allowing displaying duplicate post links for current post.
+		 *
+		 * @param bool     $display_links Whether the duplicate links will be displayed.
+		 * @param \WP_Post $post          The post object.
+		 *
+		 * @return bool Whether or not to display the duplicate post links.
+		 */
+		return apply_filters( 'duplicate_post_show_link', $display_links, $post );
+	}
+
+	/**
+	 * Determines if the Rewrite & Republish link for the post should be displayed.
+	 *
+	 * @param \WP_Post $post The post object.
+	 *
+	 * @return bool Whether the links should be displayed.
+	 */
+	public function should_rewrite_and_republish_link_be_displayed( \WP_Post $post ) {
+		return $post->post_status === 'publish'
+			&& ! $this->is_rewrite_and_republish_copy( $post )
+			&& ! $this->has_rewrite_and_republish_copy( $post );
 	}
 
 	/**

@@ -164,7 +164,6 @@ class Post_Submitbox_Test extends TestCase {
 
 		$this->setOutputCallback( function() {} );
 		$this->instance->add_new_draft_post_button( $post );
-		$this->assertTrue( Monkey\Filters\applied( 'duplicate_post_show_link' ) > 0 );
 	}
 
 	/**
@@ -198,7 +197,6 @@ class Post_Submitbox_Test extends TestCase {
 
 		$this->setOutputCallback( function() {} );
 		$this->instance->add_new_draft_post_button();
-		$this->assertTrue( Monkey\Filters\applied( 'duplicate_post_show_link' ) > 0 );
 	}
 
 	/**
@@ -257,7 +255,6 @@ class Post_Submitbox_Test extends TestCase {
 
 		$this->setOutputCallback( function() {} );
 		$this->instance->add_new_draft_post_button( $post );
-		$this->assertTrue( Monkey\Filters\applied( 'duplicate_post_show_link' ) > 0 );
 	}
 
 	/**
@@ -284,6 +281,11 @@ class Post_Submitbox_Test extends TestCase {
 			->with( $post )
 			->andReturnTrue();
 
+		$this->permissions_helper
+			->expects( 'should_rewrite_and_republish_link_be_displayed' )
+			->with( $post )
+			->andReturnTrue();
+
 		$this->link_builder
 			->expects( 'build_rewrite_and_republish_link' )
 			->with( $post )
@@ -291,7 +293,6 @@ class Post_Submitbox_Test extends TestCase {
 
 		$this->setOutputCallback( function() {} );
 		$this->instance->add_rewrite_and_republish_post_button( $post );
-		$this->assertTrue( Monkey\Filters\applied( 'duplicate_post_show_link' ) > 0 );
 	}
 
 	/**
@@ -319,6 +320,11 @@ class Post_Submitbox_Test extends TestCase {
 			->with( $post )
 			->andReturnTrue();
 
+		$this->permissions_helper
+			->expects( 'should_rewrite_and_republish_link_be_displayed' )
+			->with( $post )
+			->andReturnTrue();
+
 		$this->link_builder
 			->expects( 'build_rewrite_and_republish_link' )
 			->with( $post )
@@ -326,7 +332,6 @@ class Post_Submitbox_Test extends TestCase {
 
 		$this->setOutputCallback( function() {} );
 		$this->instance->add_rewrite_and_republish_post_button();
-		$this->assertTrue( Monkey\Filters\applied( 'duplicate_post_show_link' ) > 0 );
 	}
 
 	/**
@@ -378,6 +383,11 @@ class Post_Submitbox_Test extends TestCase {
 		$this->permissions_helper
 			->expects( 'should_links_be_displayed' )
 			->with( $post )
+			->never();
+
+		$this->permissions_helper
+			->expects( 'should_rewrite_and_republish_link_be_displayed' )
+			->with( $post )
 			->andReturnFalse();
 
 		$this->link_builder
@@ -386,7 +396,6 @@ class Post_Submitbox_Test extends TestCase {
 
 		$this->setOutputCallback( function() {} );
 		$this->instance->add_rewrite_and_republish_post_button( $post );
-		$this->assertTrue( Monkey\Filters\applied( 'duplicate_post_show_link' ) > 0 );
 	}
 
 	/**

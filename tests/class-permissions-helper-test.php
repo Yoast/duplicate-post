@@ -516,14 +516,9 @@ class Permissions_Helper_Test extends TestCase {
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::should_links_be_displayed
 	 */
-	public function test_should_links_be_displayed_unsuccessful() {
+	public function test_should_links_be_displayed_successful() {
 		$post            = Mockery::mock( \WP_Post::class );
 		$post->post_type = 'post';
-
-		$this->instance
-			->expects( 'is_rewrite_and_republish_copy' )
-			->with( $post )
-			->andReturnFalse();
 
 		$this->instance
 			->expects( 'is_current_user_allowed_to_copy' )
@@ -535,6 +530,48 @@ class Permissions_Helper_Test extends TestCase {
 			->andReturnTrue();
 
 		$this->assertTrue( $this->instance->should_links_be_displayed( $post ) );
+	}
+
+	/**
+	 * Tests the should_links_be_displayed function when the user is not allowed to copy.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::should_links_be_displayed
+	 */
+	public function test_should_links_be_displayed_unsuccessful_user_not_allowed_to_copy() {
+		$post            = Mockery::mock( \WP_Post::class );
+		$post->post_type = 'post';
+
+		$this->instance
+			->expects( 'is_current_user_allowed_to_copy' )
+			->andReturnFalse();
+
+		$this->instance
+			->expects( 'is_post_type_enabled' )
+			->with( $post->post_type )
+			->never();
+
+		$this->assertFalse( $this->instance->should_links_be_displayed( $post ) );
+	}
+
+	/**
+	 * Tests the should_links_be_displayed function when the post type is not enabled for copy.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::should_links_be_displayed
+	 */
+	public function test_should_links_be_displayed_unsuccessful_post_type_not_enabled_for_copy() {
+		$post            = Mockery::mock( \WP_Post::class );
+		$post->post_type = 'post';
+
+		$this->instance
+			->expects( 'is_current_user_allowed_to_copy' )
+			->andReturnTrue();
+
+		$this->instance
+			->expects( 'is_post_type_enabled' )
+			->with( $post->post_type )
+			->andReturnFalse();
+
+		$this->assertFalse( $this->instance->should_links_be_displayed( $post ) );
 	}
 
 	/**

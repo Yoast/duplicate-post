@@ -127,6 +127,11 @@ class Admin_Bar_Test extends TestCase {
 			->once()
 			->andReturn( '1' );
 
+		$this->permissions_helper
+			->expects( 'should_rewrite_and_republish_link_be_displayed' )
+			->with( $post )
+			->andReturnTrue();
+
 		$wp_admin_bar
 			->expects( 'add_menu' )
 			->twice();
@@ -354,7 +359,6 @@ class Admin_Bar_Test extends TestCase {
 			->andReturnTrue();
 
 		$this->assertSame( $post, $this->instance->get_current_post() );
-		$this->assertTrue( Monkey\Filters\applied( 'duplicate_post_show_link' ) > 0 );
 	}
 
 	/**
@@ -393,7 +397,6 @@ class Admin_Bar_Test extends TestCase {
 			->andReturnTrue();
 
 		$this->assertSame( $post, $this->instance->get_current_post() );
-		$this->assertTrue( Monkey\Filters\applied( 'duplicate_post_show_link' ) > 0 );
 	}
 
 	/**
@@ -508,6 +511,5 @@ class Admin_Bar_Test extends TestCase {
 			->never();
 
 		$this->assertSame( false, $this->instance->get_current_post() );
-		$this->assertTrue( Monkey\Filters\applied( 'duplicate_post_show_link' ) > 0 );
 	}
 }

@@ -177,7 +177,6 @@ class Block_Editor_Test extends TestCase {
 			->andReturn( $url );
 
 		$this->assertSame( $url, $this->instance->get_new_draft_permalink() );
-		$this->assertTrue( Monkey\Filters\applied( 'duplicate_post_show_link' ) > 0 );
 	}
 
 	/**
@@ -200,7 +199,6 @@ class Block_Editor_Test extends TestCase {
 			->never();
 
 		$this->assertSame( '', $this->instance->get_new_draft_permalink() );
-		$this->assertTrue( Monkey\Filters\applied( 'duplicate_post_show_link' ) > 0 );
 	}
 
 	/**
@@ -220,12 +218,15 @@ class Block_Editor_Test extends TestCase {
 			->with( $post )
 			->andReturnTrue();
 
+		$this->permissions_helper->expects( 'should_rewrite_and_republish_link_be_displayed' )
+			->with( $post )
+			->andReturnTrue();
+
 		$this->link_builder->expects( 'build_rewrite_and_republish_link' )
 			->with( $post )
 			->andReturn( $url );
 
 		$this->assertSame( $url, $this->instance->get_rewrite_republish_permalink() );
-		$this->assertTrue( Monkey\Filters\applied( 'duplicate_post_show_link' ) > 0 );
 	}
 
 	/**
@@ -243,6 +244,10 @@ class Block_Editor_Test extends TestCase {
 		$this->permissions_helper->expects( 'should_links_be_displayed' )
 			->with( $post )
 			->never();
+
+		$this->permissions_helper->expects( 'should_rewrite_and_republish_link_be_displayed' )
+			->with( $post )
+			->andReturnFalse();
 
 		$this->link_builder->expects( 'build_rewrite_and_republish_link' )
 			->with( $post )
@@ -266,6 +271,10 @@ class Block_Editor_Test extends TestCase {
 
 		$this->permissions_helper->expects( 'should_links_be_displayed' )
 			->with( $post )
+			->never();
+
+		$this->permissions_helper->expects( 'should_rewrite_and_republish_link_be_displayed' )
+			->with( $post )
 			->andReturnFalse();
 
 		$this->link_builder->expects( 'build_rewrite_and_republish_link' )
@@ -273,6 +282,32 @@ class Block_Editor_Test extends TestCase {
 			->never();
 
 		$this->assertSame( '', $this->instance->get_rewrite_republish_permalink() );
-		$this->assertTrue( Monkey\Filters\applied( 'duplicate_post_show_link' ) > 0 );
+	}
+
+	/**
+	 * Tests the get_rewrite_republish_permalink function when duplicate link should be displayed except the Rewrite & Republish one.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Block_Editor::get_rewrite_republish_permalink
+	 */
+	public function test_get_rewrite_republish_permalink_unsuccessful_rewrite_and_republish_link_should_not_be_displayed() {
+		$post              = Mockery::mock( \WP_Post::class );
+		$post->post_status = 'publish';
+
+		Monkey\Functions\expect( '\get_post' )
+			->andReturn( $post );
+
+		$this->permissions_helper->expects( 'should_links_be_displayed' )
+			->with( $post )
+			->never();
+
+		$this->permissions_helper->expects( 'should_rewrite_and_republish_link_be_displayed' )
+			->with( $post )
+			->andReturnFalse();
+
+		$this->link_builder->expects( 'build_rewrite_and_republish_link' )
+			->with( $post )
+			->never();
+
+		$this->assertSame( '', $this->instance->get_rewrite_republish_permalink() );
 	}
 }

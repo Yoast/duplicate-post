@@ -131,8 +131,7 @@ class Block_Editor {
 	public function get_new_draft_permalink() {
 		$post = \get_post();
 
-		/** This filter is documented in class-row-actions.php */
-		if ( ! apply_filters( 'duplicate_post_show_link', $this->permissions_helper->should_links_be_displayed( $post ), $post ) ) {
+		if ( ! $this->permissions_helper->should_links_be_displayed( $post ) ) {
 			return '';
 		}
 
@@ -147,8 +146,10 @@ class Block_Editor {
 	public function get_rewrite_republish_permalink() {
 		$post = \get_post();
 
-		/** This filter is documented in class-row-actions.php */
-		if ( $post->post_status !== 'publish' || ! apply_filters( 'duplicate_post_show_link', $this->permissions_helper->should_links_be_displayed( $post ), $post ) ) {
+		if (
+			! $this->permissions_helper->should_rewrite_and_republish_link_be_displayed( $post )
+			|| ! $this->permissions_helper->should_links_be_displayed( $post )
+		) {
 			return '';
 		}
 

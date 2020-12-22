@@ -87,8 +87,10 @@ class Admin_Bar {
 			);
 		}
 
-		if ( \intval( Utils::get_option( 'duplicate_post_show_link', 'rewrite_republish' ) ) === 1
-			&& $post->post_status === 'publish' ) {
+		if (
+			\intval( Utils::get_option( 'duplicate_post_show_link', 'rewrite_republish' ) ) === 1
+			&& $this->permissions_helper->should_rewrite_and_republish_link_be_displayed( $post )
+		) {
 			$wp_admin_bar->add_menu(
 				[
 					'id'     => 'rewrite_republish',
@@ -141,13 +143,15 @@ class Admin_Bar {
 			return false;
 		}
 
-		$show_duplicate_link = $this->permissions_helper->should_links_be_displayed( $post )
-							&& ( $this->permissions_helper->is_edit_post_screen() || \is_singular( $post->post_type ) )
-							&& $this->permissions_helper->post_type_has_admin_bar( $post->post_type );
-
-		/** This filter is documented in class-row-actions.php */
-		if ( ! \apply_filters( 'duplicate_post_show_link', $show_duplicate_link, $post ) ) {
+		if ( ! $this->permissions_helper->should_links_be_displayed( $post ) ) {
 			return false;
+		}
+
+		if (
+			( $this->permissions_helper->is_edit_post_screen() || \is_singular( $post->post_type ) )
+			&& $this->permissions_helper->post_type_has_admin_bar( $post->post_type )
+		) {
+			return $post;
 		}
 
 		return $post;
