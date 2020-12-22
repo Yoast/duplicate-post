@@ -235,15 +235,6 @@ class Post_Republisher_Test extends TestCase {
 					'post_status' => 'dp-rewrite-republish',
 				],
 			],
-			[
-				[
-					'post_status' => 'future',
-					'is_copy'     => true,
-				],
-				[
-					'post_status' => 'dp-rewrite-schedule',
-				],
-			],
 		];
 	}
 
@@ -304,5 +295,99 @@ class Post_Republisher_Test extends TestCase {
 				'display_post_state' => 'Scheduled',
 			],
 		];
+	}
+
+	/**
+	 * Tests the republish_scheduled_post function when a valid copy is passed.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Post_Republisher::republish_scheduled_post
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_republish_scheduled_post() {
+		$original              = Mockery::mock( \WP_Post::class );
+		$original->ID          = 1;
+		$original->post_status = 'publish';
+
+		$copy              = Mockery::mock( \WP_Post::class );
+		$copy->ID          = 123;
+		$copy->post_status = 'future';
+
+		$this->permissions_helper
+			->expects( 'is_rewrite_and_republish_copy' )
+			->with( $copy )
+			->once()
+			->andReturnTrue();
+
+		$utils = \Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
+		$utils
+			->expects( 'get_original' )
+			->with( $copy->ID )
+			->once()
+			->andReturn( $original );
+
+		$this->instance->expects( 'republish' )->with( $copy, $original->ID )->once();
+		$this->instance->expects( 'delete_copy' )->with( $copy->ID, $original->ID )->once();
+
+		$this->instance->republish_scheduled_post( $copy );
+	}
+
+	/**
+	 * Tests the republish_scheduled_post function when an invalid copy is passed.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Post_Republisher::republish_scheduled_post
+	 */
+	public function test_republish_scheduled_post_invalid_copy() {
+		$copy              = Mockery::mock( \WP_Post::class );
+		$copy->ID          = 123;
+		$copy->post_status = 'publish';
+
+		$this->permissions_helper
+			->expects( 'is_rewrite_and_republish_copy' )
+			->with( $copy )
+			->once()
+			->andReturnFalse();
+
+		$this->instance->expects( 'republish' )->never();
+		$this->instance->expects( 'delete_copy' )->never();
+
+		$this->instance->republish_scheduled_post( $copy );
+	}
+
+	/**
+	 * Tests the republish_scheduled_post function when the original copy has been permanently deleted.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Post_Republisher::republish_scheduled_post
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_republish_scheduled_post_original_deleted() {
+		$copy              = Mockery::mock( \WP_Post::class );
+		$copy->ID          = 123;
+		$copy->post_status = 'publish';
+
+		$this->permissions_helper
+			->expects( 'is_rewrite_and_republish_copy' )
+			->with( $copy )
+			->once()
+			->andReturnTrue();
+
+		$utils = \Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
+		$utils
+			->expects( 'get_original' )
+			->with( $copy->ID )
+			->once()
+			->andReturnNull();
+
+		$this->instance
+			->expects( 'republish' )
+			->never();
+
+		$this->instance
+			->expects( 'delete_copy' )
+			->with( $copy->ID )
+			->once();
+
+		$this->instance->republish_scheduled_post( $copy );
 	}
 }

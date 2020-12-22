@@ -69,6 +69,7 @@ class Post_Republisher {
 		// Clean up after the redirect to the original post.
 		\add_action( 'load-post.php', [ $this, 'clean_up_after_redirect' ] );
 
+		// Ensure scheduled Rewrite and Republish posts are properly handled.
 		\add_action( 'future_to_publish', [ $this, 'republish_scheduled_post' ] );
 	}
 
@@ -126,10 +127,6 @@ class Post_Republisher {
 			$data['post_status'] = 'dp-rewrite-republish';
 		}
 
-		// if ( $data['post_status'] === 'future' ) {
-		// $data['post_status'] = 'dp-rewrite-schedule';
-		// }
-
 		return $data;
 	}
 
@@ -154,12 +151,7 @@ class Post_Republisher {
 			return;
 		}
 
-		// Republish taxonomies and meta.
-		$this->republish_post_taxonomies( $post );
-		$this->republish_post_meta( $post );
-
-		// Republish the post.
-		$this->republish_post_elements( $post, $original_post_id );
+		$this->republish( $post, $original_post_id );
 
 		// Trigger the redirect in the Classic Editor.
 		if ( $this->is_classic_editor_post_request() ) {
@@ -175,7 +167,7 @@ class Post_Republisher {
 	 * @return void
 	 */
 	public function republish_after_rest_api_request( $post ) {
-		if ( $this->permissions_helper->is_scheduled_rewrite_and_republish_copy( $post ) ) {
+		if ( $this->permissions_helper->has_scheduled_rewrite_and_republish_copy( $post ) ) {
 			return;
 		}
 
@@ -198,7 +190,7 @@ class Post_Republisher {
 			return;
 		}
 
-		if ( $this->permissions_helper->is_scheduled_rewrite_and_republish_copy( $post ) ) {
+		if ( $this->permissions_helper->has_scheduled_rewrite_and_republish_copy( $post ) ) {
 			return;
 		}
 
@@ -208,46 +200,30 @@ class Post_Republisher {
 	/**
 	 * Republishes the scheduled Rewrited and Republish post.
 	 *
-	 * @param $post The scheduled post's ID.
+	 * @param \WP_Post $copy The scheduled copy.
 	 *
 	 * @return void
 	 */
-	public function republish_scheduled_post( $post ) {
-		if ( ! $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
+	public function republish_scheduled_post( \WP_Post $copy ) {
+		if ( ! $this->permissions_helper->is_rewrite_and_republish_copy( $copy ) ) {
 			return;
 		}
 
-		$original_post_id = Utils::get_original_post_id( $post->ID );
+		$original_post = Utils::get_original( $copy->ID );
 
-		if ( ! $original_post_id ) {
-			\wp_delete_post( $post->ID, true );
-
-			return;
-		}
-
-		$original = \get_post( $original_post_id );
-		if( ! $original || $original->post_status === 'trash' ) {
-			\wp_delete_post( $post->ID, true );
+		// If the original post was permanently deleted, we don't want to republish.
+		if ( ! $original_post ) {
+			$this->delete_copy( $copy->ID );
 
 			return;
 		}
 
-		// Republish taxonomies and meta.
-		$this->republish_post_taxonomies( $post );
-		$this->republish_post_meta( $post );
-
-		// Republish the post.
-		$this->republish_post_elements( $post, $original_post_id );
-
-		// Delete the copy bypassing the trash so it also deletes the copy post meta.
-		\wp_delete_post( $post->ID, true );
-
-		// Delete the meta that marks the original post has having a copy.
-		\delete_post_meta( $original_post_id, '_dp_has_rewrite_republish_copy' );
+		$this->republish( $copy, $original_post->ID );
+		$this->delete_copy( $copy->ID, $original_post->ID );
 	}
 
 	/**
-	 * Deletes the copied post and temporary metadata.
+	 * Cleans up the copied post and temporary metadata after the user has been redirected.
 	 *
 	 * @return void
 	 */
@@ -258,11 +234,7 @@ class Post_Republisher {
 
 			\check_admin_referer( 'dp-republish', 'dpnonce' );
 
-			// Delete the copy bypassing the trash so it also deletes the copy post meta.
-			\wp_delete_post( $copy_id, true );
-
-			// Delete the meta that marks the original post has having a copy.
-			\delete_post_meta( $post_id, '_dp_has_rewrite_republish_copy' );
+			$this->delete_copy( $copy_id, $post_id );
 		}
 	}
 
@@ -286,6 +258,57 @@ class Post_Republisher {
 	 */
 	public function is_rest_request() {
 		return defined( 'REST_REQUEST' ) && REST_REQUEST;
+	}
+
+	/**
+	 * Adds the default post display states used in the posts list table.
+	 *
+	 * @param string[] $post_states An array of post display states.
+	 * @param WP_Post  $post        The current post object.
+	 *
+	 * @return string[] An array of filtered display post states.
+	 */
+	public function add_rewrite_schedule_display_state( $post_states, $post ) {
+		if ( $post->post_status === 'dp-rewrite-schedule' ) {
+			$post_states['dp-rewrite-schedule'] = \esc_html__( 'Scheduled', 'duplicate-post' );
+		}
+
+		return $post_states;
+	}
+
+	/**
+	 * Republishes the post by overwriting the original post.
+	 *
+	 * @param \WP_Post $post             The Rewrite & Republish copy.
+	 * @param int      $original_post_id The original post's ID.
+	 *
+	 * @return void
+	 */
+	public function republish( \WP_Post $post, $original_post_id ) {
+		// Republish taxonomies and meta.
+		$this->republish_post_taxonomies( $post );
+		$this->republish_post_meta( $post );
+
+		// Republish the post.
+		$this->republish_post_elements( $post, $original_post_id );
+	}
+
+	/**
+	 * Deletes the copy and associated post meta, if applicable.
+	 *
+	 * @param int      $copy_id The copy's ID.
+	 * @param int|null $post_id The post's ID. Optional.
+	 *
+	 * @return void
+	 */
+	public function delete_copy( $copy_id, $post_id = null ) {
+		// Delete the copy bypassing the trash so it also deletes the copy post meta.
+		\wp_delete_post( $copy_id, true );
+
+		if ( ! \is_null( $post_id ) ) {
+			// Delete the meta that marks the original post has having a copy.
+			\delete_post_meta( $post_id, '_dp_has_rewrite_republish_copy' );
+		}
 	}
 
 	/**
@@ -384,21 +407,5 @@ class Post_Republisher {
 			)
 		);
 		exit();
-	}
-
-	/**
-	 * Adds the default post display states used in the posts list table.
-	 *
-	 * @param string[] $post_states An array of post display states.
-	 * @param WP_Post  $post        The current post object.
-	 *
-	 * @return string[] An array of filtered display post states.
-	 */
-	public function add_rewrite_schedule_display_state( $post_states, $post ) {
-		if ( $post->post_status === 'dp-rewrite-schedule' ) {
-			$post_states['dp-rewrite-schedule'] = \esc_html__( 'Scheduled', 'duplicate-post' );
-		}
-
-		return $post_states;
 	}
 }
