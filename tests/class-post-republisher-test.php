@@ -290,10 +290,6 @@ class Post_Republisher_Test extends TestCase {
 				'post_status'        => 'protected',
 				'display_post_state' => 'Password protected',
 			],
-			[
-				'post_status'        => 'dp-rewrite-schedule',
-				'display_post_state' => 'Scheduled',
-			],
 		];
 	}
 

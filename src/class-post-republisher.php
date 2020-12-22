@@ -269,8 +269,8 @@ class Post_Republisher {
 	 * @return string[] An array of filtered display post states.
 	 */
 	public function add_rewrite_schedule_display_state( $post_states, $post ) {
-		if ( $post->post_status === 'dp-rewrite-schedule' ) {
-			$post_states['dp-rewrite-schedule'] = \esc_html__( 'Scheduled', 'duplicate-post' );
+		if ( $post->post_status === 'future' ) {
+			$post_states['scheduled'] = \esc_html__( 'Scheduled', 'duplicate-post' );
 		}
 
 		return $post_states;
