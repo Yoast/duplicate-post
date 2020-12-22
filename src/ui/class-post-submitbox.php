@@ -134,7 +134,7 @@ class Post_Submitbox {
 
 		if (
 			! \is_null( $post )
-			&& $this->permissions_helper->should_rewrite_and_republish_link_be_displayed( $post )
+			&& $this->permissions_helper->should_rewrite_and_republish_be_allowed( $post )
 			&& $this->permissions_helper->should_links_be_displayed( $post )
 		) {
 			?>

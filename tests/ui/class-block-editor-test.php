@@ -218,7 +218,7 @@ class Block_Editor_Test extends TestCase {
 			->with( $post )
 			->andReturnTrue();
 
-		$this->permissions_helper->expects( 'should_rewrite_and_republish_link_be_displayed' )
+		$this->permissions_helper->expects( 'should_rewrite_and_republish_be_allowed' )
 			->with( $post )
 			->andReturnTrue();
 
@@ -245,7 +245,7 @@ class Block_Editor_Test extends TestCase {
 			->with( $post )
 			->never();
 
-		$this->permissions_helper->expects( 'should_rewrite_and_republish_link_be_displayed' )
+		$this->permissions_helper->expects( 'should_rewrite_and_republish_be_allowed' )
 			->with( $post )
 			->andReturnFalse();
 
@@ -273,7 +273,7 @@ class Block_Editor_Test extends TestCase {
 			->with( $post )
 			->never();
 
-		$this->permissions_helper->expects( 'should_rewrite_and_republish_link_be_displayed' )
+		$this->permissions_helper->expects( 'should_rewrite_and_republish_be_allowed' )
 			->with( $post )
 			->andReturnFalse();
 
@@ -300,7 +300,7 @@ class Block_Editor_Test extends TestCase {
 			->with( $post )
 			->never();
 
-		$this->permissions_helper->expects( 'should_rewrite_and_republish_link_be_displayed' )
+		$this->permissions_helper->expects( 'should_rewrite_and_republish_be_allowed' )
 			->with( $post )
 			->andReturnFalse();
 

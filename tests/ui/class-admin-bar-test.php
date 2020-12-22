@@ -128,7 +128,7 @@ class Admin_Bar_Test extends TestCase {
 			->andReturn( '1' );
 
 		$this->permissions_helper
-			->expects( 'should_rewrite_and_republish_link_be_displayed' )
+			->expects( 'should_rewrite_and_republish_be_allowed' )
 			->with( $post )
 			->andReturnTrue();
 

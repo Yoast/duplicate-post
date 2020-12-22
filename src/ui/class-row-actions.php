@@ -127,7 +127,7 @@ class Row_Actions {
 	 */
 	public function add_rewrite_and_republish_action_link( array $actions, \WP_Post $post ) {
 		if (
-			! $this->permissions_helper->should_rewrite_and_republish_link_be_displayed( $post )
+			! $this->permissions_helper->should_rewrite_and_republish_be_allowed( $post )
 			|| ! $this->permissions_helper->should_links_be_displayed( $post )
 		) {
 			return $actions;

@@ -282,7 +282,7 @@ class Post_Submitbox_Test extends TestCase {
 			->andReturnTrue();
 
 		$this->permissions_helper
-			->expects( 'should_rewrite_and_republish_link_be_displayed' )
+			->expects( 'should_rewrite_and_republish_be_allowed' )
 			->with( $post )
 			->andReturnTrue();
 
@@ -321,7 +321,7 @@ class Post_Submitbox_Test extends TestCase {
 			->andReturnTrue();
 
 		$this->permissions_helper
-			->expects( 'should_rewrite_and_republish_link_be_displayed' )
+			->expects( 'should_rewrite_and_republish_be_allowed' )
 			->with( $post )
 			->andReturnTrue();
 
@@ -386,7 +386,7 @@ class Post_Submitbox_Test extends TestCase {
 			->never();
 
 		$this->permissions_helper
-			->expects( 'should_rewrite_and_republish_link_be_displayed' )
+			->expects( 'should_rewrite_and_republish_be_allowed' )
 			->with( $post )
 			->andReturnFalse();
 

@@ -575,6 +575,85 @@ class Permissions_Helper_Test extends TestCase {
 	}
 
 	/**
+	 * Tests the should_rewrite_and_republish_be_allowed.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::should_rewrite_and_republish_be_allowed
+	 * @dataProvider should_rewrite_and_republish_be_allowed_provider
+	 *
+	 * @param mixed $original Input value.
+	 * @param mixed $expected Expected output.
+	 */
+	public function test_should_rewrite_and_republish_be_allowed( $original, $expected ) {
+		$post              = Mockery::mock( \WP_Post::class );
+		$post->post_type   = 'post';
+		$post->post_status = $original['post_status'];
+
+		$this->instance
+			->expects( 'is_rewrite_and_republish_copy' )
+			->times( $original['is_rewrite_and_republish_copy_times_called'] )
+			->with( $post )
+			->andReturn( $original['is_rewrite_and_republish_copy'] );
+
+		$this->instance
+			->expects( 'has_rewrite_and_republish_copy' )
+			->times( $original['has_rewrite_and_republish_copy_times_called'] )
+			->with( $post )
+			->andReturn( $original['has_rewrite_and_republish_copy'] );
+
+		$this->assertEquals( $expected, $this->instance->should_rewrite_and_republish_be_allowed( $post ) );
+	}
+
+	/**
+	 * Data provider for test_should_rewrite_and_republish_be_allowed.
+	 *
+	 * @return array The test parameters.
+	 */
+	public function should_rewrite_and_republish_be_allowed_provider() {
+		return [
+			[
+				'original' => [
+					'post_status'                    => 'publish',
+					'is_rewrite_and_republish_copy'  => false,
+					'is_rewrite_and_republish_copy_times_called' => 1,
+					'has_rewrite_and_republish_copy' => false,
+					'has_rewrite_and_republish_copy_times_called' => 1,
+				],
+				'expected' => true,
+			],
+			[
+				'original' => [
+					'post_status'                    => 'draft',
+					'is_rewrite_and_republish_copy'  => false,
+					'is_rewrite_and_republish_copy_times_called' => 0,
+					'has_rewrite_and_republish_copy' => false,
+					'has_rewrite_and_republish_copy_times_called' => 0,
+				],
+				'expected' => false,
+			],
+			[
+				'original' => [
+					'post_status'                    => 'publish',
+					'is_rewrite_and_republish_copy'  => true,
+					'is_rewrite_and_republish_copy_times_called' => 1,
+					'has_rewrite_and_republish_copy' => false,
+					'has_rewrite_and_republish_copy_times_called' => 0,
+				],
+				'expected' => false,
+			],
+			[
+				'original' => [
+					'post_status'                    => 'publish',
+					'is_rewrite_and_republish_copy'  => false,
+					'is_rewrite_and_republish_copy_times_called' => 1,
+					'has_rewrite_and_republish_copy' => true,
+					'has_rewrite_and_republish_copy_times_called' => 1,
+				],
+				'expected' => false,
+			],
+		];
+	}
+
+	/**
 	 * Tests the post_type_has_admin_bar function.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::post_type_has_admin_bar

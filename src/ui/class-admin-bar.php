@@ -89,7 +89,7 @@ class Admin_Bar {
 
 		if (
 			\intval( Utils::get_option( 'duplicate_post_show_link', 'rewrite_republish' ) ) === 1
-			&& $this->permissions_helper->should_rewrite_and_republish_link_be_displayed( $post )
+			&& $this->permissions_helper->should_rewrite_and_republish_be_allowed( $post )
 		) {
 			$wp_admin_bar->add_menu(
 				[

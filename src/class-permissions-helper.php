@@ -191,7 +191,7 @@ class Permissions_Helper {
 	 *
 	 * @return bool Whether the links should be displayed.
 	 */
-	public function should_rewrite_and_republish_link_be_displayed( \WP_Post $post ) {
+	public function should_rewrite_and_republish_be_allowed( \WP_Post $post ) {
 		return $post->post_status === 'publish'
 			&& ! $this->is_rewrite_and_republish_copy( $post )
 			&& ! $this->has_rewrite_and_republish_copy( $post );

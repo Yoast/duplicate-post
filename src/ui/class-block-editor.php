@@ -147,7 +147,7 @@ class Block_Editor {
 		$post = \get_post();
 
 		if (
-			! $this->permissions_helper->should_rewrite_and_republish_link_be_displayed( $post )
+			! $this->permissions_helper->should_rewrite_and_republish_be_allowed( $post )
 			|| ! $this->permissions_helper->should_links_be_displayed( $post )
 		) {
 			return '';
