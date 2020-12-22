@@ -68,12 +68,13 @@ class Utils {
 			return null;
 		}
 
-		$original_id = \get_post_meta( $post->ID, '_dp_original' );
+		$original_id = self::get_original_post_id( $post->ID );
+
 		if ( empty( $original_id ) ) {
 			return null;
 		}
 
-		return \get_post( $original_id[0], $output );
+		return \get_post( $original_id, $output );
 	}
 
 	/**
