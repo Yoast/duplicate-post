@@ -140,15 +140,3 @@ function duplicate_post_get_original( $post = null, $output = OBJECT ) {
 	return $original_post;
 }
 
-/**
- * Sorts taxonomy objects: first public, then private.
- *
- * @ignore
- * @param WP_Taxonomy $a First taxonomy object.
- * @param WP_Taxonomy $b Second taxonomy object.
- * @return bool
- */
-function duplicate_post_tax_obj_cmp( $a, $b ) {
-	return ( $a->public < $b->public );
-}
-
