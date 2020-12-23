@@ -8,10 +8,6 @@
 
 namespace Yoast\WP\Duplicate_Post;
 
-use Yoast\WP\Duplicate_Post\Permissions_Helper;
-use Yoast\WP\Duplicate_Post\Post_Duplicator;
-use Yoast\WP\Duplicate_Post\Utils;
-
 /**
  * Represents the Post Republisher class.
  */
@@ -40,8 +36,6 @@ class Post_Republisher {
 	public function __construct( Post_Duplicator $post_duplicator, Permissions_Helper $permissions_helper ) {
 		$this->post_duplicator    = $post_duplicator;
 		$this->permissions_helper = $permissions_helper;
-
-		$this->register_hooks();
 	}
 
 	/**
@@ -144,9 +138,9 @@ class Post_Republisher {
 			return;
 		}
 
-		$original_post_id = Utils::get_original_post_id( $post->ID );
+		$original_post = Utils::get_original( $post );
 
-		if ( ! $original_post_id ) {
+		if ( ! $original_post ) {
 			return;
 		}
 
@@ -155,11 +149,13 @@ class Post_Republisher {
 		$this->republish_post_meta( $post );
 
 		// Republish the post.
-		$this->republish_post_elements( $post, $original_post_id );
+		$this->republish_post_elements( $post, $original_post->ID );
+
+		\do_action( 'duplicate_post_after_rewriting', $post, $original_post );
 
 		// Trigger the redirect in the Classic Editor.
 		if ( $this->is_classic_editor_post_request() ) {
-			$this->redirect( $original_post_id, $post->ID );
+			$this->redirect( $original_post->ID, $post->ID );
 		}
 	}
 
@@ -324,7 +320,7 @@ class Post_Republisher {
 	 * Adds the default post display states used in the posts list table.
 	 *
 	 * @param string[] $post_states An array of post display states.
-	 * @param WP_Post  $post        The current post object.
+	 * @param \WP_Post  $post        The current post object.
 	 *
 	 * @return string[] An array of filtered display post states.
 	 */

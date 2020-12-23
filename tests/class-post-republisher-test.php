@@ -9,7 +9,6 @@ namespace Yoast\WP\Duplicate_Post\Tests;
 
 use Brain\Monkey;
 use Mockery;
-use Yoast\WP\Duplicate_Post\Tests\TestCase;
 use Yoast\WP\Duplicate_Post\Post_Republisher;
 use Yoast\WP\Duplicate_Post\Post_Duplicator;
 use Yoast\WP\Duplicate_Post\Permissions_Helper;
@@ -50,16 +49,9 @@ class Post_Republisher_Test extends TestCase {
 		$this->permissions_helper = Mockery::mock( Permissions_Helper::class );
 
 		$this->instance = Mockery::mock(
-			Post_Republisher::class
+			Post_Republisher::class,
+			[ $this->post_duplicator, $this->permissions_helper ]
 		)->makePartial();
-
-		$enabled_post_types = [ 'post', 'page' ];
-
-		$this->permissions_helper
-			->expects( 'get_enabled_post_types' )
-			->andReturn( $enabled_post_types );
-
-		$this->instance->__construct( $this->post_duplicator, $this->permissions_helper );
 	}
 
 	/**
@@ -70,9 +62,6 @@ class Post_Republisher_Test extends TestCase {
 	public function test_constructor() {
 		$this->assertAttributeInstanceOf( Post_Duplicator::class, 'post_duplicator', $this->instance );
 		$this->assertAttributeInstanceOf( Permissions_Helper::class, 'permissions_helper', $this->instance );
-
-		$this->instance->expects( 'register_hooks' )->once();
-		$this->instance->__construct( $this->post_duplicator, $this->permissions_helper );
 	}
 
 	/**
