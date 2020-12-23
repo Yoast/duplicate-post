@@ -66,6 +66,8 @@ class Post_Republisher {
 		\add_action( 'wp_insert_post', [ $this, 'republish_after_post_request' ], \PHP_INT_MAX, 2 );
 		// Clean up after the redirect to the original post.
 		\add_action( 'load-post.php', [ $this, 'clean_up_after_redirect' ] );
+		\add_action( 'add_meta_boxes', [ $this, 'remove_slug_meta_box' ], 10, 2 );
+		\add_filter( 'get_sample_permalink_html', [ $this, 'remove_sample_permalink_slug_editor' ], 10, 5 );
 	}
 
 	/**
@@ -334,5 +336,38 @@ class Post_Republisher {
 		}
 
 		return $post_states;
+	}
+
+	/**
+	 * Removes the slug meta box in the Classic Editor when the post is a Rewrite & Republish copy.
+	 *
+	 * @param string   $post_type Post type.
+	 * @param \WP_Post $post      Post object.
+	 *
+	 * @return void
+	 */
+	public function remove_slug_meta_box( $post_type, $post ) {
+		if ( $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
+			\remove_meta_box( 'slugdiv', $post_type, 'normal' );
+		}
+	}
+
+	/**
+	 * Removes the sample permalink slug editor in the Classic Editor when the post is a Rewrite & Republish copy.
+	 *
+	 * @param string   $return    Sample permalink HTML markup.
+	 * @param int      $post_id   Post ID.
+	 * @param string   $new_title New sample permalink title.
+	 * @param string   $new_slug  New sample permalink slug.
+	 * @param \WP_Post $post      Post object.
+	 *
+	 * @return string The filtered HTML of the sample permalink slug editor.
+	 */
+	public function remove_sample_permalink_slug_editor( $return, $post_id, $new_title, $new_slug, $post ) {
+		if ( $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
+			return '';
+		}
+
+		return $return;
 	}
 }
