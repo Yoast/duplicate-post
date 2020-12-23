@@ -282,7 +282,7 @@ class Post_Republisher {
 
 			// Delete the copy bypassing the trash so it also deletes the copy post meta.
 			\wp_delete_post( $copy_id, true );
-			// Delete the meta that marks the original post has having a copy.
+			// Delete the meta that marks the original post as having a copy.
 			\delete_post_meta( $post_id, '_dp_has_rewrite_republish_copy' );
 		}
 	}
@@ -339,7 +339,7 @@ class Post_Republisher {
 	}
 
 	/**
-	 * Deletes the original post meta that flags it has having a copy when the copy is manually deleted.
+	 * Deletes the original post meta that flags it as having a copy when the copy is manually deleted.
 	 *
 	 * @param int $post_id Post ID of a post that is going to be deleted.
 	 *
