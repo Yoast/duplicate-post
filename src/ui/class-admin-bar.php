@@ -143,15 +143,15 @@ class Admin_Bar {
 			return false;
 		}
 
-		if ( ! $this->permissions_helper->should_links_be_displayed( $post ) ) {
+		if (
+			( ! $this->permissions_helper->is_edit_post_screen() && ! \is_singular( $post->post_type ) )
+			|| ! $this->permissions_helper->post_type_has_admin_bar( $post->post_type )
+		) {
 			return false;
 		}
 
-		if (
-			( $this->permissions_helper->is_edit_post_screen() || \is_singular( $post->post_type ) )
-			&& $this->permissions_helper->post_type_has_admin_bar( $post->post_type )
-		) {
-			return $post;
+		if ( ! $this->permissions_helper->should_links_be_displayed( $post ) ) {
+			return false;
 		}
 
 		return $post;
