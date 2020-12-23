@@ -85,6 +85,13 @@ class User_Interface {
 	protected $link_builder;
 
 	/**
+	 * Holds the object to create the action link to duplicate.
+	 *
+	 * @var Asset_Manager
+	 */
+	protected $asset_manager;
+
+	/**
 	 * Initializes the class.
 	 *
 	 * @param Permissions_Helper $permissions_helper The permissions helper object.
@@ -92,39 +99,25 @@ class User_Interface {
 	public function __construct( Permissions_Helper $permissions_helper ) {
 		$this->permissions_helper = $permissions_helper;
 		$this->link_builder       = new Link_Builder();
-		$this->row_actions        = new Row_Actions( $this->link_builder, $this->permissions_helper );
-		$this->row_actions->register_hooks();
+		$this->asset_manager      = new Asset_Manager();
+		$this->asset_manager->register_hooks();
 
-		$this->post_submitbox = new Post_Submitbox( $this->link_builder, $this->permissions_helper );
-		$this->post_submitbox->register_hooks();
+		$this->admin_bar      = new Admin_Bar( $this->link_builder, $this->permissions_helper, $this->asset_manager );
+		$this->block_editor   = new Block_Editor( $this->link_builder, $this->permissions_helper, $this->asset_manager );
+		$this->bulk_actions   = new Bulk_Actions( $this->permissions_helper );
+		$this->column         = new Column( $this->permissions_helper, $this->asset_manager );
+		$this->metabox        = new Metabox( $this->permissions_helper );
+		$this->post_states    = new Post_States( $this->permissions_helper );
+		$this->post_submitbox = new Post_Submitbox( $this->link_builder, $this->permissions_helper, $this->asset_manager );
+		$this->row_actions    = new Row_Actions( $this->link_builder, $this->permissions_helper );
 
-		$this->block_editor = new Block_Editor( $this->link_builder, $this->permissions_helper );
-		$this->admin_bar    = new Admin_Bar( $this->link_builder, $this->permissions_helper );
 		$this->admin_bar->register_hooks();
-
-		$this->bulk_actions = new Bulk_Actions( $this->permissions_helper );
-		$this->post_states  = new Post_States( $this->permissions_helper );
+		$this->block_editor->register_hooks();
 		$this->bulk_actions->register_hooks();
-
-		$this->metabox = new Metabox( $this->permissions_helper );
-		$this->column  = new Column( $this->permissions_helper );
-
-		$this->register_hooks();
-	}
-
-	/**
-	 * Adds hooks to integrate with WordPress.
-	 *
-	 * @return void
-	 */
-	public function register_hooks() {
-		\add_action( 'init', [ $this, 'register_styles' ] );
-	}
-
-	/**
-	 * Registers the styles.
-	 */
-	public function register_styles() {
-		\wp_register_style( 'duplicate-post', \plugins_url( '/duplicate-post.css', DUPLICATE_POST_FILE ), [], DUPLICATE_POST_CURRENT_VERSION );
+		$this->column->register_hooks();
+		$this->metabox->register_hooks();
+		$this->post_states->register_hooks();
+		$this->post_submitbox->register_hooks();
+		$this->row_actions->register_hooks();
 	}
 }

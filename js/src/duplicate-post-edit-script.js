@@ -131,23 +131,23 @@ class DuplicatePost {
 	render() {
 		return (
 			<Fragment>
-				{ ( duplicatePost.new_draft_link !== '' && duplicatePost.show_links.new_draft === '1' ) &&
+				{ ( duplicatePost.newDraftLink !== '' && duplicatePost.showLinks.new_draft === '1' ) &&
 					<PluginPostStatusInfo>
 						<Button
 							isTertiary={ true }
 							className="dp-editor-post-copy-to-draft"
-							href={ duplicatePost.new_draft_link }
+							href={ duplicatePost.newDraftLink }
 						>
 							{ __( 'Copy to a new draft', 'duplicate-post' ) }
 						</Button>
 					</PluginPostStatusInfo>
 				}
-				{ ( duplicatePost.rewrite_and_republish_link !== '' && duplicatePost.show_links.rewrite_republish === '1' ) &&
+				{ ( duplicatePost.rewriteAndRepublishLink !== '' && duplicatePost.showLinks.rewrite_republish === '1' ) &&
 					<PluginPostStatusInfo>
 						<Button
 							isTertiary={ true }
 							className="dp-editor-post-rewrite-republish"
-							href={ duplicatePost.rewrite_and_republish_link }
+							href={ duplicatePost.rewriteAndRepublishLink }
 						>
 							{ __( 'Rewrite & Republish', 'duplicate-post' ) }
 						</Button>
