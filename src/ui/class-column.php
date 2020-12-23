@@ -23,14 +23,21 @@ class Column {
 	protected $permissions_helper;
 
 	/**
+	 * Holds the asset manager.
+	 *
+	 * @var Asset_Manager
+	 */
+	protected $asset_manager;
+
+	/**
 	 * Initializes the class.
 	 *
 	 * @param Permissions_Helper $permissions_helper The permissions helper.
+	 * @param Asset_Manager      $asset_manager      The asset manager.
 	 */
-	public function __construct( Permissions_Helper $permissions_helper ) {
+	public function __construct( Permissions_Helper $permissions_helper, Asset_Manager $asset_manager ) {
 		$this->permissions_helper = $permissions_helper;
-
-		$this->register_hooks();
+		$this->asset_manager      = $asset_manager;
 	}
 
 	/**
@@ -145,7 +152,7 @@ class Column {
 	 */
 	public function admin_enqueue_scripts( $hook ) {
 		if ( 'edit.php' === $hook ) {
-			\wp_enqueue_script( 'duplicate_post_admin_script', \plugins_url( 'duplicate_post_admin_script.js', DUPLICATE_POST_FILE ), [ 'jquery' ], DUPLICATE_POST_CURRENT_VERSION, true );
+			$this->asset_manager->enqueue_quick_edit_script();
 		}
 	}
 
@@ -158,7 +165,7 @@ class Column {
 	 */
 	public function admin_enqueue_styles( $hook ) {
 		if ( 'edit.php' === $hook ) {
-			\wp_enqueue_style( 'duplicate-post' );
+			$this->asset_manager->enqueue_styles();
 		}
 	}
 }

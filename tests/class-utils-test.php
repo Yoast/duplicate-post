@@ -17,7 +17,7 @@ class Utils_Test extends TestCase {
 	/**
 	 * Tests the flatten_version function.
 	 *
-	 * @covers       Utils::flatten_version
+	 * @covers       \Yoast\WP\Duplicate_Post\Utils::flatten_version
 	 * @dataProvider flatten_version_provider
 	 *
 	 * @param string $original Version number.
@@ -46,7 +46,7 @@ class Utils_Test extends TestCase {
 	/**
 	 * Tests the addslashes_to_strings_only function.
 	 *
-	 * @covers       Utils::addslashes_to_strings_only
+	 * @covers       \Yoast\WP\Duplicate_Post\Utils::addslashes_to_strings_only
 	 * @dataProvider addslashes_to_strings_only_provider
 	 *
 	 * @param mixed $original Input value.
