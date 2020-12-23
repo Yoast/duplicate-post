@@ -116,7 +116,7 @@ class Check_Changes_Handler_Test extends TestCase {
 		$this->expectOutputString(
 			'		<div class="wrap">
 			<h1 class="long-header">
-			Compare changes of duplicated post with the original (<a href="https://yoa.st/wp-admin/post.php?id=100">Unchanged Title</a>)				</h1>
+			Compare changes of duplicated post with the original (&#8220;<a href="https://yoa.st/wp-admin/post.php?id=100">Unchanged Title</a>&#8221;)				</h1>
 			<a href="https://yoa.st/wp-admin/post.php?id=123"></a>
 			<div class="revisions">
 				<div class="revisions-control-frame">

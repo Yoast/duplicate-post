@@ -93,7 +93,7 @@ class Check_Changes_Handler {
 			<?php
 				echo \sprintf(
 						/* translators: %s: original item link (to view or edit) or title. */
-					\esc_html__( 'Compare changes of duplicated post with the original (%s)', 'duplicate-post' ),
+					\esc_html__( 'Compare changes of duplicated post with the original (&#8220;%s&#8221;)', 'duplicate-post' ),
 					Utils::get_edit_or_view_link( $original ) // phpcs:ignore WordPress.Security.EscapeOutput
 				);
 			?>
