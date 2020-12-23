@@ -320,7 +320,7 @@ class Post_Republisher {
 	 * Adds the default post display states used in the posts list table.
 	 *
 	 * @param string[] $post_states An array of post display states.
-	 * @param \WP_Post  $post        The current post object.
+	 * @param \WP_Post $post        The current post object.
 	 *
 	 * @return string[] An array of filtered display post states.
 	 */
