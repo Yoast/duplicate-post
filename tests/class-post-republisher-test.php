@@ -9,7 +9,6 @@ namespace Yoast\WP\Duplicate_Post\Tests;
 
 use Brain\Monkey;
 use Mockery;
-use Yoast\WP\Duplicate_Post\Tests\TestCase;
 use Yoast\WP\Duplicate_Post\Post_Republisher;
 use Yoast\WP\Duplicate_Post\Post_Duplicator;
 use Yoast\WP\Duplicate_Post\Permissions_Helper;
@@ -309,7 +308,7 @@ class Post_Republisher_Test extends TestCase {
 			->once()
 			->andReturn( $original );
 
-		$this->instance->expects( 'republish' )->with( $copy, $original->ID )->once();
+		$this->instance->expects( 'republish' )->with( $copy, $original )->once();
 		$this->instance->expects( 'delete_copy' )->with( $copy->ID, $original->ID )->once();
 
 		$this->instance->republish_scheduled_post( $copy );

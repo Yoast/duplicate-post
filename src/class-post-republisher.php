@@ -134,17 +134,17 @@ class Post_Republisher {
 			return;
 		}
 
-		$original_post_id = Utils::get_original_post_id( $post->ID );
+		$original_post = Utils::get_original( $post->ID );
 
-		if ( ! $original_post_id ) {
+		if ( ! $original_post ) {
 			return;
 		}
 
-		$this->republish( $post, $original_post_id );
+		$this->republish( $post, $original_post );
 
 		// Trigger the redirect in the Classic Editor.
 		if ( $this->is_classic_editor_post_request() ) {
-			$this->redirect( $original_post_id, $post->ID );
+			$this->redirect( $original_post->ID, $post->ID );
 		}
 	}
 
@@ -207,7 +207,7 @@ class Post_Republisher {
 			return;
 		}
 
-		$this->republish( $copy, $original_post->ID );
+		$this->republish( $copy, $original_post );
 		$this->delete_copy( $copy->ID, $original_post->ID );
 	}
 
@@ -268,18 +268,18 @@ class Post_Republisher {
 	/**
 	 * Republishes the post by overwriting the original post.
 	 *
-	 * @param \WP_Post $post             The Rewrite & Republish copy.
-	 * @param int      $original_post_id The original post's ID.
+	 * @param \WP_Post $post          The Rewrite & Republish copy.
+	 * @param \WP_Post $original_post The original post.
 	 *
 	 * @return void
 	 */
-	public function republish( \WP_Post $post, $original_post_id ) {
+	public function republish( \WP_Post $post, $original_post ) {
 		// Republish taxonomies and meta.
 		$this->republish_post_taxonomies( $post );
 		$this->republish_post_meta( $post );
 
 		// Republish the post.
-		$this->republish_post_elements( $post, $original_post_id );
+		$this->republish_post_elements( $post, $original_post );
 	}
 
 	/**
@@ -303,28 +303,26 @@ class Post_Republisher {
 	/**
 	 * Republishes the post elements overwriting the original post.
 	 *
-	 * @param \WP_Post $post             The post object.
-	 * @param int      $original_post_id The original post's ID.
+	 * @param \WP_Post $post          The post object.
+	 * @param \WP_Post $original_post The original post.
 	 *
 	 * @return void
 	 */
-	protected function republish_post_elements( $post, $original_post_id ) {
+	protected function republish_post_elements( $post, $original_post ) {
 		// Cast to array and not alter the copy's original object.
-		$post_to_be_rewritten = (array) $post;
+		$post_to_be_rewritten = clone $post;
 
-		// Determine the new post status.
-		$new_post_status = $post_to_be_rewritten['post_status'] === 'private' ? 'private' : 'publish';
 		// Prepare post data for republishing.
-		$post_to_be_rewritten['ID']          = $original_post_id;
-		$post_to_be_rewritten['post_name']   = \get_post_field( 'post_name', $original_post_id );
-		$post_to_be_rewritten['post_status'] = $new_post_status;
+		$post_to_be_rewritten->ID          = $original_post->ID;
+		$post_to_be_rewritten->post_name   = $original_post->post_name;
+		$post_to_be_rewritten->post_status = $this->determine_post_status( $post, $original_post );
 
 		/**
 		 * Yoast SEO and other plugins prevent from accidentally updating another post's
 		 * data (e.g. the Yoast SEO metadata by checking the $_POST data ID with the post object ID.
 		 * We need to overwrite the $_POST data ID to allow updating the original post.
 		 */
-		$_POST['ID'] = $original_post_id;
+		$_POST['ID'] = $original_post->ID;
 
 		// Republish the original post.
 		$rewritten_post_id = \wp_update_post( \wp_slash( $post_to_be_rewritten ) );
@@ -396,5 +394,25 @@ class Post_Republisher {
 			)
 		);
 		exit();
+	}
+
+	/**
+	 * Determines the post status to use when publishing the Rewrite & Republish copy.
+	 *
+	 * @param \WP_Post $post          The post object.
+	 * @param \WP_Post $original_post The original post object.
+	 *
+	 * @return string The post status to use.
+	 */
+	protected function determine_post_status( $post, $original_post ) {
+		if ( $original_post->post_status === 'trash' ) {
+			return 'trash';
+		}
+
+		if ( $post->post_status === 'private' ) {
+			return 'private';
+		}
+
+		return 'publish';
 	}
 }
