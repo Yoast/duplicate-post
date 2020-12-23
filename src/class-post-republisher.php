@@ -200,9 +200,9 @@ class Post_Republisher {
 
 		$original_post = Utils::get_original( $copy->ID );
 
-		// If the original post was permanently deleted, we don't want to republish.
+		// If the original post was permanently deleted, we don't want to republish, so trash instead.
 		if ( ! $original_post ) {
-			$this->delete_copy( $copy->ID );
+			$this->delete_copy( $copy->ID, null, false );
 
 			return;
 		}
@@ -287,12 +287,13 @@ class Post_Republisher {
 	 *
 	 * @param int      $copy_id The copy's ID.
 	 * @param int|null $post_id The post's ID. Optional.
+	 * @param bool     $permanently_delete Whether to permanently delete the copy. Defaults to true.
 	 *
 	 * @return void
 	 */
-	public function delete_copy( $copy_id, $post_id = null ) {
+	public function delete_copy( $copy_id, $post_id = null, $permanently_delete = true ) {
 		// Delete the copy bypassing the trash so it also deletes the copy post meta.
-		\wp_delete_post( $copy_id, true );
+		\wp_delete_post( $copy_id, $permanently_delete );
 
 		if ( ! \is_null( $post_id ) ) {
 			// Delete the meta that marks the original post has having a copy.

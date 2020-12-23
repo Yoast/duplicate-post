@@ -367,7 +367,7 @@ class Post_Republisher_Test extends TestCase {
 
 		$this->instance
 			->expects( 'delete_copy' )
-			->with( $copy->ID )
+			->with( $copy->ID, null, false )
 			->once();
 
 		$this->instance->republish_scheduled_post( $copy );
