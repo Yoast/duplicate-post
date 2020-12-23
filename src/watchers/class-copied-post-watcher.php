@@ -52,7 +52,7 @@ class Copied_Post_Watcher {
 	public function get_notice_text( $post ) {
 		if ( $this->permissions_helper->has_trashed_rewrite_and_republish_copy( $post ) ) {
 			return __(
-				'A duplicate of this post was made. The duplicate is in the trash.',
+				'You can only make one duplicate at a time, and a duplicate of this post already exists in the trash. Permanently delete it if you want to make a new duplicate.',
 				'duplicate-post'
 			);
 		}
