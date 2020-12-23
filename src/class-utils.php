@@ -62,7 +62,7 @@ class Utils {
 	 *
 	 * @return \WP_Post|null Post data if successful, null otherwise.
 	 */
-	public static function get_original( $post = null, $output = OBJECT ) {
+	public static function get_original( $post = null, $output = \OBJECT ) {
 		$post = \get_post( $post );
 		if ( ! $post ) {
 			return null;
