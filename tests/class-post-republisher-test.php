@@ -153,30 +153,17 @@ class Post_Republisher_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Post_Republisher::register_post_statuses
 	 */
 	public function test_register_post_statuses() {
-		$statuses = [
-			'dp-rewrite-republish' => [
-				'label'                     => 'Republish',
-				'public'                    => true,
-				'exclude_from_search'       => false,
-				'show_in_admin_all_list'    => false,
-				'show_in_admin_status_list' => false,
-			],
-			'dp-rewrite-schedule'  => [
-				'label'                     => 'Future Republish',
-				'public'                    => true,
-				'exclude_from_search'       => false,
-				'show_in_admin_all_list'    => false,
-				'show_in_admin_status_list' => false,
-			],
+		$options = [
+			'label'                     => 'Republish',
+			'public'                    => true,
+			'exclude_from_search'       => false,
+			'show_in_admin_all_list'    => false,
+			'show_in_admin_status_list' => false,
 		];
 
 		Monkey\Functions\expect( '\register_post_status' )
 			->once()
-			->with( 'dp-rewrite-republish', $statuses['dp-rewrite-republish'] );
-
-		Monkey\Functions\expect( '\register_post_status' )
-			->once()
-			->with( 'dp-rewrite-schedule', $statuses['dp-rewrite-schedule'] );
+			->with( 'dp-rewrite-republish', $options );
 
 		$this->instance->register_post_statuses();
 	}

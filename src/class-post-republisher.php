@@ -83,26 +83,15 @@ class Post_Republisher {
 	 * @return void
 	 */
 	public function register_post_statuses() {
-		$custom_post_statuses = [
-			'dp-rewrite-republish' => [
-				'label'                     => __( 'Republish', 'duplicate-post' ),
-				'public'                    => true,
-				'exclude_from_search'       => false,
-				'show_in_admin_all_list'    => false,
-				'show_in_admin_status_list' => false,
-			],
-			'dp-rewrite-schedule'  => [
-				'label'                     => __( 'Future Republish', 'duplicate-post' ),
-				'public'                    => true,
-				'exclude_from_search'       => false,
-				'show_in_admin_all_list'    => false,
-				'show_in_admin_status_list' => false,
-			],
+		$options = [
+			'label'                     => __( 'Republish', 'duplicate-post' ),
+			'public'                    => true,
+			'exclude_from_search'       => false,
+			'show_in_admin_all_list'    => false,
+			'show_in_admin_status_list' => false,
 		];
 
-		foreach ( $custom_post_statuses as $custom_post_status => $options ) {
-			\register_post_status( $custom_post_status, $options );
-		}
+		\register_post_status( 'dp-rewrite-republish', $options );
 	}
 
 	/**
