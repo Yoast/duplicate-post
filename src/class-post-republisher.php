@@ -48,7 +48,6 @@ class Post_Republisher {
 	public function register_hooks() {
 		\add_action( 'init', [ $this, 'register_post_statuses' ] );
 		\add_filter( 'wp_insert_post_data', [ $this, 'change_post_copy_status' ], 1, 2 );
-		\add_filter( 'display_post_states', [ $this, 'add_rewrite_schedule_display_state' ], 9, 2 );
 
 		$enabled_post_types = $this->permissions_helper->get_enabled_post_types();
 		foreach ( $enabled_post_types as $enabled_post_type ) {
@@ -248,22 +247,6 @@ class Post_Republisher {
 	 */
 	public function is_rest_request() {
 		return defined( 'REST_REQUEST' ) && REST_REQUEST;
-	}
-
-	/**
-	 * Adds the default post display states used in the posts list table.
-	 *
-	 * @param string[] $post_states An array of post display states.
-	 * @param WP_Post  $post        The current post object.
-	 *
-	 * @return string[] An array of filtered display post states.
-	 */
-	public function add_rewrite_schedule_display_state( $post_states, $post ) {
-		if ( $post->post_status === 'future' ) {
-			$post_states['scheduled'] = \esc_html__( 'Scheduled', 'duplicate-post' );
-		}
-
-		return $post_states;
 	}
 
 	/**
