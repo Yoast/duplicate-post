@@ -66,6 +66,8 @@ class Post_Republisher {
 		\add_action( 'wp_insert_post', [ $this, 'republish_after_post_request' ], \PHP_INT_MAX, 2 );
 		// Clean up after the redirect to the original post.
 		\add_action( 'load-post.php', [ $this, 'clean_up_after_redirect' ] );
+		// Clean up the original when the copy is manually deleted from the trash.
+		\add_action( 'before_delete_post', [ $this, 'clean_up_when_copy_manually_deleted' ] );
 	}
 
 	/**
@@ -280,7 +282,7 @@ class Post_Republisher {
 
 			// Delete the copy bypassing the trash so it also deletes the copy post meta.
 			\wp_delete_post( $copy_id, true );
-			// Delete the meta that marks the original post has having a copy.
+			// Delete the meta that marks the original post as having a copy.
 			\delete_post_meta( $post_id, '_dp_has_rewrite_republish_copy' );
 		}
 	}
@@ -334,5 +336,23 @@ class Post_Republisher {
 		}
 
 		return $post_states;
+	}
+
+	/**
+	 * Deletes the original post meta that flags it as having a copy when the copy is manually deleted.
+	 *
+	 * @param int $post_id Post ID of a post that is going to be deleted.
+	 *
+	 * @return void
+	 */
+	public function clean_up_when_copy_manually_deleted( $post_id ) {
+		$post = \get_post( $post_id );
+
+		if ( ! $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
+			return;
+		}
+
+		$original_post_id = Utils::get_original_post_id( $post_id );
+		\delete_post_meta( $original_post_id, '_dp_has_rewrite_republish_copy' );
 	}
 }

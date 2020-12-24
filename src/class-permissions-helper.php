@@ -170,10 +170,31 @@ class Permissions_Helper {
 	 *
 	 * @return bool Whether the links can be displayed.
 	 */
-	public function should_link_be_displayed( \WP_Post $post ) {
-		return ! $this->is_rewrite_and_republish_copy( $post )
-			&& $this->is_current_user_allowed_to_copy()
-			&& $this->is_post_type_enabled( $post->post_type );
+	public function should_links_be_displayed( \WP_Post $post ) {
+		/**
+		 * Filter allowing displaying duplicate post links for current post.
+		 *
+		 * @param bool     $display_links Whether the duplicate links will be displayed.
+		 * @param \WP_Post $post          The post object.
+		 *
+		 * @return bool Whether or not to display the duplicate post links.
+		 */
+		$display_links = apply_filters( 'duplicate_post_show_link', $this->is_current_user_allowed_to_copy() && $this->is_post_type_enabled( $post->post_type ), $post );
+
+		return ! $this->is_rewrite_and_republish_copy( $post ) && $display_links;
+	}
+
+	/**
+	 * Determines if the Rewrite & Republish link for the post should be displayed.
+	 *
+	 * @param \WP_Post $post The post object.
+	 *
+	 * @return bool Whether the links should be displayed.
+	 */
+	public function should_rewrite_and_republish_be_allowed( \WP_Post $post ) {
+		return $post->post_status === 'publish'
+			&& ! $this->is_rewrite_and_republish_copy( $post )
+			&& ! $this->has_rewrite_and_republish_copy( $post );
 	}
 
 	/**
@@ -202,5 +223,28 @@ class Permissions_Helper {
 	 */
 	public function is_copy_allowed_to_be_republished( \WP_Post $post ) {
 		return \in_array( $post->post_status, [ 'dp-rewrite-republish', 'private' ], true );
+	}
+
+	/**
+	 * Determines if the post has a trashed copy intended for Rewrite & Republish.
+	 *
+	 * @param \WP_Post $post The post object.
+	 *
+	 * @return bool Whether the post has a trashed copy intended for Rewrite & Republish.
+	 */
+	public function has_trashed_rewrite_and_republish_copy( \WP_Post $post ) {
+		$copy_id = \get_post_meta( $post->ID, '_dp_has_rewrite_republish_copy', true );
+
+		if ( ! $copy_id ) {
+			return false;
+		}
+
+		$copy = \get_post( $copy_id );
+
+		if ( $copy && $copy->post_status === 'trash' ) {
+			return true;
+		}
+
+		return false;
 	}
 }

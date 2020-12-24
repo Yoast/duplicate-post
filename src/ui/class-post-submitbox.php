@@ -125,21 +125,17 @@ class Post_Submitbox {
 			}
 		}
 
-		if ( ! \is_null( $post ) ) {
-			/** This filter is documented in class-row-action.php */
-			if ( \apply_filters(
-				'duplicate_post_show_link',
-				$this->permissions_helper->should_link_be_displayed( $post ),
-				$post
-			) ) {
-				?>
-				<div id="duplicate-action">
-					<a class="submitduplicate duplication"
-						href="<?php echo \esc_url( $this->link_builder->build_new_draft_link( $post ) ); ?>"><?php \esc_html_e( 'Copy to a new draft', 'duplicate-post' ); ?>
-					</a>
-				</div>
-				<?php
-			}
+		if (
+			! \is_null( $post )
+			&& $this->permissions_helper->should_links_be_displayed( $post )
+		) {
+			?>
+			<div id="duplicate-action">
+				<a class="submitduplicate duplication"
+					href="<?php echo \esc_url( $this->link_builder->build_new_draft_link( $post ) ); ?>"><?php \esc_html_e( 'Copy to a new draft', 'duplicate-post' ); ?>
+				</a>
+			</div>
+			<?php
 		}
 	}
 
@@ -158,20 +154,17 @@ class Post_Submitbox {
 			}
 		}
 
-		if ( ! \is_null( $post ) && $post->post_status === 'publish' ) {
-			/** This filter is documented in duplicate-post-admin.php */
-			if ( \apply_filters(
-				'duplicate_post_show_link',
-				$this->permissions_helper->should_link_be_displayed( $post ),
-				$post
-			) ) {
-				?>
-				<div id="rewrite-republish-action">
-					<a class="submitduplicate duplication" href="<?php echo \esc_url( $this->link_builder->build_rewrite_and_republish_link( $post ) ); ?>"><?php \esc_html_e( 'Rewrite & Republish', 'duplicate-post' ); ?>
-					</a>
-				</div>
-				<?php
-			}
+		if (
+			! \is_null( $post )
+			&& $this->permissions_helper->should_rewrite_and_republish_be_allowed( $post )
+			&& $this->permissions_helper->should_links_be_displayed( $post )
+		) {
+			?>
+			<div id="rewrite-republish-action">
+				<a class="submitduplicate duplication" href="<?php echo \esc_url( $this->link_builder->build_rewrite_and_republish_link( $post ) ); ?>"><?php \esc_html_e( 'Rewrite & Republish', 'duplicate-post' ); ?>
+				</a>
+			</div>
+			<?php
 		}
 	}
 
