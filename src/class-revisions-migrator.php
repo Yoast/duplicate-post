@@ -28,17 +28,24 @@ class Revisions_Migrator {
 	 * It mimics the behaviour of wp_save_post_revision() in wp-includes/revision.php
 	 * by deleting the revisions (except autosaves) exceeding the maximum allowed number.
 	 *
-	 * @param \WP_Post $post          The Rewrite & Republish copy.
-	 * @param \WP_Post $original_post The original post which has been rewritten.
+	 * @param int $copy_id     The copy's ID.
+	 * @param int $original_id The post's ID.
 	 *
 	 * @return void
 	 */
-	public function migrate_revisions( $post, $original_post ) {
+	public function migrate_revisions( $copy_id, $original_id ) {
+		$copy          = \get_post( $copy_id );
+		$original_post = \get_post( $original_id );
+
+		if ( \is_null( $copy ) || \is_null( $original_post ) ) {
+			return;
+		}
+
 		if ( ! \wp_revisions_enabled( $original_post ) ) {
 			return;
 		}
 
-		$copy_revisions = \wp_get_post_revisions( $post );
+		$copy_revisions = \wp_get_post_revisions( $copy );
 		foreach ( $copy_revisions as $revision ) {
 			$revision->post_parent = $original_post->ID;
 			$revision->post_name   = "$original_post->ID-revision-v1";

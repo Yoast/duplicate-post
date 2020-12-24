@@ -50,15 +50,20 @@ class Revisions_Migrator_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Revisions_Migrator::migrate_revisions
 	 */
 	public function test_migrate_revisions_unlimited() {
+		$post_id           = 128;
+		$original_id       = 64;
 		$post              = Mockery::mock( \WP_Post::class );
 		$original_post     = Mockery::mock( \WP_Post::class );
-		$original_post->ID = 64;
+		$original_post->ID = $original_id;
 		$revisions         = [
 			Mockery::mock( \WP_Post::class ),
 			Mockery::mock( \WP_Post::class ),
 			Mockery::mock( \WP_Post::class ),
 			Mockery::mock( \WP_Post::class ),
 		];
+
+		Monkey\Functions\expect( '\get_post' )
+			->andReturn( $post, $original_post );
 
 		Monkey\Functions\expect( '\wp_revisions_enabled' )
 			->with( $original_post )
@@ -78,7 +83,7 @@ class Revisions_Migrator_Test extends TestCase {
 		Monkey\Functions\expect( '\wp_delete_post_revision' )
 			->never();
 
-		$this->instance->migrate_revisions( $post, $original_post );
+		$this->instance->migrate_revisions( $post_id, $original_id );
 	}
 
 	/**
@@ -87,12 +92,14 @@ class Revisions_Migrator_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Revisions_Migrator::migrate_revisions
 	 */
 	public function test_migrate_revisions_limited() {
+		$post_id             = 128;
+		$original_id         = 64;
 		$post                = Mockery::mock( \WP_Post::class );
 		$revision            = Mockery::mock( \WP_Post::class );
 		$revision->ID        = 123;
 		$revision->post_name = 'revision';
 		$original_post       = Mockery::mock( \WP_Post::class );
-		$original_post->ID   = 64;
+		$original_post->ID   = $original_id;
 		$revisions           = [
 			$revision,
 			$revision,
@@ -112,6 +119,9 @@ class Revisions_Migrator_Test extends TestCase {
 		];
 		$revisions_to_keep   = 6;
 
+		Monkey\Functions\expect( '\get_post' )
+			->andReturn( $post, $original_post );
+
 		Monkey\Functions\expect( '\wp_revisions_enabled' )
 			->with( $original_post )
 			->andReturnTrue();
@@ -129,7 +139,7 @@ class Revisions_Migrator_Test extends TestCase {
 		Monkey\Functions\expect( '\wp_delete_post_revision' )
 			->times( 3 );
 
-		$this->instance->migrate_revisions( $post, $original_post );
+		$this->instance->migrate_revisions( $post_id, $original_id );
 	}
 
 	/**
@@ -138,8 +148,13 @@ class Revisions_Migrator_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Revisions_Migrator::migrate_revisions
 	 */
 	public function test_migrate_revisions_none() {
+		$post_id       = 128;
+		$original_id   = 64;
 		$post          = Mockery::mock( \WP_Post::class );
 		$original_post = Mockery::mock( \WP_Post::class );
+
+		Monkey\Functions\expect( '\get_post' )
+			->andReturn( $post, $original_post );
 
 		Monkey\Functions\expect( '\wp_revisions_enabled' )
 			->with( $original_post )
@@ -157,7 +172,7 @@ class Revisions_Migrator_Test extends TestCase {
 		Monkey\Functions\expect( '\wp_delete_post_revision' )
 			->never();
 
-		$this->instance->migrate_revisions( $post, $original_post );
+		$this->instance->migrate_revisions( $post_id, $original_id );
 	}
 
 }

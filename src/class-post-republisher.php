@@ -36,8 +36,6 @@ class Post_Republisher {
 	public function __construct( Post_Duplicator $post_duplicator, Permissions_Helper $permissions_helper ) {
 		$this->post_duplicator    = $post_duplicator;
 		$this->permissions_helper = $permissions_helper;
-
-		$this->register_hooks();
 	}
 
 	/**
@@ -141,8 +139,6 @@ class Post_Republisher {
 		}
 
 		$this->republish( $post, $original_post );
-
-		\do_action( 'duplicate_post_after_rewriting', $post, $original_post );
 
 		// Trigger the redirect in the Classic Editor.
 		if ( $this->is_classic_editor_post_request() ) {
@@ -264,12 +260,20 @@ class Post_Republisher {
 	 * Deletes the copy and associated post meta, if applicable.
 	 *
 	 * @param int      $copy_id The copy's ID.
-	 * @param int|null $post_id The post's ID. Optional.
+	 * @param int|null $post_id The original post's ID. Optional.
 	 * @param bool     $permanently_delete Whether to permanently delete the copy. Defaults to true.
 	 *
 	 * @return void
 	 */
 	public function delete_copy( $copy_id, $post_id = null, $permanently_delete = true ) {
+		/**
+		 * Fires before deleting a Rewrite & Republish copy.
+		 *
+		 * @param int $copy_id The copy's ID.
+		 * @param int $post_id The original post's ID..
+		 */
+		\do_action( 'duplicate_post_after_rewriting', $copy_id, $post_id );
+
 		// Delete the copy bypassing the trash so it also deletes the copy post meta.
 		\wp_delete_post( $copy_id, $permanently_delete );
 
