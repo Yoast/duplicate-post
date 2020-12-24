@@ -93,9 +93,6 @@ class Post_Republisher_Test extends TestCase {
 		Monkey\Filters\expectAdded( 'wp_insert_post_data' )
 			->with( [ $this->instance, 'change_post_copy_status' ], 1, 2 );
 
-		Monkey\Filters\expectAdded( 'display_post_states' )
-			->with( [ $this->instance, 'add_rewrite_schedule_display_state' ], 9, 2 );
-
 		Monkey\Actions\expectAdded( 'init' )
 			->with( [ $this->instance, 'register_post_statuses' ] );
 
@@ -223,61 +220,6 @@ class Post_Republisher_Test extends TestCase {
 				[
 					'post_status' => 'dp-rewrite-republish',
 				],
-			],
-		];
-	}
-
-	/**
-	 * Tests the add_rewrite_schedule_display_state function.
-	 *
-	 * @covers \Yoast\WP\Duplicate_Post\Post_Republisher::add_rewrite_schedule_display_state
-	 * @dataProvider add_rewrite_schedule_display_state_provider
-	 *
-	 * @param mixed $post_status        Input value.
-	 * @param mixed $display_post_state Expected output.
-	 */
-	public function test_add_rewrite_schedule_display_state( $post_status, $display_post_state ) {
-		$some_default_display_post_states = [
-			'draft'     => 'Draft',
-			'future'    => 'Scheduled',
-			'pending'   => 'Pending',
-			'private'   => 'Private',
-			'protected' => 'Password protected',
-		];
-
-		$post              = Mockery::mock( \WP_Post::class );
-		$post->post_status = $post_status;
-
-		$returned_post_display_state = $this->instance->add_rewrite_schedule_display_state( $some_default_display_post_states, $post );
-		$this->assertEquals( $display_post_state, $returned_post_display_state[ $post_status ] );
-	}
-
-	/**
-	 * Data provider for test_add_rewrite_schedule_display_state.
-	 *
-	 * @return array
-	 */
-	public function add_rewrite_schedule_display_state_provider() {
-		return [
-			[
-				'post_status'        => 'draft',
-				'display_post_state' => 'Draft',
-			],
-			[
-				'post_status'        => 'future',
-				'display_post_state' => 'Scheduled',
-			],
-			[
-				'post_status'        => 'pending',
-				'display_post_state' => 'Pending',
-			],
-			[
-				'post_status'        => 'private',
-				'display_post_state' => 'Private',
-			],
-			[
-				'post_status'        => 'protected',
-				'display_post_state' => 'Password protected',
 			],
 		];
 	}

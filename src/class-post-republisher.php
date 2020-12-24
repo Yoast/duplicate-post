@@ -156,10 +156,6 @@ class Post_Republisher {
 	 * @return void
 	 */
 	public function republish_after_rest_api_request( $post ) {
-		if ( $this->permissions_helper->has_scheduled_rewrite_and_republish_copy( $post ) ) {
-			return;
-		}
-
 		$this->republish_request( $post );
 	}
 
@@ -176,10 +172,6 @@ class Post_Republisher {
 	 */
 	public function republish_after_post_request( $post_id, $post ) {
 		if ( $this->is_rest_request() ) {
-			return;
-		}
-
-		if ( $this->permissions_helper->has_scheduled_rewrite_and_republish_copy( $post ) ) {
 			return;
 		}
 
