@@ -83,9 +83,6 @@ class Post_Republisher_Test extends TestCase {
 		Monkey\Filters\expectAdded( 'wp_insert_post_data' )
 			->with( [ $this->instance, 'change_post_copy_status' ], 1, 2 );
 
-		Monkey\Filters\expectAdded( 'display_post_states' )
-			->with( [ $this->instance, 'add_rewrite_schedule_display_state' ], 9, 2 );
-
 		Monkey\Actions\expectAdded( 'init' )
 			->with( [ $this->instance, 'register_post_statuses' ] );
 
@@ -100,6 +97,9 @@ class Post_Republisher_Test extends TestCase {
 
 		Monkey\Actions\expectAdded( 'load-post.php' )
 			->with( [ $this->instance, 'clean_up_after_redirect' ] );
+
+		Monkey\Actions\expectAdded( 'before_delete_post' )
+			->with( [ $this->instance, 'clean_up_when_copy_manually_deleted' ] );
 
 		$this->instance->register_hooks();
 	}
@@ -142,30 +142,17 @@ class Post_Republisher_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Post_Republisher::register_post_statuses
 	 */
 	public function test_register_post_statuses() {
-		$statuses = [
-			'dp-rewrite-republish' => [
-				'label'                     => 'Republish',
-				'public'                    => true,
-				'exclude_from_search'       => false,
-				'show_in_admin_all_list'    => false,
-				'show_in_admin_status_list' => false,
-			],
-			'dp-rewrite-schedule'  => [
-				'label'                     => 'Future Republish',
-				'public'                    => true,
-				'exclude_from_search'       => false,
-				'show_in_admin_all_list'    => false,
-				'show_in_admin_status_list' => false,
-			],
+		$options = [
+			'label'                     => 'Republish',
+			'public'                    => true,
+			'exclude_from_search'       => false,
+			'show_in_admin_all_list'    => false,
+			'show_in_admin_status_list' => false,
 		];
 
 		Monkey\Functions\expect( '\register_post_status' )
 			->once()
-			->with( 'dp-rewrite-republish', $statuses['dp-rewrite-republish'] );
-
-		Monkey\Functions\expect( '\register_post_status' )
-			->once()
-			->with( 'dp-rewrite-schedule', $statuses['dp-rewrite-schedule'] );
+			->with( 'dp-rewrite-republish', $options );
 
 		$this->instance->register_post_statuses();
 	}
@@ -224,74 +211,100 @@ class Post_Republisher_Test extends TestCase {
 					'post_status' => 'dp-rewrite-republish',
 				],
 			],
-			[
-				[
-					'post_status' => 'future',
-					'is_copy'     => true,
-				],
-				[
-					'post_status' => 'dp-rewrite-schedule',
-				],
-			],
 		];
 	}
 
 	/**
-	 * Tests the add_rewrite_schedule_display_state function.
+	 * Tests the republish_scheduled_post function when a valid copy is passed.
 	 *
-	 * @covers \Yoast\WP\Duplicate_Post\Post_Republisher::add_rewrite_schedule_display_state
-	 * @dataProvider add_rewrite_schedule_display_state_provider
-	 *
-	 * @param mixed $post_status        Input value.
-	 * @param mixed $display_post_state Expected output.
+	 * @covers \Yoast\WP\Duplicate_Post\Post_Republisher::republish_scheduled_post
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
 	 */
-	public function test_add_rewrite_schedule_display_state( $post_status, $display_post_state ) {
-		$some_default_display_post_states = [
-			'draft'     => 'Draft',
-			'future'    => 'Scheduled',
-			'pending'   => 'Pending',
-			'private'   => 'Private',
-			'protected' => 'Password protected',
-		];
+	public function test_republish_scheduled_post() {
+		$original              = Mockery::mock( \WP_Post::class );
+		$original->ID          = 1;
+		$original->post_status = 'publish';
 
-		$post              = Mockery::mock( \WP_Post::class );
-		$post->post_status = $post_status;
+		$copy              = Mockery::mock( \WP_Post::class );
+		$copy->ID          = 123;
+		$copy->post_status = 'future';
 
-		$returned_post_display_state = $this->instance->add_rewrite_schedule_display_state( $some_default_display_post_states, $post );
-		$this->assertEquals( $display_post_state, $returned_post_display_state[ $post_status ] );
+		$this->permissions_helper
+			->expects( 'is_rewrite_and_republish_copy' )
+			->with( $copy )
+			->once()
+			->andReturnTrue();
+
+		$utils = \Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
+		$utils
+			->expects( 'get_original' )
+			->with( $copy->ID )
+			->once()
+			->andReturn( $original );
+
+		$this->instance->expects( 'republish' )->with( $copy, $original )->once();
+		$this->instance->expects( 'delete_copy' )->with( $copy->ID, $original->ID )->once();
+
+		$this->instance->republish_scheduled_post( $copy );
 	}
 
 	/**
-	 * Data provider for test_add_rewrite_schedule_display_state.
+	 * Tests the republish_scheduled_post function when an invalid copy is passed.
 	 *
-	 * @return array
+	 * @covers \Yoast\WP\Duplicate_Post\Post_Republisher::republish_scheduled_post
 	 */
-	public function add_rewrite_schedule_display_state_provider() {
-		return [
-			[
-				'post_status'        => 'draft',
-				'display_post_state' => 'Draft',
-			],
-			[
-				'post_status'        => 'future',
-				'display_post_state' => 'Scheduled',
-			],
-			[
-				'post_status'        => 'pending',
-				'display_post_state' => 'Pending',
-			],
-			[
-				'post_status'        => 'private',
-				'display_post_state' => 'Private',
-			],
-			[
-				'post_status'        => 'protected',
-				'display_post_state' => 'Password protected',
-			],
-			[
-				'post_status'        => 'dp-rewrite-schedule',
-				'display_post_state' => 'Scheduled',
-			],
-		];
+	public function test_republish_scheduled_post_invalid_copy() {
+		$copy              = Mockery::mock( \WP_Post::class );
+		$copy->ID          = 123;
+		$copy->post_status = 'publish';
+
+		$this->permissions_helper
+			->expects( 'is_rewrite_and_republish_copy' )
+			->with( $copy )
+			->once()
+			->andReturnFalse();
+
+		$this->instance->expects( 'republish' )->never();
+		$this->instance->expects( 'delete_copy' )->never();
+
+		$this->instance->republish_scheduled_post( $copy );
+	}
+
+	/**
+	 * Tests the republish_scheduled_post function when the original copy has been permanently deleted.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Post_Republisher::republish_scheduled_post
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_republish_scheduled_post_original_deleted() {
+		$copy              = Mockery::mock( \WP_Post::class );
+		$copy->ID          = 123;
+		$copy->post_status = 'publish';
+
+		$this->permissions_helper
+			->expects( 'is_rewrite_and_republish_copy' )
+			->with( $copy )
+			->once()
+			->andReturnTrue();
+
+		$utils = \Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
+		$utils
+			->expects( 'get_original' )
+			->with( $copy->ID )
+			->once()
+			->andReturnNull();
+
+		$this->instance
+			->expects( 'republish' )
+			->never();
+
+		$this->instance
+			->expects( 'delete_copy' )
+			->with( $copy->ID, null, false )
+			->once();
+
+		$this->instance->republish_scheduled_post( $copy );
 	}
 }
