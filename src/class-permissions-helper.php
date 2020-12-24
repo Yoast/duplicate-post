@@ -171,8 +171,6 @@ class Permissions_Helper {
 	 * @return bool Whether the links can be displayed.
 	 */
 	public function should_links_be_displayed( \WP_Post $post ) {
-		$display_links = $this->is_current_user_allowed_to_copy() && $this->is_post_type_enabled( $post->post_type );
-
 		/**
 		 * Filter allowing displaying duplicate post links for current post.
 		 *
@@ -181,7 +179,9 @@ class Permissions_Helper {
 		 *
 		 * @return bool Whether or not to display the duplicate post links.
 		 */
-		return apply_filters( 'duplicate_post_show_link', $display_links, $post );
+		$display_links = apply_filters( 'duplicate_post_show_link', $this->is_current_user_allowed_to_copy() && $this->is_post_type_enabled( $post->post_type ), $post );
+
+		return ! $this->is_rewrite_and_republish_copy( $post ) && $display_links;
 	}
 
 	/**

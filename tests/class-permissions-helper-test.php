@@ -545,6 +545,11 @@ class Permissions_Helper_Test extends TestCase {
 			->with( $post->post_type )
 			->andReturnTrue();
 
+		$this->instance
+			->expects( 'is_rewrite_and_republish_copy' )
+			->with( $post )
+			->andReturnFalse();
+
 		$this->assertTrue( $this->instance->should_links_be_displayed( $post ) );
 	}
 
@@ -566,6 +571,11 @@ class Permissions_Helper_Test extends TestCase {
 			->with( $post->post_type )
 			->never();
 
+		$this->instance
+			->expects( 'is_rewrite_and_republish_copy' )
+			->with( $post )
+			->andReturnFalse();
+
 		$this->assertFalse( $this->instance->should_links_be_displayed( $post ) );
 	}
 
@@ -586,6 +596,37 @@ class Permissions_Helper_Test extends TestCase {
 			->expects( 'is_post_type_enabled' )
 			->with( $post->post_type )
 			->andReturnFalse();
+
+		$this->instance
+			->expects( 'is_rewrite_and_republish_copy' )
+			->with( $post )
+			->andReturnFalse();
+
+		$this->assertFalse( $this->instance->should_links_be_displayed( $post ) );
+	}
+
+	/**
+	 * Tests the should_links_be_displayed function when the post is a Rewrite & Republish copy.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::should_links_be_displayed
+	 */
+	public function test_should_links_be_displayed_unsuccessful_post_is_rewrite_and_republish() {
+		$post            = Mockery::mock( \WP_Post::class );
+		$post->post_type = 'post';
+
+		$this->instance
+			->expects( 'is_current_user_allowed_to_copy' )
+			->andReturnTrue();
+
+		$this->instance
+			->expects( 'is_post_type_enabled' )
+			->with( $post->post_type )
+			->andReturnTrue();
+
+		$this->instance
+			->expects( 'is_rewrite_and_republish_copy' )
+			->with( $post )
+			->andReturnTrue();
 
 		$this->assertFalse( $this->instance->should_links_be_displayed( $post ) );
 	}
