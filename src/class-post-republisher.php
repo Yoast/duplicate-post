@@ -68,7 +68,8 @@ class Post_Republisher {
 
 		// Clean up after the redirect to the original post.
 		\add_action( 'load-post.php', [ $this, 'clean_up_after_redirect' ] );
-
+		// Clean up the original when the copy is manually deleted from the trash.
+		\add_action( 'before_delete_post', [ $this, 'clean_up_when_copy_manually_deleted' ] );
 		// Ensure scheduled Rewrite and Republish posts are properly handled.
 		\add_action( 'future_to_publish', [ $this, 'republish_scheduled_post' ] );
 	}
@@ -415,5 +416,23 @@ class Post_Republisher {
 		}
 
 		return 'publish';
+	}
+
+	/**
+	 * Deletes the original post meta that flags it as having a copy when the copy is manually deleted.
+	 *
+	 * @param int $post_id Post ID of a post that is going to be deleted.
+	 *
+	 * @return void
+	 */
+	public function clean_up_when_copy_manually_deleted( $post_id ) {
+		$post = \get_post( $post_id );
+
+		if ( ! $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
+			return;
+		}
+
+		$original_post_id = Utils::get_original_post_id( $post_id );
+		\delete_post_meta( $original_post_id, '_dp_has_rewrite_republish_copy' );
 	}
 }
