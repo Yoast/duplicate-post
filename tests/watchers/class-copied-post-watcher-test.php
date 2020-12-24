@@ -141,7 +141,7 @@ class Copied_Post_Watcher_Test extends TestCase {
 			->andReturnTrue();
 
 		$this->assertSame(
-			'You can only make one duplicate at a time, and a duplicate of this post already exists in the trash. Permanently delete it if you want to make a new duplicate.',
+			'You can only make one Rewrite & Republish duplicate at a time, and a duplicate of this post already exists in the trash. Permanently delete it if you want to make a new duplicate.',
 			$this->instance->get_notice_text( $post )
 		);
 	}
