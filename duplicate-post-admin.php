@@ -83,37 +83,18 @@ function duplicate_post_plugin_upgrade() {
 	if ( empty( $installed_version ) ) {
 		// Get default roles.
 		$default_roles = array(
-			3 => 'editor',
-			8 => 'administrator',
+			'editor',
+			'administrator',
+			'wpseo_manager',
+			'wpseo_editor',
 		);
 
 		// Cycle all roles and assign capability if its level >= duplicate_post_copy_user_level.
-		foreach ( $default_roles as $level => $name ) {
+		foreach ( $default_roles as $name ) {
 			$role = get_role( $name );
 			if ( ! empty( $role ) ) {
 				$role->add_cap( 'copy_posts' );
 			}
-		}
-	} else {
-		$min_user_level = get_option( 'duplicate_post_copy_user_level' );
-
-		if ( ! empty( $min_user_level ) ) {
-			// Get default roles.
-			$default_roles = array(
-				1 => 'contributor',
-				2 => 'author',
-				3 => 'editor',
-				8 => 'administrator',
-			);
-
-			// Cycle all roles and assign capability if its level >= duplicate_post_copy_user_level.
-			foreach ( $default_roles as $level => $name ) {
-				$role = get_role( $name );
-				if ( $role && $min_user_level <= $level ) {
-					$role->add_cap( 'copy_posts' );
-				}
-			}
-			delete_option( 'duplicate_post_copy_user_level' );
 		}
 	}
 
@@ -179,11 +160,6 @@ function duplicate_post_plugin_upgrade() {
 		$meta_blacklist = array_diff( $meta_blacklist, array( '_thumbnail_id' ) );
 	}
 	update_option( 'duplicate_post_blacklist', implode( ',', $meta_blacklist ) );
-
-	delete_option( 'duplicate_post_admin_user_level' );
-	delete_option( 'duplicate_post_create_user_level' );
-	delete_option( 'duplicate_post_view_user_level' );
-	delete_option( 'dp_notice' );
 
 	delete_option( 'duplicate_post_show_notice' );
 	if ( version_compare( $installed_version, '3.2.5' ) < 0 ) {
