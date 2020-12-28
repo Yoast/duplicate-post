@@ -12,13 +12,13 @@ use Mockery;
 use Yoast\WP\Duplicate_Post\Permissions_Helper;
 use Yoast\WP\Duplicate_Post\Tests\TestCase;
 use Yoast\WP\Duplicate_Post\UI\Asset_Manager;
-use Yoast\WP\Duplicate_Post\UI\Post_Submitbox;
+use Yoast\WP\Duplicate_Post\UI\Classic_Editor;
 use Yoast\WP\Duplicate_Post\UI\Link_Builder;
 
 /**
- * Test the Post_Submitbox class.
+ * Test the Classic_Editor class.
  */
-class Post_Submitbox_Test extends TestCase {
+class Classic_Editor_Test extends TestCase {
 
 	/**
 	 * Holds the object to create the action link to duplicate.
@@ -44,7 +44,7 @@ class Post_Submitbox_Test extends TestCase {
 	/**
 	 * The instance.
 	 *
-	 * @var Post_Submitbox
+	 * @var Classic_Editor
 	 */
 	protected $instance;
 
@@ -59,7 +59,7 @@ class Post_Submitbox_Test extends TestCase {
 		$this->asset_manager      = Mockery::mock( Asset_Manager::class );
 
 		$this->instance = Mockery::mock(
-			Post_Submitbox::class,
+			Classic_Editor::class,
 			[
 				$this->link_builder,
 				$this->permissions_helper,
@@ -71,7 +71,7 @@ class Post_Submitbox_Test extends TestCase {
 	/**
 	 * Tests if the needed attributes are set correctly.
 	 *
-	 * @covers \Yoast\WP\Duplicate_Post\UI\Post_Submitbox::__construct
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::__construct
 	 */
 	public function test_constructor() {
 		$this->assertAttributeInstanceOf( Link_Builder::class, 'link_builder', $this->instance );
@@ -81,7 +81,7 @@ class Post_Submitbox_Test extends TestCase {
 	/**
 	 * Tests the registration of the hooks.
 	 *
-	 * @covers \Yoast\WP\Duplicate_Post\UI\Post_Submitbox::register_hooks
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::register_hooks
 	 * @runInSeparateProcess
 	 * @preserveGlobalState disabled
 	 */
@@ -115,12 +115,15 @@ class Post_Submitbox_Test extends TestCase {
 
 		$this->assertNotFalse( \has_action( 'admin_enqueue_scripts', [ $this->instance, 'enqueue_classic_editor_scripts' ] ), 'Does not have expected admin_enqueue_scripts action (scripts)' );
 		$this->assertNotFalse( \has_action( 'admin_enqueue_scripts', [ $this->instance, 'enqueue_classic_editor_styles' ] ), 'Does not have expected admin_enqueue_scripts action (styles)' );
+
+		$this->assertNotFalse( \has_action( 'add_meta_boxes', [ $this->instance, 'remove_slug_meta_box' ] ), 'Does not have expected add_meta_boxes action' );
+		$this->assertNotFalse( \has_filter( 'get_sample_permalink_html', [ $this->instance, 'remove_sample_permalink_slug_editor' ] ), 'Does not have expected get_sample_permalink_html filter' );
 	}
 
 	/**
 	 * Tests the successful enqueue_classic_editor_scripts function.
 	 *
-	 * @covers \Yoast\WP\Duplicate_Post\UI\Post_Submitbox::enqueue_classic_editor_scripts
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::enqueue_classic_editor_scripts
 	 */
 	public function test_enqueue_classic_editor_scripts() {
 		$_GET['post'] = '123';
@@ -147,7 +150,7 @@ class Post_Submitbox_Test extends TestCase {
 	/**
 	 * Tests the successful enqueue_classic_editor_scripts function.
 	 *
-	 * @covers \Yoast\WP\Duplicate_Post\UI\Post_Submitbox::enqueue_classic_editor_styles
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::enqueue_classic_editor_styles
 	 */
 	public function test_enqueue_classic_editor_styles() {
 		$_GET['post'] = '123';
@@ -173,7 +176,7 @@ class Post_Submitbox_Test extends TestCase {
 	/**
 	 * Tests the add_new_draft_post_button function when a button is displayed.
 	 *
-	 * @covers \Yoast\WP\Duplicate_Post\UI\Post_Submitbox::add_new_draft_post_button
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::add_new_draft_post_button
 	 */
 	public function test_add_new_draft_post_button_successful() {
 		$post            = Mockery::mock( \WP_Post::class );
@@ -205,7 +208,7 @@ class Post_Submitbox_Test extends TestCase {
 	/**
 	 * Tests the add_new_draft_post_button function when a button is displayed and the post ID comes from $_GET.
 	 *
-	 * @covers \Yoast\WP\Duplicate_Post\UI\Post_Submitbox::add_new_draft_post_button
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::add_new_draft_post_button
 	 */
 	public function test_add_new_draft_post_button_successful_post_from_GET() {
 		$_GET['post']    = '123';
@@ -238,7 +241,7 @@ class Post_Submitbox_Test extends TestCase {
 	/**
 	 * Tests the add_new_draft_post_button function when no post could be retrieved
 	 *
-	 * @covers \Yoast\WP\Duplicate_Post\UI\Post_Submitbox::add_new_draft_post_button
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::add_new_draft_post_button
 	 */
 	public function test_add_new_draft_post_button_unsuccessful_no_post() {
 		unset( $_GET['post'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Intended, to be able to test the method.
@@ -266,7 +269,7 @@ class Post_Submitbox_Test extends TestCase {
 	/**
 	 * Tests the add_new_draft_post_button function when the link cannot be displayed.
 	 *
-	 * @covers \Yoast\WP\Duplicate_Post\UI\Post_Submitbox::add_new_draft_post_button
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::add_new_draft_post_button
 	 */
 	public function test_add_new_draft_post_button_unsuccessful_no_link_allowed() {
 		$post            = Mockery::mock( \WP_Post::class );
@@ -296,7 +299,7 @@ class Post_Submitbox_Test extends TestCase {
 	/**
 	 * Tests the add_rewrite_and_republish_post_button function when a button is displayed.
 	 *
-	 * @covers \Yoast\WP\Duplicate_Post\UI\Post_Submitbox::add_rewrite_and_republish_post_button
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::add_rewrite_and_republish_post_button
 	 */
 	public function test_add_rewrite_and_republish_post_button_successful() {
 		$post              = Mockery::mock( \WP_Post::class );
@@ -334,7 +337,7 @@ class Post_Submitbox_Test extends TestCase {
 	/**
 	 * Tests the add_rewrite_and_republish_post_button function when a button is displayed and the post ID comes from $_GET.
 	 *
-	 * @covers \Yoast\WP\Duplicate_Post\UI\Post_Submitbox::add_rewrite_and_republish_post_button
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::add_rewrite_and_republish_post_button
 	 */
 	public function test_add_rewrite_and_republish_post_button_post_from_GET() {
 		$_GET['post']      = '123';
@@ -373,7 +376,7 @@ class Post_Submitbox_Test extends TestCase {
 	/**
 	 * Tests the add_rewrite_and_republish_post_button function when no post could be retrieved.
 	 *
-	 * @covers \Yoast\WP\Duplicate_Post\UI\Post_Submitbox::add_rewrite_and_republish_post_button
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::add_rewrite_and_republish_post_button
 	 */
 	public function test_add_rewrite_and_republish_post_button_no_post() {
 		unset( $_GET['post'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Intended, to be able to test the method.
@@ -401,7 +404,7 @@ class Post_Submitbox_Test extends TestCase {
 	/**
 	 * Tests the add_rewrite_and_republish_post_button function when the link cannot be displayed.
 	 *
-	 * @covers \Yoast\WP\Duplicate_Post\UI\Post_Submitbox::add_rewrite_and_republish_post_button
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::add_rewrite_and_republish_post_button
 	 */
 	public function test_add_rewrite_and_republish_post_button_unsuccessful_is_for_rewrite_and_republish() {
 		$post              = Mockery::mock( \WP_Post::class );
@@ -437,7 +440,7 @@ class Post_Submitbox_Test extends TestCase {
 	/**
 	 * Tests the add_rewrite_and_republish_post_button function when the post is not published.
 	 *
-	 * @covers \Yoast\WP\Duplicate_Post\UI\Post_Submitbox::add_rewrite_and_republish_post_button
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::add_rewrite_and_republish_post_button
 	 */
 	public function test_add_rewrite_and_republish_post_button_not_publish() {
 		$post              = Mockery::mock( \WP_Post::class );
@@ -467,7 +470,7 @@ class Post_Submitbox_Test extends TestCase {
 	/**
 	 * Tests the change_republish_strings_classic_editor function when the copy should be changed.
 	 *
-	 * @covers \Yoast\WP\Duplicate_Post\UI\Post_Submitbox::change_republish_strings_classic_editor
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::change_republish_strings_classic_editor
 	 */
 	public function test_should_change_republish_strings() {
 		$text = 'Publish';
@@ -490,7 +493,7 @@ class Post_Submitbox_Test extends TestCase {
 	/**
 	 * Tests the change_republish_strings_classic_editor function when the copy should not be changed.
 	 *
-	 * @covers \Yoast\WP\Duplicate_Post\UI\Post_Submitbox::change_republish_strings_classic_editor
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::change_republish_strings_classic_editor
 	 */
 	public function test_should_not_change_republish_strings() {
 		$text        = 'Publish';
@@ -515,7 +518,7 @@ class Post_Submitbox_Test extends TestCase {
 	 * Tests the change_republish_strings_classic_editor function when the copy should not be changed,
 	 * because the copy is not 'Publish'.
 	 *
-	 * @covers \Yoast\WP\Duplicate_Post\UI\Post_Submitbox::change_republish_strings_classic_editor
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::change_republish_strings_classic_editor
 	 */
 	public function test_should_not_change_republish_strings_other_text() {
 		$text        = 'Test';
@@ -539,7 +542,7 @@ class Post_Submitbox_Test extends TestCase {
 	/**
 	 * Tests the change_schedule_strings_classic_editor function when the copy should be changed.
 	 *
-	 * @covers \Yoast\WP\Duplicate_Post\UI\Post_Submitbox::change_schedule_strings_classic_editor
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::change_schedule_strings_classic_editor
 	 */
 	public function test_should_change_schedule_strings() {
 		$text = 'Schedule';
@@ -562,7 +565,7 @@ class Post_Submitbox_Test extends TestCase {
 	/**
 	 * Tests the change_schedule_strings_classic_editor function when the copy should not be changed.
 	 *
-	 * @covers \Yoast\WP\Duplicate_Post\UI\Post_Submitbox::change_schedule_strings_classic_editor
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::change_schedule_strings_classic_editor
 	 */
 	public function test_should_not_change_schedule_strings() {
 		$text        = 'Schedule';
@@ -587,7 +590,7 @@ class Post_Submitbox_Test extends TestCase {
 	 * Tests the change_republish_strings_classic_editor function when the copy should not be changed,
 	 * because the copy is not 'Schedule'.
 	 *
-	 * @covers \Yoast\WP\Duplicate_Post\UI\Post_Submitbox::change_schedule_strings_classic_editor
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::change_schedule_strings_classic_editor
 	 */
 	public function test_should_not_change_schedule_strings_other_text() {
 		$text        = 'Test';
@@ -611,7 +614,7 @@ class Post_Submitbox_Test extends TestCase {
 	/**
 	 * Tests the change_scheduled_notice_classic_editor function when the copy should be changed for a post.
 	 *
-	 * @covers \Yoast\WP\Duplicate_Post\UI\Post_Submitbox::change_scheduled_notice_classic_editor
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::change_scheduled_notice_classic_editor
 	 */
 	public function test_should_change_scheduled_notice_post() {
 		$post             = Mockery::mock( \WP_Post::class );
@@ -721,7 +724,7 @@ class Post_Submitbox_Test extends TestCase {
 	/**
 	 * Tests the change_scheduled_notice_classic_editor function when the copy should be changed for a page.
 	 *
-	 * @covers \Yoast\WP\Duplicate_Post\UI\Post_Submitbox::change_scheduled_notice_classic_editor
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::change_scheduled_notice_classic_editor
 	 */
 	public function test_should_change_scheduled_notice_page() {
 		$post             = Mockery::mock( \WP_Post::class );
@@ -831,7 +834,7 @@ class Post_Submitbox_Test extends TestCase {
 	/**
 	 * Tests the should_change_rewrite_republish_copy function when it should return true for a post.
 	 *
-	 * @covers \Yoast\WP\Duplicate_Post\UI\Post_Submitbox::should_change_rewrite_republish_copy
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::should_change_rewrite_republish_copy
 	 */
 	public function test_should_change_rewrite_republish_copy_post() {
 		global $pagenow;
@@ -851,7 +854,7 @@ class Post_Submitbox_Test extends TestCase {
 	/**
 	 * Tests the should_change_rewrite_republish_copy function when it should return true for a new post.
 	 *
-	 * @covers \Yoast\WP\Duplicate_Post\UI\Post_Submitbox::should_change_rewrite_republish_copy
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::should_change_rewrite_republish_copy
 	 */
 	public function test_should_change_rewrite_republish_copy_new_post() {
 		global $pagenow;
@@ -872,7 +875,7 @@ class Post_Submitbox_Test extends TestCase {
 	 * Tests the should_change_rewrite_republish_copy function when it should return false,
 	 * because the current page is not a post edit screen.
 	 *
-	 * @covers \Yoast\WP\Duplicate_Post\UI\Post_Submitbox::should_change_rewrite_republish_copy
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::should_change_rewrite_republish_copy
 	 */
 	public function test_should_not_change_rewrite_republish_copy_not_post_edit_screen() {
 		global $pagenow;
@@ -888,7 +891,7 @@ class Post_Submitbox_Test extends TestCase {
 	 * Tests the should_change_rewrite_republish_copy function when it should return false,
 	 * because the current post is null.
 	 *
-	 * @covers \Yoast\WP\Duplicate_Post\UI\Post_Submitbox::should_change_rewrite_republish_copy
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::should_change_rewrite_republish_copy
 	 */
 	public function test_should_not_change_rewrite_republish_copy_post_is_null() {
 		global $pagenow;
@@ -901,7 +904,7 @@ class Post_Submitbox_Test extends TestCase {
 	 * Tests the should_change_rewrite_republish_copy function when it should return false,
 	 * because the current post is not a Rewrite & Republish post.
 	 *
-	 * @covers \Yoast\WP\Duplicate_Post\UI\Post_Submitbox::should_change_rewrite_republish_copy
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::should_change_rewrite_republish_copy
 	 */
 	public function test_should_not_change_rewrite_republish_copy_not_republish_copy() {
 		global $pagenow;
@@ -916,5 +919,88 @@ class Post_Submitbox_Test extends TestCase {
 			->andReturnFalse();
 
 		$this->assertFalse( $this->instance->should_change_rewrite_republish_copy( $post ) );
+	}
+
+	/**
+	 * Tests the remove_slug_meta_box function when the post is a Rewrite & Republish copy.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::remove_slug_meta_box
+	 */
+	public function test_remove_slug_meta_box() {
+		$post            = Mockery::mock( \WP_Post::class );
+		$post->post_type = 'post';
+
+		$this->permissions_helper->expects( 'is_rewrite_and_republish_copy' )
+			->once()
+			->with( $post )
+			->andReturnTrue();
+
+		Monkey\Functions\expect( '\remove_meta_box' )
+			->once()
+			->with( 'slugdiv', $post->post_type, 'normal' );
+
+		$this->instance->remove_slug_meta_box( $post->post_type, $post );
+	}
+
+	/**
+	 * Tests the remove_slug_meta_box function when the post is not a Rewrite & Republish copy.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::remove_slug_meta_box
+	 */
+	public function test_remove_slug_meta_box_not_rewrite_and_republish_copy() {
+		$post            = Mockery::mock( \WP_Post::class );
+		$post->post_type = 'post';
+
+		$this->permissions_helper->expects( 'is_rewrite_and_republish_copy' )
+			->once()
+			->with( $post )
+			->andReturnFalse();
+
+		Monkey\Functions\expect( '\remove_meta_box' )
+			->never();
+
+		$this->instance->remove_slug_meta_box( $post->post_type, $post );
+	}
+
+	/**
+	 * Tests the remove_sample_permalink_slug_editor function when the post is a Rewrite & Republish copy.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::remove_sample_permalink_slug_editor
+	 */
+	public function test_remove_sample_permalink_slug_editor() {
+		$return          = 'sample-permalink-html';
+		$post_id         = '123';
+		$new_title       = null;
+		$new_slug        = null;
+		$post            = Mockery::mock( \WP_Post::class );
+		$post->post_type = 'post';
+
+		$this->permissions_helper->expects( 'is_rewrite_and_republish_copy' )
+			->once()
+			->with( $post )
+			->andReturnTrue();
+
+		$this->assertEquals( '', $this->instance->remove_sample_permalink_slug_editor( $return, $post_id, $new_title, $new_slug, $post ) );
+	}
+
+	/**
+	 * Tests the remove_sample_permalink_slug_editor function when the post is not a Rewrite & Republish copy.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::remove_sample_permalink_slug_editor
+	 */
+	public function test_remove_sample_permalink_slug_editor_not_rewrite_and_republish_copy() {
+		$return          = 'sample-permalink-html';
+		$post_id         = '123';
+		$new_title       = null;
+		$new_slug        = null;
+		$post            = Mockery::mock( \WP_Post::class );
+		$post->post_type = 'post';
+
+		$this->permissions_helper->expects( 'is_rewrite_and_republish_copy' )
+			->once()
+			->with( $post )
+			->andReturnFalse();
+
+		$this->assertEquals( 'sample-permalink-html', $this->instance->remove_sample_permalink_slug_editor( $return, $post_id, $new_title, $new_slug, $post ) );
 	}
 }
