@@ -57,16 +57,14 @@ class Classic_Editor {
 	public function register_hooks() {
 		\add_action( 'post_submitbox_misc_actions', [ $this, 'add_check_changes_link' ], 90 );
 
-		if ( \intval( Utils::get_option( 'duplicate_post_show_link_in', 'submitbox' ) ) === 0 ) {
-			return;
-		}
+		if ( \intval( Utils::get_option( 'duplicate_post_show_link_in', 'submitbox' ) ) === 1 ) {
+			if ( \intval( Utils::get_option( 'duplicate_post_show_link', 'new_draft' ) ) === 1 ) {
+				\add_action( 'post_submitbox_start', [ $this, 'add_new_draft_post_button' ] );
+			}
 
-		if ( \intval( Utils::get_option( 'duplicate_post_show_link', 'new_draft' ) ) === 1 ) {
-			\add_action( 'post_submitbox_start', [ $this, 'add_new_draft_post_button' ] );
-		}
-
-		if ( \intval( Utils::get_option( 'duplicate_post_show_link', 'rewrite_republish' ) ) === 1 ) {
-			\add_action( 'post_submitbox_start', [ $this, 'add_rewrite_and_republish_post_button' ] );
+			if ( \intval( Utils::get_option( 'duplicate_post_show_link', 'rewrite_republish' ) ) === 1 ) {
+				\add_action( 'post_submitbox_start', [ $this, 'add_rewrite_and_republish_post_button' ] );
+			}
 		}
 
 		\add_filter( 'gettext', [ $this, 'change_republish_strings_classic_editor' ], 10, 2 );
