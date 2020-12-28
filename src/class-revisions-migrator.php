@@ -37,11 +37,7 @@ class Revisions_Migrator {
 		$copy          = \get_post( $copy_id );
 		$original_post = \get_post( $original_id );
 
-		if ( \is_null( $copy ) || \is_null( $original_post ) ) {
-			return;
-		}
-
-		if ( ! \wp_revisions_enabled( $original_post ) ) {
+		if ( \is_null( $copy ) || \is_null( $original_post ) || ! \wp_revisions_enabled( $original_post ) ) {
 			return;
 		}
 
