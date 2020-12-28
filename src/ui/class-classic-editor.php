@@ -1,6 +1,6 @@
 <?php
 /**
- * Duplicate Post class to manage the post submitbox.
+ * Duplicate Post class to manage the classic editor UI.
  *
  * @package Duplicate_Post
  */
@@ -11,9 +11,9 @@ use Yoast\WP\Duplicate_Post\Permissions_Helper;
 use Yoast\WP\Duplicate_Post\Utils;
 
 /**
- * Represents the Post_Submitbox class.
+ * Represents the Classic_Editor class.
  */
-class Post_Submitbox {
+class Classic_Editor {
 
 	/**
 	 * Holds the object to create the action link to duplicate.
@@ -57,16 +57,14 @@ class Post_Submitbox {
 	public function register_hooks() {
 		\add_action( 'post_submitbox_misc_actions', [ $this, 'add_check_changes_link' ], 90 );
 
-		if ( \intval( Utils::get_option( 'duplicate_post_show_link_in', 'submitbox' ) ) === 0 ) {
-			return;
-		}
+		if ( \intval( Utils::get_option( 'duplicate_post_show_link_in', 'submitbox' ) ) === 1 ) {
+			if ( \intval( Utils::get_option( 'duplicate_post_show_link', 'new_draft' ) ) === 1 ) {
+				\add_action( 'post_submitbox_start', [ $this, 'add_new_draft_post_button' ] );
+			}
 
-		if ( \intval( Utils::get_option( 'duplicate_post_show_link', 'new_draft' ) ) === 1 ) {
-			\add_action( 'post_submitbox_start', [ $this, 'add_new_draft_post_button' ] );
-		}
-
-		if ( \intval( Utils::get_option( 'duplicate_post_show_link', 'rewrite_republish' ) ) === 1 ) {
-			\add_action( 'post_submitbox_start', [ $this, 'add_rewrite_and_republish_post_button' ] );
+			if ( \intval( Utils::get_option( 'duplicate_post_show_link', 'rewrite_republish' ) ) === 1 ) {
+				\add_action( 'post_submitbox_start', [ $this, 'add_rewrite_and_republish_post_button' ] );
+			}
 		}
 
 		\add_filter( 'gettext', [ $this, 'change_republish_strings_classic_editor' ], 10, 2 );
@@ -75,6 +73,10 @@ class Post_Submitbox {
 
 		\add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_classic_editor_scripts' ] );
 		\add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_classic_editor_styles' ] );
+
+		// Remove slug editing from Classic Editor.
+		\add_action( 'add_meta_boxes', [ $this, 'remove_slug_meta_box' ], 10, 2 );
+		\add_filter( 'get_sample_permalink_html', [ $this, 'remove_sample_permalink_slug_editor' ], 10, 5 );
 	}
 
 	/**
@@ -125,21 +127,17 @@ class Post_Submitbox {
 			}
 		}
 
-		if ( ! \is_null( $post ) ) {
-			/** This filter is documented in class-row-action.php */
-			if ( \apply_filters(
-				'duplicate_post_show_link',
-				$this->permissions_helper->should_link_be_displayed( $post ),
-				$post
-			) ) {
-				?>
-				<div id="duplicate-action">
-					<a class="submitduplicate duplication"
-						href="<?php echo \esc_url( $this->link_builder->build_new_draft_link( $post ) ); ?>"><?php \esc_html_e( 'Copy to a new draft', 'duplicate-post' ); ?>
-					</a>
-				</div>
-				<?php
-			}
+		if (
+			! \is_null( $post )
+			&& $this->permissions_helper->should_links_be_displayed( $post )
+		) {
+			?>
+			<div id="duplicate-action">
+				<a class="submitduplicate duplication"
+					href="<?php echo \esc_url( $this->link_builder->build_new_draft_link( $post ) ); ?>"><?php \esc_html_e( 'Copy to a new draft', 'duplicate-post' ); ?>
+				</a>
+			</div>
+			<?php
 		}
 	}
 
@@ -158,20 +156,17 @@ class Post_Submitbox {
 			}
 		}
 
-		if ( ! \is_null( $post ) && $post->post_status === 'publish' ) {
-			/** This filter is documented in duplicate-post-admin.php */
-			if ( \apply_filters(
-				'duplicate_post_show_link',
-				$this->permissions_helper->should_link_be_displayed( $post ),
-				$post
-			) ) {
-				?>
-				<div id="rewrite-republish-action">
-					<a class="submitduplicate duplication" href="<?php echo \esc_url( $this->link_builder->build_rewrite_and_republish_link( $post ) ); ?>"><?php \esc_html_e( 'Rewrite & Republish', 'duplicate-post' ); ?>
-					</a>
-				</div>
-				<?php
-			}
+		if (
+			! \is_null( $post )
+			&& $this->permissions_helper->should_rewrite_and_republish_be_allowed( $post )
+			&& $this->permissions_helper->should_links_be_displayed( $post )
+		) {
+			?>
+			<div id="rewrite-republish-action">
+				<a class="submitduplicate duplication" href="<?php echo \esc_url( $this->link_builder->build_rewrite_and_republish_link( $post ) ); ?>"><?php \esc_html_e( 'Rewrite & Republish', 'duplicate-post' ); ?>
+				</a>
+			</div>
+			<?php
 		}
 	}
 
@@ -295,5 +290,38 @@ class Post_Submitbox {
 		}
 
 		return $this->permissions_helper->is_rewrite_and_republish_copy( $post );
+	}
+
+	/**
+	 * Removes the slug meta box in the Classic Editor when the post is a Rewrite & Republish copy.
+	 *
+	 * @param string   $post_type Post type.
+	 * @param \WP_Post $post      Post object.
+	 *
+	 * @return void
+	 */
+	public function remove_slug_meta_box( $post_type, $post ) {
+		if ( $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
+			\remove_meta_box( 'slugdiv', $post_type, 'normal' );
+		}
+	}
+
+	/**
+	 * Removes the sample permalink slug editor in the Classic Editor when the post is a Rewrite & Republish copy.
+	 *
+	 * @param string   $return    Sample permalink HTML markup.
+	 * @param int      $post_id   Post ID.
+	 * @param string   $new_title New sample permalink title.
+	 * @param string   $new_slug  New sample permalink slug.
+	 * @param \WP_Post $post      Post object.
+	 *
+	 * @return string The filtered HTML of the sample permalink slug editor.
+	 */
+	public function remove_sample_permalink_slug_editor( $return, $post_id, $new_title, $new_slug, $post ) {
+		if ( $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
+			return '';
+		}
+
+		return $return;
 	}
 }

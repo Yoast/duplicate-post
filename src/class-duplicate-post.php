@@ -53,6 +53,13 @@ class Duplicate_Post {
 	protected $post_republisher;
 
 	/**
+	 * Revisions_Migrator object.
+	 *
+	 * @var Revisions_Migrator
+	 */
+	protected $revisions_migrator;
+
+	/**
 	 * Watchers object.
 	 *
 	 * @var Watchers
@@ -68,6 +75,10 @@ class Duplicate_Post {
 		$this->post_duplicator    = new Post_Duplicator();
 		$this->handler            = new Handler( $this->post_duplicator, $this->permissions_helper );
 		$this->post_republisher   = new Post_Republisher( $this->post_duplicator, $this->permissions_helper );
+		$this->revisions_migrator = new Revisions_Migrator();
 		$this->watchers           = new Watchers( $this->permissions_helper );
+
+		$this->post_republisher->register_hooks();
+		$this->revisions_migrator->register_hooks();
 	}
 }

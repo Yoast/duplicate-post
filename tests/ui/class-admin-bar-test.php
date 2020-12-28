@@ -87,7 +87,7 @@ class Admin_Bar_Test extends TestCase {
 	 * @preserveGlobalState disabled
 	 */
 	public function test_register_hooks() {
-		$utils = \Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
+		$utils = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
 
 		$utils->expects( 'get_option' )
 			->with( 'duplicate_post_show_link_in', 'adminbar' )
@@ -123,13 +123,14 @@ class Admin_Bar_Test extends TestCase {
 
 		$this->link_builder
 			->expects( 'build_new_draft_link' )
-			->with( $post );
+			->with( $post )
+			->twice();
 
 		$this->link_builder
 			->expects( 'build_rewrite_and_republish_link' )
 			->with( $post );
 
-		$utils = \Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
+		$utils = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
 
 		$utils->expects( 'get_option' )
 			->with( 'duplicate_post_show_link', 'new_draft' )
@@ -141,9 +142,14 @@ class Admin_Bar_Test extends TestCase {
 			->once()
 			->andReturn( '1' );
 
+		$this->permissions_helper
+			->expects( 'should_rewrite_and_republish_be_allowed' )
+			->with( $post )
+			->andReturnTrue();
+
 		$wp_admin_bar
 			->expects( 'add_menu' )
-			->twice();
+			->times( 3 );
 
 		$this->instance->admin_bar_render();
 	}
@@ -177,7 +183,7 @@ class Admin_Bar_Test extends TestCase {
 			->with( $post )
 			->never();
 
-		$utils = \Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
+		$utils = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
 
 		$utils->expects( 'get_option' )
 			->with( 'duplicate_post_show_link', 'new_draft' )
@@ -351,7 +357,7 @@ class Admin_Bar_Test extends TestCase {
 			->never();
 
 		$this->permissions_helper
-			->expects( 'should_link_be_displayed' )
+			->expects( 'should_links_be_displayed' )
 			->with( $post )
 			->andReturnTrue();
 
@@ -365,7 +371,6 @@ class Admin_Bar_Test extends TestCase {
 			->andReturnTrue();
 
 		$this->assertSame( $post, $this->instance->get_current_post() );
-		$this->assertTrue( Monkey\Filters\applied( 'duplicate_post_show_link' ) > 0 );
 	}
 
 	/**
@@ -390,7 +395,7 @@ class Admin_Bar_Test extends TestCase {
 			->andReturn( $post );
 
 		$this->permissions_helper
-			->expects( 'should_link_be_displayed' )
+			->expects( 'should_links_be_displayed' )
 			->with( $post )
 			->andReturnTrue();
 
@@ -404,7 +409,6 @@ class Admin_Bar_Test extends TestCase {
 			->andReturnTrue();
 
 		$this->assertSame( $post, $this->instance->get_current_post() );
-		$this->assertTrue( Monkey\Filters\applied( 'duplicate_post_show_link' ) > 0 );
 	}
 
 	/**
@@ -428,7 +432,7 @@ class Admin_Bar_Test extends TestCase {
 			->never();
 
 		$this->permissions_helper
-			->expects( 'should_link_be_displayed' )
+			->expects( 'should_links_be_displayed' )
 			->with( $post )
 			->never();
 
@@ -466,7 +470,7 @@ class Admin_Bar_Test extends TestCase {
 			->andReturn( $post );
 
 		$this->permissions_helper
-			->expects( 'should_link_be_displayed' )
+			->expects( 'should_links_be_displayed' )
 			->with( $post )
 			->never();
 
@@ -505,20 +509,25 @@ class Admin_Bar_Test extends TestCase {
 			->never();
 
 		$this->permissions_helper
-			->expects( 'should_link_be_displayed' )
-			->with( $post )
-			->andReturnFalse();
-
-		$this->permissions_helper
 			->expects( 'is_edit_post_screen' )
-			->never();
+			->once()
+			->andReturnTrue();
+
+		Monkey\Functions\expect( '\is_singular' )
+			->andReturn( false );
 
 		$this->permissions_helper
 			->expects( 'post_type_has_admin_bar' )
 			->with( $post->post_type )
-			->never();
+			->once()
+			->andReturnTrue();
+
+		$this->permissions_helper
+			->expects( 'should_links_be_displayed' )
+			->with( $post )
+			->once()
+			->andReturnFalse();
 
 		$this->assertSame( false, $this->instance->get_current_post() );
-		$this->assertTrue( Monkey\Filters\applied( 'duplicate_post_show_link' ) > 0 );
 	}
 }

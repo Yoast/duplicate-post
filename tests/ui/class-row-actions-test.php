@@ -122,7 +122,7 @@ class Row_Actions_Test extends TestCase {
 		$url              = 'http://basic.wordpress.test/wp-admin/admin.php?action=duplicate_post_clone&amp;post=464';
 
 		$this->permissions_helper
-			->expects( 'should_link_be_displayed' )
+			->expects( 'should_links_be_displayed' )
 			->with( $post )
 			->andReturnTrue();
 
@@ -149,7 +149,6 @@ class Row_Actions_Test extends TestCase {
 			],
 			$this->instance->add_clone_action_link( $actions, $post )
 		);
-		$this->assertTrue( Monkey\Filters\applied( 'duplicate_post_show_link' ) > 0 );
 	}
 
 	/**
@@ -167,7 +166,7 @@ class Row_Actions_Test extends TestCase {
 		$post    = Mockery::mock( \WP_Post::class );
 
 		$this->permissions_helper
-			->expects( 'should_link_be_displayed' )
+			->expects( 'should_links_be_displayed' )
 			->with( $post )
 			->andReturnFalse();
 
@@ -187,7 +186,6 @@ class Row_Actions_Test extends TestCase {
 			],
 			$this->instance->add_clone_action_link( $actions, $post )
 		);
-		$this->assertTrue( Monkey\Filters\applied( 'duplicate_post_show_link' ) > 0 );
 	}
 
 	/**
@@ -209,7 +207,7 @@ class Row_Actions_Test extends TestCase {
 		$url              = 'http://basic.wordpress.test/wp-admin/admin.php?action=duplicate_post_new_draft&amp;post=464';
 
 		$this->permissions_helper
-			->expects( 'should_link_be_displayed' )
+			->expects( 'should_links_be_displayed' )
 			->with( $post )
 			->andReturnTrue();
 
@@ -236,7 +234,6 @@ class Row_Actions_Test extends TestCase {
 			],
 			$this->instance->add_new_draft_action_link( $actions, $post )
 		);
-		$this->assertTrue( Monkey\Filters\applied( 'duplicate_post_show_link' ) > 0 );
 	}
 
 	/**
@@ -254,7 +251,7 @@ class Row_Actions_Test extends TestCase {
 		$post    = Mockery::mock( \WP_Post::class );
 
 		$this->permissions_helper
-			->expects( 'should_link_be_displayed' )
+			->expects( 'should_links_be_displayed' )
 			->with( $post )
 			->andReturnFalse();
 
@@ -274,7 +271,6 @@ class Row_Actions_Test extends TestCase {
 			],
 			$this->instance->add_new_draft_action_link( $actions, $post )
 		);
-		$this->assertTrue( Monkey\Filters\applied( 'duplicate_post_show_link' ) > 0 );
 	}
 
 	/**
@@ -297,7 +293,12 @@ class Row_Actions_Test extends TestCase {
 		$url               = 'http://basic.wordpress.test/wp-admin/admin.php?action=duplicate_post_rewrite&amp;post=464';
 
 		$this->permissions_helper
-			->expects( 'should_link_be_displayed' )
+			->expects( 'should_links_be_displayed' )
+			->with( $post )
+			->andReturnTrue();
+
+		$this->permissions_helper
+			->expects( 'should_rewrite_and_republish_be_allowed' )
 			->with( $post )
 			->andReturnTrue();
 
@@ -324,7 +325,6 @@ class Row_Actions_Test extends TestCase {
 			],
 			$this->instance->add_rewrite_and_republish_action_link( $actions, $post )
 		);
-		$this->assertTrue( Monkey\Filters\applied( 'duplicate_post_show_link' ) > 0 );
 	}
 
 	/**
@@ -343,7 +343,12 @@ class Row_Actions_Test extends TestCase {
 		$post->post_status = 'publish';
 
 		$this->permissions_helper
-			->expects( 'should_link_be_displayed' )
+			->expects( 'should_links_be_displayed' )
+			->with( $post )
+			->never();
+
+		$this->permissions_helper
+			->expects( 'should_rewrite_and_republish_be_allowed' )
 			->with( $post )
 			->andReturnFalse();
 
@@ -363,7 +368,6 @@ class Row_Actions_Test extends TestCase {
 			],
 			$this->instance->add_rewrite_and_republish_action_link( $actions, $post )
 		);
-		$this->assertTrue( Monkey\Filters\applied( 'duplicate_post_show_link' ) > 0 );
 	}
 
 	/**
@@ -382,8 +386,13 @@ class Row_Actions_Test extends TestCase {
 		$post->post_status = 'draft';
 
 		$this->permissions_helper
-			->expects( 'should_link_be_displayed' )
+			->expects( 'should_links_be_displayed' )
 			->never();
+
+		$this->permissions_helper
+			->expects( 'should_rewrite_and_republish_be_allowed' )
+			->with( $post )
+			->andReturnFalse();
 
 		Monkey\Functions\expect( '\_draft_or_post_title' )
 			->never();

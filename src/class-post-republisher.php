@@ -3,14 +3,10 @@
  * Duplicate Post class to republish a rewritten post.
  *
  * @package Duplicate_Post
- * @since 4.0
+ * @since   4.0
  */
 
 namespace Yoast\WP\Duplicate_Post;
-
-use Yoast\WP\Duplicate_Post\Permissions_Helper;
-use Yoast\WP\Duplicate_Post\Post_Duplicator;
-use Yoast\WP\Duplicate_Post\Utils;
 
 /**
  * Represents the Post Republisher class.
@@ -40,8 +36,6 @@ class Post_Republisher {
 	public function __construct( Post_Duplicator $post_duplicator, Permissions_Helper $permissions_helper ) {
 		$this->post_duplicator    = $post_duplicator;
 		$this->permissions_helper = $permissions_helper;
-
-		$this->register_hooks();
 	}
 
 	/**
@@ -52,20 +46,29 @@ class Post_Republisher {
 	public function register_hooks() {
 		\add_action( 'init', [ $this, 'register_post_statuses' ] );
 		\add_filter( 'wp_insert_post_data', [ $this, 'change_post_copy_status' ], 1, 2 );
-		\add_filter( 'display_post_states', [ $this, 'add_rewrite_schedule_display_state' ], 9, 2 );
 
 		$enabled_post_types = $this->permissions_helper->get_enabled_post_types();
 		foreach ( $enabled_post_types as $enabled_post_type ) {
-			// Called in the REST API when submitting the post copy in the Block Editor.
-			// Runs the republishing of the copy onto the original.
+			/**
+			 * Called in the REST API when submitting the post copy in the Block Editor.
+			 * Runs the republishing of the copy onto the original.
+			 */
 			\add_action( "rest_after_insert_{$enabled_post_type}", [ $this, 'republish_after_rest_api_request' ] );
 		}
-		// Called by `wp_insert_post()` when submitting the post copy, which runs in two cases:
-		// - In the Classic Editor, where there's only one request that updates everything.
-		// - In the Block Editor, only when there are custom meta boxes.
+
+		/**
+		 * Called by `wp_insert_post()` when submitting the post copy, which runs in two cases:
+		 * - In the Classic Editor, where there's only one request that updates everything.
+		 * - In the Block Editor, only when there are custom meta boxes.
+		 */
 		\add_action( 'wp_insert_post', [ $this, 'republish_after_post_request' ], \PHP_INT_MAX, 2 );
+
 		// Clean up after the redirect to the original post.
 		\add_action( 'load-post.php', [ $this, 'clean_up_after_redirect' ] );
+		// Clean up the original when the copy is manually deleted from the trash.
+		\add_action( 'before_delete_post', [ $this, 'clean_up_when_copy_manually_deleted' ] );
+		// Ensure scheduled Rewrite and Republish posts are properly handled.
+		\add_action( 'future_to_publish', [ $this, 'republish_scheduled_post' ] );
 	}
 
 	/**
@@ -78,26 +81,15 @@ class Post_Republisher {
 	 * @return void
 	 */
 	public function register_post_statuses() {
-		$custom_post_statuses = [
-			'dp-rewrite-republish' => [
-				'label'                     => __( 'Republish', 'duplicate-post' ),
-				'public'                    => true,
-				'exclude_from_search'       => false,
-				'show_in_admin_all_list'    => false,
-				'show_in_admin_status_list' => false,
-			],
-			'dp-rewrite-schedule'  => [
-				'label'                     => __( 'Future Republish', 'duplicate-post' ),
-				'public'                    => true,
-				'exclude_from_search'       => false,
-				'show_in_admin_all_list'    => false,
-				'show_in_admin_status_list' => false,
-			],
+		$options = [
+			'label'                     => __( 'Republish', 'duplicate-post' ),
+			'public'                    => true,
+			'exclude_from_search'       => false,
+			'show_in_admin_all_list'    => false,
+			'show_in_admin_status_list' => false,
 		];
 
-		foreach ( $custom_post_statuses as $custom_post_status => $options ) {
-			\register_post_status( $custom_post_status, $options );
-		}
+		\register_post_status( 'dp-rewrite-republish', $options );
 	}
 
 	/**
@@ -122,10 +114,6 @@ class Post_Republisher {
 			$data['post_status'] = 'dp-rewrite-republish';
 		}
 
-		if ( $data['post_status'] === 'future' ) {
-			$data['post_status'] = 'dp-rewrite-schedule';
-		}
-
 		return $data;
 	}
 
@@ -144,22 +132,17 @@ class Post_Republisher {
 			return;
 		}
 
-		$original_post_id = Utils::get_original_post_id( $post->ID );
+		$original_post = Utils::get_original( $post->ID );
 
-		if ( ! $original_post_id ) {
+		if ( ! $original_post ) {
 			return;
 		}
 
-		// Republish taxonomies and meta.
-		$this->republish_post_taxonomies( $post );
-		$this->republish_post_meta( $post );
-
-		// Republish the post.
-		$this->republish_post_elements( $post, $original_post_id );
+		$this->republish( $post, $original_post );
 
 		// Trigger the redirect in the Classic Editor.
 		if ( $this->is_classic_editor_post_request() ) {
-			$this->redirect( $original_post_id, $post->ID );
+			$this->redirect( $original_post->ID, $post->ID );
 		}
 	}
 
@@ -186,7 +169,7 @@ class Post_Republisher {
 	 * @return void
 	 */
 	public function republish_after_post_request( $post_id, $post ) {
-		if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
+		if ( $this->is_rest_request() ) {
 			return;
 		}
 
@@ -194,32 +177,146 @@ class Post_Republisher {
 	}
 
 	/**
-	 * Republishes the post elements overwriting the original post.
+	 * Republishes the scheduled Rewrited and Republish post.
 	 *
-	 * @param \WP_Post $post             The post object.
-	 * @param int      $original_post_id The original post's ID.
+	 * @param \WP_Post $copy The scheduled copy.
 	 *
 	 * @return void
 	 */
-	protected function republish_post_elements( $post, $original_post_id ) {
-		// Cast to array and not alter the original object.
-		$post_to_be_rewritten = (array) $post;
-		// Determine the new post status.
-		$new_post_status = $post_to_be_rewritten['post_status'] === 'private' ? 'private' : 'publish';
-		// Prepare post data for republishing.
-		$post_to_be_rewritten['ID']          = $original_post_id;
-		$post_to_be_rewritten['post_name']   = \get_post_field( 'post_name', $original_post_id );
-		$post_to_be_rewritten['post_status'] = $new_post_status;
+	public function republish_scheduled_post( \WP_Post $copy ) {
+		if ( ! $this->permissions_helper->is_rewrite_and_republish_copy( $copy ) ) {
+			return;
+		}
 
-		// Yoast SEO and other plugins prevent from accidentally updating another
-		// post's data (e.g. the Yoast SEO metadata) by checking the $_POST data
-		// ID with the post object ID. We need to overwrite the $_POST data ID
-		// to allow updating the original post.
-		$_POST['ID'] = $original_post_id;
+		$original_post = Utils::get_original( $copy->ID );
+
+		// If the original post was permanently deleted, we don't want to republish, so trash instead.
+		if ( ! $original_post ) {
+			$this->delete_copy( $copy->ID, null, false );
+
+			return;
+		}
+
+		$this->republish( $copy, $original_post );
+		$this->delete_copy( $copy->ID, $original_post->ID );
+	}
+
+	/**
+	 * Cleans up the copied post and temporary metadata after the user has been redirected.
+	 *
+	 * @return void
+	 */
+	public function clean_up_after_redirect() {
+		if ( ! empty( $_GET['dprepublished'] ) && ! empty( $_GET['dpcopy'] ) && ! empty( $_GET['post'] ) ) {
+			$copy_id = \intval( \wp_unslash( $_GET['dpcopy'] ) );
+			$post_id = \intval( \wp_unslash( $_GET['post'] ) );
+
+			\check_admin_referer( 'dp-republish', 'dpnonce' );
+
+			$this->delete_copy( $copy_id, $post_id );
+		}
+	}
+
+	/**
+	 * Checks whether a request is the Classic Editor POST request.
+	 *
+	 * @return bool Whether the request is the Classic Editor POST request.
+	 */
+	public function is_classic_editor_post_request() {
+		if ( $this->is_rest_request() ) {
+			return false;
+		}
+
+		return isset( $_GET['meta-box-loader'] ) === false; // phpcs:ignore WordPress.Security.NonceVerification
+	}
+
+	/**
+	 * Determines whether the current request is a REST request.
+	 *
+	 * @return bool Whether or not the request is a REST request.
+	 */
+	public function is_rest_request() {
+		return defined( 'REST_REQUEST' ) && REST_REQUEST;
+	}
+
+	/**
+	 * Republishes the post by overwriting the original post.
+	 *
+	 * @param \WP_Post $post          The Rewrite & Republish copy.
+	 * @param \WP_Post $original_post The original post.
+	 *
+	 * @return void
+	 */
+	public function republish( \WP_Post $post, $original_post ) {
+		// Remove WordPress default filter so a new revision is not created on republish.
+		\remove_action( 'post_updated', 'wp_save_post_revision', 10 );
+
+		// Republish taxonomies and meta.
+		$this->republish_post_taxonomies( $post );
+		$this->republish_post_meta( $post );
+
+		// Republish the post.
+		$this->republish_post_elements( $post, $original_post );
+
+		// Re-enable the creation of a new revision.
+		\add_action( 'post_updated', 'wp_save_post_revision', 10, 1 );
+	}
+
+	/**
+	 * Deletes the copy and associated post meta, if applicable.
+	 *
+	 * @param int      $copy_id The copy's ID.
+	 * @param int|null $post_id The original post's ID. Optional.
+	 * @param bool     $permanently_delete Whether to permanently delete the copy. Defaults to true.
+	 *
+	 * @return void
+	 */
+	public function delete_copy( $copy_id, $post_id = null, $permanently_delete = true ) {
+		/**
+		 * Fires before deleting a Rewrite & Republish copy.
+		 *
+		 * @param int $copy_id The copy's ID.
+		 * @param int $post_id The original post's ID..
+		 */
+		\do_action( 'duplicate_post_after_rewriting', $copy_id, $post_id );
+
+		// Delete the copy bypassing the trash so it also deletes the copy post meta.
+		\wp_delete_post( $copy_id, $permanently_delete );
+
+		if ( ! \is_null( $post_id ) ) {
+			// Delete the meta that marks the original post has having a copy.
+			\delete_post_meta( $post_id, '_dp_has_rewrite_republish_copy' );
+		}
+	}
+
+	/**
+	 * Republishes the post elements overwriting the original post.
+	 *
+	 * @param \WP_Post $post          The post object.
+	 * @param \WP_Post $original_post The original post.
+	 *
+	 * @return void
+	 */
+	protected function republish_post_elements( $post, $original_post ) {
+		// Cast to array and not alter the copy's original object.
+		$post_to_be_rewritten = clone $post;
+
+		// Prepare post data for republishing.
+		$post_to_be_rewritten->ID          = $original_post->ID;
+		$post_to_be_rewritten->post_name   = $original_post->post_name;
+		$post_to_be_rewritten->post_status = $this->determine_post_status( $post, $original_post );
+
+		/**
+		 * Yoast SEO and other plugins prevent from accidentally updating another post's
+		 * data (e.g. the Yoast SEO metadata by checking the $_POST data ID with the post object ID.
+		 * We need to overwrite the $_POST data ID to allow updating the original post.
+		 */
+		$_POST['ID'] = $original_post->ID;
+
 		// Republish the original post.
 		$rewritten_post_id = \wp_update_post( \wp_slash( $post_to_be_rewritten ) );
 
-		if ( 0 === $rewritten_post_id ) {
+		if ( $rewritten_post_id === 0 ) {
 			\wp_die( \esc_html__( 'An error occurred while republishing the post.', 'duplicate-post' ) );
 		}
 	}
@@ -267,25 +364,6 @@ class Post_Republisher {
 	}
 
 	/**
-	 * Deletes the copied post and temporary metadata.
-	 *
-	 * @return void
-	 */
-	public function clean_up_after_redirect() {
-		if ( ! empty( $_GET['dprepublished'] ) && ! empty( $_GET['dpcopy'] ) && ! empty( $_GET['post'] ) ) {
-			$copy_id = \intval( \wp_unslash( $_GET['dpcopy'] ) );
-			$post_id = \intval( \wp_unslash( $_GET['post'] ) );
-
-			\check_admin_referer( 'dp-republish', 'dpnonce' );
-
-			// Delete the copy bypassing the trash so it also deletes the copy post meta.
-			\wp_delete_post( $copy_id, true );
-			// Delete the meta that marks the original post has having a copy.
-			\delete_post_meta( $post_id, '_dp_has_rewrite_republish_copy' );
-		}
-	}
-
-	/**
 	 * Redirects the user to the original post.
 	 *
 	 * @param int $original_post_id The ID of the original post to redirect to.
@@ -308,31 +386,40 @@ class Post_Republisher {
 	}
 
 	/**
-	 * Checks whether a request is the Classic Editor POST request.
+	 * Determines the post status to use when publishing the Rewrite & Republish copy.
 	 *
-	 * @return bool Whether the request is the Classic Editor POST request.
+	 * @param \WP_Post $post          The post object.
+	 * @param \WP_Post $original_post The original post object.
+	 *
+	 * @return string The post status to use.
 	 */
-	public function is_classic_editor_post_request() {
-		if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
-			return false;
+	protected function determine_post_status( $post, $original_post ) {
+		if ( $original_post->post_status === 'trash' ) {
+			return 'trash';
 		}
 
-		return isset( $_GET['meta-box-loader'] ) === false; // phpcs:ignore WordPress.Security.NonceVerification
+		if ( $post->post_status === 'private' ) {
+			return 'private';
+		}
+
+		return 'publish';
 	}
 
 	/**
-	 * Adds the default post display states used in the posts list table.
+	 * Deletes the original post meta that flags it as having a copy when the copy is manually deleted.
 	 *
-	 * @param string[] $post_states An array of post display states.
-	 * @param WP_Post  $post        The current post object.
+	 * @param int $post_id Post ID of a post that is going to be deleted.
 	 *
-	 * @return string[] An array of filtered display post states.
+	 * @return void
 	 */
-	public function add_rewrite_schedule_display_state( $post_states, $post ) {
-		if ( $post->post_status === 'dp-rewrite-schedule' ) {
-			$post_states['dp-rewrite-schedule'] = \esc_html__( 'Scheduled', 'duplicate-post' );
+	public function clean_up_when_copy_manually_deleted( $post_id ) {
+		$post = \get_post( $post_id );
+
+		if ( ! $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
+			return;
 		}
 
-		return $post_states;
+		$original_post_id = Utils::get_original_post_id( $post_id );
+		\delete_post_meta( $original_post_id, '_dp_has_rewrite_republish_copy' );
 	}
 }
