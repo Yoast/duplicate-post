@@ -149,7 +149,7 @@ class Options_Form_Generator {
 
 		$taxonomies_blacklist = \get_option( 'duplicate_post_taxonomies_blacklist' );
 
-		if ( ! is_array( $taxonomies_blacklist ) ) {
+		if ( ! \is_array( $taxonomies_blacklist ) ) {
 			$taxonomies_blacklist = [];
 		}
 
@@ -161,9 +161,9 @@ class Options_Form_Generator {
 			}
 
 			$is_public = ( $taxonomy->public ) ? 'public' : 'private';
-			$name      = esc_attr( $taxonomy->name );
+			$name      = \esc_attr( $taxonomy->name );
 
-			$output .= sprintf( '<div class="taxonomy_%s">', $is_public );
+			$output .= \sprintf( '<div class="taxonomy_%s">', $is_public );
 			$output .= $this->generate_options_input(
 				[
 					'duplicate_post_taxonomies_blacklist[]' => [
