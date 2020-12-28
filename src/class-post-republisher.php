@@ -248,12 +248,18 @@ class Post_Republisher {
 	 * @return void
 	 */
 	public function republish( \WP_Post $post, $original_post ) {
+		// Remove WordPress default filter so a new revision is not created on republish.
+		\remove_action( 'post_updated', 'wp_save_post_revision', 10 );
+
 		// Republish taxonomies and meta.
 		$this->republish_post_taxonomies( $post );
 		$this->republish_post_meta( $post );
 
 		// Republish the post.
 		$this->republish_post_elements( $post, $original_post );
+
+		// Re-enable the creation of a new revision.
+		\add_action( 'post_updated', 'wp_save_post_revision', 10, 1 );
 	}
 
 	/**
