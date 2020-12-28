@@ -79,6 +79,11 @@ class Copied_Post_Watcher_Test extends TestCase {
 			->with( $post )
 			->andReturnFalse();
 
+		$this->permissions_helper
+			->expects( 'has_trashed_rewrite_and_republish_copy' )
+			->with( $post )
+			->andReturnFalse();
+
 		$this->assertSame(
 			'A duplicate of this post was made. Please note that any changes you make to this post will be replaced when the duplicated version is republished.',
 			$this->instance->get_notice_text( $post )
@@ -99,6 +104,11 @@ class Copied_Post_Watcher_Test extends TestCase {
 			->with( $post )
 			->andReturn( $copy );
 
+		$this->permissions_helper
+			->expects( 'has_trashed_rewrite_and_republish_copy' )
+			->with( $post )
+			->andReturnFalse();
+
 		Monkey\Functions\expect( '\get_option' )
 			->twice()
 			->andReturnValues( [ 'Y/m/d', 'g:i a' ] );
@@ -109,6 +119,29 @@ class Copied_Post_Watcher_Test extends TestCase {
 
 		$this->assertSame(
 			'A duplicate of this post was made, which is scheduled to replace this post on 2020/12/02 at 10:30 am.',
+			$this->instance->get_notice_text( $post )
+		);
+	}
+
+	/**
+	 * Tests the get_notice_text function when the copy is in the trash.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Copied_Post_Watcher::get_notice_text
+	 */
+	public function test_get_notice_text_copy_in_the_trash() {
+		$post = \Mockery::mock( \WP_Post::class );
+
+		$this->permissions_helper
+			->expects( 'has_scheduled_rewrite_and_republish_copy' )
+			->never();
+
+		$this->permissions_helper
+			->expects( 'has_trashed_rewrite_and_republish_copy' )
+			->with( $post )
+			->andReturnTrue();
+
+		$this->assertSame(
+			'You can only make one Rewrite & Republish duplicate at a time, and a duplicate of this post already exists in the trash. Permanently delete it if you want to make a new duplicate.',
 			$this->instance->get_notice_text( $post )
 		);
 	}

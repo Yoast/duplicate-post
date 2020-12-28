@@ -12,6 +12,7 @@ import { redirectOnSaveCompletion } from "./duplicate-post-functions";
 class DuplicatePost {
 	constructor() {
 		this.renderNotices();
+		this.removeSlugSidebarPanel();
 	}
 
 	/**
@@ -105,6 +106,17 @@ class DuplicatePost {
 					}
 				);
 			}
+		}
+	}
+
+	/**
+	 * Removes the slug panel from the block editor sidebar when the post is a Rewrite & Republish copy.
+	 *
+	 * @returns {void}
+	 */
+	removeSlugSidebarPanel() {
+		if ( parseInt( duplicatePost.rewriting, 10 ) ) {
+			dispatch( 'core/edit-post' ).removeEditorPanel( 'post-link' );
 		}
 	}
 

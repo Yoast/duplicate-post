@@ -29,14 +29,14 @@ class User_Interface {
 	protected $row_actions;
 
 	/**
-	 * Holds the object to manage the post submitbox links.
+	 * Holds the object to manage the classic editor UI.
 	 *
-	 * @var Post_Submitbox
+	 * @var Classic_Editor
 	 */
-	protected $post_submitbox;
+	protected $classic_editor;
 
 	/**
-	 * Holds the object to manage the block editor links.
+	 * Holds the object to manage the block editor UI.
 	 *
 	 * @var Block_Editor
 	 */
@@ -108,7 +108,7 @@ class User_Interface {
 		$this->column         = new Column( $this->permissions_helper, $this->asset_manager );
 		$this->metabox        = new Metabox( $this->permissions_helper );
 		$this->post_states    = new Post_States( $this->permissions_helper );
-		$this->post_submitbox = new Post_Submitbox( $this->link_builder, $this->permissions_helper, $this->asset_manager );
+		$this->classic_editor = new Classic_Editor( $this->link_builder, $this->permissions_helper, $this->asset_manager );
 		$this->row_actions    = new Row_Actions( $this->link_builder, $this->permissions_helper );
 
 		$this->admin_bar->register_hooks();
@@ -117,7 +117,7 @@ class User_Interface {
 		$this->column->register_hooks();
 		$this->metabox->register_hooks();
 		$this->post_states->register_hooks();
-		$this->post_submitbox->register_hooks();
+		$this->classic_editor->register_hooks();
 		$this->row_actions->register_hooks();
 	}
 }

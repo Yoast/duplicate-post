@@ -149,7 +149,7 @@ class Post_Duplicator {
 		$options  = [
 			'copy_title'      => true,
 			'copy_date'       => true,
-			'copy_name'       => true,
+			'copy_name'       => false,
 			'copy_content'    => true,
 			'copy_excerpt'    => true,
 			'copy_author'     => true,
