@@ -38,11 +38,11 @@ function duplicate_post_get_clone_post_link( $id = 0, $context = 'display', $dra
 		return '';
 	}
 
-	$link_builder = new Link_Builder();
+	$link_builder       = new Link_Builder();
 	$permissions_helper = new Permissions_Helper();
 
-	if( ! $permissions_helper->is_current_user_allowed_to_copy()
-	    || ! $permissions_helper->is_post_type_enabled( $post->post_type ) ) {
+	if ( ! $permissions_helper->is_current_user_allowed_to_copy()
+		|| ! $permissions_helper->is_post_type_enabled( $post->post_type ) ) {
 		return '';
 	}
 
@@ -97,6 +97,6 @@ function duplicate_post_clone_post_link( $link = null, $before = '', $after = ''
  * @return mixed Post data.
  */
 function duplicate_post_get_original( $post = null, $output = OBJECT ) {
-	return Utils::get_original( $post,  $output );
+	return Utils::get_original( $post, $output );
 }
 
