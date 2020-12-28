@@ -115,6 +115,9 @@ class Classic_Editor_Test extends TestCase {
 
 		$this->assertNotFalse( \has_action( 'admin_enqueue_scripts', [ $this->instance, 'enqueue_classic_editor_scripts' ] ), 'Does not have expected admin_enqueue_scripts action (scripts)' );
 		$this->assertNotFalse( \has_action( 'admin_enqueue_scripts', [ $this->instance, 'enqueue_classic_editor_styles' ] ), 'Does not have expected admin_enqueue_scripts action (styles)' );
+
+		$this->assertNotFalse( \has_action( 'add_meta_boxes', [ $this->instance, 'remove_slug_meta_box' ] ), 'Does not have expected add_meta_boxes action' );
+		$this->assertNotFalse( \has_filter( 'get_sample_permalink_html', [ $this->instance, 'remove_sample_permalink_slug_editor' ] ), 'Does not have expected get_sample_permalink_html filter' );
 	}
 
 	/**
@@ -916,5 +919,88 @@ class Classic_Editor_Test extends TestCase {
 			->andReturnFalse();
 
 		$this->assertFalse( $this->instance->should_change_rewrite_republish_copy( $post ) );
+	}
+
+	/**
+	 * Tests the remove_slug_meta_box function when the post is a Rewrite & Republish copy.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::remove_slug_meta_box
+	 */
+	public function test_remove_slug_meta_box() {
+		$post            = Mockery::mock( \WP_Post::class );
+		$post->post_type = 'post';
+
+		$this->permissions_helper->expects( 'is_rewrite_and_republish_copy' )
+			->once()
+			->with( $post )
+			->andReturnTrue();
+
+		Monkey\Functions\expect( '\remove_meta_box' )
+			->once()
+			->with( 'slugdiv', $post->post_type, 'normal' );
+
+		$this->instance->remove_slug_meta_box( $post->post_type, $post );
+	}
+
+	/**
+	 * Tests the remove_slug_meta_box function when the post is not a Rewrite & Republish copy.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::remove_slug_meta_box
+	 */
+	public function test_remove_slug_meta_box_not_rewrite_and_republish_copy() {
+		$post            = Mockery::mock( \WP_Post::class );
+		$post->post_type = 'post';
+
+		$this->permissions_helper->expects( 'is_rewrite_and_republish_copy' )
+			->once()
+			->with( $post )
+			->andReturnFalse();
+
+		Monkey\Functions\expect( '\remove_meta_box' )
+			->never();
+
+		$this->instance->remove_slug_meta_box( $post->post_type, $post );
+	}
+
+	/**
+	 * Tests the remove_sample_permalink_slug_editor function when the post is a Rewrite & Republish copy.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::remove_sample_permalink_slug_editor
+	 */
+	public function test_remove_sample_permalink_slug_editor() {
+		$return          = 'sample-permalink-html';
+		$post_id         = '123';
+		$new_title       = null;
+		$new_slug        = null;
+		$post            = Mockery::mock( \WP_Post::class );
+		$post->post_type = 'post';
+
+		$this->permissions_helper->expects( 'is_rewrite_and_republish_copy' )
+			->once()
+			->with( $post )
+			->andReturnTrue();
+
+		$this->assertEquals( '', $this->instance->remove_sample_permalink_slug_editor( $return, $post_id, $new_title, $new_slug, $post ) );
+	}
+
+	/**
+	 * Tests the remove_sample_permalink_slug_editor function when the post is not a Rewrite & Republish copy.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::remove_sample_permalink_slug_editor
+	 */
+	public function test_remove_sample_permalink_slug_editor_not_rewrite_and_republish_copy() {
+		$return          = 'sample-permalink-html';
+		$post_id         = '123';
+		$new_title       = null;
+		$new_slug        = null;
+		$post            = Mockery::mock( \WP_Post::class );
+		$post->post_type = 'post';
+
+		$this->permissions_helper->expects( 'is_rewrite_and_republish_copy' )
+			->once()
+			->with( $post )
+			->andReturnFalse();
+
+		$this->assertEquals( 'sample-permalink-html', $this->instance->remove_sample_permalink_slug_editor( $return, $post_id, $new_title, $new_slug, $post ) );
 	}
 }
