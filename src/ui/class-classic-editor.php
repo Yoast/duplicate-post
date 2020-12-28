@@ -1,6 +1,6 @@
 <?php
 /**
- * Duplicate Post class to manage the post submitbox.
+ * Duplicate Post class to manage the classic editor UI.
  *
  * @package Duplicate_Post
  */
@@ -11,9 +11,9 @@ use Yoast\WP\Duplicate_Post\Permissions_Helper;
 use Yoast\WP\Duplicate_Post\Utils;
 
 /**
- * Represents the Post_Submitbox class.
+ * Represents the Classic_Editor class.
  */
-class Post_Submitbox {
+class Classic_Editor {
 
 	/**
 	 * Holds the object to create the action link to duplicate.
