@@ -41,8 +41,7 @@ function duplicate_post_get_clone_post_link( $id = 0, $context = 'display', $dra
 	$link_builder       = new Link_Builder();
 	$permissions_helper = new Permissions_Helper();
 
-	if ( ! $permissions_helper->is_current_user_allowed_to_copy()
-		|| ! $permissions_helper->is_post_type_enabled( $post->post_type ) ) {
+	if ( ! $permissions_helper->should_links_be_displayed( $post ) ) {
 		return '';
 	}
 
