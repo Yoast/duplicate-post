@@ -87,7 +87,7 @@ class Admin_Bar_Test extends TestCase {
 	 * @preserveGlobalState disabled
 	 */
 	public function test_register_hooks() {
-		$utils = \Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
+		$utils = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
 
 		$utils->expects( 'get_option' )
 			->with( 'duplicate_post_show_link_in', 'adminbar' )
@@ -123,13 +123,14 @@ class Admin_Bar_Test extends TestCase {
 
 		$this->link_builder
 			->expects( 'build_new_draft_link' )
-			->with( $post );
+			->with( $post )
+			->twice();
 
 		$this->link_builder
 			->expects( 'build_rewrite_and_republish_link' )
 			->with( $post );
 
-		$utils = \Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
+		$utils = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
 
 		$utils->expects( 'get_option' )
 			->with( 'duplicate_post_show_link', 'new_draft' )
@@ -182,7 +183,7 @@ class Admin_Bar_Test extends TestCase {
 			->with( $post )
 			->never();
 
-		$utils = \Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
+		$utils = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
 
 		$utils->expects( 'get_option' )
 			->with( 'duplicate_post_show_link', 'new_draft' )

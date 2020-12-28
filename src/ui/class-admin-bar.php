@@ -82,40 +82,54 @@ class Admin_Bar {
 			return;
 		}
 
-		// By default this is false, as we generally always want to show.
-		$parent = false;
+		$show_new_draft             = ( \intval( Utils::get_option( 'duplicate_post_show_link', 'new_draft' ) ) === 1 );
+		$show_rewrite_and_republish = ( \intval( Utils::get_option( 'duplicate_post_show_link', 'rewrite_republish' ) ) === 1 )
+									&& $this->permissions_helper->should_rewrite_and_republish_be_allowed( $post );
 
-		if ( \intval( Utils::get_option( 'duplicate_post_show_link', 'new_draft' ) ) === 1 ) {
-			$parent = true;
+		if ( $show_new_draft && $show_rewrite_and_republish ) {
 			$wp_admin_bar->add_menu(
 				[
-					'id'    => 'new_draft',
-					'title' => \esc_attr__( 'Copy to a new draft', 'duplicate-post' ),
+					'id'    => 'duplicate-post',
+					'title' => '<span class="ab-icon"></span><span class="ab-label">' . \__( 'Duplicate Post', 'duplicate-post' ) . '</span>',
 					'href'  => $this->link_builder->build_new_draft_link( $post ),
 				]
 			);
-		}
+			$wp_admin_bar->add_menu(
+				[
+					'id'     => 'new-draft',
+					'parent' => 'duplicate-post',
+					'title'  => \__( 'Copy to a new draft', 'duplicate-post' ),
+					'href'   => $this->link_builder->build_new_draft_link( $post ),
+				]
+			);
+			$wp_admin_bar->add_menu(
+				[
+					'id'     => 'rewrite-republish',
+					'parent' => 'duplicate-post',
+					'title'  => \__( 'Rewrite & Republish', 'duplicate-post' ),
+					'href'   => $this->link_builder->build_rewrite_and_republish_link( $post ),
+				]
+			);
+		} else {
+			if ( $show_new_draft ) {
+				$wp_admin_bar->add_menu(
+					[
+						'id'     => 'new-draft',
+						'title'  => '<span class="ab-icon"></span><span class="ab-label">' . \__( 'Copy to a new draft', 'duplicate-post' ) . '</span>',
+						'href'   => $this->link_builder->build_new_draft_link( $post ),
+					]
+				);
+			}
 
-		if (
-			\intval( Utils::get_option( 'duplicate_post_show_link', 'rewrite_republish' ) ) === 1
-			&& $this->permissions_helper->should_rewrite_and_republish_be_allowed( $post )
-		) {
-			$wp_admin_bar->add_menu(
-				[
-					'id'     => 'rewrite_republish',
-					'parent' => ( $parent ) ? 'new_draft' : false,
-					'title'  => \esc_attr__( 'Rewrite & Republish', 'duplicate-post' ),
-					'href'   => $rewrite_and_republish_link,
-				]
-			);
-			$wp_admin_bar->add_menu(
-				[
-					'id'     => 'rewrite_republish_mobile',
-					'parent' => ( $parent ) ? 'new_draft' : false,
-					'title'  => \esc_attr__( 'R&R', 'duplicate-post' ),
-					'href'   => $rewrite_and_republish_link,
-				]
-			);
+			if ( $show_rewrite_and_republish ) {
+				$wp_admin_bar->add_menu(
+					[
+						'id'     => 'rewrite-republish',
+						'title'  => '<span class="ab-icon"></span><span class="ab-label">' . \__( 'Rewrite & Republish', 'duplicate-post' ) . '</span>',
+						'href'   => $this->link_builder->build_rewrite_and_republish_link( $post ),
+					]
+				);
+			}
 		}
 	}
 
