@@ -76,7 +76,7 @@ function duplicate_post_clone_post_link( $link = null, $before = '', $after = ''
 		$link = esc_html__( 'Copy to a new draft', 'duplicate-post' );
 	}
 
-	$link = '<a class="post-clone-link" href="' . $url . '">' . $link . '</a>';
+	$link = '<a class="post-clone-link" href="' . esc_url( $url ) . '">' . $link . '</a>';
 
 	/**
 	 * Filter on the clone link HTML
@@ -86,7 +86,7 @@ function duplicate_post_clone_post_link( $link = null, $before = '', $after = ''
 	 *
 	 * @return string
 	 */
-	echo esc_html( $before . apply_filters( 'duplicate_post_clone_post_link', $link, $post->ID ) . $after );
+	echo $before . apply_filters( 'duplicate_post_clone_post_link', $link, $post->ID ) . $after; // phpcs:ignore WordPress.Security.EscapeOutput
 }
 
 /**
