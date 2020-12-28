@@ -189,7 +189,7 @@ class Post_Submitbox_Test extends TestCase {
 			->never();
 
 		$this->permissions_helper
-			->expects( 'should_link_be_displayed' )
+			->expects( 'should_links_be_displayed' )
 			->with( $post )
 			->andReturnTrue();
 
@@ -200,7 +200,6 @@ class Post_Submitbox_Test extends TestCase {
 
 		$this->setOutputCallback( function() {} );
 		$this->instance->add_new_draft_post_button( $post );
-		$this->assertTrue( Monkey\Filters\applied( 'duplicate_post_show_link' ) > 0 );
 	}
 
 	/**
@@ -223,7 +222,7 @@ class Post_Submitbox_Test extends TestCase {
 			->andReturn( $post );
 
 		$this->permissions_helper
-			->expects( 'should_link_be_displayed' )
+			->expects( 'should_links_be_displayed' )
 			->with( $post )
 			->andReturnTrue();
 
@@ -234,7 +233,6 @@ class Post_Submitbox_Test extends TestCase {
 
 		$this->setOutputCallback( function() {} );
 		$this->instance->add_new_draft_post_button();
-		$this->assertTrue( Monkey\Filters\applied( 'duplicate_post_show_link' ) > 0 );
 	}
 
 	/**
@@ -253,7 +251,7 @@ class Post_Submitbox_Test extends TestCase {
 			->never();
 
 		$this->permissions_helper
-			->expects( 'should_link_be_displayed' )
+			->expects( 'should_links_be_displayed' )
 			->never();
 
 		$this->link_builder
@@ -283,7 +281,7 @@ class Post_Submitbox_Test extends TestCase {
 			->never();
 
 		$this->permissions_helper
-			->expects( 'should_link_be_displayed' )
+			->expects( 'should_links_be_displayed' )
 			->with( $post )
 			->andReturnFalse();
 
@@ -293,7 +291,6 @@ class Post_Submitbox_Test extends TestCase {
 
 		$this->setOutputCallback( function() {} );
 		$this->instance->add_new_draft_post_button( $post );
-		$this->assertTrue( Monkey\Filters\applied( 'duplicate_post_show_link' ) > 0 );
 	}
 
 	/**
@@ -316,7 +313,12 @@ class Post_Submitbox_Test extends TestCase {
 			->never();
 
 		$this->permissions_helper
-			->expects( 'should_link_be_displayed' )
+			->expects( 'should_links_be_displayed' )
+			->with( $post )
+			->andReturnTrue();
+
+		$this->permissions_helper
+			->expects( 'should_rewrite_and_republish_be_allowed' )
 			->with( $post )
 			->andReturnTrue();
 
@@ -327,7 +329,6 @@ class Post_Submitbox_Test extends TestCase {
 
 		$this->setOutputCallback( function() {} );
 		$this->instance->add_rewrite_and_republish_post_button( $post );
-		$this->assertTrue( Monkey\Filters\applied( 'duplicate_post_show_link' ) > 0 );
 	}
 
 	/**
@@ -351,7 +352,12 @@ class Post_Submitbox_Test extends TestCase {
 			->andReturn( $post );
 
 		$this->permissions_helper
-			->expects( 'should_link_be_displayed' )
+			->expects( 'should_links_be_displayed' )
+			->with( $post )
+			->andReturnTrue();
+
+		$this->permissions_helper
+			->expects( 'should_rewrite_and_republish_be_allowed' )
 			->with( $post )
 			->andReturnTrue();
 
@@ -362,7 +368,6 @@ class Post_Submitbox_Test extends TestCase {
 
 		$this->setOutputCallback( function() {} );
 		$this->instance->add_rewrite_and_republish_post_button();
-		$this->assertTrue( Monkey\Filters\applied( 'duplicate_post_show_link' ) > 0 );
 	}
 
 	/**
@@ -381,7 +386,7 @@ class Post_Submitbox_Test extends TestCase {
 			->never();
 
 		$this->permissions_helper
-			->expects( 'should_link_be_displayed' )
+			->expects( 'should_links_be_displayed' )
 			->never();
 
 		$this->link_builder
@@ -412,7 +417,12 @@ class Post_Submitbox_Test extends TestCase {
 			->never();
 
 		$this->permissions_helper
-			->expects( 'should_link_be_displayed' )
+			->expects( 'should_links_be_displayed' )
+			->with( $post )
+			->never();
+
+		$this->permissions_helper
+			->expects( 'should_rewrite_and_republish_be_allowed' )
 			->with( $post )
 			->andReturnFalse();
 
@@ -422,7 +432,6 @@ class Post_Submitbox_Test extends TestCase {
 
 		$this->setOutputCallback( function() {} );
 		$this->instance->add_rewrite_and_republish_post_button( $post );
-		$this->assertTrue( Monkey\Filters\applied( 'duplicate_post_show_link' ) > 0 );
 	}
 
 	/**
@@ -443,7 +452,7 @@ class Post_Submitbox_Test extends TestCase {
 			->never();
 
 		$this->permissions_helper
-			->expects( 'should_link_be_displayed' )
+			->expects( 'should_links_be_displayed' )
 			->never();
 
 		$this->link_builder
