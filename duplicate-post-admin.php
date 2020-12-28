@@ -800,15 +800,6 @@ function duplicate_post_add_plugin_links( $links, $file ) {
 	return $links;
 }
 
-/* NOTICES */
-
-/**
- * Shows a notice after the copy has succeeded.
- *
- * @ignore
- */
-
-
 /**
  * Renders the newsletter signup form.
  *
