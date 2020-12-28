@@ -512,18 +512,29 @@ class Permissions_Helper_Test extends TestCase {
 	}
 
 	/**
-	 * Tests the should_link_be_displayed function.
+	 * Tests the has_original_changed function when the post is not meant for Rewrite & Republish.
 	 *
-	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::should_link_be_displayed
+	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::has_original_changed
 	 */
-	public function test_should_link_be_displayed_unsuccessful() {
-		$post            = Mockery::mock( \WP_Post::class );
-		$post->post_type = 'post';
+	public function test_has_original_changed_not_rewrite_and_republish() {
+		$post = Mockery::mock( \WP_Post::class );
 
 		$this->instance
 			->expects( 'is_rewrite_and_republish_copy' )
 			->with( $post )
 			->andReturnFalse();
+
+		$this->assertFalse( $this->instance->has_original_changed( $post ) );
+	}
+
+	/**
+	 * Tests the should_links_be_displayed function.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::should_links_be_displayed
+	 */
+	public function test_should_links_be_displayed_successful() {
+		$post            = Mockery::mock( \WP_Post::class );
+		$post->post_type = 'post';
 
 		$this->instance
 			->expects( 'is_current_user_allowed_to_copy' )
@@ -534,7 +545,169 @@ class Permissions_Helper_Test extends TestCase {
 			->with( $post->post_type )
 			->andReturnTrue();
 
-		$this->assertTrue( $this->instance->should_link_be_displayed( $post ) );
+		$this->instance
+			->expects( 'is_rewrite_and_republish_copy' )
+			->with( $post )
+			->andReturnFalse();
+
+		$this->assertTrue( $this->instance->should_links_be_displayed( $post ) );
+	}
+
+	/**
+	 * Tests the should_links_be_displayed function when the user is not allowed to copy.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::should_links_be_displayed
+	 */
+	public function test_should_links_be_displayed_unsuccessful_user_not_allowed_to_copy() {
+		$post            = Mockery::mock( \WP_Post::class );
+		$post->post_type = 'post';
+
+		$this->instance
+			->expects( 'is_current_user_allowed_to_copy' )
+			->andReturnFalse();
+
+		$this->instance
+			->expects( 'is_post_type_enabled' )
+			->with( $post->post_type )
+			->never();
+
+		$this->instance
+			->expects( 'is_rewrite_and_republish_copy' )
+			->with( $post )
+			->andReturnFalse();
+
+		$this->assertFalse( $this->instance->should_links_be_displayed( $post ) );
+	}
+
+	/**
+	 * Tests the should_links_be_displayed function when the post type is not enabled for copy.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::should_links_be_displayed
+	 */
+	public function test_should_links_be_displayed_unsuccessful_post_type_not_enabled_for_copy() {
+		$post            = Mockery::mock( \WP_Post::class );
+		$post->post_type = 'post';
+
+		$this->instance
+			->expects( 'is_current_user_allowed_to_copy' )
+			->andReturnTrue();
+
+		$this->instance
+			->expects( 'is_post_type_enabled' )
+			->with( $post->post_type )
+			->andReturnFalse();
+
+		$this->instance
+			->expects( 'is_rewrite_and_republish_copy' )
+			->with( $post )
+			->andReturnFalse();
+
+		$this->assertFalse( $this->instance->should_links_be_displayed( $post ) );
+	}
+
+	/**
+	 * Tests the should_links_be_displayed function when the post is a Rewrite & Republish copy.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::should_links_be_displayed
+	 */
+	public function test_should_links_be_displayed_unsuccessful_post_is_rewrite_and_republish() {
+		$post            = Mockery::mock( \WP_Post::class );
+		$post->post_type = 'post';
+
+		$this->instance
+			->expects( 'is_current_user_allowed_to_copy' )
+			->andReturnTrue();
+
+		$this->instance
+			->expects( 'is_post_type_enabled' )
+			->with( $post->post_type )
+			->andReturnTrue();
+
+		$this->instance
+			->expects( 'is_rewrite_and_republish_copy' )
+			->with( $post )
+			->andReturnTrue();
+
+		$this->assertFalse( $this->instance->should_links_be_displayed( $post ) );
+	}
+
+	/**
+	 * Tests the should_rewrite_and_republish_be_allowed.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::should_rewrite_and_republish_be_allowed
+	 * @dataProvider should_rewrite_and_republish_be_allowed_provider
+	 *
+	 * @param mixed $original Input value.
+	 * @param mixed $expected Expected output.
+	 */
+	public function test_should_rewrite_and_republish_be_allowed( $original, $expected ) {
+		$post              = Mockery::mock( \WP_Post::class );
+		$post->post_type   = 'post';
+		$post->post_status = $original['post_status'];
+
+		$this->instance
+			->expects( 'is_rewrite_and_republish_copy' )
+			->times( $original['is_rewrite_and_republish_copy_times_called'] )
+			->with( $post )
+			->andReturn( $original['is_rewrite_and_republish_copy'] );
+
+		$this->instance
+			->expects( 'has_rewrite_and_republish_copy' )
+			->times( $original['has_rewrite_and_republish_copy_times_called'] )
+			->with( $post )
+			->andReturn( $original['has_rewrite_and_republish_copy'] );
+
+		$this->assertEquals( $expected, $this->instance->should_rewrite_and_republish_be_allowed( $post ) );
+	}
+
+	/**
+	 * Data provider for test_should_rewrite_and_republish_be_allowed.
+	 *
+	 * @return array The test parameters.
+	 */
+	public function should_rewrite_and_republish_be_allowed_provider() {
+		return [
+			[
+				'original' => [
+					'post_status'                    => 'publish',
+					'is_rewrite_and_republish_copy'  => false,
+					'is_rewrite_and_republish_copy_times_called' => 1,
+					'has_rewrite_and_republish_copy' => false,
+					'has_rewrite_and_republish_copy_times_called' => 1,
+				],
+				'expected' => true,
+			],
+			[
+				'original' => [
+					'post_status'                    => 'draft',
+					'is_rewrite_and_republish_copy'  => false,
+					'is_rewrite_and_republish_copy_times_called' => 0,
+					'has_rewrite_and_republish_copy' => false,
+					'has_rewrite_and_republish_copy_times_called' => 0,
+				],
+				'expected' => false,
+			],
+			[
+				'original' => [
+					'post_status'                    => 'publish',
+					'is_rewrite_and_republish_copy'  => true,
+					'is_rewrite_and_republish_copy_times_called' => 1,
+					'has_rewrite_and_republish_copy' => false,
+					'has_rewrite_and_republish_copy_times_called' => 0,
+				],
+				'expected' => false,
+			],
+			[
+				'original' => [
+					'post_status'                    => 'publish',
+					'is_rewrite_and_republish_copy'  => false,
+					'is_rewrite_and_republish_copy_times_called' => 1,
+					'has_rewrite_and_republish_copy' => true,
+					'has_rewrite_and_republish_copy_times_called' => 1,
+				],
+				'expected' => false,
+			],
+		];
 	}
 
 	/**
@@ -611,5 +784,89 @@ class Permissions_Helper_Test extends TestCase {
 			->andReturn( $post_type_object );
 
 		$this->assertSame( false, $this->instance->post_type_has_admin_bar( $post_type ) );
+	}
+
+	/**
+	 * Tests the is_copy_allowed_to_be_republished function.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::is_copy_allowed_to_be_republished
+	 * @dataProvider is_copy_allowed_to_be_republished_provider
+	 *
+	 * @param mixed $post_status Input value.
+	 * @param mixed $expected    Expected output.
+	 */
+	public function test_is_copy_allowed_to_be_republished( $post_status, $expected ) {
+		$post              = Mockery::mock( \WP_Post::class );
+		$post->post_status = $post_status;
+
+		$this->assertEquals( $expected, $this->instance->is_copy_allowed_to_be_republished( $post ) );
+	}
+
+	/**
+	 * Data provider for test_is_copy_allowed_to_be_republished.
+	 *
+	 * @return array The test parameters.
+	 */
+	public function is_copy_allowed_to_be_republished_provider() {
+		return [
+			[
+				'post_status' => 'dp-rewrite-republish',
+				'expected'    => true,
+			],
+			[
+				'post_status' => 'private',
+				'expected'    => true,
+			],
+			[
+				'post_status' => 'draft',
+				'expected'    => false,
+			],
+		];
+	}
+
+	/**
+	 * Tests the has_trashed_rewrite_and_republish_copy function when the post has a trashed Rewrite & Republisb copy.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::has_trashed_rewrite_and_republish_copy
+	 */
+	public function test_has_trashed_rewrite_and_republish_copy() {
+		$post              = Mockery::mock( \WP_Post::class );
+		$post->ID          = 123;
+		$copy              = Mockery::mock( \WP_Post::class );
+		$copy->post_status = 'trash';
+		$copy_id           = 321;
+
+		Monkey\Functions\expect( '\get_post_meta' )
+			->with( $post->ID, '_dp_has_rewrite_republish_copy', true )
+			->andReturn( $copy_id );
+
+		Monkey\Functions\expect( '\get_post' )
+			->with( $copy_id )
+			->andReturn( $copy );
+
+		$this->assertTrue( $this->instance->has_trashed_rewrite_and_republish_copy( $post ) );
+	}
+
+	/**
+	 * Tests the has_trashed_rewrite_and_republish_copy function when the post has a non-trashed Rewrite & Republisb copy.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::has_trashed_rewrite_and_republish_copy
+	 */
+	public function test_does_not_have_trashed_rewrite_and_republish_copy() {
+		$post              = Mockery::mock( \WP_Post::class );
+		$post->ID          = 123;
+		$copy              = Mockery::mock( \WP_Post::class );
+		$copy->post_status = 'draft';
+		$copy_id           = 321;
+
+		Monkey\Functions\expect( '\get_post_meta' )
+			->with( $post->ID, '_dp_has_rewrite_republish_copy', true )
+			->andReturn( $copy_id );
+
+		Monkey\Functions\expect( '\get_post' )
+			->with( $copy_id )
+			->andReturn( $copy );
+
+		$this->assertFalse( $this->instance->has_trashed_rewrite_and_republish_copy( $post ) );
 	}
 }

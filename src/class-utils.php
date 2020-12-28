@@ -62,18 +62,19 @@ class Utils {
 	 *
 	 * @return \WP_Post|null Post data if successful, null otherwise.
 	 */
-	public static function get_original( $post = null, $output = OBJECT ) {
+	public static function get_original( $post = null, $output = \OBJECT ) {
 		$post = \get_post( $post );
 		if ( ! $post ) {
 			return null;
 		}
 
-		$original_id = \get_post_meta( $post->ID, '_dp_original' );
+		$original_id = self::get_original_post_id( $post->ID );
+
 		if ( empty( $original_id ) ) {
 			return null;
 		}
 
-		return \get_post( $original_id[0], $output );
+		return \get_post( $original_id, $output );
 	}
 
 	/**

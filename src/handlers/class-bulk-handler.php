@@ -40,8 +40,6 @@ class Bulk_Handler {
 	public function __construct( Post_Duplicator $post_duplicator, Permissions_Helper $permissions_helper ) {
 		$this->post_duplicator    = $post_duplicator;
 		$this->permissions_helper = $permissions_helper;
-
-		$this->register_hooks();
 	}
 
 	/**
@@ -97,7 +95,7 @@ class Bulk_Handler {
 		$counter = 0;
 		foreach ( $post_ids as $post_id ) {
 			$post = \get_post( $post_id );
-			if ( ! empty( $post ) && $post->post_status === 'publish' && ! $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
+			if ( ! empty( $post ) && $this->permissions_helper->should_rewrite_and_republish_be_allowed( $post ) ) {
 				$new_post_id = $this->post_duplicator->create_duplicate_for_rewrite_and_republish( $post );
 				if ( ! \is_wp_error( $new_post_id ) ) {
 					$counter++;

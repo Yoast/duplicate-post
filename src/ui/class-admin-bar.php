@@ -30,14 +30,23 @@ class Admin_Bar {
 	protected $permissions_helper;
 
 	/**
+	 * Holds the asset manager.
+	 *
+	 * @var Asset_Manager
+	 */
+	protected $asset_manager;
+
+	/**
 	 * Initializes the class.
 	 *
 	 * @param Link_Builder       $link_builder       The link builder.
 	 * @param Permissions_Helper $permissions_helper The permissions helper.
+	 * @param Asset_Manager      $asset_manager      The asset manager.
 	 */
-	public function __construct( Link_Builder $link_builder, Permissions_Helper $permissions_helper ) {
+	public function __construct( Link_Builder $link_builder, Permissions_Helper $permissions_helper, Asset_Manager $asset_manager ) {
 		$this->link_builder       = $link_builder;
 		$this->permissions_helper = $permissions_helper;
+		$this->asset_manager      = $asset_manager;
 	}
 
 	/**
@@ -87,9 +96,10 @@ class Admin_Bar {
 			);
 		}
 
-		if ( \intval( Utils::get_option( 'duplicate_post_show_link', 'rewrite_republish' ) ) === 1
-			&& $post->post_status === 'publish' ) {
-			$rewrite_and_republish_link = $this->link_builder->build_rewrite_and_republish_link( $post );
+		if (
+			\intval( Utils::get_option( 'duplicate_post_show_link', 'rewrite_republish' ) ) === 1
+			&& $this->permissions_helper->should_rewrite_and_republish_be_allowed( $post )
+		) {
 			$wp_admin_bar->add_menu(
 				[
 					'id'     => 'rewrite_republish',
@@ -127,7 +137,7 @@ class Admin_Bar {
 			return;
 		}
 
-		\wp_enqueue_style( 'duplicate-post' );
+		$this->asset_manager->enqueue_styles();
 	}
 
 	/**
@@ -150,12 +160,14 @@ class Admin_Bar {
 			return false;
 		}
 
-		$show_duplicate_link = $this->permissions_helper->should_link_be_displayed( $post )
-							&& ( $this->permissions_helper->is_edit_post_screen() || \is_singular( $post->post_type ) )
-							&& $this->permissions_helper->post_type_has_admin_bar( $post->post_type );
+		if (
+			( ! $this->permissions_helper->is_edit_post_screen() && ! \is_singular( $post->post_type ) )
+			|| ! $this->permissions_helper->post_type_has_admin_bar( $post->post_type )
+		) {
+			return false;
+		}
 
-		/** This filter is documented in class-row-actions.php */
-		if ( ! \apply_filters( 'duplicate_post_show_link', $show_duplicate_link, $post ) ) {
+		if ( ! $this->permissions_helper->should_links_be_displayed( $post ) ) {
 			return false;
 		}
 

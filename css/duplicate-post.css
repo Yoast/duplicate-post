@@ -24,8 +24,8 @@
 	text-decoration: underline;
 }
 
-#wpadminbar #wp-admin-bar-rewrite_republish_mobile > .ab-item {
-	display: none;
+#check-changes-action  {
+	padding: 6px 10px 8px;
 }
 
 @media screen and (max-width: 782px){

@@ -41,6 +41,10 @@ class DuplicatePost {
 			const hasActiveMetaBoxes = select( 'core/edit-post' ).hasMetaBoxes();
 			const isSavingMetaBoxes  = select( 'core/edit-post' ).isSavingMetaBoxes();
 
+			if ( ! this.isCopyAllowedToBeRepublished() ) {
+				return;
+			}
+
 			// When there are custom meta boxes, redirect after they're saved.
 			if ( hasActiveMetaBoxes && ! isSavingMetaBoxes && wasSavingMetaboxes ) {
 				window.location.assign( duplicatePost.originalEditURL );
@@ -81,6 +85,21 @@ class DuplicatePost {
 	}
 
 	/**
+	 * Determines whether a Rewrite & Republish copy can be republished.
+	 *
+	 * @return bool Whether the Rewrite & Republish copy can be republished.
+	 */
+	isCopyAllowedToBeRepublished() {
+		const currentPostStatus = select( 'core/editor' ).getEditedPostAttribute( 'status' );
+
+		if ( currentPostStatus === 'dp-rewrite-republish' || currentPostStatus === 'private' ) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
 	 * Renders the notices in the block editor.
 	 *
 	 * @returns {void}
@@ -112,23 +131,23 @@ class DuplicatePost {
 	render() {
 		return (
 			<Fragment>
-				{ ( duplicatePost.new_draft_link !== '' && duplicatePost.show_links.new_draft === '1' ) &&
+				{ ( duplicatePost.newDraftLink !== '' && duplicatePost.showLinks.new_draft === '1' ) &&
 					<PluginPostStatusInfo>
 						<Button
 							isTertiary={ true }
 							className="dp-editor-post-copy-to-draft"
-							href={ duplicatePost.new_draft_link }
+							href={ duplicatePost.newDraftLink }
 						>
 							{ __( 'Copy to a new draft', 'duplicate-post' ) }
 						</Button>
 					</PluginPostStatusInfo>
 				}
-				{ ( duplicatePost.rewrite_and_republish_link !== '' && duplicatePost.show_links.rewrite_republish === '1' ) &&
+				{ ( duplicatePost.rewriteAndRepublishLink !== '' && duplicatePost.showLinks.rewrite_republish === '1' ) &&
 					<PluginPostStatusInfo>
 						<Button
 							isTertiary={ true }
 							className="dp-editor-post-rewrite-republish"
-							href={ duplicatePost.rewrite_and_republish_link }
+							href={ duplicatePost.rewriteAndRepublishLink }
 						>
 							{ __( 'Rewrite & Republish', 'duplicate-post' ) }
 						</Button>

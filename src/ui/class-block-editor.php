@@ -30,16 +30,23 @@ class Block_Editor {
 	protected $permissions_helper;
 
 	/**
+	 * Holds the asset manager.
+	 *
+	 * @var Asset_Manager
+	 */
+	protected $asset_manager;
+
+	/**
 	 * Initializes the class.
 	 *
 	 * @param Link_Builder       $link_builder       The link builder.
 	 * @param Permissions_Helper $permissions_helper The permissions helper.
+	 * @param Asset_Manager      $asset_manager      The asset manager.
 	 */
-	public function __construct( Link_Builder $link_builder, Permissions_Helper $permissions_helper ) {
+	public function __construct( Link_Builder $link_builder, Permissions_Helper $permissions_helper, Asset_Manager $asset_manager ) {
 		$this->link_builder       = $link_builder;
 		$this->permissions_helper = $permissions_helper;
-
-		$this->register_hooks();
+		$this->asset_manager      = $asset_manager;
 	}
 
 	/**
@@ -80,46 +87,22 @@ class Block_Editor {
 			return;
 		}
 
-		\wp_enqueue_script(
-			'duplicate_post_edit_script',
-			\plugins_url( \sprintf( 'js/dist/duplicate-post-edit-%s.js', Utils::flatten_version( DUPLICATE_POST_CURRENT_VERSION ) ), DUPLICATE_POST_FILE ),
-			[
-				'wp-blocks',
-				'wp-element',
-				'wp-i18n',
-			],
-			DUPLICATE_POST_CURRENT_VERSION,
-			true
-		);
-		\wp_add_inline_script(
-			'duplicate_post_edit_script',
-			'let duplicatePostNotices = {};',
-			'before'
-		);
+		$is_rewrite_and_republish_copy = $this->permissions_helper->is_rewrite_and_republish_copy( $post );
 
-		\wp_localize_script(
-			'duplicate_post_edit_script',
-			'duplicatePost',
-			[
-				'new_draft_link'             => $this->get_new_draft_permalink(),
-				'show_links'                 => Utils::get_option( 'duplicate_post_show_link' ),
-				'rewrite_and_republish_link' => $this->get_rewrite_republish_permalink(),
-				'rewriting'                  => $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ? 1 : 0,
-				'originalEditURL'            => $this->get_original_post_edit_url(),
-			]
-		);
+		$edit_js_object = [
+			'newDraftLink'            => $this->get_new_draft_permalink(),
+			'rewriteAndRepublishLink' => $this->get_rewrite_republish_permalink(),
+			'showLinks'               => Utils::get_option( 'duplicate_post_show_link' ),
+			'rewriting'               => $is_rewrite_and_republish_copy ? 1 : 0,
+			'originalEditURL'         => $this->get_original_post_edit_url(),
+		];
+		$this->asset_manager->enqueue_edit_script( $edit_js_object );
 
-		if ( $this->permissions_helper->is_rewrite_and_republish_copy( \get_post() ) ) {
-			\wp_enqueue_script(
-				'duplicate_post_strings',
-				\plugins_url( \sprintf( 'js/dist/duplicate-post-strings-%s.js', Utils::flatten_version( DUPLICATE_POST_CURRENT_VERSION ) ), DUPLICATE_POST_FILE ),
-				[
-					'wp-element',
-					'wp-i18n',
-				],
-				DUPLICATE_POST_CURRENT_VERSION,
-				true
-			);
+		if ( $is_rewrite_and_republish_copy ) {
+			$string_js_object = [
+				'checkLink' => $this->get_check_permalink(),
+			];
+			$this->asset_manager->enqueue_strings_script( $string_js_object );
 		}
 	}
 
@@ -131,8 +114,7 @@ class Block_Editor {
 	public function get_new_draft_permalink() {
 		$post = \get_post();
 
-		/** This filter is documented in class-row-actions.php */
-		if ( ! apply_filters( 'duplicate_post_show_link', $this->permissions_helper->should_link_be_displayed( $post ), $post ) ) {
+		if ( ! $this->permissions_helper->should_links_be_displayed( $post ) ) {
 			return '';
 		}
 
@@ -147,12 +129,29 @@ class Block_Editor {
 	public function get_rewrite_republish_permalink() {
 		$post = \get_post();
 
-		/** This filter is documented in class-row-actions.php */
-		if ( $post->post_status !== 'publish' || ! apply_filters( 'duplicate_post_show_link', $this->permissions_helper->should_link_be_displayed( $post ), $post ) ) {
+		if (
+			! $this->permissions_helper->should_rewrite_and_republish_be_allowed( $post )
+			|| ! $this->permissions_helper->should_links_be_displayed( $post )
+		) {
 			return '';
 		}
 
 		return $this->link_builder->build_rewrite_and_republish_link( $post );
+	}
+
+	/**
+	 * Generates a Check Changes permalink for the current post, if it's intended for Rewrite & Republish.
+	 *
+	 * @return string The permalink. Returns empty if the post does not exist or it's not a Rewrite & Republish copy.
+	 */
+	public function get_check_permalink() {
+		$post = \get_post();
+
+		if ( ! $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
+			return '';
+		}
+
+		return $this->link_builder->build_check_link( $post );
 	}
 
 	/**

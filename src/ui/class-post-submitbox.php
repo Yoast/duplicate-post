@@ -30,14 +30,23 @@ class Post_Submitbox {
 	protected $permissions_helper;
 
 	/**
+	 * Holds the asset manager.
+	 *
+	 * @var Asset_Manager
+	 */
+	protected $asset_manager;
+
+	/**
 	 * Initializes the class.
 	 *
 	 * @param Link_Builder       $link_builder       The link builder.
 	 * @param Permissions_Helper $permissions_helper The permissions helper.
+	 * @param Asset_Manager      $asset_manager      The asset manager.
 	 */
-	public function __construct( Link_Builder $link_builder, Permissions_Helper $permissions_helper ) {
+	public function __construct( Link_Builder $link_builder, Permissions_Helper $permissions_helper, Asset_Manager $asset_manager ) {
 		$this->link_builder       = $link_builder;
 		$this->permissions_helper = $permissions_helper;
+		$this->asset_manager      = $asset_manager;
 	}
 
 	/**
@@ -46,6 +55,8 @@ class Post_Submitbox {
 	 * @return void
 	 */
 	public function register_hooks() {
+		\add_action( 'post_submitbox_misc_actions', [ $this, 'add_check_changes_link' ], 90 );
+
 		if ( \intval( Utils::get_option( 'duplicate_post_show_link_in', 'submitbox' ) ) === 0 ) {
 			return;
 		}
@@ -63,28 +74,39 @@ class Post_Submitbox {
 		\add_filter( 'post_updated_messages', [ $this, 'change_scheduled_notice_classic_editor' ], 10, 1 );
 
 		\add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_classic_editor_scripts' ] );
+		\add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_classic_editor_styles' ] );
 	}
 
 	/**
-	 * Enqueues the necessary JavaScript code for the classic editor.
+	 * Enqueues the necessary JavaScript code for the Classic editor.
 	 *
 	 * @return void
 	 */
 	public function enqueue_classic_editor_scripts() {
-		if ( $this->should_change_rewrite_republish_copy( \get_post() ) ) {
-			\wp_enqueue_script(
-				'duplicate_post_strings',
-				\plugins_url(
-					\sprintf( 'js/dist/duplicate-post-strings-%s.js', Utils::flatten_version( DUPLICATE_POST_CURRENT_VERSION ) ),
-					DUPLICATE_POST_FILE
-				),
-				[
-					'wp-element',
-					'wp-i18n',
-				],
-				DUPLICATE_POST_CURRENT_VERSION,
-				true
-			);
+		if ( $this->permissions_helper->is_classic_editor() && isset( $_GET['post'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+			$id   = \intval( \wp_unslash( $_GET['post'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
+			$post = \get_post( $id );
+
+			if ( ! \is_null( $post ) && $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
+				$this->asset_manager->enqueue_strings_script();
+			}
+		}
+	}
+
+	/**
+	 * Enqueues the necessary styles for the Classic editor.
+	 *
+	 * @return void
+	 */
+	public function enqueue_classic_editor_styles() {
+		if ( $this->permissions_helper->is_classic_editor()
+			&& isset( $_GET['post'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+			$id   = \intval( \wp_unslash( $_GET['post'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
+			$post = \get_post( $id );
+
+			if ( ! \is_null( $post ) && $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
+				$this->asset_manager->enqueue_styles();
+			}
 		}
 	}
 
@@ -103,21 +125,17 @@ class Post_Submitbox {
 			}
 		}
 
-		if ( ! \is_null( $post ) ) {
-			/** This filter is documented in class-row-action.php */
-			if ( \apply_filters(
-				'duplicate_post_show_link',
-				$this->permissions_helper->should_link_be_displayed( $post ),
-				$post
-			) ) {
-				?>
-				<div id="duplicate-action">
-					<a class="submitduplicate duplication"
-						href="<?php echo \esc_url( $this->link_builder->build_new_draft_link( $post ) ); ?>"><?php \esc_html_e( 'Copy to a new draft', 'duplicate-post' ); ?>
-					</a>
-				</div>
-				<?php
-			}
+		if (
+			! \is_null( $post )
+			&& $this->permissions_helper->should_links_be_displayed( $post )
+		) {
+			?>
+			<div id="duplicate-action">
+				<a class="submitduplicate duplication"
+					href="<?php echo \esc_url( $this->link_builder->build_new_draft_link( $post ) ); ?>"><?php \esc_html_e( 'Copy to a new draft', 'duplicate-post' ); ?>
+				</a>
+			</div>
+			<?php
 		}
 	}
 
@@ -136,20 +154,42 @@ class Post_Submitbox {
 			}
 		}
 
-		if ( ! \is_null( $post ) && $post->post_status === 'publish' ) {
-			/** This filter is documented in duplicate-post-admin.php */
-			if ( \apply_filters(
-				'duplicate_post_show_link',
-				$this->permissions_helper->should_link_be_displayed( $post ),
-				$post
-			) ) {
-				?>
-				<div id="rewrite-republish-action">
-					<a class="submitduplicate duplication" href="<?php echo \esc_url( $this->link_builder->build_rewrite_and_republish_link( $post ) ); ?>"><?php \esc_html_e( 'Rewrite & Republish', 'duplicate-post' ); ?>
+		if (
+			! \is_null( $post )
+			&& $this->permissions_helper->should_rewrite_and_republish_be_allowed( $post )
+			&& $this->permissions_helper->should_links_be_displayed( $post )
+		) {
+			?>
+			<div id="rewrite-republish-action">
+				<a class="submitduplicate duplication" href="<?php echo \esc_url( $this->link_builder->build_rewrite_and_republish_link( $post ) ); ?>"><?php \esc_html_e( 'Rewrite & Republish', 'duplicate-post' ); ?>
+				</a>
+			</div>
+			<?php
+		}
+	}
+
+	/**
+	 * Adds a message in the post/page edit screen to create a clone for Rewrite & Republish.
+	 *
+	 * @param \WP_Post|null $post The post object that's being edited.
+	 *
+	 * @return void
+	 */
+	public function add_check_changes_link( $post = null ) {
+		if ( \is_null( $post ) ) {
+			if ( isset( $_GET['post'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+				$id   = \intval( \wp_unslash( $_GET['post'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
+				$post = \get_post( $id );
+			}
+		}
+
+		if ( ! \is_null( $post ) && $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
+			?>
+				<div id="check-changes-action">
+					<a href="<?php echo \esc_url( $this->link_builder->build_check_link( $post ) ); ?>"><?php \esc_html_e( 'Do you want to compare your changes with the original version before merging?', 'duplicate-post' ); ?>
 					</a>
 				</div>
 				<?php
-			}
 		}
 	}
 

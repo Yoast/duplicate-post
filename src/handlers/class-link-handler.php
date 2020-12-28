@@ -39,8 +39,6 @@ class Link_Handler {
 	public function __construct( Post_Duplicator $post_duplicator, Permissions_Helper $permissions_helper ) {
 		$this->post_duplicator    = $post_duplicator;
 		$this->permissions_helper = $permissions_helper;
-
-		$this->register_hooks();
 	}
 
 	/**
@@ -212,9 +210,9 @@ class Link_Handler {
 			);
 		}
 
-		if ( $post->post_status !== 'publish' ) {
+		if ( ! $this->permissions_helper->should_rewrite_and_republish_be_allowed( $post ) ) {
 			\wp_die(
-				\esc_html__( 'You cannot create a copy for Rewrite & Republish if the original is not published.', 'duplicate-post' )
+				\esc_html__( 'You cannot create a copy for Rewrite & Republish if the original is not published or if it already has a copy.', 'duplicate-post' )
 			);
 		}
 

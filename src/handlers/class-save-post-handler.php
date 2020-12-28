@@ -29,8 +29,6 @@ class Save_Post_Handler {
 	 */
 	public function __construct( Permissions_Helper $permissions_helper ) {
 		$this->permissions_helper = $permissions_helper;
-
-		$this->register_hooks();
 	}
 
 	/**
