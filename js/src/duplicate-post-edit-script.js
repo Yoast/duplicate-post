@@ -141,6 +141,8 @@ class DuplicatePost {
 	 * @returns {JSX.Element} The rendered links.
 	 */
 	render() {
+		const currentPostStatus = select( 'core/editor' ).getEditedPostAttribute( 'status' );
+
 		return (
 			<Fragment>
 				{ ( duplicatePost.newDraftLink !== '' && duplicatePost.showLinks.new_draft === '1' ) &&
@@ -154,7 +156,7 @@ class DuplicatePost {
 						</Button>
 					</PluginPostStatusInfo>
 				}
-				{ ( duplicatePost.rewriteAndRepublishLink !== '' && duplicatePost.showLinks.rewrite_republish === '1' ) &&
+				{ ( currentPostStatus === 'publish' && duplicatePost.rewriteAndRepublishLink !== '' && duplicatePost.showLinks.rewrite_republish === '1' ) &&
 					<PluginPostStatusInfo>
 						<Button
 							isTertiary={ true }
