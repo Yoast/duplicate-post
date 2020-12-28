@@ -36,8 +36,6 @@ class Post_Republisher {
 	public function __construct( Post_Duplicator $post_duplicator, Permissions_Helper $permissions_helper ) {
 		$this->post_duplicator    = $post_duplicator;
 		$this->permissions_helper = $permissions_helper;
-
-		$this->register_hooks();
 	}
 
 	/**
@@ -250,24 +248,38 @@ class Post_Republisher {
 	 * @return void
 	 */
 	public function republish( \WP_Post $post, $original_post ) {
+		// Remove WordPress default filter so a new revision is not created on republish.
+		\remove_action( 'post_updated', 'wp_save_post_revision', 10 );
+
 		// Republish taxonomies and meta.
 		$this->republish_post_taxonomies( $post );
 		$this->republish_post_meta( $post );
 
 		// Republish the post.
 		$this->republish_post_elements( $post, $original_post );
+
+		// Re-enable the creation of a new revision.
+		\add_action( 'post_updated', 'wp_save_post_revision', 10, 1 );
 	}
 
 	/**
 	 * Deletes the copy and associated post meta, if applicable.
 	 *
 	 * @param int      $copy_id The copy's ID.
-	 * @param int|null $post_id The post's ID. Optional.
+	 * @param int|null $post_id The original post's ID. Optional.
 	 * @param bool     $permanently_delete Whether to permanently delete the copy. Defaults to true.
 	 *
 	 * @return void
 	 */
 	public function delete_copy( $copy_id, $post_id = null, $permanently_delete = true ) {
+		/**
+		 * Fires before deleting a Rewrite & Republish copy.
+		 *
+		 * @param int $copy_id The copy's ID.
+		 * @param int $post_id The original post's ID..
+		 */
+		\do_action( 'duplicate_post_after_rewriting', $copy_id, $post_id );
+
 		// Delete the copy bypassing the trash so it also deletes the copy post meta.
 		\wp_delete_post( $copy_id, $permanently_delete );
 
