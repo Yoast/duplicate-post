@@ -575,11 +575,9 @@ function duplicate_post_copy_comments( $new_id, $post ) {
 			$commentdata['comment_date_gmt'] = get_gmt_from_date( $comment->comment_date );
 		}
 		$new_comment_id = wp_insert_comment( $commentdata );
-		if ( intval( get_option( 'duplicate_post_copycommentmeta' ) ) === 1 ) {
-			$commentmeta = get_comment_meta( $new_comment_id );
-			foreach ( $commentmeta as $meta_key => $meta_value ) {
-				add_comment_meta( $new_comment_id, $meta_key, duplicate_post_wp_slash( $meta_value ) );
-			}
+		$commentmeta = get_comment_meta( $new_comment_id );
+		foreach ( $commentmeta as $meta_key => $meta_value ) {
+			add_comment_meta( $new_comment_id, $meta_key, duplicate_post_wp_slash( $meta_value ) );
 		}
 		$old_id_to_new[ $comment->comment_ID ] = $new_comment_id;
 	}
