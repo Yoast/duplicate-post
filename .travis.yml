@@ -1,5 +1,15 @@
 language: php
 
+branches:
+  only:
+    - master
+    - develop
+    - /^release\/*/
+    - /^hotfix\/\d+\.\d+(\.\d+)?(-\S*)?$/
+    - /^feature\/*/
+    # Also build tags like 1.1.1 or 1.1 for deployment.
+    - /^\d+\.\d+(\.\d+)?(-\S*)?$/
+
 cache:
   directories:
     - .cache
