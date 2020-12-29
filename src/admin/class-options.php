@@ -208,7 +208,7 @@ class Options {
 				'type'        => 'number',
 				'label'       => \__( 'Increase menu order by', 'duplicate-post' ),
 				'value'       => \get_option( 'duplicate_post_increase_menu_order_by' ),
-				'description' => \__( 'Add this number to the original menu order (blank or zero to retain the value)', 'duplicate-post' ),
+				'description' => [ \__( 'Add this number to the original menu order (blank or zero to retain the value)', 'duplicate-post' ) ],
 			],
 			'duplicate_post_blacklist'                    => [
 				'tab'         => 'what-to-copy',
