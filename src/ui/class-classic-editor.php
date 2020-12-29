@@ -188,7 +188,10 @@ class Classic_Editor {
 		if ( ! \is_null( $post ) && $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
 			?>
 				<div id="check-changes-action">
-					<a href="<?php echo \esc_url( $this->link_builder->build_check_link( $post ) ); ?>"><?php \esc_html_e( 'Do you want to compare your changes with the original version before merging?', 'duplicate-post' ); ?>
+					<?php \esc_html_e( 'Do you want to compare your changes with the original version before merging? Please save any changes first.', 'duplicate-post' ); ?>
+					<br><br>
+					<a class='button' href=<?php echo \esc_url( $this->link_builder->build_check_link( $post ) ); ?>>
+						<?php \esc_html_e( 'Compare', 'duplicate-post' ); ?>
 					</a>
 				</div>
 				<?php

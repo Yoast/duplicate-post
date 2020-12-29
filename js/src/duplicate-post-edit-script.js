@@ -6,6 +6,8 @@ import { Fragment } from "@wordpress/element";
 import { Button } from '@wordpress/components';
 import { __ } from "@wordpress/i18n";
 import { select, subscribe, dispatch } from "@wordpress/data";
+import { redirectOnSaveCompletion } from "./duplicate-post-functions";
+
 
 class DuplicatePost {
 	constructor() {
@@ -33,32 +35,15 @@ class DuplicatePost {
 		 * @returns {void}
 		 */
 		subscribe( () => {
-			if ( ! this.isSafeRedirectURL( duplicatePost.originalEditURL ) ) {
+			if ( ! this.isSafeRedirectURL( duplicatePost.originalEditURL ) || ! this.isCopyAllowedToBeRepublished() ) {
 				return;
 			}
 
-			const isSavingPost       = select( 'core/editor' ).isSavingPost();
-			const isAutosavingPost   = select( 'core/editor' ).isAutosavingPost();
-			const hasActiveMetaBoxes = select( 'core/edit-post' ).hasMetaBoxes();
-			const isSavingMetaBoxes  = select( 'core/edit-post' ).isSavingMetaBoxes();
+			const completed = redirectOnSaveCompletion( duplicatePost.originalEditURL, { wasSavingPost, wasSavingMetaboxes, wasAutoSavingPost } );
 
-			if ( ! this.isCopyAllowedToBeRepublished() ) {
-				return;
-			}
-
-			// When there are custom meta boxes, redirect after they're saved.
-			if ( hasActiveMetaBoxes && ! isSavingMetaBoxes && wasSavingMetaboxes ) {
-				window.location.assign( duplicatePost.originalEditURL );
-			}
-
-			// When there are no custom meta boxes, redirect after the post is saved.
-			if ( ! hasActiveMetaBoxes && ! isSavingPost && wasSavingPost && ! wasAutoSavingPost ) {
-				window.location.assign( duplicatePost.originalEditURL );
-			}
-
-			wasSavingPost      = isSavingPost;
-			wasSavingMetaboxes = isSavingMetaBoxes;
-			wasAutoSavingPost  = isAutosavingPost;
+			wasSavingPost      = completed.isSavingPost;
+			wasSavingMetaboxes = completed.isSavingMetaBoxes;
+			wasAutoSavingPost  = completed.isAutosavingPost;
 		} );
 	}
 
@@ -141,6 +126,8 @@ class DuplicatePost {
 	 * @returns {JSX.Element} The rendered links.
 	 */
 	render() {
+		const currentPostStatus = select( 'core/editor' ).getEditedPostAttribute( 'status' );
+
 		return (
 			<Fragment>
 				{ ( duplicatePost.newDraftLink !== '' && duplicatePost.showLinks.new_draft === '1' ) &&
@@ -154,7 +141,7 @@ class DuplicatePost {
 						</Button>
 					</PluginPostStatusInfo>
 				}
-				{ ( duplicatePost.rewriteAndRepublishLink !== '' && duplicatePost.showLinks.rewrite_republish === '1' ) &&
+				{ ( currentPostStatus === 'publish' && duplicatePost.rewriteAndRepublishLink !== '' && duplicatePost.showLinks.rewrite_republish === '1' ) &&
 					<PluginPostStatusInfo>
 						<Button
 							isTertiary={ true }

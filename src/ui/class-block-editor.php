@@ -130,7 +130,8 @@ class Block_Editor {
 		$post = \get_post();
 
 		if (
-			! $this->permissions_helper->should_rewrite_and_republish_be_allowed( $post )
+			$this->permissions_helper->is_rewrite_and_republish_copy( $post )
+			|| $this->permissions_helper->has_rewrite_and_republish_copy( $post )
 			|| ! $this->permissions_helper->should_links_be_displayed( $post )
 		) {
 			return '';
