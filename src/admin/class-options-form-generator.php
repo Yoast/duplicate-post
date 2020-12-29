@@ -227,7 +227,8 @@ class Options_Form_Generator {
 		$output     = '';
 
 		foreach ( $post_types as $post_type_object ) {
-			if ( $post_type_object->name === 'attachment' ) {
+			if ( $post_type_object->name === 'attachment'
+				|| $post_type_object->name === 'wp_block' ) {
 				continue;
 			}
 
