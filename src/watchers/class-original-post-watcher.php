@@ -51,7 +51,7 @@ class Original_Post_Watcher {
 	 * @return string The translated text for the notice.
 	 */
 	public function get_notice_text() {
-		return __(
+		return \__(
 			'The original post has been edited in the meantime. If you click "Republish", this rewritten post will replace the original post.',
 			'duplicate-post'
 		);

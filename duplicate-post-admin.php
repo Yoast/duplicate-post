@@ -46,12 +46,6 @@ function duplicate_post_admin_init() {
 		add_action( 'wp_ajax_duplicate_post_dismiss_notice', 'duplicate_post_dismiss_notice' );
 	}
 
-	/**
-	 * Connect actions to functions.
-	 */
-	add_action( 'admin_action_duplicate_post_save_as_new_post', 'duplicate_post_save_as_new_post' );
-	add_action( 'admin_action_duplicate_post_save_as_new_post_draft', 'duplicate_post_save_as_new_post_draft' );
-
 	add_action( 'dp_duplicate_post', 'duplicate_post_copy_post_meta_info', 10, 2 );
 	add_action( 'dp_duplicate_page', 'duplicate_post_copy_post_meta_info', 10, 2 );
 
@@ -89,37 +83,17 @@ function duplicate_post_plugin_upgrade() {
 	if ( empty( $installed_version ) ) {
 		// Get default roles.
 		$default_roles = array(
-			3 => 'editor',
-			8 => 'administrator',
+			'editor',
+			'administrator',
+			'wpseo_manager',
+			'wpseo_editor',
 		);
 
-		// Cycle all roles and assign capability if its level >= duplicate_post_copy_user_level.
-		foreach ( $default_roles as $level => $name ) {
+		foreach ( $default_roles as $name ) {
 			$role = get_role( $name );
 			if ( ! empty( $role ) ) {
 				$role->add_cap( 'copy_posts' );
 			}
-		}
-	} else {
-		$min_user_level = get_option( 'duplicate_post_copy_user_level' );
-
-		if ( ! empty( $min_user_level ) ) {
-			// Get default roles.
-			$default_roles = array(
-				1 => 'contributor',
-				2 => 'author',
-				3 => 'editor',
-				8 => 'administrator',
-			);
-
-			// Cycle all roles and assign capability if its level >= duplicate_post_copy_user_level.
-			foreach ( $default_roles as $level => $name ) {
-				$role = get_role( $name );
-				if ( $role && $min_user_level <= $level ) {
-					$role->add_cap( 'copy_posts' );
-				}
-			}
-			delete_option( 'duplicate_post_copy_user_level' );
 		}
 	}
 
@@ -185,11 +159,6 @@ function duplicate_post_plugin_upgrade() {
 		$meta_blacklist = array_diff( $meta_blacklist, array( '_thumbnail_id' ) );
 	}
 	update_option( 'duplicate_post_blacklist', implode( ',', $meta_blacklist ) );
-
-	delete_option( 'duplicate_post_admin_user_level' );
-	delete_option( 'duplicate_post_create_user_level' );
-	delete_option( 'duplicate_post_view_user_level' );
-	delete_option( 'dp_notice' );
 
 	delete_option( 'duplicate_post_show_notice' );
 	if ( version_compare( $installed_version, '3.2.5' ) < 0 ) {
@@ -312,101 +281,6 @@ function duplicate_post_show_update_notice() {
 function duplicate_post_dismiss_notice() {
 	$result = update_site_option( 'duplicate_post_show_notice', 0 );
 	return $result;
-}
-
-/**
- * Calls the creation of a new copy of the selected post (as a draft) then redirects to the edit post screen.
- *
- * @see duplicate_post_save_as_new_post()
- */
-function duplicate_post_save_as_new_post_draft() {
-	duplicate_post_save_as_new_post( 'draft' );
-}
-
-/**
- * Calls the creation of a new copy of the selected post (by default preserving the original publish status)
- * then redirects to the post list.
- *
- * @param string $status The status name.
- */
-function duplicate_post_save_as_new_post( $status = '' ) {
-	if ( ! duplicate_post_is_current_user_allowed_to_copy() ) {
-		wp_die( esc_html__( 'Current user is not allowed to copy posts.', 'duplicate-post' ) );
-	}
-
-	if ( ! ( isset( $_GET['post'] ) || isset( $_POST['post'] ) || // Input var okay.
-			( isset( $_REQUEST['action'] ) && 'duplicate_post_save_as_new_post' === $_REQUEST['action'] ) ) ) { // Input var okay.
-		wp_die( esc_html__( 'No post to duplicate has been supplied!', 'duplicate-post' ) );
-	}
-
-	// Nonce check.
-	check_admin_referer( 'duplicate-post_' . ( isset( $_GET['post'] ) ? intval( wp_unslash( $_GET['post'] ) ) : intval( wp_unslash( $_POST['post'] ) ) ) ); // Input var okay.
-
-	// Get the original post.
-	$id   = ( isset( $_GET['post'] ) ? intval( wp_unslash( $_GET['post'] ) ) : intval( wp_unslash( $_POST['post'] ) ) ); // Input var okay.
-	$post = get_post( $id );
-
-	// Copy the post and insert it.
-	if ( isset( $post ) && null !== $post ) {
-		$post_type = $post->post_type;
-		$new_id    = duplicate_post_create_duplicate( $post, $status );
-
-		// Die on insert error.
-		if ( is_wp_error( $new_id ) ) {
-			wp_die(
-				esc_html(
-					__( 'Copy creation failed, could not find original:', 'duplicate-post' ) . ' '
-					. $id
-				)
-			);
-		}
-
-		if ( '' === $status ) {
-			$sendback = wp_get_referer();
-			if ( ! $sendback || strpos( $sendback, 'post.php' ) !== false || strpos( $sendback, 'post-new.php' ) !== false ) {
-				if ( 'attachment' === $post_type ) {
-					$sendback = admin_url( 'upload.php' );
-				} else {
-					$sendback = admin_url( 'edit.php' );
-					if ( ! empty( $post_type ) ) {
-						$sendback = add_query_arg( 'post_type', $post_type, $sendback );
-					}
-				}
-			} else {
-				$sendback = remove_query_arg( array( 'trashed', 'untrashed', 'deleted', 'cloned', 'ids' ), $sendback );
-			}
-			// Redirect to the post list screen.
-			wp_safe_redirect(
-				add_query_arg(
-					array(
-						'cloned' => 1,
-						'ids'    => $post->ID,
-					),
-					$sendback
-				)
-			);
-			exit();
-		} else {
-			// Redirect to the edit screen for the new draft post.
-			wp_safe_redirect(
-				add_query_arg(
-					array(
-						'cloned' => 1,
-						'ids'    => $post->ID,
-					),
-					admin_url( 'post.php?action=edit&post=' . $new_id . ( isset( $_GET['classic-editor'] ) ? '&classic-editor' : '' ) )
-				)
-			);
-			exit();
-		}
-	} else {
-		wp_die(
-			esc_html(
-				__( 'Copy creation failed, could not find original:', 'duplicate-post' ) . ' '
-				. $id
-			)
-		);
-	}
 }
 
 /**
@@ -700,11 +574,9 @@ function duplicate_post_copy_comments( $new_id, $post ) {
 			$commentdata['comment_date_gmt'] = get_gmt_from_date( $comment->comment_date );
 		}
 		$new_comment_id = wp_insert_comment( $commentdata );
-		if ( intval( get_option( 'duplicate_post_copycommentmeta' ) ) === 1 ) {
-			$commentmeta = get_comment_meta( $new_comment_id );
-			foreach ( $commentmeta as $meta_key => $meta_value ) {
-				add_comment_meta( $new_comment_id, $meta_key, duplicate_post_wp_slash( $meta_value ) );
-			}
+		$commentmeta    = get_comment_meta( $new_comment_id );
+		foreach ( $commentmeta as $meta_key => $meta_value ) {
+			add_comment_meta( $new_comment_id, $meta_key, duplicate_post_wp_slash( $meta_value ) );
 		}
 		$old_id_to_new[ $comment->comment_ID ] = $new_comment_id;
 	}
@@ -900,15 +772,6 @@ function duplicate_post_add_plugin_links( $links, $file ) {
 	}
 	return $links;
 }
-
-/* NOTICES */
-
-/**
- * Shows a notice after the copy has succeeded.
- *
- * @ignore
- */
-
 
 /**
  * Renders the newsletter signup form.

@@ -55,7 +55,7 @@ class Bulk_Actions_Watcher {
 				'<div id="message" class="notice notice-success fade"><p>' .
 				\esc_html(
 				/* translators: %s: Number of posts copied. */
-					_n(
+					\_n(
 						'%s item copied.',
 						'%s items copied.',
 						$copied_posts,

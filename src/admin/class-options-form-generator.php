@@ -50,32 +50,32 @@ class Options_Form_Generator {
 			}
 
 			// Check for support of the current WordPress version.
-			if ( array_key_exists( 'version', $option_values ) && version_compare( \get_bloginfo( 'version' ), $option_values['version'] ) < 0 ) {
+			if ( \array_key_exists( 'version', $option_values ) && \version_compare( \get_bloginfo( 'version' ), $option_values['version'] ) < 0 ) {
 				continue;
 			}
 
-			if ( array_key_exists( 'sub_options', $option_values ) ) {
+			if ( \array_key_exists( 'sub_options', $option_values ) ) {
 				$output .= $this->generate_options_input( $option_values['sub_options'], $option );
 
 				continue;
 			}
 
 			// If callback, call it.
-			if ( array_key_exists( 'callback', $option_values ) ) {
+			if ( \array_key_exists( 'callback', $option_values ) ) {
 				$output .= $this->{$option_values['callback']}();
 
 				continue;
 			}
 
-			if ( ! array_key_exists( 'type', $option_values ) ) {
+			if ( ! \array_key_exists( 'type', $option_values ) ) {
 				continue;
 			}
 
-			$id = ( array_key_exists( 'id', $option_values ) ? $option_values['id'] : $this->prepare_input_id( $option ) );
+			$id = ( \array_key_exists( 'id', $option_values ) ? $option_values['id'] : $this->prepare_input_id( $option ) );
 
 			if ( $parent_option !== '' ) {
-				$id     = sprintf( '%s-%s', $this->prepare_input_id( $parent_option ), $id );
-				$option = sprintf( '%s[%s]', $parent_option, $option );
+				$id     = \sprintf( '%s-%s', $this->prepare_input_id( $parent_option ), $id );
+				$option = \sprintf( '%s[%s]', $parent_option, $option );
 			}
 
 			switch ( $option_values['type'] ) {
@@ -87,7 +87,7 @@ class Options_Form_Generator {
 						$this->is_checked( $option, $option_values, $parent_option )
 					);
 
-					$output .= sprintf( '<label for="%s">%s</label>', $id, \esc_html( $option_values['label'] ) );
+					$output .= \sprintf( '<label for="%s">%s</label>', $id, \esc_html( $option_values['label'] ) );
 					break;
 				case 'text':
 					$output .= $this->options_inputs->text( $option, $option_values['value'], $id );
@@ -98,7 +98,7 @@ class Options_Form_Generator {
 					break;
 			}
 
-			if ( array_key_exists( 'description', $option_values ) ) {
+			if ( \array_key_exists( 'description', $option_values ) ) {
 				$output .= ' ' . $this->extract_description( $option_values['description'], $id );
 			}
 
@@ -111,8 +111,8 @@ class Options_Form_Generator {
 	/**
 	 * Sorts taxonomy objects based on being public, followed by being private.
 	 *
-	 * @param WP_Taxonomy $taxonomy1 First taxonomy object.
-	 * @param WP_Taxonomy $taxonomy2  Second taxonomy object.
+	 * @param \WP_Taxonomy $taxonomy1 First taxonomy object.
+	 * @param \WP_Taxonomy $taxonomy2 Second taxonomy object.
 	 *
 	 * @return bool True when the first taxonomy is public.
 	 * @ignore
@@ -130,11 +130,11 @@ class Options_Form_Generator {
 	 * @return string The description HTML for the input.
 	 */
 	public function extract_description( $description, $id ) {
-		if ( ! is_array( $description ) ) {
-			return sprintf( '<span id="%s-description">(%s)</span>', $id, \esc_html( $description ) );
+		if ( ! \is_array( $description ) ) {
+			return \sprintf( '<span id="%s-description">(%s)</span>', $id, \esc_html( $description ) );
 		}
 
-		return sprintf( '<p id="%s-description">%s</p>', $id, \esc_html( implode( '<br />', $description ) ) );
+		return \sprintf( '<p id="%s-description">%s</p>', $id, \implode( '<br />', \array_map( '\esc_html', $description ) ) );
 	}
 
 	/**
@@ -145,11 +145,11 @@ class Options_Form_Generator {
 	public function generate_taxonomy_exclusion_list() {
 		$taxonomies = \get_taxonomies( [], 'objects' );
 
-		usort( $taxonomies, [ $this, 'sort_taxonomy_objects' ] );
+		\usort( $taxonomies, [ $this, 'sort_taxonomy_objects' ] );
 
 		$taxonomies_blacklist = \get_option( 'duplicate_post_taxonomies_blacklist' );
 
-		if ( ! is_array( $taxonomies_blacklist ) ) {
+		if ( ! \is_array( $taxonomies_blacklist ) ) {
 			$taxonomies_blacklist = [];
 		}
 
@@ -161,9 +161,9 @@ class Options_Form_Generator {
 			}
 
 			$is_public = ( $taxonomy->public ) ? 'public' : 'private';
-			$name      = esc_attr( $taxonomy->name );
+			$name      = \esc_attr( $taxonomy->name );
 
-			$output .= sprintf( '<div class="taxonomy_%s">', $is_public );
+			$output .= \sprintf( '<div class="taxonomy_%s">', $is_public );
 			$output .= $this->generate_options_input(
 				[
 					'duplicate_post_taxonomies_blacklist[]' => [
@@ -227,7 +227,8 @@ class Options_Form_Generator {
 		$output     = '';
 
 		foreach ( $post_types as $post_type_object ) {
-			if ( $post_type_object->name === 'attachment' ) {
+			if ( $post_type_object->name === 'attachment'
+				|| $post_type_object->name === 'wp_block' ) {
 				continue;
 			}
 
@@ -259,21 +260,21 @@ class Options_Form_Generator {
 	 * @return bool Whether or not the checkbox should be checked.
 	 */
 	public function is_checked( $option, $option_values, $parent_option = '' ) {
-		if ( array_key_exists( 'checked', $option_values ) ) {
+		if ( \array_key_exists( 'checked', $option_values ) ) {
 			return $option_values['checked'];
 		}
 
 		// Check for serialized options.
 		$saved_option = ! empty( $parent_option ) ? \get_option( $parent_option ) : \get_option( $option );
 
-		if ( ! is_array( $saved_option ) ) {
+		if ( ! \is_array( $saved_option ) ) {
 			return (int) $saved_option === 1;
 		}
 
 		// Clean up the sub-option's name.
-		$cleaned_option = trim( str_replace( $parent_option, '', $option ), '[]' );
+		$cleaned_option = \trim( \str_replace( $parent_option, '', $option ), '[]' );
 
-		return array_key_exists( $cleaned_option, $saved_option ) && (int) $saved_option[ $cleaned_option ] === 1;
+		return \array_key_exists( $cleaned_option, $saved_option ) && (int) $saved_option[ $cleaned_option ] === 1;
 	}
 
 	/**
@@ -284,7 +285,7 @@ class Options_Form_Generator {
 	 * @return string The prepared input ID.
 	 */
 	public function prepare_input_id( $id ) {
-		return str_replace( '_', '-', $id );
+		return \str_replace( '_', '-', $id );
 	}
 
 	/**
@@ -296,6 +297,10 @@ class Options_Form_Generator {
 	 * @codeCoverageIgnore As this is a simple wrapper for a function that is also being used elsewhere, we can skip testing for now.
 	 */
 	public function is_post_type_enabled( $post_type ) {
-		return duplicate_post_is_post_type_enabled( $post_type );
+		$duplicate_post_types_enabled = \get_option( 'duplicate_post_types_enabled', [ 'post', 'page' ] );
+		if ( ! \is_array( $duplicate_post_types_enabled ) ) {
+			$duplicate_post_types_enabled = [ $duplicate_post_types_enabled ];
+		}
+		return \in_array( $post_type, $duplicate_post_types_enabled, true );
 	}
 }

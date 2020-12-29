@@ -153,23 +153,23 @@ class Link_Handler {
 		}
 
 		$post_type = $post->post_type;
-		$sendback  = wp_get_referer();
+		$sendback  = \wp_get_referer();
 		if ( ! $sendback || strpos( $sendback, 'post.php' ) !== false || strpos( $sendback, 'post-new.php' ) !== false ) {
 			if ( 'attachment' === $post_type ) {
-				$sendback = admin_url( 'upload.php' );
+				$sendback = \admin_url( 'upload.php' );
 			} else {
-				$sendback = admin_url( 'edit.php' );
+				$sendback = \admin_url( 'edit.php' );
 				if ( ! empty( $post_type ) ) {
-					$sendback = add_query_arg( 'post_type', $post_type, $sendback );
+					$sendback = \add_query_arg( 'post_type', $post_type, $sendback );
 				}
 			}
 		} else {
-			$sendback = remove_query_arg( [ 'trashed', 'untrashed', 'deleted', 'cloned', 'ids' ], $sendback );
+			$sendback = \remove_query_arg( [ 'trashed', 'untrashed', 'deleted', 'cloned', 'ids' ], $sendback );
 		}
 
 		// Redirect to the post list screen.
-		wp_safe_redirect(
-			add_query_arg(
+		\wp_safe_redirect(
+			\add_query_arg(
 				[
 					'cloned' => 1,
 					'ids'    => $post->ID,

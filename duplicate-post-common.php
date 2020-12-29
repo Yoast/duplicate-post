@@ -6,17 +6,12 @@
  * @since 2.0
  */
 
-/**
- * Tests if the user is allowed to copy posts.
- *
- * @return bool
- */
-function duplicate_post_is_current_user_allowed_to_copy() {
-	return current_user_can( 'copy_posts' );
-}
+use Yoast\WP\Duplicate_Post\Permissions_Helper;
+use Yoast\WP\Duplicate_Post\UI\Link_Builder;
+use Yoast\WP\Duplicate_Post\Utils;
 
 /**
- * Tests if post type is enable to be copied.
+ * Tests if post type is enabled to be copied.
  *
  * @param string $post_type The post type to check.
  * @return bool
@@ -38,50 +33,23 @@ function duplicate_post_is_post_type_enabled( $post_type ) {
  * @return string
  */
 function duplicate_post_get_clone_post_link( $id = 0, $context = 'display', $draft = true ) {
-	if ( ! duplicate_post_is_current_user_allowed_to_copy() ) {
-		return '';
-	}
-
 	$post = get_post( $id );
 	if ( ! $post ) {
 		return '';
 	}
 
-	if ( ! duplicate_post_is_post_type_enabled( $post->post_type ) ) {
+	$link_builder       = new Link_Builder();
+	$permissions_helper = new Permissions_Helper();
+
+	if ( ! $permissions_helper->should_links_be_displayed( $post ) ) {
 		return '';
 	}
 
 	if ( $draft ) {
-		$action_name = 'duplicate_post_save_as_new_post_draft';
+		return $link_builder->build_new_draft_link( $post, $context );
 	} else {
-		$action_name = 'duplicate_post_save_as_new_post';
+		return $link_builder->build_clone_link( $post, $context );
 	}
-
-	if ( 'display' === $context ) {
-		$action = '?action=' . $action_name . '&amp;post=' . $post->ID;
-	} else {
-		$action = '?action=' . $action_name . '&post=' . $post->ID;
-	}
-
-	$post_type_object = get_post_type_object( $post->post_type );
-	if ( ! $post_type_object ) {
-		return '';
-	}
-
-	return wp_nonce_url(
-		/**
-		 * Filter on the URL of the clone link
-		 *
-		 * @param string $url     The URL of the clone link.
-		 * @param int    $ID      The ID of the post
-		 * @param string $context The context in which the URL is used.
-		 * @param bool   $draft   Whether to clone to a new draft.
-		 *
-		 * @return string
-		 */
-		apply_filters( 'duplicate_post_get_clone_post_link', admin_url( 'admin.php' . $action ), $post->ID, $context, $draft ),
-		'duplicate-post_' . $post->ID
-	);
 }
 
 /**
@@ -107,17 +75,17 @@ function duplicate_post_clone_post_link( $link = null, $before = '', $after = ''
 		$link = esc_html__( 'Copy to a new draft', 'duplicate-post' );
 	}
 
-	$link = '<a class="post-clone-link" href="' . $url . '">' . $link . '</a>';
+	$link = '<a class="post-clone-link" href="' . esc_url( $url ) . '">' . $link . '</a>';
 
 	/**
-	 * Filter on the clone link HTML
+	 * Filter on the clone link HTML.
 	 *
 	 * @param string $link The full HTML tag of the link.
-	 * @param int    $ID   The ID of the post
+	 * @param int    $ID   The ID of the post.
 	 *
 	 * @return string
 	 */
-	echo esc_html( $before . apply_filters( 'duplicate_post_clone_post_link', $link, $post->ID ) . $after );
+	echo $before . apply_filters( 'duplicate_post_clone_post_link', $link, $post->ID ) . $after; // phpcs:ignore WordPress.Security.EscapeOutput
 }
 
 /**
@@ -128,27 +96,5 @@ function duplicate_post_clone_post_link( $link = null, $before = '', $after = ''
  * @return mixed Post data.
  */
 function duplicate_post_get_original( $post = null, $output = OBJECT ) {
-	$post = get_post( $post );
-	if ( ! $post ) {
-		return null;
-	}
-	$original_id = get_post_meta( $post->ID, '_dp_original' );
-	if ( empty( $original_id ) ) {
-		return null;
-	}
-	$original_post = get_post( $original_id[0], $output );
-	return $original_post;
+	return Utils::get_original( $post, $output );
 }
-
-/**
- * Sorts taxonomy objects: first public, then private.
- *
- * @ignore
- * @param WP_Taxonomy $a First taxonomy object.
- * @param WP_Taxonomy $b Second taxonomy object.
- * @return bool
- */
-function duplicate_post_tax_obj_cmp( $a, $b ) {
-	return ( $a->public < $b->public );
-}
-
