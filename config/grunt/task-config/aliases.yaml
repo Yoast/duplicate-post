@@ -27,7 +27,7 @@ clean:build-assets:
   - 'copy:artifact'
   # Create a zip file
   - 'compress:artifact'
-  - 'clean:artifact'
+  # There is no `clean:artifact` here because the `wp_deploy` needs the `artifact` folder.
   - 'restore-environment-after-artifact'
 
 'restore-environment-after-artifact':
@@ -42,6 +42,11 @@ release:
 
 'release:js':
   - 'webpack:buildProd'
+
+'deploy:trunk':
+  - 'update-version-trunk'
+  - 'artifact'
+  - 'wp_deploy:trunk'
 
 # Default task
 default:
