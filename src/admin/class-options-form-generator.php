@@ -134,7 +134,7 @@ class Options_Form_Generator {
 			return \sprintf( '<span id="%s-description">(%s)</span>', $id, \esc_html( $description ) );
 		}
 
-		return \sprintf( '<p id="%s-description">%s</p>', $id, \esc_html( \implode( '<br />', $description ) ) );
+		return \sprintf( '<p id="%s-description">%s</p>', $id, \implode( '<br />', \array_map( '\esc_html', $description ) ) );
 	}
 
 	/**
