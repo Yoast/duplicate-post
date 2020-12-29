@@ -55,7 +55,7 @@ class Metabox {
 		foreach ( $screens as $screen ) {
 			\add_meta_box(
 				'duplicate_post_show_original',
-				'Duplicate Post',
+				\__( 'Duplicate Post', 'duplicate-post' ),
 				[ $this, 'custom_metabox_html' ],
 				$screen,
 				'side'
