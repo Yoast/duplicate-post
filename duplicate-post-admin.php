@@ -89,7 +89,6 @@ function duplicate_post_plugin_upgrade() {
 			'wpseo_editor',
 		);
 
-		// Cycle all roles and assign capability if its level >= duplicate_post_copy_user_level.
 		foreach ( $default_roles as $name ) {
 			$role = get_role( $name );
 			if ( ! empty( $role ) ) {

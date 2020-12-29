@@ -141,7 +141,7 @@ class Utils {
 					'<a href="%s" rel="bookmark" aria-label="%s">%s</a>',
 					\get_permalink( $post->ID ),
 					/* translators: %s: post title */
-					\esc_attr( \sprintf( __( 'View &#8220;%s&#8221;', 'default' ), $title ) ),
+					\esc_attr( \sprintf( \__( 'View &#8220;%s&#8221;', 'default' ), $title ) ),
 					$title
 				);
 			}
@@ -183,11 +183,11 @@ class Utils {
 	public static function get_option( $option, $key = '' ) {
 		$option = \get_option( $option );
 
-		if ( ! is_array( $option ) || empty( $key ) ) {
+		if ( ! \is_array( $option ) || empty( $key ) ) {
 			return $option;
 		}
 
-		if ( ! array_key_exists( $key, $option ) ) {
+		if ( ! \array_key_exists( $key, $option ) ) {
 			return '';
 		}
 

@@ -51,7 +51,7 @@ class Copied_Post_Watcher {
 	 */
 	public function get_notice_text( $post ) {
 		if ( $this->permissions_helper->has_trashed_rewrite_and_republish_copy( $post ) ) {
-			return __(
+			return \__(
 				'You can only make one Rewrite & Republish duplicate at a time, and a duplicate of this post already exists in the trash. Permanently delete it if you want to make a new duplicate.',
 				'duplicate-post'
 			);
@@ -59,15 +59,15 @@ class Copied_Post_Watcher {
 
 		$scheduled_copy = $this->permissions_helper->has_scheduled_rewrite_and_republish_copy( $post );
 		if ( ! $scheduled_copy ) {
-			return __(
+			return \__(
 				'A duplicate of this post was made. Please note that any changes you make to this post will be replaced when the duplicated version is republished.',
 				'duplicate-post'
 			);
 		}
 
-		return sprintf(
-			/* translators: %1$s: scheduled date of the copy, %2$s: scheduled time of the copy.  */
-			__(
+		return \sprintf(
+			/* translators: %1$s: scheduled date of the copy, %2$s: scheduled time of the copy. */
+			\__(
 				'A duplicate of this post was made, which is scheduled to replace this post on %1$s at %2$s.',
 				'duplicate-post'
 			),

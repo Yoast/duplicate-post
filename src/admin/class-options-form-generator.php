@@ -272,7 +272,7 @@ class Options_Form_Generator {
 		}
 
 		// Clean up the sub-option's name.
-		$cleaned_option = \trim( str_replace( $parent_option, '', $option ), '[]' );
+		$cleaned_option = \trim( \str_replace( $parent_option, '', $option ), '[]' );
 
 		return \array_key_exists( $cleaned_option, $saved_option ) && (int) $saved_option[ $cleaned_option ] === 1;
 	}

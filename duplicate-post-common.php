@@ -78,10 +78,10 @@ function duplicate_post_clone_post_link( $link = null, $before = '', $after = ''
 	$link = '<a class="post-clone-link" href="' . esc_url( $url ) . '">' . $link . '</a>';
 
 	/**
-	 * Filter on the clone link HTML
+	 * Filter on the clone link HTML.
 	 *
 	 * @param string $link The full HTML tag of the link.
-	 * @param int    $ID   The ID of the post
+	 * @param int    $ID   The ID of the post.
 	 *
 	 * @return string
 	 */
@@ -98,4 +98,3 @@ function duplicate_post_clone_post_link( $link = null, $before = '', $after = ''
 function duplicate_post_get_original( $post = null, $output = OBJECT ) {
 	return Utils::get_original( $post, $output );
 }
-

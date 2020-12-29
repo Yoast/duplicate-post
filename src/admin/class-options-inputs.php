@@ -24,7 +24,7 @@ class Options_Inputs {
 	 * @return string The input's HTML output.
 	 */
 	protected function input( $type, $name, $value, $id, $attributes = '' ) {
-		return sprintf(
+		return \sprintf(
 			'<input type="%s" name="%s" id="%s" value="%s" %s />',
 			\esc_attr( $type ),
 			\esc_attr( $name ),

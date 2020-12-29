@@ -202,7 +202,7 @@ class Permissions_Helper {
 		 *
 		 * @return bool Whether or not to display the duplicate post links.
 		 */
-		$display_links = apply_filters( 'duplicate_post_show_link', $this->is_current_user_allowed_to_copy() && $this->is_post_type_enabled( $post->post_type ), $post );
+		$display_links = \apply_filters( 'duplicate_post_show_link', $this->is_current_user_allowed_to_copy() && $this->is_post_type_enabled( $post->post_type ), $post );
 
 		return ! $this->is_rewrite_and_republish_copy( $post ) && $display_links;
 	}

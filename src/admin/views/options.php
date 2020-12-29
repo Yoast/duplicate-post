@@ -121,7 +121,7 @@ if ( ! defined( 'DUPLICATE_POST_CURRENT_VERSION' ) ) {
 						<fieldset>
 							<legend class="screen-reader-text"><?php \esc_html_e( 'Do not copy these taxonomies', 'duplicate-post' ); ?></legend>
 							<?php
-                            // phpcs:ignore WordPress.Security.EscapeOutput -- Already escapes correctly.
+							// phpcs:ignore WordPress.Security.EscapeOutput -- Already escapes correctly.
 							echo $this->generate_input( 'duplicate_post_taxonomies_blacklist' );
 							?>
 							<button type="button" class="button-link hide-if-no-js toggle-private-taxonomies"
@@ -148,7 +148,7 @@ if ( ! defined( 'DUPLICATE_POST_CURRENT_VERSION' ) ) {
 							<fieldset>
 								<legend class="screen-reader-text"><?php \esc_html_e( 'Roles allowed to copy', 'duplicate-post' ); ?></legend>
 								<?php
-                                // phpcs:ignore WordPress.Security.EscapeOutput -- Already escapes correctly.
+								// phpcs:ignore WordPress.Security.EscapeOutput -- Already escapes correctly.
 								echo $this->generate_input( 'duplicate_post_roles' );
 								?>
 								<p>
@@ -193,7 +193,7 @@ if ( ! defined( 'DUPLICATE_POST_CURRENT_VERSION' ) ) {
 					<td>
 						<fieldset>
 							<?php
-                            // phpcs:ignore WordPress.Security.EscapeOutput -- Already escapes correctly.
+							// phpcs:ignore WordPress.Security.EscapeOutput -- Already escapes correctly.
 							echo $this->generate_tab_inputs( 'display', 'show-links' );
 							?>
 						</fieldset>
@@ -205,7 +205,7 @@ if ( ! defined( 'DUPLICATE_POST_CURRENT_VERSION' ) ) {
 					<td>
 						<fieldset>
 							<?php
-                            // phpcs:ignore WordPress.Security.EscapeOutput -- Already escapes correctly.
+							// phpcs:ignore WordPress.Security.EscapeOutput -- Already escapes correctly.
 							echo $this->generate_tab_inputs( 'display', 'show-links-in' );
 							?>
 						</fieldset>
@@ -213,7 +213,7 @@ if ( ! defined( 'DUPLICATE_POST_CURRENT_VERSION' ) ) {
 							<?php \esc_html_e( 'Whether the links are displayed for custom post types registered by themes or plugins depends on their use of standard WordPress UI elements.', 'duplicate-post' ); ?>
 							<br/>
 							<?php
-							printf(
+							\printf(
 							/* translators: 1: Code start tag, 2: Code closing tag, 3: Link start tag to the template tag documentation, 4: Link closing tag. */
 								\esc_html__( 'You can also use the template tag %1$sduplicate_post_clone_post_link( $link, $before, $after, $id )%2$s. %3$sMore info on the template tag%4$s.', 'duplicate-post' ),
 								'<code>',

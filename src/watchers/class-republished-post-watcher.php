@@ -65,7 +65,7 @@ class Republished_Post_Watcher {
 	 * @return string The translated text for the republished notice.
 	 */
 	public function get_notice_text() {
-		return __(
+		return \__(
 			'Your original post has been replaced with the rewritten post. You are now viewing the (rewritten) original post.',
 			'duplicate-post'
 		);

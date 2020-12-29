@@ -84,7 +84,7 @@ class Row_Actions {
 		$actions['clone'] = '<a href="' . $this->link_builder->build_clone_link( $post->ID ) .
 			'" aria-label="' . \esc_attr(
 			/* translators: %s: Post title. */
-				\sprintf( __( 'Clone &#8220;%s&#8221;', 'duplicate-post' ), $title )
+				\sprintf( \__( 'Clone &#8220;%s&#8221;', 'duplicate-post' ), $title )
 			) . '">' .
 			\esc_html_x( 'Clone', 'verb', 'duplicate-post' ) . '</a>';
 
@@ -109,7 +109,7 @@ class Row_Actions {
 		$actions['edit_as_new_draft'] = '<a href="' . $this->link_builder->build_new_draft_link( $post->ID ) .
 			'" aria-label="' . \esc_attr(
 			/* translators: %s: Post title. */
-				\sprintf( __( 'New draft of &#8220;%s&#8221;', 'duplicate-post' ), $title )
+				\sprintf( \__( 'New draft of &#8220;%s&#8221;', 'duplicate-post' ), $title )
 			) . '">' .
 			\esc_html__( 'New Draft', 'duplicate-post' ) .
 			'</a>';
@@ -138,7 +138,7 @@ class Row_Actions {
 		$actions['rewrite'] = '<a href="' . $this->link_builder->build_rewrite_and_republish_link( $post->ID ) .
 			'" aria-label="' . \esc_attr(
 			/* translators: %s: Post title. */
-				\sprintf( __( 'Rewrite & Republish &#8220;%s&#8221;', 'duplicate-post' ), $title )
+				\sprintf( \__( 'Rewrite & Republish &#8220;%s&#8221;', 'duplicate-post' ), $title )
 			) . '">' .
 			\esc_html_x( 'Rewrite & Republish', 'verb', 'duplicate-post' ) . '</a>';
 

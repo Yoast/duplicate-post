@@ -63,7 +63,7 @@ class Post_States {
 
 		if ( \intval( \get_option( 'duplicate_post_show_original_in_post_states' ) ) === 1 ) {
 			/* translators: %s: Original item link (to view or edit) or title. */
-			$post_states['duplicate_post_original_item'] = \sprintf( __( 'Original: %s', 'duplicate-post' ), Utils::get_edit_or_view_link( $original_item ) );
+			$post_states['duplicate_post_original_item'] = \sprintf( \__( 'Original: %s', 'duplicate-post' ), Utils::get_edit_or_view_link( $original_item ) );
 		}
 
 		return $post_states;
