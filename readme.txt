@@ -155,6 +155,7 @@ New features and customization, WP 3.0 compatibility: you should upgrade if you 
 
 Enhancements:
 
+* Introduces integration with Block editor.
 * Introduces Rewrite & Republish feature.
 * Introduces new settings to individually enable/disable the `New Draft`, `Clone` and `Rewrite & Republish` links.
 
