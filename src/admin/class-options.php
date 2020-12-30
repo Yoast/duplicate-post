@@ -299,7 +299,6 @@ class Options {
 						'type'        => 'checkbox',
 						'label'       => \__( 'Admin bar', 'duplicate-post' ),
 						'value'       => 1,
-						'description' => \__( 'now works on Edit screen too - check this option to use with Gutenberg enabled', 'duplicate-post' ),
 					],
 					'submitbox' => [
 						'type'  => 'checkbox',
