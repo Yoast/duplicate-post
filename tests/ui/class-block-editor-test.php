@@ -207,6 +207,12 @@ class Block_Editor_Test extends TestCase {
 		$original_edit_url          = 'http://fakeu.rl/original';
 
 		$show_links = [
+			'new_draft'         => '1',
+			'clone'             => '1',
+			'rewrite_republish' => '1',
+		];
+
+		$show_links_in = [
 			'row'         => '1',
 			'adminbar'    => '1',
 			'submitbox'   => '1',
@@ -233,6 +239,10 @@ class Block_Editor_Test extends TestCase {
 			->expects( 'get_option' )
 			->andReturn( $show_links );
 
+		$utils
+			->expects( 'get_option' )
+			->andReturn( $show_links_in );
+
 		$this->instance
 			->expects( 'get_original_post_edit_url' )
 			->andReturn( $original_edit_url );
@@ -241,6 +251,7 @@ class Block_Editor_Test extends TestCase {
 			'newDraftLink'            => $new_draft_link,
 			'rewriteAndRepublishLink' => $rewrite_and_republish_link,
 			'showLinks'               => $show_links,
+			'showLinksIn'             => $show_links_in,
 			'rewriting'               => $rewriting,
 			'originalEditURL'         => $original_edit_url,
 		];
@@ -274,6 +285,12 @@ class Block_Editor_Test extends TestCase {
 		$check_link                 = 'http://fakeu.rl/check';
 
 		$show_links = [
+			'new_draft'         => '1',
+			'clone'             => '1',
+			'rewrite_republish' => '1',
+		];
+
+		$show_links_in = [
 			'row'         => '1',
 			'adminbar'    => '1',
 			'submitbox'   => '1',
@@ -300,6 +317,10 @@ class Block_Editor_Test extends TestCase {
 			->expects( 'get_option' )
 			->andReturn( $show_links );
 
+		$utils
+			->expects( 'get_option' )
+			->andReturn( $show_links_in );
+
 		$this->instance
 			->expects( 'get_original_post_edit_url' )
 			->andReturn( $original_edit_url );
@@ -308,6 +329,7 @@ class Block_Editor_Test extends TestCase {
 			'newDraftLink'            => $new_draft_link,
 			'rewriteAndRepublishLink' => $rewrite_and_republish_link,
 			'showLinks'               => $show_links,
+			'showLinksIn'             => $show_links_in,
 			'rewriting'               => $rewriting,
 			'originalEditURL'         => $original_edit_url,
 		];

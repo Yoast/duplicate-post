@@ -93,6 +93,7 @@ class Block_Editor {
 			'newDraftLink'            => $this->get_new_draft_permalink(),
 			'rewriteAndRepublishLink' => $this->get_rewrite_republish_permalink(),
 			'showLinks'               => Utils::get_option( 'duplicate_post_show_link' ),
+			'showLinksIn'             => Utils::get_option( 'duplicate_post_show_link_in' ),
 			'rewriting'               => $is_rewrite_and_republish_copy ? 1 : 0,
 			'originalEditURL'         => $this->get_original_post_edit_url(),
 		];
