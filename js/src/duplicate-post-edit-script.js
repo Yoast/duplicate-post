@@ -76,7 +76,7 @@ class DuplicatePost {
 	 * @return bool Whether the Rewrite & Republish copy can be republished.
 	 */
 	isCopyAllowedToBeRepublished() {
-		const currentPostStatus = select( 'core/editor' ).getEditedPostAttribute( 'status' );
+		const currentPostStatus = select( 'core/editor' ).getCurrentPostAttribute( 'status' );
 
 		if ( currentPostStatus === 'dp-rewrite-republish' || currentPostStatus === 'private' ) {
 			return true;

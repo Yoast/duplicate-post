@@ -1,4 +1,25 @@
-import { select } from "@wordpress/data";
+import { dispatch, select } from "@wordpress/data";
+
+/**
+ * This redirects without showing the warning that occurs due to a Gutenberg bug.
+ *
+ * Edits made to the post on the PHP side are not correctly recognized and thus the warning for unsaved changes is shown.
+ * By updating the post status ourselves on the JS side as well we avoid this.
+ *
+ * @param {string} url The url to redirect to.
+ *
+ * @returns {void}
+ */
+const redirectWithoutWarning = ( url ) => {
+	const currentPostStatus = select( 'core/editor' ).getCurrentPostAttribute( 'status' );
+	const editedPostStatus  = select( 'core/editor' ).getEditedPostAttribute( 'status' );
+
+	if ( currentPostStatus === 'dp-rewrite-republish' && editedPostStatus === 'publish' ) {
+		dispatch( 'core/editor' ).editPost( { status: currentPostStatus } );
+	}
+
+	window.location.assign( url );
+}
 
 /**
  * Redirects to url when saving in the block editor has completed.
@@ -16,12 +37,12 @@ export const redirectOnSaveCompletion = ( url, editorState ) => {
 
 	// When there are custom meta boxes, redirect after they're saved.
 	if ( hasActiveMetaBoxes && ! isSavingMetaBoxes && editorState.wasSavingMetaboxes ) {
-		window.location.assign( url );
+		redirectWithoutWarning( url );
 	}
 
 	// When there are no custom meta boxes, redirect after the post is saved.
 	if ( ! hasActiveMetaBoxes && ! isSavingPost && editorState.wasSavingPost && ! editorState.wasAutoSavingPost ) {
-		window.location.assign( url );
+		redirectWithoutWarning( url );
 	}
 
 	return { isSavingPost, isSavingMetaBoxes, isAutosavingPost };
