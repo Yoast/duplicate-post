@@ -236,7 +236,7 @@ class Options {
 				'tab'         => 'display',
 				'fieldset'    => 'show-original',
 				'type'        => 'checkbox',
-				'label'       => \__( 'In a metabox in the Edit screen [Classic editor]', 'duplicate-post' ),
+				'label'       => \__( 'In a metabox in the Edit screen', 'duplicate-post' ),
 				'value'       => 1,
 				'description' => [
 					__( "You'll also be able to delete the reference to the original item with a checkbox", 'duplicate-post' ),
