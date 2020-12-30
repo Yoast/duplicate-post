@@ -129,6 +129,7 @@ class DuplicatePost {
 		const currentPostStatus = select( 'core/editor' ).getEditedPostAttribute( 'status' );
 
 		return (
+			( duplicatePost.showLinksIn.submitbox === '1' ) &&
 			<Fragment>
 				{ ( duplicatePost.newDraftLink !== '' && duplicatePost.showLinks.new_draft === '1' ) &&
 					<PluginPostStatusInfo>
