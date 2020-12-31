@@ -86,7 +86,7 @@ class Classic_Editor_Test extends TestCase {
 	 * @preserveGlobalState disabled
 	 */
 	public function test_register_hooks() {
-		$utils = \Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
+		$utils = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
 
 		$utils->expects( 'get_option' )
 			->with( 'duplicate_post_show_link_in', 'submitbox' )
@@ -465,6 +465,29 @@ class Classic_Editor_Test extends TestCase {
 		$this->setOutputCallback( function() {} );
 		$this->instance->add_rewrite_and_republish_post_button();
 		$this->assertTrue( Monkey\Filters\applied( 'duplicate_post_show_link' ) === 0 );
+	}
+
+	/**
+	 * Tests the change_republish_strings_classic_editor function when the copy should be changed in the case of the date label.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::change_republish_strings_classic_editor
+	 */
+	public function test_should_change_republish_strings_date_label() {
+		$text = 'Publish on: %s';
+
+		$post            = Mockery::mock( \WP_Post::class );
+		$post->post_type = 'post';
+
+		Monkey\Functions\expect( '\get_post' )
+			->once()
+			->andReturn( $post );
+
+		$this->instance->expects( 'should_change_rewrite_republish_copy' )
+			->with( $post )
+			->once()
+			->andReturnTrue();
+
+		$this->assertEquals( $this->instance->change_republish_strings_classic_editor( '', $text ), 'Republish on: %s' );
 	}
 
 	/**

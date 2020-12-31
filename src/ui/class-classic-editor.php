@@ -207,8 +207,15 @@ class Classic_Editor {
 	 * @return string The to-be-used copy of the text.
 	 */
 	public function change_republish_strings_classic_editor( $translation, $text ) {
-		if ( $this->should_change_rewrite_republish_copy( \get_post() ) && $text === 'Publish' ) {
-			return \__( 'Republish', 'duplicate-post' );
+		if ( $this->should_change_rewrite_republish_copy( \get_post() ) ) {
+			if ( $text === 'Publish' ) {
+				return \__( 'Republish', 'duplicate-post' );
+			}
+
+			if ( $text === 'Publish on: %s' ) {
+				/* translators: %s: Date on which the post is to be republished. */
+				return \__( 'Republish on: %s', 'duplicate-post' );
+			}
 		}
 
 		return $translation;

@@ -30,6 +30,7 @@ const saveAndCompare = () => {
 const republishStrings = {
 	'Publish'  : __( 'Republish', 'duplicate-post' ),
 	'Publish:' : __( 'Republish:', 'duplicate-post' ),
+	'Publish on:' : __( 'Republish on:', 'duplicate-post' ),
 
 	'Are you ready to publish?'	: __( 'Are you ready to republish your post?', 'duplicate-post' ),
 	'Double-check your settings before publishing.':
