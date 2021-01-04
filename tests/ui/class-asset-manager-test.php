@@ -104,7 +104,7 @@ class Asset_Manager_Test extends TestCase {
 				'duplicate_post_edit_script',
 				$edit_script_url,
 				[
-					'wp-blocks',
+					'wp-components',
 					'wp-element',
 					'wp-i18n',
 				],
@@ -117,6 +117,7 @@ class Asset_Manager_Test extends TestCase {
 				'duplicate_post_strings',
 				$strings_script_url,
 				[
+					'wp-components',
 					'wp-element',
 					'wp-i18n',
 				],
