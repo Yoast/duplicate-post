@@ -46,7 +46,7 @@ class Asset_Manager {
 			'duplicate_post_edit_script',
 			\plugins_url( \sprintf( 'js/dist/duplicate-post-edit-%s.js', $flattened_version ), DUPLICATE_POST_FILE ),
 			[
-				'wp-blocks',
+				'wp-components',
 				'wp-element',
 				'wp-i18n',
 			],
@@ -58,6 +58,7 @@ class Asset_Manager {
 			'duplicate_post_strings',
 			\plugins_url( \sprintf( 'js/dist/duplicate-post-strings-%s.js', $flattened_version ), DUPLICATE_POST_FILE ),
 			[
+				'wp-components',
 				'wp-element',
 				'wp-i18n',
 			],
