@@ -155,13 +155,9 @@ New features and customization, WP 3.0 compatibility: you should upgrade if you 
 
 Enhancements:
 
-* Introduces integration with Block editor.
 * Introduces Rewrite & Republish feature.
+* Introduces an integration with the Block Editor.
 * Introduces new settings to individually enable/disable the `New Draft`, `Clone` and `Rewrite & Republish` links.
-
-Other:
-
-* Refactors most of the code to be cleaner, more readable and testable.
 
 = 3.2.6 (2020-09-17) =
 * Compatibility with WordPress 5.5
