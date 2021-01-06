@@ -60,7 +60,7 @@ class Block_Editor {
 	}
 
 	/**
-	 * Disables the Yoast SEO PreviouslyUsedKeyword assessment for posts duplicated for Rewrite & Republish.
+	 * Disables the Yoast SEO PreviouslyUsedKeyword assessment for Rewrite & Republish original and duplicate posts.
 	 *
 	 * @return void
 	 */
@@ -69,7 +69,13 @@ class Block_Editor {
 
 			$post = \get_post();
 
-			if ( ! \is_null( $post ) && $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
+			if (
+				! \is_null( $post )
+				&& (
+					$this->permissions_helper->is_rewrite_and_republish_copy( $post )
+					|| $this->permissions_helper->has_rewrite_and_republish_copy( $post )
+				)
+			) {
 				\add_filter( 'wpseo_previously_used_keyword_active', '__return_false' );
 			}
 		}
