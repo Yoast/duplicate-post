@@ -152,7 +152,7 @@ if ( ! defined( 'DUPLICATE_POST_CURRENT_VERSION' ) ) {
 								echo $this->generate_input( 'duplicate_post_roles' );
 								?>
 								<p>
-									<?php \esc_html_e( 'Warning: users will be able to copy all posts, even those of other users.', 'duplicate-post' ); ?>
+									<?php \esc_html_e( 'Warning: users will be able to copy, rewrite and republish all posts, even those of other users.', 'duplicate-post' ); ?>
 									<br/>
 									<?php \esc_html_e( 'Passwords and contents of password-protected posts may become visible to undesired users and visitors.', 'duplicate-post' ); ?>
 								</p>
