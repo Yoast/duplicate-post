@@ -155,7 +155,7 @@ New features and customization, WP 3.0 compatibility: you should upgrade if you 
 
 Enhancements:
 
-* Introduces Rewrite & Republish feature.
+* Introduces the Rewrite & Republish feature, offering you the possibility to update a post/page without taking it offline or having to take extra steps.
 * Introduces an integration with the Block Editor.
 * Introduces new settings to individually enable/disable the `New Draft`, `Clone` and `Rewrite & Republish` links.
 
