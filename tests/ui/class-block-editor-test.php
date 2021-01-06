@@ -136,6 +136,11 @@ class Block_Editor_Test extends TestCase {
 			->with( $post )
 			->andReturn( $original['is_rewrite_and_republish_copy'] );
 
+		$this->permissions_helper
+			->allows( 'has_rewrite_and_republish_copy' )
+			->with( $post )
+			->andReturn( $original['has_rewrite_and_republish_copy'] );
+
 		$this->instance->should_previously_used_keyword_assessment_run();
 		$this->assertSame( $expected, \has_filter( 'wpseo_previously_used_keyword_active' ) );
 	}
@@ -149,41 +154,55 @@ class Block_Editor_Test extends TestCase {
 		return [
 			[
 				'original' => [
-					'is_edit_post_screen'           => true,
-					'is_new_post_screen'            => false,
-					'is_rewrite_and_republish_copy' => true,
+					'is_edit_post_screen'            => true,
+					'is_new_post_screen'             => false,
+					'is_rewrite_and_republish_copy'  => true,
+					'has_rewrite_and_republish_copy' => false,
 				],
 				'expected' => true,
 			],
 			[
 				'original' => [
-					'is_edit_post_screen'           => false,
-					'is_new_post_screen'            => true,
-					'is_rewrite_and_republish_copy' => true,
+					'is_edit_post_screen'            => false,
+					'is_new_post_screen'             => true,
+					'is_rewrite_and_republish_copy'  => true,
+					'has_rewrite_and_republish_copy' => false,
 				],
 				'expected' => true,
 			],
 			[
 				'original' => [
-					'is_edit_post_screen'           => false,
-					'is_new_post_screen'            => false,
-					'is_rewrite_and_republish_copy' => null,
+					'is_edit_post_screen'            => true,
+					'is_new_post_screen'             => false,
+					'is_rewrite_and_republish_copy'  => false,
+					'has_rewrite_and_republish_copy' => true,
+				],
+				'expected' => true,
+			],
+			[
+				'original' => [
+					'is_edit_post_screen'            => false,
+					'is_new_post_screen'             => false,
+					'is_rewrite_and_republish_copy'  => false,
+					'has_rewrite_and_republish_copy' => false,
 				],
 				'expected' => false,
 			],
 			[
 				'original' => [
-					'is_edit_post_screen'           => true,
-					'is_new_post_screen'            => false,
-					'is_rewrite_and_republish_copy' => false,
+					'is_edit_post_screen'            => true,
+					'is_new_post_screen'             => false,
+					'is_rewrite_and_republish_copy'  => false,
+					'has_rewrite_and_republish_copy' => false,
 				],
 				'expected' => false,
 			],
 			[
 				'original' => [
-					'is_edit_post_screen'           => false,
-					'is_new_post_screen'            => true,
-					'is_rewrite_and_republish_copy' => false,
+					'is_edit_post_screen'            => false,
+					'is_new_post_screen'             => true,
+					'is_rewrite_and_republish_copy'  => false,
+					'has_rewrite_and_republish_copy' => false,
 				],
 				'expected' => false,
 			],
