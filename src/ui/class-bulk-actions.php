@@ -69,13 +69,13 @@ class Bulk_Actions {
 	 */
 	public function register_bulk_action( $bulk_actions ) {
 		// phpcs:ignore WordPress.Security.NonceVerification
-		$is_trashed = isset( $_REQUEST['post_status'] ) && $_REQUEST['post_status'] === 'trash';
+		$is_draft_or_trash = isset( $_REQUEST['post_status'] ) && in_array( $_REQUEST['post_status'], array( 'draft', 'trash' ), true );
 
 		if ( \intval( Utils::get_option( 'duplicate_post_show_link', 'clone' ) ) === 1 ) {
 			$bulk_actions['duplicate_post_bulk_clone'] = \esc_html__( 'Clone', 'duplicate-post' );
 		}
 
-		if ( ! $is_trashed && \intval( Utils::get_option( 'duplicate_post_show_link', 'rewrite_republish' ) ) === 1 ) {
+		if ( ! $is_draft_or_trash && \intval( Utils::get_option( 'duplicate_post_show_link', 'rewrite_republish' ) ) === 1 ) {
 			$bulk_actions['duplicate_post_bulk_rewrite_republish'] = \esc_html__( 'Rewrite & Republish', 'duplicate-post' );
 		}
 
