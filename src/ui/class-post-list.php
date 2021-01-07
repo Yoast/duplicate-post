@@ -60,7 +60,7 @@ class Post_List {
 		}
 
 		$post_not_in = $query->get( 'post__not_in', [] );
-		$post_not_in = array_merge( $post_not_in, $this->get_copy_ids( $query->get( 'post_type' ) );
+		$post_not_in = array_merge( $post_not_in, \array_keys( $this->get_copy_ids( $query->get( 'post_type' ) ) ) );
 
 		$query->set( 'post__not_in', $post_not_in );
 
@@ -80,7 +80,14 @@ class Post_List {
 			return $counts;
 		}
 
-		$counts->draft = $counts->draft - count( $this->get_copy_ids( $post_type ) );
+		$copies = $this->get_copy_ids( $post_type );
+
+		foreach ( $copies as $item ) {
+			$status = $item->post_status;
+			if ( \property_exists( $counts, $status ) ) {
+				$counts->$status--;
+			}
+		}
 
 		return $counts;
 	}
@@ -95,18 +102,19 @@ class Post_List {
 	protected function get_copy_ids( $post_type ) {
 		global $wpdb;
 
-		if ( \array_key_exists( $this->copy_ids, $post_type ) ) {
+		if ( \array_key_exists( $post_type, $this->copy_ids ) ) {
 			return $this->copy_ids[ $post_type ];
 		}
 
-		$this->copy_ids[ $post_type ] = $wpdb->get_col(
+		$this->copy_ids[ $post_type ] = $wpdb->get_results(
 			$wpdb->prepare(
-				'SELECT post_id FROM ' . $wpdb->postmeta . ' AS pm ' .
+				'SELECT post_id, post_status FROM ' . $wpdb->postmeta . ' AS pm ' .
 				'JOIN ' . $wpdb->posts . ' AS p ON pm.post_id = p.ID ' .
 				'WHERE meta_key = %s AND post_type = %s',
 				'_dp_is_rewrite_republish_copy',
 				$post_type
-			)
+			),
+			OBJECT_K
 		);
 
 		return $this->copy_ids;
