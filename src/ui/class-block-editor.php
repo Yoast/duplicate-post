@@ -140,6 +140,7 @@ class Block_Editor {
 			$this->permissions_helper->is_rewrite_and_republish_copy( $post )
 			|| $this->permissions_helper->has_rewrite_and_republish_copy( $post )
 			|| ! $this->permissions_helper->should_links_be_displayed( $post )
+			|| $this->permissions_helper->is_elementor_active()
 		) {
 			return '';
 		}

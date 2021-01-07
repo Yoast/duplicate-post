@@ -657,6 +657,11 @@ class Permissions_Helper_Test extends TestCase {
 			->with( $post )
 			->andReturn( $original['has_rewrite_and_republish_copy'] );
 
+		$this->instance
+			->allows( 'is_elementor_active' )
+			->times( $original['is_elementor_active_times_called'] )
+			->andReturn( $original['is_elementor_active'] );
+
 		$this->assertEquals( $expected, $this->instance->should_rewrite_and_republish_be_allowed( $post ) );
 	}
 
@@ -669,41 +674,61 @@ class Permissions_Helper_Test extends TestCase {
 		return [
 			[
 				'original' => [
-					'post_status'                    => 'publish',
-					'is_rewrite_and_republish_copy'  => false,
+					'post_status'                      => 'publish',
+					'is_rewrite_and_republish_copy'    => false,
 					'is_rewrite_and_republish_copy_times_called' => 1,
-					'has_rewrite_and_republish_copy' => false,
+					'has_rewrite_and_republish_copy'   => false,
 					'has_rewrite_and_republish_copy_times_called' => 1,
+					'is_elementor_active'              => false,
+					'is_elementor_active_times_called' => 1,
 				],
 				'expected' => true,
 			],
 			[
 				'original' => [
-					'post_status'                    => 'draft',
-					'is_rewrite_and_republish_copy'  => false,
+					'post_status'                      => 'draft',
+					'is_rewrite_and_republish_copy'    => false,
 					'is_rewrite_and_republish_copy_times_called' => 0,
-					'has_rewrite_and_republish_copy' => false,
+					'has_rewrite_and_republish_copy'   => false,
 					'has_rewrite_and_republish_copy_times_called' => 0,
+					'is_elementor_active'              => false,
+					'is_elementor_active_times_called' => 0,
 				],
 				'expected' => false,
 			],
 			[
 				'original' => [
-					'post_status'                    => 'publish',
-					'is_rewrite_and_republish_copy'  => true,
+					'post_status'                      => 'publish',
+					'is_rewrite_and_republish_copy'    => true,
 					'is_rewrite_and_republish_copy_times_called' => 1,
-					'has_rewrite_and_republish_copy' => false,
+					'has_rewrite_and_republish_copy'   => false,
 					'has_rewrite_and_republish_copy_times_called' => 0,
+					'is_elementor_active'              => false,
+					'is_elementor_active_times_called' => 0,
 				],
 				'expected' => false,
 			],
 			[
 				'original' => [
-					'post_status'                    => 'publish',
-					'is_rewrite_and_republish_copy'  => false,
+					'post_status'                      => 'publish',
+					'is_rewrite_and_republish_copy'    => false,
 					'is_rewrite_and_republish_copy_times_called' => 1,
-					'has_rewrite_and_republish_copy' => true,
+					'has_rewrite_and_republish_copy'   => true,
 					'has_rewrite_and_republish_copy_times_called' => 1,
+					'is_elementor_active'              => false,
+					'is_elementor_active_times_called' => 0,
+				],
+				'expected' => false,
+			],
+			[
+				'original' => [
+					'post_status'                      => 'publish',
+					'is_rewrite_and_republish_copy'    => false,
+					'is_rewrite_and_republish_copy_times_called' => 1,
+					'has_rewrite_and_republish_copy'   => false,
+					'has_rewrite_and_republish_copy_times_called' => 1,
+					'is_elementor_active'              => true,
+					'is_elementor_active_times_called' => 1,
 				],
 				'expected' => false,
 			],

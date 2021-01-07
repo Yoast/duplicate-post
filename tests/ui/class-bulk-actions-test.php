@@ -11,7 +11,6 @@ use Brain\Monkey;
 use Yoast\WP\Duplicate_Post\Permissions_Helper;
 use Yoast\WP\Duplicate_Post\Tests\TestCase;
 use Yoast\WP\Duplicate_Post\UI\Bulk_Actions;
-use Yoast\WP\Duplicate_Post\Utils;
 
 /**
  * Test the Bulk_Actions class.
@@ -155,6 +154,10 @@ class Bulk_Actions_Test extends TestCase {
 			->with( 'duplicate_post_show_link', 'rewrite_republish' )
 			->once()
 			->andReturn( '1' );
+
+		$this->permissions_helper
+			->expects( 'is_elementor_active' )
+			->andReturnFalse();
 
 		$array = [
 			'edit'  => 'Edit',
