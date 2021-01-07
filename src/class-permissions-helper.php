@@ -277,7 +277,7 @@ class Permissions_Helper {
 	 *
 	 * We can't use is_plugin_active because this must be working on front end too.
 	 *
-	 * @return bool
+	 * @return bool Whether the Elementor plugin is currently active.
 	 */
 	public function is_elementor_active() {
 		$plugin = 'elementor/elementor.php';
@@ -291,10 +291,6 @@ class Permissions_Helper {
 		}
 
 		$plugins = \get_site_option( 'active_sitewide_plugins' );
-		if ( isset( $plugins[ $plugin ] ) ) {
-			return true;
-		}
-
-		return false;
+		return isset( $plugins[ $plugin ] );
 	}
 }
