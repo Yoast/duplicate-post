@@ -55,8 +55,18 @@ class Block_Editor {
 	 * @return void
 	 */
 	public function register_hooks() {
+		\add_action( 'elementor/editor/before_enqueue_scripts', [ $this, 'elementor' ], 9 );
 		\add_action( 'admin_enqueue_scripts', [ $this, 'should_previously_used_keyword_assessment_run' ], 9 );
 		\add_action( 'enqueue_block_editor_assets', [ $this, 'enqueue_block_editor_scripts' ] );
+	}
+
+	/**
+	 * Disables the Yoast SEO PreviouslyUsedKeyword assessment for Rewrite & Republish original and duplicate posts.
+	 *
+	 * @return void
+	 */
+	public function elementor() {
+		$this->asset_manager->enqueue_elementor_script();
 	}
 
 	/**
