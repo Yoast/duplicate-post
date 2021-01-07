@@ -26,7 +26,7 @@ class Post_List {
 	 *
 	 * @var array
 	 */
-	protected $copy_ids;
+	protected $copy_ids = [];
 
 	/**
 	 * Initializes the class.
@@ -44,7 +44,7 @@ class Post_List {
 	 */
 	public function register_hooks() {
 		\add_filter( 'parse_query', [ $this, 'filter_rewrite_and_republish_copies' ] );
-		\add_filter( 'wp_count_posts', [ $this, 'filter_rewrite_and_republish_counts' ] );
+		\add_filter( 'wp_count_posts', [ $this, 'filter_rewrite_and_republish_counts' ], 10, 2 );
 	}
 
 	/**
@@ -60,7 +60,7 @@ class Post_List {
 		}
 
 		$post_not_in = $query->get( 'post__not_in', [] );
-		$post_not_in = array_merge( $post_not_in, $this->get_copy_ids() );
+		$post_not_in = array_merge( $post_not_in, $this->get_copy_ids( $query->get( 'post_type' ) );
 
 		$query->set( 'post__not_in', $post_not_in );
 
@@ -70,16 +70,17 @@ class Post_List {
 	/**
 	 * Filters out the Rewrite and Republish posts from the post counts.
 	 *
-	 * @param object $counts The current post counts.
+	 * @param object $counts    The current post counts.
+	 * @param string $post_type The post type.
 	 *
 	 * @return object The updated post counts.
 	 */
-	public function filter_rewrite_and_republish_counts( $counts ) {
+	public function filter_rewrite_and_republish_counts( $counts, $post_type ) {
 		if ( ! $this->should_filter() ) {
 			return $counts;
 		}
 
-		$counts->draft = $counts->draft - count( $this->get_copy_ids() );
+		$counts->draft = $counts->draft - count( $this->get_copy_ids( $post_type ) );
 
 		return $counts;
 	}
@@ -87,19 +88,24 @@ class Post_List {
 	/**
 	 * Queries the database to get the IDs of all Rewrite and Republish copies.
 	 *
+	 * @param string $post_type The post type to fetch the copy IDs for.
+	 *
 	 * @return array The IDs of the copies.
 	 */
-	protected function get_copy_ids() {
+	protected function get_copy_ids( $post_type ) {
 		global $wpdb;
 
-		if ( ! is_null( $this->copy_ids ) ) {
-			return $this->copy_ids;
+		if ( \array_key_exists( $this->copy_ids, $post_type ) ) {
+			return $this->copy_ids[ $post_type ];
 		}
 
-		$this->copy_ids = $wpdb->get_col(
+		$this->copy_ids[ $post_type ] = $wpdb->get_col(
 			$wpdb->prepare(
-				'SELECT post_id FROM ' . $wpdb->postmeta . ' WHERE meta_key = %s',
-				'_dp_is_rewrite_republish_copy'
+				'SELECT post_id FROM ' . $wpdb->postmeta . ' AS pm ' .
+				'JOIN ' . $wpdb->posts . ' AS p ON pm.post_id = p.ID ' .
+				'WHERE meta_key = %s AND post_type = %s',
+				'_dp_is_rewrite_republish_copy',
+				$post_type
 			)
 		);
 
