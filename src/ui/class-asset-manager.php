@@ -157,4 +157,23 @@ class Asset_Manager {
 	public function enqueue_options_script() {
 		\wp_enqueue_script( 'duplicate_post_options_script' );
 	}
+
+	/**
+	 * Enqueues the script for the Elementor plugin.
+	 *
+	 * @return void
+	 */
+	public function enqueue_elementor_script() {
+		$flattened_version = Utils::flatten_version( DUPLICATE_POST_CURRENT_VERSION );
+
+		\wp_register_script(
+			'duplicate_post_elementor_script',
+			\plugins_url( \sprintf( 'js/dist/elementorHooks-%s.js', $flattened_version ), DUPLICATE_POST_FILE ),
+			[ 'jquery' ],
+			DUPLICATE_POST_CURRENT_VERSION,
+			true
+		);
+
+		\wp_enqueue_script( 'duplicate_post_elementor_script' );
+	}
 }
