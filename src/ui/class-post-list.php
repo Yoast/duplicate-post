@@ -117,7 +117,7 @@ class Post_List {
 			OBJECT_K
 		);
 
-		return $this->copy_ids;
+		return $this->copy_ids[ $post_type ];
 	}
 
 	/**
