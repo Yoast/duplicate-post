@@ -126,8 +126,12 @@ class Post_List {
 	 * @return bool Whether the filter should be applied.
 	 */
 	protected function should_filter() {
+		if ( ! \is_admin() ) {
+			return false;
+		}
+
 		$current_screen = \get_current_screen();
 
-		return ( \is_admin() && $current_screen->base === 'edit' && $this->permissions_helper->is_elementor_active() );
+		return ( $current_screen->base === 'edit' && $this->permissions_helper->is_elementor_active() );
 	}
 }
