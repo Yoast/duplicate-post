@@ -491,6 +491,10 @@ class Block_Editor_Test extends TestCase {
 			->with( $post )
 			->andReturnTrue();
 
+		$this->permissions_helper
+			->expects( 'is_elementor_active' )
+			->andReturnFalse();
+
 		$this->link_builder
 			->expects( 'build_rewrite_and_republish_link' )
 			->with( $post )

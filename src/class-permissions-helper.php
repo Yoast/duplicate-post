@@ -217,7 +217,8 @@ class Permissions_Helper {
 	public function should_rewrite_and_republish_be_allowed( \WP_Post $post ) {
 		return $post->post_status === 'publish'
 			&& ! $this->is_rewrite_and_republish_copy( $post )
-			&& ! $this->has_rewrite_and_republish_copy( $post );
+			&& ! $this->has_rewrite_and_republish_copy( $post )
+			&& ! $this->is_elementor_active();
 	}
 
 	/**
@@ -269,5 +270,27 @@ class Permissions_Helper {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Determines if the Elementor plugin is active.
+	 *
+	 * We can't use is_plugin_active because this must be working on front end too.
+	 *
+	 * @return bool Whether the Elementor plugin is currently active.
+	 */
+	public function is_elementor_active() {
+		$plugin = 'elementor/elementor.php';
+
+		if ( \in_array( $plugin, (array) \get_option( 'active_plugins', [] ), true ) ) {
+			return true;
+		}
+
+		if ( ! \is_multisite() ) {
+			return false;
+		}
+
+		$plugins = \get_site_option( 'active_sitewide_plugins' );
+		return isset( $plugins[ $plugin ] );
 	}
 }
