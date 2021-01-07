@@ -96,11 +96,12 @@ class Post_List {
 			return $this->copy_ids;
 		}
 
-		$query = $wpdb->prepare(
-			'SELECT post_id FROM ' . $wpdb->postmeta . ' WHERE meta_key = %s', '_dp_is_rewrite_republish_copy'
+		$this->copy_ids = $wpdb->get_col(
+			$wpdb->prepare(
+				'SELECT post_id FROM ' . $wpdb->postmeta . ' WHERE meta_key = %s',
+				'_dp_is_rewrite_republish_copy'
+			)
 		);
-
-		$this->copy_ids = $wpdb->get_col( $query );
 
 		return $this->copy_ids;
 	}
