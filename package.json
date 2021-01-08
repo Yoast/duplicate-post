@@ -53,6 +53,6 @@
     "@wordpress/plugins": "^2.23.0"
   },
   "yoast": {
-    "pluginVersion": "4.0-RC4"
+    "pluginVersion": "4.0-RC5"
   }
 }
