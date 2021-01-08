@@ -275,22 +275,9 @@ class Permissions_Helper {
 	/**
 	 * Determines if the Elementor plugin is active.
 	 *
-	 * We can't use is_plugin_active because this must be working on front end too.
-	 *
 	 * @return bool Whether the Elementor plugin is currently active.
 	 */
 	public function is_elementor_active() {
-		$plugin = 'elementor/elementor.php';
-
-		if ( \in_array( $plugin, (array) \get_option( 'active_plugins', [] ), true ) ) {
-			return true;
-		}
-
-		if ( ! \is_multisite() ) {
-			return false;
-		}
-
-		$plugins = \get_site_option( 'active_sitewide_plugins' );
-		return isset( $plugins[ $plugin ] );
+		return Utils::is_plugin_active( 'elementor/elementor.php' );
 	}
 }
