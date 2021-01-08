@@ -324,7 +324,7 @@ class Options_Form_Generator_Test extends TestCase {
 	 * @preserveGlobalState disabled
 	 */
 	public function test_generate_roles_permission_list() {
-		$utils = \Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
+		$utils = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
 		$utils
 			->expects( 'get_roles' )
 			->once()
@@ -348,6 +348,16 @@ class Options_Form_Generator_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Admin\Options_Form_Generator::generate_post_types_list
 	 */
 	public function test_generate_post_types_list() {
+		$this->instance
+			->expects( 'get_hidden_post_types' )
+			->andReturn(
+				[
+					'attachment',
+					'wp_block',
+					'product',
+				]
+			);
+
 		$this->instance
 			->expects( 'is_post_type_enabled' )
 			->with( 'Books' )
