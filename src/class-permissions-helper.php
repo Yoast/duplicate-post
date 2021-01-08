@@ -19,12 +19,23 @@ class Permissions_Helper {
 	 * @return array The array of post types.
 	 */
 	public function get_enabled_post_types() {
-		$duplicate_post_types_enabled = \get_option( 'duplicate_post_types_enabled', [ 'post', 'page' ] );
-		if ( ! \is_array( $duplicate_post_types_enabled ) ) {
-			$duplicate_post_types_enabled = [ $duplicate_post_types_enabled ];
+		$enabled_post_types = \get_option( 'duplicate_post_types_enabled', [ 'post', 'page' ] );
+		if ( ! \is_array( $enabled_post_types ) ) {
+			$enabled_post_types = [ $enabled_post_types ];
 		}
 
-		return $duplicate_post_types_enabled;
+		if ( Utils::is_plugin_active( 'woocommerce/woocommerce.php' ) ) {
+			$enabled_post_types = \array_diff( $enabled_post_types, [ 'product' ] );
+		}
+
+		/**
+		 * Filters the list of post types for which the plugin is enabled.
+		 *
+		 * @param array $enabled_post_types The array of post type names for which the plugin is enabled.
+		 *
+		 * @return array The filtered array of post types names.
+		 */
+		return \apply_filters( 'duplicate_post_enabled_post_types', $enabled_post_types );
 	}
 
 	/**
