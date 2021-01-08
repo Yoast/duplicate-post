@@ -126,7 +126,7 @@ class Post_List {
 	 * @return bool Whether the filter should be applied.
 	 */
 	protected function should_filter() {
-		if ( ! \is_admin() ) {
+		if ( ! \is_admin() || ! \function_exists( '\get_current_screen' ) ) {
 			return false;
 		}
 
