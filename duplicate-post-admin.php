@@ -203,8 +203,6 @@ function duplicate_post_migrate_show_links_in_options( $defaults ) {
  * @global string $wp_version The WordPress version string.
  */
 function duplicate_post_show_update_notice() {
-	global $wp_version;
-
 	if ( ! current_user_can( 'manage_options' ) ) {
 		return;
 	}
@@ -220,27 +218,29 @@ function duplicate_post_show_update_notice() {
 
 	$class   = 'notice is-dismissible';
 	$message = '<p><strong>' . sprintf(
-		/* translators: %s: Duplicate Post version. */
-		__( "What's new in Duplicate Post version %s:", 'duplicate-post' ),
+		/* translators: %s: Yoast Duplicate Post version. */
+		__( "What's new in Yoast Duplicate Post version %s:", 'duplicate-post' ),
 		DUPLICATE_POST_CURRENT_VERSION
-	) . '</strong></p>';
+	) . '</strong> ';
+	$message .= __( 'Meet the Rewrite & Republish feature! It makes it easy as ABC to update a post/page without taking it offline or having to take extra steps!', 'duplicate-post' )
+		. ' ';
+
+	$message .= '<a href="https://yoa.st/duplicate-post-4-0">'
+				. sprintf(
+					/* translators: %s: Yoast Duplicate Post version. */
+					__( 'Read more about what’s new in Yoast Duplicate Post %s!', 'duplicate-post' ),
+					DUPLICATE_POST_CURRENT_VERSION
+				)
+				. '</a></p>';
 
 	$message .= '<p>%%SIGNUP_FORM%%</p>';
 
-	$message .= '<p>' . __( 'Serving the WordPress community since November 2007.', 'duplicate-post' ) . '</p>';
-
-	if ( version_compare( $wp_version, '4.2' ) < 0 ) {
-		$message .= ' | <a id="duplicate-post-dismiss-notice" href="javascript:duplicate_post_dismiss_notice();">' .
-			__( 'Dismiss this notice.', 'default' ) . '</a>';
-	}
 	$allowed_tags = array(
 		'a'      => array(
 			'href'  => array(),
-			'title' => array(),
 		),
 		'br'     => array(),
 		'p'      => array(),
-		'em'     => array(),
 		'strong' => array(),
 	);
 
@@ -782,7 +782,7 @@ function duplicate_post_newsletter_signup_form() {
 	$copy = sprintf(
 		/* translators: 1: Yoast */
 		__(
-			'If you want to stay up to date about all the exciting developments around duplicate post, subscribe to the %1$s newsletter!',
+			'If you want to stay up to date about all the exciting developments around Duplicate Post, subscribe to the %1$s newsletter!',
 			'duplicate-post'
 		),
 		'Yoast'
