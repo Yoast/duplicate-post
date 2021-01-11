@@ -197,7 +197,7 @@ class Utils {
 	/**
 	 * Determines if the a plugin is active.
 	 *
-	 * We can't use is_plugin_active because this must be working on front end too.
+	 * We can't use is_plugin_active because this must work on the frontend too.
 	 *
 	 * @param string $plugin Path to the plugin file relative to the plugins directory.
 	 *
