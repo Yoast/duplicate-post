@@ -74,7 +74,7 @@ class Row_Actions {
 	 *
 	 * @return array The updated array of actions.
 	 */
-	public function add_clone_action_link( array $actions, \WP_Post $post ) {
+	public function add_clone_action_link( $actions, $post ) {
 		if ( ! $this->permissions_helper->should_links_be_displayed( $post ) ) {
 			return $actions;
 		}
@@ -99,7 +99,7 @@ class Row_Actions {
 	 *
 	 * @return array The updated array of actions.
 	 */
-	public function add_new_draft_action_link( array $actions, \WP_Post $post ) {
+	public function add_new_draft_action_link( $actions, $post ) {
 		if ( ! $this->permissions_helper->should_links_be_displayed( $post ) ) {
 			return $actions;
 		}
@@ -125,7 +125,7 @@ class Row_Actions {
 	 *
 	 * @return array The updated array of actions.
 	 */
-	public function add_rewrite_and_republish_action_link( array $actions, \WP_Post $post ) {
+	public function add_rewrite_and_republish_action_link( $actions, $post ) {
 		if (
 			! $this->permissions_helper->should_rewrite_and_republish_be_allowed( $post )
 			|| ! $this->permissions_helper->should_links_be_displayed( $post )

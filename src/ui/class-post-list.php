@@ -54,7 +54,7 @@ class Post_List {
 	 *
 	 * @return \WP_Query The updated post WordPress query.
 	 */
-	public function filter_rewrite_and_republish_copies( \WP_Query $query ) {
+	public function filter_rewrite_and_republish_copies( $query ) {
 		if ( ! $this->should_filter() ) {
 			return $query;
 		}

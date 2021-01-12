@@ -54,7 +54,7 @@ class Permissions_Helper {
 	 *
 	 * @return bool Whether the post is a copy intended for Rewrite & Republish.
 	 */
-	public function is_rewrite_and_republish_copy( \WP_Post $post ) {
+	public function is_rewrite_and_republish_copy( $post ) {
 		return ( \intval( \get_post_meta( $post->ID, '_dp_is_rewrite_republish_copy', true ) ) === 1 );
 	}
 
@@ -65,7 +65,7 @@ class Permissions_Helper {
 	 *
 	 * @return int The Rewrite & Republish copy ID.
 	 */
-	public function get_rewrite_and_republish_copy_id( \WP_Post $post ) {
+	public function get_rewrite_and_republish_copy_id( $post ) {
 		return \get_post_meta( $post->ID, '_dp_has_rewrite_republish_copy', true );
 	}
 
@@ -76,7 +76,7 @@ class Permissions_Helper {
 	 *
 	 * @return \WP_Post|null The copy's post object or null if it doesn't exist.
 	 */
-	public function get_rewrite_and_republish_copy( \WP_Post $post ) {
+	public function get_rewrite_and_republish_copy( $post ) {
 		$copy_id = $this->get_rewrite_and_republish_copy_id( $post );
 
 		if ( empty( $copy_id ) ) {
@@ -93,7 +93,7 @@ class Permissions_Helper {
 	 *
 	 * @return bool Whether the post has a copy intended for Rewrite & Republish.
 	 */
-	public function has_rewrite_and_republish_copy( \WP_Post $post ) {
+	public function has_rewrite_and_republish_copy( $post ) {
 		return ( ! empty( $this->get_rewrite_and_republish_copy_id( $post ) ) );
 	}
 
@@ -104,7 +104,7 @@ class Permissions_Helper {
 	 *
 	 * @return bool|\WP_Post The scheduled copy if present, false if the post has no scheduled copy.
 	 */
-	public function has_scheduled_rewrite_and_republish_copy( \WP_Post $post ) {
+	public function has_scheduled_rewrite_and_republish_copy( $post ) {
 		$copy = $this->get_rewrite_and_republish_copy( $post );
 
 		if ( ! empty( $copy ) && $copy->post_status === 'future' ) {
@@ -169,7 +169,7 @@ class Permissions_Helper {
 	 *
 	 * @return bool Whether the original post has changed since the creation of the copy.
 	 */
-	public function has_original_changed( \WP_Post $post ) {
+	public function has_original_changed( $post ) {
 		if ( ! $this->is_rewrite_and_republish_copy( $post ) ) {
 			return false;
 		}
@@ -193,7 +193,7 @@ class Permissions_Helper {
 	 *
 	 * @return bool Whether the links can be displayed.
 	 */
-	public function should_links_be_displayed( \WP_Post $post ) {
+	public function should_links_be_displayed( $post ) {
 		/**
 		 * Filter allowing displaying duplicate post links for current post.
 		 *
@@ -214,7 +214,7 @@ class Permissions_Helper {
 	 *
 	 * @return bool Whether the links should be displayed.
 	 */
-	public function should_rewrite_and_republish_be_allowed( \WP_Post $post ) {
+	public function should_rewrite_and_republish_be_allowed( $post ) {
 		return $post->post_status === 'publish'
 			&& ! $this->is_rewrite_and_republish_copy( $post )
 			&& ! $this->has_rewrite_and_republish_copy( $post )
@@ -245,7 +245,7 @@ class Permissions_Helper {
 	 *
 	 * @return bool Whether the Rewrite & Republish copy can be republished.
 	 */
-	public function is_copy_allowed_to_be_republished( \WP_Post $post ) {
+	public function is_copy_allowed_to_be_republished( $post ) {
 		return \in_array( $post->post_status, [ 'dp-rewrite-republish', 'private' ], true );
 	}
 
@@ -256,7 +256,7 @@ class Permissions_Helper {
 	 *
 	 * @return bool Whether the post has a trashed copy intended for Rewrite & Republish.
 	 */
-	public function has_trashed_rewrite_and_republish_copy( \WP_Post $post ) {
+	public function has_trashed_rewrite_and_republish_copy( $post ) {
 		$copy_id = \get_post_meta( $post->ID, '_dp_has_rewrite_republish_copy', true );
 
 		if ( ! $copy_id ) {

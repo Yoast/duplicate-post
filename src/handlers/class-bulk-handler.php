@@ -73,7 +73,7 @@ class Bulk_Handler {
 	 *
 	 * @return string The URL to redirect to.
 	 */
-	public function bulk_action_handler( $redirect_to, $doaction, array $post_ids ) {
+	public function bulk_action_handler( $redirect_to, $doaction, $post_ids ) {
 		$redirect_to = $this->clone_bulk_action_handler( $redirect_to, $doaction, $post_ids );
 		return $this->rewrite_bulk_action_handler( $redirect_to, $doaction, $post_ids );
 	}
@@ -87,7 +87,7 @@ class Bulk_Handler {
 	 *
 	 * @return string The URL to redirect to.
 	 */
-	public function rewrite_bulk_action_handler( $redirect_to, $doaction, array $post_ids ) {
+	public function rewrite_bulk_action_handler( $redirect_to, $doaction, $post_ids ) {
 		if ( $doaction !== 'duplicate_post_bulk_rewrite_republish' ) {
 			return $redirect_to;
 		}
