@@ -1,0 +1,54 @@
+language: php
+
+branches:
+  only:
+    - master
+    - develop
+    - /^release\/*/
+    - /^hotfix\/\d+\.\d+(\.\d+)?(-\S*)?$/
+    - /^feature\/*/
+    # Also build tags like 1.1.1 or 1.1 for deployment.
+    - /^\d+\.\d+(\.\d+)?(-\S*)?$/
+
+cache:
+  directories:
+    - .cache
+
+php:
+    - '5.6'
+    - '7.0'
+    - '7.1'
+    - '7.2'
+    - '7.3'
+    - '7.4'
+    - '8.0'
+    - "nightly"
+
+matrix:
+  include:
+    # Arbitrary PHP version to run the sniffs against.
+    - php: '7.4'
+      env: SNIFF=1 PHPUNIT=1
+
+  allow_failures:
+    - php: "nightly"
+
+before_install:
+  - if [[ "$SNIFF" == "1" || "$PHPUNIT" == "1" ]]; then composer install; fi
+
+before_script:
+- export -f travis_fold
+- export -f travis_time_start
+- export -f travis_time_finish
+
+script:
+  - find -L . ./compat/ ./src/ \( -path ./vendor -o -path ./node_modules \) -prune -o -name '*.php'  -print0 | xargs -0 -n 1 -P 4 php -l
+  - if [[ "$SNIFF" == "1" ]]; then composer check-cs; fi
+  - if [[ "$SNIFF" == "1" ]]; then composer check-vip; fi
+  # PHP Unit Tests
+  - |
+    if [[ "$PHPUNIT" == "1" ]]; then
+      travis_fold start "PHP.tests" && travis_time_start
+      composer test
+      travis_time_finish && travis_fold end "PHP.tests"
+    fi

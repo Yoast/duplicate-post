@@ -2,10 +2,10 @@
 Contributors: 		yoast, lopo
 Donate link: 		https://yoast.com/wordpress/plugins/duplicate-post/
 Tags: 				duplicate post, copy, clone
-Requires at least: 	3.6
-Tested up to: 		5.5
+Requires at least: 	5.5
+Tested up to: 		5.6
 Stable tag: 		3.2.6
-Requires PHP:		5.2.4
+Requires PHP:		5.6.20
 License: 			GPLv2 or later
 License URI: 		http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -62,12 +62,12 @@ If Duplicate Post is still in English, or if there are some untraslated strings,
 
 == Screenshots ==
 
-1. Here you can copy the post you're editing to a new draft.
-2. By clicking on "Clone" the post is cloned immediately. "New draft" leads to the edit screen.
-3. The options page.
-4. The template tag manually added to Twenty Ten theme. Click on the "Copy to a new draft" link and you're redirected to the edit screen for a new draft copy of your post.
-5. The admin bar link.
-6. Bulk clone action.
+1. Classic editor.
+2. Block editor.
+3. Post list.
+4. Admin bar menu.
+5. Bulk actions.
+6. The options page.
 
 == Upgrade Notice ==
 
@@ -150,6 +150,14 @@ Some users have experienced a fatal error when upgrading to v1.1: this may fix i
 New features and customization, WP 3.0 compatibility: you should upgrade if you want to copy Custom Posts with Custom Taxonomies.
 
 == Changelog ==
+
+= 4.0 (2021-01-12) =
+
+Enhancements:
+
+* Introduces the Rewrite & Republish feature, offering you the possibility to update a post/page without taking it offline or having to take extra steps. This feature is currently not available when Elementor is active on your site.
+* Introduces an integration with the Block Editor.
+* Introduces new settings to individually enable/disable the `New Draft`, `Clone` and `Rewrite & Republish` links.
 
 = 3.2.6 (2020-09-17) =
 * Compatibility with WordPress 5.5
