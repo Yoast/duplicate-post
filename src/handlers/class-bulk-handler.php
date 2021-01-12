@@ -122,15 +122,17 @@ class Bulk_Handler {
 		}
 
 		$counter = 0;
-		foreach ( $post_ids as $post_id ) {
-			$post = \get_post( $post_id );
-			if ( ! empty( $post ) && ! $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
-				if ( \intval( \get_option( 'duplicate_post_copychildren' ) !== 1 )
-					|| ! \is_post_type_hierarchical( $post->post_type )
-					|| ( \is_post_type_hierarchical( $post->post_type ) && ! Utils::has_ancestors_marked( $post, $post_ids ) )
-				) {
-					if ( ! \is_wp_error( \duplicate_post_create_duplicate( $post ) ) ) {
-						$counter++;
+		if ( \is_array( $post_ids ) ) {
+			foreach ( $post_ids as $post_id ) {
+				$post = \get_post( $post_id );
+				if ( ! empty( $post ) && ! $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
+					if ( \intval( \get_option( 'duplicate_post_copychildren' ) !== 1 )
+						|| ! \is_post_type_hierarchical( $post->post_type )
+						|| ( \is_post_type_hierarchical( $post->post_type ) && ! Utils::has_ancestors_marked( $post, $post_ids ) )
+					) {
+						if ( ! \is_wp_error( \duplicate_post_create_duplicate( $post ) ) ) {
+							$counter ++;
+						}
 					}
 				}
 			}
