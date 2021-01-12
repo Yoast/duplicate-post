@@ -55,6 +55,9 @@ class Permissions_Helper {
 	 * @return bool Whether the post is a copy intended for Rewrite & Republish.
 	 */
 	public function is_rewrite_and_republish_copy( $post ) {
+		if ( $post instanceof \WP_Post === false ) {
+			return false;
+		}
 		return ( \intval( \get_post_meta( $post->ID, '_dp_is_rewrite_republish_copy', true ) ) === 1 );
 	}
 
@@ -194,6 +197,10 @@ class Permissions_Helper {
 	 * @return bool Whether the links can be displayed.
 	 */
 	public function should_links_be_displayed( $post ) {
+		if ( $post instanceof \WP_Post === false ) {
+			return false;
+		}
+
 		/**
 		 * Filter allowing displaying duplicate post links for current post.
 		 *
@@ -215,6 +222,10 @@ class Permissions_Helper {
 	 * @return bool Whether the links should be displayed.
 	 */
 	public function should_rewrite_and_republish_be_allowed( $post ) {
+		if ( $post instanceof \WP_Post === false ) {
+			return false;
+		}
+
 		return $post->post_status === 'publish'
 			&& ! $this->is_rewrite_and_republish_copy( $post )
 			&& ! $this->has_rewrite_and_republish_copy( $post )

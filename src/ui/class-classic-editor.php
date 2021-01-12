@@ -311,7 +311,7 @@ class Classic_Editor {
 	 * @return void
 	 */
 	public function remove_slug_meta_box( $post_type, $post ) {
-		if ( \is_a( $post, '\WP_Post' ) && $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
+		if ( $post instanceof \WP_Post && $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
 			\remove_meta_box( 'slugdiv', $post_type, 'normal' );
 		}
 	}
