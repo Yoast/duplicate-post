@@ -132,6 +132,10 @@ class Post_List {
 
 		$current_screen = \get_current_screen();
 
+		if ( \is_null( $current_screen ) ) {
+			return false;
+		}
+
 		return ( $current_screen->base === 'edit' && $this->permissions_helper->is_elementor_active() );
 	}
 }
