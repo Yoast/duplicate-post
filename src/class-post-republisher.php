@@ -8,6 +8,8 @@
 
 namespace Yoast\WP\Duplicate_Post;
 
+use WP_Post;
+
 /**
  * Represents the Post Republisher class.
  */
@@ -126,7 +128,8 @@ class Post_Republisher {
 	 */
 	public function republish_request( $post ) {
 		if (
-			! $this->permissions_helper->is_rewrite_and_republish_copy( $post )
+			! $post instanceof WP_Post
+			|| ! $this->permissions_helper->is_rewrite_and_republish_copy( $post )
 			|| ! $this->permissions_helper->is_copy_allowed_to_be_republished( $post )
 		) {
 			return;
@@ -183,8 +186,8 @@ class Post_Republisher {
 	 *
 	 * @return void
 	 */
-	public function republish_scheduled_post( \WP_Post $copy ) {
-		if ( ! $this->permissions_helper->is_rewrite_and_republish_copy( $copy ) ) {
+	public function republish_scheduled_post( $copy ) {
+		if ( ! $copy instanceof WP_Post || ! $this->permissions_helper->is_rewrite_and_republish_copy( $copy ) ) {
 			return;
 		}
 

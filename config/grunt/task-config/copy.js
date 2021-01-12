@@ -18,6 +18,7 @@ module.exports = {
 					"duplicate-post-admin.php",
 					"duplicate-post-common.php",
 					"duplicate-post-options.php",
+					"duplicate_post_yoast_icon-125x125.png",
 					"!vendor/bin/**",
 					"!vendor/composer/installed.json",
 					"!vendor/composer/installers/**",
