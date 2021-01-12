@@ -193,4 +193,26 @@ class Utils {
 
 		return $option[ $key ];
 	}
+
+	/**
+	 * Determines if a plugin is active.
+	 *
+	 * We can't use is_plugin_active because this must work on the frontend too.
+	 *
+	 * @param string $plugin Path to the plugin file relative to the plugins directory.
+	 *
+	 * @return bool Whether a plugin is currently active.
+	 */
+	public static function is_plugin_active( $plugin ) {
+		if ( \in_array( $plugin, (array) \get_option( 'active_plugins', [] ), true ) ) {
+			return true;
+		}
+
+		if ( ! \is_multisite() ) {
+			return false;
+		}
+
+		$plugins = \get_site_option( 'active_sitewide_plugins' );
+		return isset( $plugins[ $plugin ] );
+	}
 }

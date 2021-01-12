@@ -223,12 +223,12 @@ class Options_Form_Generator {
 	 * @return string The generated post types list.
 	 */
 	public function generate_post_types_list() {
-		$post_types = \get_post_types( [ 'show_ui' => true ], 'objects' );
-		$output     = '';
+		$post_types        = \get_post_types( [ 'show_ui' => true ], 'objects' );
+		$hidden_post_types = $this->get_hidden_post_types();
+		$output            = '';
 
 		foreach ( $post_types as $post_type_object ) {
-			if ( $post_type_object->name === 'attachment'
-				|| $post_type_object->name === 'wp_block' ) {
+			if ( \in_array( $post_type_object->name, $hidden_post_types, true ) ) {
 				continue;
 			}
 
@@ -302,5 +302,23 @@ class Options_Form_Generator {
 			$duplicate_post_types_enabled = [ $duplicate_post_types_enabled ];
 		}
 		return \in_array( $post_type, $duplicate_post_types_enabled, true );
+	}
+
+	/**
+	 * Generates a list of post types that should be hidden from the options page.
+	 *
+	 * @return array The array of names of the post types to hide.
+	 */
+	public function get_hidden_post_types() {
+		$hidden_post_types = [
+			'attachment',
+			'wp_block',
+		];
+
+		if ( Utils::is_plugin_active( 'woocommerce/woocommerce.php' ) ) {
+			$hidden_post_types[] = 'product';
+		}
+
+		return $hidden_post_types;
 	}
 }
