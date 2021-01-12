@@ -7,6 +7,7 @@
 
 namespace Yoast\WP\Duplicate_Post\UI;
 
+use WP_Post;
 use Yoast\WP\Duplicate_Post\Permissions_Helper;
 use Yoast\WP\Duplicate_Post\Utils;
 
@@ -157,7 +158,7 @@ class Classic_Editor {
 		}
 
 		if (
-			! \is_null( $post )
+			$post instanceof WP_Post
 			&& $this->permissions_helper->should_rewrite_and_republish_be_allowed( $post )
 			&& $this->permissions_helper->should_links_be_displayed( $post )
 		) {
@@ -185,7 +186,7 @@ class Classic_Editor {
 			}
 		}
 
-		if ( ! \is_null( $post ) && $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
+		if ( $post instanceof WP_Post && $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
 			?>
 				<div id="check-changes-action">
 					<?php \esc_html_e( 'Do you want to compare your changes with the original version before merging? Please save any changes first.', 'duplicate-post' ); ?>
@@ -295,7 +296,7 @@ class Classic_Editor {
 			return false;
 		}
 
-		if ( \is_null( $post ) ) {
+		if ( ! $post instanceof WP_Post ) {
 			return false;
 		}
 
@@ -311,7 +312,7 @@ class Classic_Editor {
 	 * @return void
 	 */
 	public function remove_slug_meta_box( $post_type, $post ) {
-		if ( $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
+		if ( $post instanceof WP_Post && $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
 			\remove_meta_box( 'slugdiv', $post_type, 'normal' );
 		}
 	}
@@ -328,6 +329,10 @@ class Classic_Editor {
 	 * @return string The filtered HTML of the sample permalink slug editor.
 	 */
 	public function remove_sample_permalink_slug_editor( $return, $post_id, $new_title, $new_slug, $post ) {
+		if ( ! $post instanceof WP_Post ) {
+			return $return;
+		}
+
 		if ( $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
 			return '';
 		}

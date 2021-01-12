@@ -7,6 +7,7 @@
 
 namespace Yoast\WP\Duplicate_Post\UI;
 
+use WP_Post;
 use Yoast\WP\Duplicate_Post\Permissions_Helper;
 use Yoast\WP\Duplicate_Post\Utils;
 

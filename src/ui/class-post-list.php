@@ -54,8 +54,8 @@ class Post_List {
 	 *
 	 * @return \WP_Query The updated post WordPress query.
 	 */
-	public function filter_rewrite_and_republish_copies( \WP_Query $query ) {
-		if ( ! $this->should_filter() ) {
+	public function filter_rewrite_and_republish_copies( $query ) {
+		if ( ! $this->should_filter() || ( $query instanceof \WP_Query === false ) ) {
 			return $query;
 		}
 
@@ -131,6 +131,10 @@ class Post_List {
 		}
 
 		$current_screen = \get_current_screen();
+
+		if ( \is_null( $current_screen ) ) {
+			return false;
+		}
 
 		return ( $current_screen->base === 'edit' && $this->permissions_helper->is_elementor_active() );
 	}
