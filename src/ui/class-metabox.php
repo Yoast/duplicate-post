@@ -72,7 +72,7 @@ class Metabox {
 	 */
 	public function custom_metabox_html( $post ) {
 		$original_item = Utils::get_original( $post );
-		if ( $original_item ) {
+		if ( $post instanceof \WP_Post && $original_item instanceof \WP_Post ) {
 			if ( ! $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
 				?>
 			<p>

@@ -7,6 +7,7 @@
 
 namespace Yoast\WP\Duplicate_Post\UI;
 
+use WP_Post;
 use Yoast\WP\Duplicate_Post\Permissions_Helper;
 use Yoast\WP\Duplicate_Post\Utils;
 
@@ -70,7 +71,7 @@ class Block_Editor {
 			$post = \get_post();
 
 			if (
-				! \is_null( $post )
+				$post instanceof WP_Post
 				&& (
 					$this->permissions_helper->is_rewrite_and_republish_copy( $post )
 					|| $this->permissions_helper->has_rewrite_and_republish_copy( $post )
@@ -89,7 +90,7 @@ class Block_Editor {
 	public function enqueue_block_editor_scripts() {
 		$post = \get_post();
 
-		if ( ! $post ) {
+		if ( ! $post instanceof WP_Post ) {
 			return;
 		}
 
@@ -121,7 +122,7 @@ class Block_Editor {
 	public function get_new_draft_permalink() {
 		$post = \get_post();
 
-		if ( ! $this->permissions_helper->should_links_be_displayed( $post ) ) {
+		if ( ! $post instanceof WP_Post || ! $this->permissions_helper->should_links_be_displayed( $post ) ) {
 			return '';
 		}
 
@@ -137,7 +138,8 @@ class Block_Editor {
 		$post = \get_post();
 
 		if (
-			$this->permissions_helper->is_rewrite_and_republish_copy( $post )
+			! $post instanceof WP_Post
+			|| $this->permissions_helper->is_rewrite_and_republish_copy( $post )
 			|| $this->permissions_helper->has_rewrite_and_republish_copy( $post )
 			|| ! $this->permissions_helper->should_links_be_displayed( $post )
 			|| $this->permissions_helper->is_elementor_active()
@@ -156,7 +158,7 @@ class Block_Editor {
 	public function get_check_permalink() {
 		$post = \get_post();
 
-		if ( ! $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
+		if ( ! $post instanceof WP_Post || ! $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
 			return '';
 		}
 
@@ -171,7 +173,7 @@ class Block_Editor {
 	public function get_original_post_edit_url() {
 		$post = \get_post();
 
-		if ( \is_null( $post ) ) {
+		if ( ! $post instanceof WP_Post ) {
 			return '';
 		}
 

@@ -38,8 +38,10 @@ class Bulk_Actions_Watcher {
 	 * @return array The updated array of query args keys.
 	 */
 	public function add_removable_query_args( $removable_query_args ) {
-		$removable_query_args[] = 'bulk_cloned';
-		$removable_query_args[] = 'bulk_rewriting';
+		if ( \is_array( $removable_query_args ) ) {
+			$removable_query_args[] = 'bulk_cloned';
+			$removable_query_args[] = 'bulk_rewriting';
+		}
 		return $removable_query_args;
 	}
 

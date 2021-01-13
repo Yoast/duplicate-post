@@ -73,7 +73,7 @@ class Link_Builder {
 	 */
 	public function build_link( $post, $context, $action_name ) {
 		$post = \get_post( $post );
-		if ( ! $post ) {
+		if ( ! $post instanceof \WP_Post ) {
 			return '';
 		}
 
