@@ -7,6 +7,7 @@
 
 namespace Yoast\WP\Duplicate_Post\UI;
 
+use WP_Post;
 use Yoast\WP\Duplicate_Post\Permissions_Helper;
 use Yoast\WP\Duplicate_Post\Utils;
 
@@ -159,7 +160,7 @@ class Admin_Bar {
 	 *
 	 * @global \WP_Query $wp_the_query
 	 *
-	 * @return false|\WP_Post The Post object, false if we are not on a post.
+	 * @return false|WP_Post The Post object, false if we are not on a post.
 	 */
 	public function get_current_post() {
 		global $wp_the_query;
@@ -170,7 +171,7 @@ class Admin_Bar {
 			$post = $wp_the_query->get_queried_object();
 		}
 
-		if ( empty( $post ) || ! \is_a( $post, '\WP_Post' ) ) {
+		if ( empty( $post ) || ! $post instanceof WP_Post ) {
 			return false;
 		}
 

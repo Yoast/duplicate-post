@@ -52,10 +52,11 @@ class Republished_Post_Watcher {
 	 * @return array The updated array of query args keys.
 	 */
 	public function add_removable_query_args( $removable_query_args ) {
-		$removable_query_args[] = 'dprepublished';
-		$removable_query_args[] = 'dpcopy';
-		$removable_query_args[] = 'dpnonce';
-
+		if ( \is_array( $removable_query_args ) ) {
+			$removable_query_args[] = 'dprepublished';
+			$removable_query_args[] = 'dpcopy';
+			$removable_query_args[] = 'dpnonce';
+		}
 		return $removable_query_args;
 	}
 

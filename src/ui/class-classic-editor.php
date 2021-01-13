@@ -128,10 +128,7 @@ class Classic_Editor {
 			}
 		}
 
-		if (
-			! \is_null( $post )
-			&& $this->permissions_helper->should_links_be_displayed( $post )
-		) {
+		if ( $post instanceof WP_Post && $this->permissions_helper->should_links_be_displayed( $post ) ) {
 			?>
 			<div id="duplicate-action">
 				<a class="submitduplicate duplication"
