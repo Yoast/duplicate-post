@@ -102,11 +102,17 @@ class Post_List {
 	protected function get_copy_ids( $post_type ) {
 		global $wpdb;
 
+		if ( empty( $post_type ) ) {
+			return [];
+		}
+
 		if ( \array_key_exists( $post_type, $this->copy_ids ) ) {
 			return $this->copy_ids[ $post_type ];
 		}
 
-		$this->copy_ids[ $post_type ] = $wpdb->get_results(
+		$this->copy_ids[ $post_type ] = [];
+
+		$results = $wpdb->get_results(
 			$wpdb->prepare(
 				'SELECT post_id, post_status FROM ' . $wpdb->postmeta . ' AS pm ' .
 				'JOIN ' . $wpdb->posts . ' AS p ON pm.post_id = p.ID ' .
@@ -116,6 +122,10 @@ class Post_List {
 			),
 			OBJECT_K
 		);
+
+		if ( \is_array( $results ) ) {
+			$this->copy_ids[ $post_type ] = $results;
+		}
 
 		return $this->copy_ids[ $post_type ];
 	}

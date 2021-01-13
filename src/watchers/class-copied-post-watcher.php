@@ -88,7 +88,7 @@ class Copied_Post_Watcher {
 
 		$post = \get_post();
 
-		if ( \is_null( $post ) ) {
+		if ( ! $post instanceof \WP_Post ) {
 			return;
 		}
 
@@ -107,7 +107,7 @@ class Copied_Post_Watcher {
 	public function add_block_editor_notice() {
 		$post = \get_post();
 
-		if ( \is_null( $post ) ) {
+		if ( ! $post instanceof \WP_Post ) {
 			return;
 		}
 
