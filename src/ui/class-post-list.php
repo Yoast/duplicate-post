@@ -123,7 +123,7 @@ class Post_List {
 			OBJECT_K
 		);
 
-		if ( is_array( $results ) ) {
+		if ( \is_array( $results ) ) {
 			$this->copy_ids[ $post_type ] = $results;
 		}
 
