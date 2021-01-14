@@ -216,7 +216,11 @@ class Post_Republisher {
 
 			\check_admin_referer( 'dp-republish', 'dpnonce' );
 
-			$this->delete_copy( $copy_id, $post_id );
+			if ( \intval( \get_post_meta( $copy_id, '_dp_has_been_republished', true ) ) === 1 ) {
+				$this->delete_copy( $copy_id, $post_id );
+			} else {
+				\wp_die( \esc_html__( 'An error occurred while deleting the Rewrite & Republish copy.', 'duplicate-post' ) );
+			}
 		}
 	}
 
@@ -260,6 +264,9 @@ class Post_Republisher {
 
 		// Republish the post.
 		$this->republish_post_elements( $post, $original_post );
+
+		// Mark the copy as already published.
+		\update_post_meta( $post->ID, '_dp_has_been_republished', '1' );
 
 		// Re-enable the creation of a new revision.
 		\add_action( 'post_updated', 'wp_save_post_revision', 10, 1 );
