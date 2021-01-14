@@ -50,6 +50,11 @@ class Post_States {
 	 * @return array The updated post states array.
 	 */
 	public function show_original_in_post_states( $post_states, $post ) {
+		if ( ! $post instanceof WP_Post
+			|| ! \is_array( $post_states ) ) {
+			return $post_states;
+		}
+
 		$original_item = Utils::get_original( $post );
 
 		if ( ! $original_item ) {

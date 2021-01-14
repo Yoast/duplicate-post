@@ -43,6 +43,11 @@ release:
 'release:js':
   - 'webpack:buildProd'
 
+'deploy:master':
+  - 'update-version'
+  - 'artifact'
+  - 'wp_deploy:master'
+
 'deploy:trunk':
   - 'update-version-trunk'
   - 'artifact'

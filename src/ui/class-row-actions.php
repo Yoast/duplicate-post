@@ -76,7 +76,9 @@ class Row_Actions {
 	 * @return array The updated array of actions.
 	 */
 	public function add_clone_action_link( $actions, $post ) {
-		if ( ! $post instanceof WP_Post || ! $this->permissions_helper->should_links_be_displayed( $post ) ) {
+		if ( ! $post instanceof WP_Post
+			|| ! $this->permissions_helper->should_links_be_displayed( $post )
+			|| ! \is_array( $actions ) ) {
 			return $actions;
 		}
 
@@ -101,7 +103,9 @@ class Row_Actions {
 	 * @return array The updated array of actions.
 	 */
 	public function add_new_draft_action_link( $actions, $post ) {
-		if ( ! $post instanceof WP_Post || ! $this->permissions_helper->should_links_be_displayed( $post ) ) {
+		if ( ! $post instanceof WP_Post
+			|| ! $this->permissions_helper->should_links_be_displayed( $post )
+			|| ! \is_array( $actions ) ) {
 			return $actions;
 		}
 
@@ -131,6 +135,7 @@ class Row_Actions {
 			! $post instanceof WP_Post
 			|| ! $this->permissions_helper->should_rewrite_and_republish_be_allowed( $post )
 			|| ! $this->permissions_helper->should_links_be_displayed( $post )
+			|| ! \is_array( $actions )
 		) {
 			return $actions;
 		}

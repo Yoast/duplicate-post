@@ -68,7 +68,9 @@ class Column {
 	 * @return array The updated array.
 	 */
 	public function add_original_column( $post_columns ) {
-		$post_columns['duplicate_post_original_item'] = \__( 'Original item', 'duplicate-post' );
+		if ( \is_array( $post_columns ) ) {
+			$post_columns['duplicate_post_original_item'] = \__( 'Original item', 'duplicate-post' );
+		}
 		return $post_columns;
 	}
 
