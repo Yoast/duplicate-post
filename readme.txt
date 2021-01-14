@@ -9,7 +9,7 @@ Requires PHP:		5.6.20
 License: 			GPLv2 or later
 License URI: 		http://www.gnu.org/licenses/gpl-2.0.html
 
-Copy posts of any type with a click!
+The go-to tool for cloning posts and pages, including the powerful Rewrite & Republish feature.
 
 == Description ==
 
