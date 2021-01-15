@@ -10,7 +10,7 @@ const entry = {
 	"duplicate-post-strings": "./duplicate-post-strings.js",
 	"duplicate-post-quick-edit": "./duplicate-post-quick-edit-script.js",
 	"duplicate-post-options": "./duplicate-post-options.js",
-	"elementorHooks": "./elementorHooks.js",
+	"duplicate-post-elementor": "./duplicate-post-elementor.js",
 };
 
 /**

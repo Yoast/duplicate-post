@@ -56,7 +56,7 @@ class Block_Editor {
 	 * @return void
 	 */
 	public function register_hooks() {
-		\add_action( 'elementor/editor/before_enqueue_scripts', [ $this, 'elementor' ], 9 );
+		\add_action( 'elementor/editor/before_enqueue_scripts', [ $this, 'enqueue_elementor_script' ], 9 );
 		\add_action( 'admin_enqueue_scripts', [ $this, 'should_previously_used_keyword_assessment_run' ], 9 );
 		\add_action( 'enqueue_block_editor_assets', [ $this, 'enqueue_block_editor_scripts' ] );
 	}
@@ -66,8 +66,15 @@ class Block_Editor {
 	 *
 	 * @return void
 	 */
-	public function elementor() {
-		$this->asset_manager->enqueue_elementor_script();
+	public function enqueue_elementor_script() {
+		$post = \get_post();
+
+		if ( ! $post instanceof WP_Post ) {
+			return;
+		}
+
+		$edit_js_object = $this->generate_js_object( $post );
+		$this->asset_manager->enqueue_elementor_script( $edit_js_object );
 	}
 
 	/**
@@ -104,19 +111,10 @@ class Block_Editor {
 			return;
 		}
 
-		$is_rewrite_and_republish_copy = $this->permissions_helper->is_rewrite_and_republish_copy( $post );
-
-		$edit_js_object = [
-			'newDraftLink'            => $this->get_new_draft_permalink(),
-			'rewriteAndRepublishLink' => $this->get_rewrite_republish_permalink(),
-			'showLinks'               => Utils::get_option( 'duplicate_post_show_link' ),
-			'showLinksIn'             => Utils::get_option( 'duplicate_post_show_link_in' ),
-			'rewriting'               => $is_rewrite_and_republish_copy ? 1 : 0,
-			'originalEditURL'         => $this->get_original_post_edit_url(),
-		];
+		$edit_js_object = $this->generate_js_object( $post );
 		$this->asset_manager->enqueue_edit_script( $edit_js_object );
 
-		if ( $is_rewrite_and_republish_copy ) {
+		if ( $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
 			$string_js_object = [
 				'checkLink' => $this->get_check_permalink(),
 			];
@@ -152,7 +150,6 @@ class Block_Editor {
 			|| $this->permissions_helper->is_rewrite_and_republish_copy( $post )
 			|| $this->permissions_helper->has_rewrite_and_republish_copy( $post )
 			|| ! $this->permissions_helper->should_links_be_displayed( $post )
-			|| $this->permissions_helper->is_elementor_active()
 		) {
 			return '';
 		}
@@ -201,5 +198,27 @@ class Block_Editor {
 			],
 			\admin_url( 'post.php?action=edit&post=' . $original_post_id )
 		);
+	}
+
+	/**
+	 * Generates an array of data to be passed as a localization object to JS scripts.
+	 *
+	 * @param WP_Post $post The current post object.
+	 *
+	 * @return array The data to pass to JS scripts
+	 */
+	protected function generate_js_object( WP_Post $post ) {
+		$is_rewrite_and_republish_copy = $this->permissions_helper->is_rewrite_and_republish_copy( $post );
+
+		$edit_js_object = [
+			'newDraftLink'            => $this->get_new_draft_permalink(),
+			'rewriteAndRepublishLink' => $this->get_rewrite_republish_permalink(),
+			'showLinks'               => Utils::get_option( 'duplicate_post_show_link' ),
+			'showLinksIn'             => Utils::get_option( 'duplicate_post_show_link_in' ),
+			'rewriting'               => $is_rewrite_and_republish_copy ? 1 : 0,
+			'originalEditURL'         => $this->get_original_post_edit_url(),
+		];
+
+		return $edit_js_object;
 	}
 }

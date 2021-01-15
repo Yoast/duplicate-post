@@ -228,8 +228,7 @@ class Permissions_Helper {
 	public function should_rewrite_and_republish_be_allowed( \WP_Post $post ) {
 		return $post->post_status === 'publish'
 			&& ! $this->is_rewrite_and_republish_copy( $post )
-			&& ! $this->has_rewrite_and_republish_copy( $post )
-			&& ! $this->is_elementor_active();
+			&& ! $this->has_rewrite_and_republish_copy( $post );
 	}
 
 	/**
@@ -281,14 +280,5 @@ class Permissions_Helper {
 		}
 
 		return false;
-	}
-
-	/**
-	 * Determines if the Elementor plugin is active.
-	 *
-	 * @return bool Whether the Elementor plugin is currently active.
-	 */
-	public function is_elementor_active() {
-		return Utils::is_plugin_active( 'elementor/elementor.php' );
 	}
 }
