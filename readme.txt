@@ -58,7 +58,7 @@ If it still doesn't work, maybe there is some kind of conflict with other plugin
 
 From version 3.0 the plugin's translations are managed by the WordPress.org platform and the plugin is shipped without language files, so first of all update translations under Dashboard->Updates.
 
-If Duplicate Post is still in English, or if there are some untraslated strings, you can help traslating to your language [here](https://translate.wordpress.org/projects/wp-plugins/duplicate-post): you only need a WordPress.org account.
+If Duplicate Post is still in English, or if there are some untranslated strings, you can [help translating to your language](https://translate.wordpress.org/projects/wp-plugins/duplicate-post): you only need a WordPress.org account.
 
 == Screenshots ==
 
