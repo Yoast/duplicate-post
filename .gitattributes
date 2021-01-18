@@ -15,3 +15,5 @@ README.md export-ignore
 README.wordpress.md export-ignore
 tests export-ignore
 phpunit.xml.dist export-ignore
+.babelrc export-ignore
+.editorconfig export-ignore
