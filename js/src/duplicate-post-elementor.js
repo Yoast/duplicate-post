@@ -60,8 +60,40 @@ function duplicatePostOnElementorInitialize() {
     $e.hooks.registerUIAfter( new RedirectAfterRepublish() );
 }
 
+function duplicatePostRemoveSaveTemplateUI() {
+    class RemoveSaveTemplateUI extends $e.modules.hookUI.After {
+        getCommand() {
+            return 'editor/documents/load';
+        }
+
+        getId() {
+            return 'yoast-remove-save-template-ui';
+        }
+
+        getConditions( args ) {
+            const { document } = args;
+            console.log( 'hey' )
+
+            return duplicatePost.originalEditURL !== "";
+        }
+
+        apply() {
+            elementor.getPanelView()
+                     .footer
+                     .currentView
+                     .removeSubMenuItem( 'saver-options', {
+                         name: 'save-template',
+                     } );
+        }
+    }
+
+    $e.hooks.registerUIAfter( new RemoveSaveTemplateUI() );
+}
+
+
 // Wait on `window.elementor`.
 jQuery( window ).on( "elementor:init", () => {
+    duplicatePostRemoveSaveTemplateUI();
     // Wait on Elementor app to have started.
     window.elementor.on( "panel:init", () => {
         duplicatePostOnElementorInitialize();
