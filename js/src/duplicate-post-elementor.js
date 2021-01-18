@@ -60,42 +60,30 @@ function duplicatePostOnElementorInitialize() {
     $e.hooks.registerUIAfter( new RedirectAfterRepublish() );
 }
 
-function duplicatePostRemoveSaveTemplateUI() {
-    class RemoveSaveTemplateUI extends $e.modules.hookUI.After {
-        getCommand() {
-            return 'editor/documents/load';
-        }
-
-        getId() {
-            return 'yoast-remove-save-template-ui';
-        }
-
-        getConditions( args ) {
-            const { document } = args;
-            console.log( 'hey' )
-
-            return duplicatePost.originalEditURL !== "";
-        }
-
-        apply() {
-            elementor.getPanelView()
-                     .footer
-                     .currentView
-                     .removeSubMenuItem( 'saver-options', {
-                         name: 'save-template',
-                     } );
-        }
+/**
+ * Removes the Save as Template option for Rewrite and Republish copy.
+ *
+ * @returns {void}
+ */
+function duplicatePostRemoveSaveTemplate() {
+    if ( duplicatePost.rewriting === "0" ) {
+        return;
     }
 
-    $e.hooks.registerUIAfter( new RemoveSaveTemplateUI() );
+    elementor
+        .getPanelView()
+        .footer
+        .currentView
+        .removeSubMenuItem( 'saver-options', {
+            name: 'save-template',
+        } );
 }
-
 
 // Wait on `window.elementor`.
 jQuery( window ).on( "elementor:init", () => {
-    duplicatePostRemoveSaveTemplateUI();
     // Wait on Elementor app to have started.
     window.elementor.on( "panel:init", () => {
         duplicatePostOnElementorInitialize();
+        duplicatePostRemoveSaveTemplate();
     } );
 } );

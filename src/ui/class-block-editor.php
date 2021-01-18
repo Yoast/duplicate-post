@@ -7,6 +7,7 @@
 
 namespace Yoast\WP\Duplicate_Post\UI;
 
+use Elementor\Core\Base\Document;
 use WP_Post;
 use Yoast\WP\Duplicate_Post\Permissions_Helper;
 use Yoast\WP\Duplicate_Post\Utils;
@@ -56,6 +57,7 @@ class Block_Editor {
 	 * @return void
 	 */
 	public function register_hooks() {
+		\add_action( 'elementor/documents/register_controls', [ $this, 'remove_elementor_post_status' ] );
 		\add_action( 'elementor/editor/before_enqueue_scripts', [ $this, 'enqueue_elementor_script' ], 9 );
 		\add_action( 'admin_enqueue_scripts', [ $this, 'should_previously_used_keyword_assessment_run' ], 9 );
 		\add_action( 'enqueue_block_editor_assets', [ $this, 'enqueue_block_editor_scripts' ] );
@@ -75,6 +77,23 @@ class Block_Editor {
 
 		$edit_js_object = $this->generate_js_object( $post );
 		$this->asset_manager->enqueue_elementor_script( $edit_js_object );
+	}
+
+	/**
+	 * Removes the post status control if we're working on a Rewrite and Republish post.
+	 *
+	 * @param Document $document The document to remove the control from.
+	 *
+	 * @return void
+	 */
+	public function remove_elementor_post_status( $document ) {
+		$post = \get_post();
+
+		if ( ! $post instanceof WP_Post || ! $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
+			return;
+		}
+
+		$document->remove_control( 'post_status' );
 	}
 
 	/**
