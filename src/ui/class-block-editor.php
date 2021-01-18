@@ -62,7 +62,7 @@ class Block_Editor {
 	}
 
 	/**
-	 * Disables the Yoast SEO PreviouslyUsedKeyword assessment for Rewrite & Republish original and duplicate posts.
+	 * Enqueues the necessary Elementor script for the current post.
 	 *
 	 * @return void
 	 */
@@ -201,16 +201,16 @@ class Block_Editor {
 	}
 
 	/**
-	 * Generates an array of data to be passed as a localization object to JS scripts.
+	 * Generates an array of data to be passed as a localization object to JavaScript.
 	 *
 	 * @param WP_Post $post The current post object.
 	 *
-	 * @return array The data to pass to JS scripts
+	 * @return array The data to pass to JavaScript.
 	 */
 	protected function generate_js_object( WP_Post $post ) {
 		$is_rewrite_and_republish_copy = $this->permissions_helper->is_rewrite_and_republish_copy( $post );
 
-		$edit_js_object = [
+		return [
 			'newDraftLink'            => $this->get_new_draft_permalink(),
 			'rewriteAndRepublishLink' => $this->get_rewrite_republish_permalink(),
 			'showLinks'               => Utils::get_option( 'duplicate_post_show_link' ),
@@ -218,7 +218,5 @@ class Block_Editor {
 			'rewriting'               => $is_rewrite_and_republish_copy ? 1 : 0,
 			'originalEditURL'         => $this->get_original_post_edit_url(),
 		];
-
-		return $edit_js_object;
 	}
 }
