@@ -206,12 +206,12 @@ class Block_Editor {
 	 */
 	public function remove_original_from_wpseo_link_suggestions( $suggestions ) {
 		// At this point, the running request is the one for the Yoast SEO link suggestions.
-		$object_type = filter_input( INPUT_GET, 'object_type', FILTER_SANITIZE_STRING );
+		$object_type = \filter_input( INPUT_GET, 'object_type', FILTER_SANITIZE_STRING );
 		if ( empty( $object_type ) || $object_type !== 'post' ) {
 			return $suggestions;
 		}
 
-		$post_id = filter_input( INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT );
+		$post_id = \filter_input( INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT );
 		if ( empty( $post_id ) ) {
 			return $suggestions;
 		}

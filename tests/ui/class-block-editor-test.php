@@ -106,6 +106,17 @@ class Block_Editor_Test extends TestCase {
 			),
 			'Does not have expected enqueue_block_editor_assets action'
 		);
+
+		$this->assertNotFalse(
+			\has_filter(
+				'wpseo_link_suggestions_indexables',
+				[
+					$this->instance,
+					'remove_original_from_wpseo_link_suggestions',
+				]
+			),
+			'Does not have expected wpseo_link_suggestions_indexables filter'
+		);
 	}
 
 	/**
