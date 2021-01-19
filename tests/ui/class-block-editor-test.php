@@ -217,7 +217,7 @@ class Block_Editor_Test extends TestCase {
 	 * @runInSeparateProcess
 	 * @preserveGlobalState disabled
 	 */
-	public function test_get_new_draft_permalink_normal() {
+	public function test_enqueue_block_editor_scripts() {
 		$utils                      = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
 		$post                       = Mockery::mock( \WP_Post::class );
 		$new_draft_link             = 'http://fakeu.rl/new_draft';
@@ -244,6 +244,7 @@ class Block_Editor_Test extends TestCase {
 		$this->permissions_helper
 			->expects( 'is_rewrite_and_republish_copy' )
 			->with( $post )
+			->twice()
 			->andReturnFalse();
 
 		$this->instance
@@ -322,6 +323,7 @@ class Block_Editor_Test extends TestCase {
 		$this->permissions_helper
 			->expects( 'is_rewrite_and_republish_copy' )
 			->with( $post )
+			->twice()
 			->andReturnTrue();
 
 		$this->instance
