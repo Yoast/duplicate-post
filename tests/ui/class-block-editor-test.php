@@ -8,6 +8,7 @@
 namespace Yoast\WP\Duplicate_Post\Tests\UI;
 
 use Brain\Monkey;
+use Elementor\Core\Base\Document;
 use Mockery;
 use Yoast\WP\Duplicate_Post\Permissions_Helper;
 use Yoast\WP\Duplicate_Post\Tests\TestCase;
@@ -747,4 +748,54 @@ class Block_Editor_Test extends TestCase {
 		);
 	}
 
+	/**
+	 * Tests the removal of the Elementor post status field.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Block_Editor::remove_elementor_post_status
+	 */
+	public function test_remove_elementor_post_status() {
+		$post     = Mockery::mock( \WP_Post::class );
+		$document = Mockery::mock( Document::class );
+
+		Monkey\Functions\expect( '\get_post' )
+			->andReturn( $post );
+
+		$this->permissions_helper
+			->expects( 'is_rewrite_and_republish_copy' )
+			->with( $post )
+			->once()
+			->andReturnTrue();
+
+		$document
+			->expects( 'remove_control' )
+			->with( 'post_status' );
+
+		$this->instance->remove_elementor_post_status( $document );
+	}
+
+	/**
+	 * Tests the removal of the Elementor post status field doesn't trigger on normal posts.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Block_Editor::remove_elementor_post_status
+	 */
+	public function test_dont_remove_elementor_post_status() {
+		$post     = Mockery::mock( \WP_Post::class );
+		$document = Mockery::mock( Document::class );
+
+		Monkey\Functions\expect( '\get_post' )
+			->andReturn( $post );
+
+		$this->permissions_helper
+			->expects( 'is_rewrite_and_republish_copy' )
+			->with( $post )
+			->once()
+			->andReturnFalse();
+
+		$document
+			->expects( 'remove_control' )
+			->with( 'post_status' )
+			->never();
+
+		$this->instance->remove_elementor_post_status( $document );
+	}
 }
