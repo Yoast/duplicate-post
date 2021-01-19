@@ -58,6 +58,7 @@ class Block_Editor {
 	public function register_hooks() {
 		\add_action( 'admin_enqueue_scripts', [ $this, 'should_previously_used_keyword_assessment_run' ], 9 );
 		\add_action( 'enqueue_block_editor_assets', [ $this, 'enqueue_block_editor_scripts' ] );
+		\add_filter( 'wpseo_link_suggestions_indexables', [ $this, 'remove_original_from_wpseo_link_suggestions' ] );
 	}
 
 	/**
@@ -190,6 +191,44 @@ class Block_Editor {
 				'dpnonce'       => \wp_create_nonce( 'dp-republish' ),
 			],
 			\admin_url( 'post.php?action=edit&post=' . $original_post_id )
+		);
+	}
+
+	/**
+	 * Filters the Yoast SEO Premium link suggestions.
+	 *
+	 * Removes the original post from the Yoast SEO Premium link suggestions
+	 * displayed on the Rewrite & Republish copy.
+	 *
+	 * @param array $suggestions An array of suggestion indexables that can be filtered.
+	 *
+	 * @return array The filtered array of suggestion indexables.
+	 */
+	public function remove_original_from_wpseo_link_suggestions( $suggestions ) {
+		// At this point, the running request is the one for the Yoast SEO link suggestions.
+		$object_type = filter_input( INPUT_GET, 'object_type', FILTER_SANITIZE_STRING );
+		if ( empty( $object_type ) || $object_type !== 'post' ) {
+			return $suggestions;
+		}
+
+		$post_id = filter_input( INPUT_GET, 'object_id', FILTER_SANITIZE_NUMBER_INT );
+		if ( empty( $post_id ) ) {
+			return $suggestions;
+		}
+
+		$post = \get_post( $post_id );
+
+		if ( ! $post instanceof WP_Post || ! $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
+			return $suggestions;
+		}
+
+		$original_post_id = Utils::get_original_post_id( $post->ID );
+
+		return \array_filter(
+			$suggestions,
+			function( $suggestion ) use ( $original_post_id ) {
+				return $suggestion->object_id !== $original_post_id;
+			}
 		);
 	}
 }
