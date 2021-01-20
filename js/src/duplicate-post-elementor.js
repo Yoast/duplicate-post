@@ -74,8 +74,8 @@ function duplicatePostRemoveSaveTemplate() {
 		.getPanelView()
 		.footer
 		.currentView
-		.removeSubMenuItem( 'saver-options', {
-			name: 'save-template',
+		.removeSubMenuItem( "saver-options", {
+			name: "save-template",
 		} );
 }
 
