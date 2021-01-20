@@ -106,6 +106,10 @@ class Post_Republisher {
 	 * @return array An array of slashed, sanitized, and processed attachment post data.
 	 */
 	public function change_post_copy_status( $data, $postarr ) {
+		if ( ! \array_key_exists( 'ID', $postarr ) || empty( $postarr['ID'] ) ) {
+			return $data;
+		}
+
 		$post = \get_post( $postarr['ID'] );
 
 		if ( ! $post || ! $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
@@ -226,7 +230,7 @@ class Post_Republisher {
 	 * @return bool Whether the request is the Classic Editor POST request.
 	 */
 	public function is_classic_editor_post_request() {
-		if ( $this->is_rest_request() ) {
+		if ( $this->is_rest_request() || \wp_doing_ajax() ) {
 			return false;
 		}
 
@@ -245,12 +249,12 @@ class Post_Republisher {
 	/**
 	 * Republishes the post by overwriting the original post.
 	 *
-	 * @param \WP_Post $post          The Rewrite & Republish copy.
-	 * @param \WP_Post $original_post The original post.
+	 * @param WP_Post $post          The Rewrite & Republish copy.
+	 * @param WP_Post $original_post The original post.
 	 *
 	 * @return void
 	 */
-	public function republish( \WP_Post $post, $original_post ) {
+	public function republish( WP_Post $post, WP_Post $original_post ) {
 		// Remove WordPress default filter so a new revision is not created on republish.
 		\remove_action( 'post_updated', 'wp_save_post_revision', 10 );
 
