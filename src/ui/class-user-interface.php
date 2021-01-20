@@ -78,13 +78,6 @@ class User_Interface {
 	protected $column;
 
 	/**
-	 * Post_List object.
-	 *
-	 * @var Post_List
-	 */
-	protected $post_list;
-
-	/**
 	 * Holds the object to create the action link to duplicate.
 	 *
 	 * @var Link_Builder
@@ -115,7 +108,6 @@ class User_Interface {
 		$this->column         = new Column( $this->permissions_helper, $this->asset_manager );
 		$this->metabox        = new Metabox( $this->permissions_helper );
 		$this->post_states    = new Post_States( $this->permissions_helper );
-		$this->post_list      = new Post_List( $this->permissions_helper );
 		$this->classic_editor = new Classic_Editor( $this->link_builder, $this->permissions_helper, $this->asset_manager );
 		$this->row_actions    = new Row_Actions( $this->link_builder, $this->permissions_helper );
 
@@ -125,7 +117,6 @@ class User_Interface {
 		$this->column->register_hooks();
 		$this->metabox->register_hooks();
 		$this->post_states->register_hooks();
-		$this->post_list->register_hooks();
 		$this->classic_editor->register_hooks();
 		$this->row_actions->register_hooks();
 	}

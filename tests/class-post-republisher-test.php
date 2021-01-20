@@ -123,6 +123,10 @@ class Post_Republisher_Test extends TestCase {
 	 */
 	public function test_is_classic_editor_post_request_when_block_editor_saving_custom_meta_boxes() {
 		$_GET['meta-box-loader'] = '1';
+
+		Monkey\Functions\expect( '\wp_doing_ajax' )
+			->andReturnFalse();
+
 		$this->assertFalse( $this->instance->is_classic_editor_post_request() );
 		unset( $_GET['meta-box-loader'] ); // phpcs:ignore WordPress.Security.NonceVerification
 	}
@@ -133,6 +137,9 @@ class Post_Republisher_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Post_Republisher::is_classic_editor_post_request
 	 */
 	public function test_is_classic_editor_post_request() {
+		Monkey\Functions\expect( '\wp_doing_ajax' )
+			->andReturnFalse();
+
 		$this->assertTrue( $this->instance->is_classic_editor_post_request() );
 	}
 
@@ -236,7 +243,7 @@ class Post_Republisher_Test extends TestCase {
 			->once()
 			->andReturnTrue();
 
-		$utils = \Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
+		$utils = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
 		$utils
 			->expects( 'get_original' )
 			->with( $copy->ID )
@@ -289,7 +296,7 @@ class Post_Republisher_Test extends TestCase {
 			->once()
 			->andReturnTrue();
 
-		$utils = \Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
+		$utils = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
 		$utils
 			->expects( 'get_original' )
 			->with( $copy->ID )
