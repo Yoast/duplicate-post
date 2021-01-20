@@ -106,8 +106,7 @@ class Post_Republisher {
 	 * @return array An array of slashed, sanitized, and processed attachment post data.
 	 */
 	public function change_post_copy_status( $data, $postarr ) {
-		if ( ! \array_key_exists( 'ID', $postarr )
-		|| empty( $postarr['ID'] ) ) {
+		if ( ! \array_key_exists( 'ID', $postarr ) || empty( $postarr['ID'] ) ) {
 			return $data;
 		}
 

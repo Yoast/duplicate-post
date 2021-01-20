@@ -1,7 +1,7 @@
 /* global $e */
 
 /**
- * Hooks into Element on initialization.
+ * Hooks into Elementor on initialization.
  *
  * @returns {void}
  */
