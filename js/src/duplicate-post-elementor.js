@@ -1,4 +1,4 @@
-/* global $e */
+/* global $e, duplicatePost, elementor */
 
 /**
  * Hooks into Elementor on initialization.
