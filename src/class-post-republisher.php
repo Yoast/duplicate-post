@@ -360,12 +360,7 @@ class Post_Republisher {
 		$original_post_id = Utils::get_original_post_id( $post->ID );
 
 		$copy_meta_options = [
-			'meta_excludelist' => [
-				'_edit_lock',
-				'_edit_last',
-				'_dp_original',
-				'_dp_is_rewrite_republish_copy',
-			],
+			'meta_excludelist' => Utils::get_default_filtered_meta_names(),
 			'use_filters'      => false,
 			'copy_thumbnail'   => true,
 			'copy_template'    => true,
