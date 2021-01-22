@@ -8,7 +8,6 @@
 namespace Yoast\WP\Duplicate_Post\Tests\UI;
 
 use Brain\Monkey;
-use Elementor\Core\Base\Document;
 use Mockery;
 use Yoast\WP\Duplicate_Post\Permissions_Helper;
 use Yoast\WP\Duplicate_Post\Tests\TestCase;
@@ -89,6 +88,28 @@ class Block_Editor_Test extends TestCase {
 
 		$this->assertNotFalse(
 			\has_action(
+				'elementor/editor/after_enqueue_styles',
+				[
+					$this->instance,
+					'hide_elementor_post_status',
+				]
+			),
+			'Does not have expected elementor/editor/after_enqueue_styles action'
+		);
+
+		$this->assertNotFalse(
+			\has_action(
+				'elementor/editor/before_enqueue_scripts',
+				[
+					$this->instance,
+					'enqueue_elementor_script',
+				]
+			),
+			'Does not have expected elementor/editor/before_enqueue_scripts action'
+		);
+
+		$this->assertNotFalse(
+			\has_action(
 				'admin_enqueue_scripts',
 				[
 					$this->instance,
@@ -97,6 +118,7 @@ class Block_Editor_Test extends TestCase {
 			),
 			'Does not have expected admin_enqueue_scripts action'
 		);
+
 		$this->assertNotFalse(
 			\has_action(
 				'enqueue_block_editor_assets',
@@ -760,13 +782,12 @@ class Block_Editor_Test extends TestCase {
 	}
 
 	/**
-	 * Tests the removal of the Elementor post status field.
+	 * Tests the hiding of the Elementor post status field.
 	 *
-	 * @covers \Yoast\WP\Duplicate_Post\UI\Block_Editor::remove_elementor_post_status
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Block_Editor::hide_elementor_post_status
 	 */
-	public function test_remove_elementor_post_status() {
-		$post     = Mockery::mock( \WP_Post::class );
-		$document = Mockery::mock( Document::class );
+	public function test_hide_elementor_post_status() {
+		$post = Mockery::mock( \WP_Post::class );
 
 		Monkey\Functions\expect( '\get_post' )
 			->andReturn( $post );
@@ -777,21 +798,22 @@ class Block_Editor_Test extends TestCase {
 			->once()
 			->andReturnTrue();
 
-		$document
-			->expects( 'remove_control' )
-			->with( 'post_status' );
+		Monkey\Functions\expect( '\wp_add_inline_style' )
+			->with(
+				'elementor-editor',
+				'.elementor-control-post_status { display: none !important; }'
+			);
 
-		$this->instance->remove_elementor_post_status( $document );
+		$this->instance->hide_elementor_post_status();
 	}
 
 	/**
-	 * Tests the removal of the Elementor post status field doesn't trigger on normal posts.
+	 * Tests the hiding of the Elementor post status field doesn't trigger on normal posts.
 	 *
-	 * @covers \Yoast\WP\Duplicate_Post\UI\Block_Editor::remove_elementor_post_status
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Block_Editor::hide_elementor_post_status
 	 */
 	public function test_dont_remove_elementor_post_status() {
-		$post     = Mockery::mock( \WP_Post::class );
-		$document = Mockery::mock( Document::class );
+		$post = Mockery::mock( \WP_Post::class );
 
 		Monkey\Functions\expect( '\get_post' )
 			->andReturn( $post );
@@ -802,11 +824,9 @@ class Block_Editor_Test extends TestCase {
 			->once()
 			->andReturnFalse();
 
-		$document
-			->expects( 'remove_control' )
-			->with( 'post_status' )
+		Monkey\Functions\expect( '\wp_add_inline_style' )
 			->never();
 
-		$this->instance->remove_elementor_post_status( $document );
+		$this->instance->hide_elementor_post_status();
 	}
 }
