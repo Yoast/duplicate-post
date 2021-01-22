@@ -354,6 +354,8 @@ function duplicate_post_copy_post_meta_info( $new_id, $post ) {
 	}
 	$meta_blacklist[] = '_edit_lock'; // Edit lock.
 	$meta_blacklist[] = '_edit_last'; // Edit lock.
+	$meta_blacklist[] = '_dp_is_rewrite_republish_copy';
+	$meta_blacklist[] = '_dp_has_rewrite_republish_copy';
 	if ( intval( get_option( 'duplicate_post_copytemplate' ) ) === 0 ) {
 		$meta_blacklist[] = '_wp_page_template';
 	}
