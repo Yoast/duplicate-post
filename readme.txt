@@ -151,6 +151,21 @@ New features and customization, WP 3.0 compatibility: you should upgrade if you 
 
 == Changelog ==
 
+= 4.1 (TBD) =
+
+Enhancements:
+
+* Improves compatibility between Elementor and the Rewrite and Republish feature.
+
+Bugfixes:
+
+* Fixes a bug where Rewrite & Republish notices would be shown for regular copies.
+* Fixes a bug where the original post of a Rewrite & Republish copy was listed in the Yoast SEO Premium link suggestions.
+
+Other:
+
+* Disables the plugin for WooCommerce products and introduces filter for enabled post types.
+
 = 4.0.2 (2021-01-14) =
 
 Bugfixes:
