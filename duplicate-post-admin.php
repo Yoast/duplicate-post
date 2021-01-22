@@ -161,7 +161,7 @@ function duplicate_post_plugin_upgrade() {
 	update_option( 'duplicate_post_blacklist', implode( ',', $meta_blacklist ) );
 
 	delete_option( 'duplicate_post_show_notice' );
-	if ( version_compare( $installed_version, '4.0.0' ) < 0 ) {
+	if ( version_compare( $installed_version, '4.1.0' ) < 0 ) {
 		update_site_option( 'duplicate_post_show_notice', 1 );
 	}
 
@@ -222,10 +222,10 @@ function duplicate_post_show_update_notice() {
 		__( "What's new in Yoast Duplicate Post version %s:", 'duplicate-post' ),
 		DUPLICATE_POST_CURRENT_VERSION
 	) . '</strong> ';
-	$message .= __( 'Meet the Rewrite & Republish feature! It makes it easy as ABC to update a post/page without taking it offline or having to take extra steps!', 'duplicate-post' )
+	$message .= __( 'Now also available in Elementor: the powerful Rewrite & Republish feature. Updating your content has never been easier!', 'duplicate-post' )
 		. ' ';
 
-	$message .= '<a href="https://yoa.st/duplicate-post-4-0">'
+	$message .= '<a href="https://yoa.st/duplicate-post-4-1">'
 				. sprintf(
 					/* translators: %s: Yoast Duplicate Post version. */
 					__( 'Read more about what’s new in Yoast Duplicate Post %s!', 'duplicate-post' ),
