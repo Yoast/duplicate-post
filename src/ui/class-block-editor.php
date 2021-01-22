@@ -61,6 +61,7 @@ class Block_Editor {
 		\add_action( 'elementor/editor/before_enqueue_scripts', [ $this, 'enqueue_elementor_script' ], 9 );
 		\add_action( 'admin_enqueue_scripts', [ $this, 'should_previously_used_keyword_assessment_run' ], 9 );
 		\add_action( 'enqueue_block_editor_assets', [ $this, 'enqueue_block_editor_scripts' ] );
+		\add_filter( 'wpseo_link_suggestions_indexables', [ $this, 'remove_original_from_wpseo_link_suggestions' ], 10, 3 );
 	}
 
 	/**
@@ -237,5 +238,39 @@ class Block_Editor {
 			'rewriting'               => $is_rewrite_and_republish_copy ? 1 : 0,
 			'originalEditURL'         => $this->get_original_post_edit_url(),
 		];
+	}
+
+	/**
+	 * Filters the Yoast SEO Premium link suggestions.
+	 *
+	 * Removes the original post from the Yoast SEO Premium link suggestions
+	 * displayed on the Rewrite & Republish copy.
+	 *
+	 * @param array  $suggestions An array of suggestion indexables that can be filtered.
+	 * @param int    $object_id   The object id for the current indexable.
+	 * @param string $object_type The object type for the current indexable.
+	 *
+	 * @return array The filtered array of suggestion indexables.
+	 */
+	public function remove_original_from_wpseo_link_suggestions( $suggestions, $object_id, $object_type ) {
+		if ( $object_type !== 'post' ) {
+			return $suggestions;
+		}
+
+		// WordPress get_post already checks if the passed ID is valid and returns null if it's not.
+		$post = \get_post( $object_id );
+
+		if ( ! $post instanceof WP_Post || ! $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
+			return $suggestions;
+		}
+
+		$original_post_id = Utils::get_original_post_id( $post->ID );
+
+		return \array_filter(
+			$suggestions,
+			function( $suggestion ) use ( $original_post_id ) {
+				return $suggestion->object_id !== $original_post_id;
+			}
+		);
 	}
 }

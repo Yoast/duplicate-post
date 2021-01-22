@@ -173,6 +173,23 @@ class Utils {
 	}
 
 	/**
+	 * Gets the default meta field names to be filtered out.
+	 *
+	 * @return array The names of the meta fields to filter out by default.
+	 */
+	public static function get_default_filtered_meta_names() {
+		return [
+			'_edit_lock',
+			'_edit_last',
+			'_dp_original',
+			'_dp_is_rewrite_republish_copy',
+			'_dp_has_rewrite_republish_copy',
+			'_dp_has_been_republished',
+			'_dp_creation_date_gmt',
+		];
+	}
+
+	/**
 	 * Gets a Duplicate Post option from the database.
 	 *
 	 * @param string $option The option to get.
