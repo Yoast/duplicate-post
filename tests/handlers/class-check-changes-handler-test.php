@@ -107,6 +107,9 @@ class Check_Changes_Handler_Test extends TestCase {
 
 		$this->instance->expects( 'require_wordpress_header' );
 
+		Monkey\Functions\expect( '\get_post' )
+			->with( $post, \ARRAY_A );
+
 		Monkey\Functions\expect( '\wp_text_diff' )
 			->with( $original->post_title, $post->post_title )
 			->andReturn( null, 'diff-content', 'diff-excerpt' );
