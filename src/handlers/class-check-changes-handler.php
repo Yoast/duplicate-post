@@ -108,12 +108,15 @@ class Check_Changes_Handler {
 						<div class="diff">
 						<?php
 						$fields = [
-							\__( 'Title', 'default' )   => 'post_title',
-							\__( 'Content', 'default' ) => 'post_content',
-							\__( 'Excerpt', 'default' ) => 'post_excerpt',
+							'post_title'   => \__( 'Title', 'default' ),
+							'post_content' => \__( 'Content', 'default' ),
+							'post_excerpt' => \__( 'Excerpt', 'default' ),
 						];
 
-						foreach ( $fields as $name => $field ) {
+						$post_array = \get_post( $post, \ARRAY_A );
+						$fields     = \apply_filters( '_wp_post_revision_fields', $fields, $post_array ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+
+						foreach ( $fields as $field => $name ) {
 							$diff = \wp_text_diff( $original->$field, $post->$field );
 
 							if ( ! $diff && 'post_title' === $field ) {
@@ -150,6 +153,7 @@ class Check_Changes_Handler {
 	 * @return void
 	 */
 	public function require_wordpress_header() {
+		\set_current_screen( 'revision' );
 		require_once ABSPATH . 'wp-admin/admin-header.php';
 	}
 
