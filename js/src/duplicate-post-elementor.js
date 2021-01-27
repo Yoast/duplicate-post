@@ -51,7 +51,7 @@ function duplicatePostOnElementorInitialize() {
 		 * @returns {void}
 		 */
 		apply( args ) {
-			if ( args.status === "publish" && duplicatePost.originalEditURL ) {
+			if ( args.status === "publish" && duplicatePost.originalEditURL && duplicatePost.rewriting === "1" ) {
 				window.location.assign( duplicatePost.originalEditURL );
 			}
 		}

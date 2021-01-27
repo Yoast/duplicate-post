@@ -151,6 +151,12 @@ New features and customization, WP 3.0 compatibility: you should upgrade if you 
 
 == Changelog ==
 
+= 4.1.1 (2021-01-27) =
+
+Bugfixes:
+
+* Fixes a bug where editing posts with Elementor could trigger a fatal error.
+
 = 4.1 (2021-01-27) =
 
 Enhancements:
