@@ -56,8 +56,44 @@ class Block_Editor {
 	 * @return void
 	 */
 	public function register_hooks() {
+		\add_action( 'elementor/editor/after_enqueue_styles', [ $this, 'hide_elementor_post_status' ] );
+		\add_action( 'elementor/editor/before_enqueue_scripts', [ $this, 'enqueue_elementor_script' ], 9 );
 		\add_action( 'admin_enqueue_scripts', [ $this, 'should_previously_used_keyword_assessment_run' ], 9 );
 		\add_action( 'enqueue_block_editor_assets', [ $this, 'enqueue_block_editor_scripts' ] );
+		\add_filter( 'wpseo_link_suggestions_indexables', [ $this, 'remove_original_from_wpseo_link_suggestions' ], 10, 3 );
+	}
+
+	/**
+	 * Enqueues the necessary Elementor script for the current post.
+	 *
+	 * @return void
+	 */
+	public function enqueue_elementor_script() {
+		$post = \get_post();
+
+		if ( ! $post instanceof WP_Post ) {
+			return;
+		}
+
+		$edit_js_object = $this->generate_js_object( $post );
+		$this->asset_manager->enqueue_elementor_script( $edit_js_object );
+	}
+
+	/**
+	 * Hides the post status control if we're working on a Rewrite and Republish post.
+	 *
+	 * @return void
+	 */
+	public function hide_elementor_post_status() {
+		$post = \get_post();
+
+		if ( ! $post instanceof WP_Post || ! $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
+			return;
+		}
+		\wp_add_inline_style(
+			'elementor-editor',
+			'.elementor-control-post_status { display: none !important; }'
+		);
 	}
 
 	/**
@@ -94,19 +130,10 @@ class Block_Editor {
 			return;
 		}
 
-		$is_rewrite_and_republish_copy = $this->permissions_helper->is_rewrite_and_republish_copy( $post );
-
-		$edit_js_object = [
-			'newDraftLink'            => $this->get_new_draft_permalink(),
-			'rewriteAndRepublishLink' => $this->get_rewrite_republish_permalink(),
-			'showLinks'               => Utils::get_option( 'duplicate_post_show_link' ),
-			'showLinksIn'             => Utils::get_option( 'duplicate_post_show_link_in' ),
-			'rewriting'               => $is_rewrite_and_republish_copy ? 1 : 0,
-			'originalEditURL'         => $this->get_original_post_edit_url(),
-		];
+		$edit_js_object = $this->generate_js_object( $post );
 		$this->asset_manager->enqueue_edit_script( $edit_js_object );
 
-		if ( $is_rewrite_and_republish_copy ) {
+		if ( $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
 			$string_js_object = [
 				'checkLink' => $this->get_check_permalink(),
 			];
@@ -142,7 +169,6 @@ class Block_Editor {
 			|| $this->permissions_helper->is_rewrite_and_republish_copy( $post )
 			|| $this->permissions_helper->has_rewrite_and_republish_copy( $post )
 			|| ! $this->permissions_helper->should_links_be_displayed( $post )
-			|| $this->permissions_helper->is_elementor_active()
 		) {
 			return '';
 		}
@@ -190,6 +216,60 @@ class Block_Editor {
 				'dpnonce'       => \wp_create_nonce( 'dp-republish' ),
 			],
 			\admin_url( 'post.php?action=edit&post=' . $original_post_id )
+		);
+	}
+
+	/**
+	 * Generates an array of data to be passed as a localization object to JavaScript.
+	 *
+	 * @param WP_Post $post The current post object.
+	 *
+	 * @return array The data to pass to JavaScript.
+	 */
+	protected function generate_js_object( WP_Post $post ) {
+		$is_rewrite_and_republish_copy = $this->permissions_helper->is_rewrite_and_republish_copy( $post );
+
+		return [
+			'newDraftLink'            => $this->get_new_draft_permalink(),
+			'rewriteAndRepublishLink' => $this->get_rewrite_republish_permalink(),
+			'showLinks'               => Utils::get_option( 'duplicate_post_show_link' ),
+			'showLinksIn'             => Utils::get_option( 'duplicate_post_show_link_in' ),
+			'rewriting'               => $is_rewrite_and_republish_copy ? 1 : 0,
+			'originalEditURL'         => $this->get_original_post_edit_url(),
+		];
+	}
+
+	/**
+	 * Filters the Yoast SEO Premium link suggestions.
+	 *
+	 * Removes the original post from the Yoast SEO Premium link suggestions
+	 * displayed on the Rewrite & Republish copy.
+	 *
+	 * @param array  $suggestions An array of suggestion indexables that can be filtered.
+	 * @param int    $object_id   The object id for the current indexable.
+	 * @param string $object_type The object type for the current indexable.
+	 *
+	 * @return array The filtered array of suggestion indexables.
+	 */
+	public function remove_original_from_wpseo_link_suggestions( $suggestions, $object_id, $object_type ) {
+		if ( $object_type !== 'post' ) {
+			return $suggestions;
+		}
+
+		// WordPress get_post already checks if the passed ID is valid and returns null if it's not.
+		$post = \get_post( $object_id );
+
+		if ( ! $post instanceof WP_Post || ! $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
+			return $suggestions;
+		}
+
+		$original_post_id = Utils::get_original_post_id( $post->ID );
+
+		return \array_filter(
+			$suggestions,
+			function( $suggestion ) use ( $original_post_id ) {
+				return $suggestion->object_id !== $original_post_id;
+			}
 		);
 	}
 }

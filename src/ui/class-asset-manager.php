@@ -157,4 +157,30 @@ class Asset_Manager {
 	public function enqueue_options_script() {
 		\wp_enqueue_script( 'duplicate_post_options_script' );
 	}
+
+	/**
+	 * Enqueues the script for the Elementor plugin.
+	 *
+	 * @param array $object The object to pass to the script.
+	 *
+	 * @return void
+	 */
+	public function enqueue_elementor_script( $object = [] ) {
+		$flattened_version = Utils::flatten_version( DUPLICATE_POST_CURRENT_VERSION );
+		$handle            = 'duplicate_post_elementor_script';
+
+		\wp_register_script(
+			$handle,
+			\plugins_url( \sprintf( 'js/dist/duplicate-post-elementor-%s.js', $flattened_version ), DUPLICATE_POST_FILE ),
+			[ 'jquery' ],
+			DUPLICATE_POST_CURRENT_VERSION,
+			true
+		);
+		\wp_enqueue_script( $handle );
+		\wp_localize_script(
+			$handle,
+			'duplicatePost',
+			$object
+		);
+	}
 }

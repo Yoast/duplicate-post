@@ -76,8 +76,7 @@ class Bulk_Actions {
 		}
 
 		if ( ! $is_draft_or_trash
-			&& \intval( Utils::get_option( 'duplicate_post_show_link', 'rewrite_republish' ) ) === 1
-			&& ! $this->permissions_helper->is_elementor_active() ) {
+			&& \intval( Utils::get_option( 'duplicate_post_show_link', 'rewrite_republish' ) ) === 1 ) {
 			$bulk_actions['duplicate_post_bulk_rewrite_republish'] = \esc_html__( 'Rewrite & Republish', 'duplicate-post' );
 		}
 

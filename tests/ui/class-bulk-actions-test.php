@@ -155,10 +155,6 @@ class Bulk_Actions_Test extends TestCase {
 			->once()
 			->andReturn( '1' );
 
-		$this->permissions_helper
-			->expects( 'is_elementor_active' )
-			->andReturnFalse();
-
 		$array = [
 			'edit'  => 'Edit',
 			'trash' => 'Move to Trash',

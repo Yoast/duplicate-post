@@ -161,7 +161,7 @@ function duplicate_post_plugin_upgrade() {
 	update_option( 'duplicate_post_blacklist', implode( ',', $meta_blacklist ) );
 
 	delete_option( 'duplicate_post_show_notice' );
-	if ( version_compare( $installed_version, '4.0.0' ) < 0 ) {
+	if ( version_compare( $installed_version, '4.1.0' ) < 0 ) {
 		update_site_option( 'duplicate_post_show_notice', 1 );
 	}
 
@@ -222,10 +222,10 @@ function duplicate_post_show_update_notice() {
 		__( "What's new in Yoast Duplicate Post version %s:", 'duplicate-post' ),
 		DUPLICATE_POST_CURRENT_VERSION
 	) . '</strong> ';
-	$message .= __( 'Meet the Rewrite & Republish feature! It makes it easy as ABC to update a post/page without taking it offline or having to take extra steps!', 'duplicate-post' )
+	$message .= __( 'Now also available in Elementor: the powerful Rewrite & Republish feature. Updating your content has never been easier!', 'duplicate-post' )
 		. ' ';
 
-	$message .= '<a href="https://yoa.st/duplicate-post-4-0">'
+	$message .= '<a href="https://yoa.st/duplicate-post-4-1">'
 				. sprintf(
 					/* translators: %s: Yoast Duplicate Post version. */
 					__( 'Read more about what’s new in Yoast Duplicate Post %s!', 'duplicate-post' ),
@@ -354,6 +354,8 @@ function duplicate_post_copy_post_meta_info( $new_id, $post ) {
 	}
 	$meta_blacklist[] = '_edit_lock'; // Edit lock.
 	$meta_blacklist[] = '_edit_last'; // Edit lock.
+	$meta_blacklist[] = '_dp_is_rewrite_republish_copy';
+	$meta_blacklist[] = '_dp_has_rewrite_republish_copy';
 	if ( intval( get_option( 'duplicate_post_copytemplate' ) ) === 0 ) {
 		$meta_blacklist[] = '_wp_page_template';
 	}
@@ -805,7 +807,7 @@ function duplicate_post_newsletter_signup_form() {
 		<div class="response" id="mce-error-response" style="display:none"></div>
 		<div class="response" id="mce-success-response" style="display:none"></div>
 	</div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
-	<div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_ffa93edfe21752c921f860358_972f1c9122" tabindex="-1" value=""></div>
+	<div class="screen-reader-text" aria-hidden="true"><input type="text" name="b_ffa93edfe21752c921f860358_972f1c9122" tabindex="-1" value=""></div>
 	</div>
 </form>
 </div>

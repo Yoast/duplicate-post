@@ -173,6 +173,23 @@ class Utils {
 	}
 
 	/**
+	 * Gets the default meta field names to be filtered out.
+	 *
+	 * @return array The names of the meta fields to filter out by default.
+	 */
+	public static function get_default_filtered_meta_names() {
+		return [
+			'_edit_lock',
+			'_edit_last',
+			'_dp_original',
+			'_dp_is_rewrite_republish_copy',
+			'_dp_has_rewrite_republish_copy',
+			'_dp_has_been_republished',
+			'_dp_creation_date_gmt',
+		];
+	}
+
+	/**
 	 * Gets a Duplicate Post option from the database.
 	 *
 	 * @param string $option The option to get.
@@ -192,5 +209,27 @@ class Utils {
 		}
 
 		return $option[ $key ];
+	}
+
+	/**
+	 * Determines if a plugin is active.
+	 *
+	 * We can't use is_plugin_active because this must work on the frontend too.
+	 *
+	 * @param string $plugin Path to the plugin file relative to the plugins directory.
+	 *
+	 * @return bool Whether a plugin is currently active.
+	 */
+	public static function is_plugin_active( $plugin ) {
+		if ( \in_array( $plugin, (array) \get_option( 'active_plugins', [] ), true ) ) {
+			return true;
+		}
+
+		if ( ! \is_multisite() ) {
+			return false;
+		}
+
+		$plugins = \get_site_option( 'active_sitewide_plugins' );
+		return isset( $plugins[ $plugin ] );
 	}
 }

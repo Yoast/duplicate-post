@@ -106,6 +106,10 @@ class Post_Republisher {
 	 * @return array An array of slashed, sanitized, and processed attachment post data.
 	 */
 	public function change_post_copy_status( $data, $postarr ) {
+		if ( ! \array_key_exists( 'ID', $postarr ) || empty( $postarr['ID'] ) ) {
+			return $data;
+		}
+
 		$post = \get_post( $postarr['ID'] );
 
 		if ( ! $post || ! $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
@@ -216,7 +220,11 @@ class Post_Republisher {
 
 			\check_admin_referer( 'dp-republish', 'dpnonce' );
 
-			$this->delete_copy( $copy_id, $post_id );
+			if ( \intval( \get_post_meta( $copy_id, '_dp_has_been_republished', true ) ) === 1 ) {
+				$this->delete_copy( $copy_id, $post_id );
+			} else {
+				\wp_die( \esc_html__( 'An error occurred while deleting the Rewrite & Republish copy.', 'duplicate-post' ) );
+			}
 		}
 	}
 
@@ -226,7 +234,7 @@ class Post_Republisher {
 	 * @return bool Whether the request is the Classic Editor POST request.
 	 */
 	public function is_classic_editor_post_request() {
-		if ( $this->is_rest_request() ) {
+		if ( $this->is_rest_request() || \wp_doing_ajax() ) {
 			return false;
 		}
 
@@ -245,12 +253,12 @@ class Post_Republisher {
 	/**
 	 * Republishes the post by overwriting the original post.
 	 *
-	 * @param \WP_Post $post          The Rewrite & Republish copy.
-	 * @param \WP_Post $original_post The original post.
+	 * @param WP_Post $post          The Rewrite & Republish copy.
+	 * @param WP_Post $original_post The original post.
 	 *
 	 * @return void
 	 */
-	public function republish( \WP_Post $post, $original_post ) {
+	public function republish( WP_Post $post, WP_Post $original_post ) {
 		// Remove WordPress default filter so a new revision is not created on republish.
 		\remove_action( 'post_updated', 'wp_save_post_revision', 10 );
 
@@ -260,6 +268,9 @@ class Post_Republisher {
 
 		// Republish the post.
 		$this->republish_post_elements( $post, $original_post );
+
+		// Mark the copy as already published.
+		\update_post_meta( $post->ID, '_dp_has_been_republished', '1' );
 
 		// Re-enable the creation of a new revision.
 		\add_action( 'post_updated', 'wp_save_post_revision', 10, 1 );
@@ -353,12 +364,7 @@ class Post_Republisher {
 		$original_post_id = Utils::get_original_post_id( $post->ID );
 
 		$copy_meta_options = [
-			'meta_excludelist' => [
-				'_edit_lock',
-				'_edit_last',
-				'_dp_original',
-				'_dp_is_rewrite_republish_copy',
-			],
+			'meta_excludelist' => Utils::get_default_filtered_meta_names(),
 			'use_filters'      => false,
 			'copy_thumbnail'   => true,
 			'copy_template'    => true,

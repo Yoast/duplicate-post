@@ -88,6 +88,28 @@ class Block_Editor_Test extends TestCase {
 
 		$this->assertNotFalse(
 			\has_action(
+				'elementor/editor/after_enqueue_styles',
+				[
+					$this->instance,
+					'hide_elementor_post_status',
+				]
+			),
+			'Does not have expected elementor/editor/after_enqueue_styles action'
+		);
+
+		$this->assertNotFalse(
+			\has_action(
+				'elementor/editor/before_enqueue_scripts',
+				[
+					$this->instance,
+					'enqueue_elementor_script',
+				]
+			),
+			'Does not have expected elementor/editor/before_enqueue_scripts action'
+		);
+
+		$this->assertNotFalse(
+			\has_action(
 				'admin_enqueue_scripts',
 				[
 					$this->instance,
@@ -96,6 +118,7 @@ class Block_Editor_Test extends TestCase {
 			),
 			'Does not have expected admin_enqueue_scripts action'
 		);
+
 		$this->assertNotFalse(
 			\has_action(
 				'enqueue_block_editor_assets',
@@ -105,6 +128,17 @@ class Block_Editor_Test extends TestCase {
 				]
 			),
 			'Does not have expected enqueue_block_editor_assets action'
+		);
+
+		$this->assertNotFalse(
+			\has_filter(
+				'wpseo_link_suggestions_indexables',
+				[
+					$this->instance,
+					'remove_original_from_wpseo_link_suggestions',
+				]
+			),
+			'Does not have expected wpseo_link_suggestions_indexables filter'
 		);
 	}
 
@@ -217,7 +251,7 @@ class Block_Editor_Test extends TestCase {
 	 * @runInSeparateProcess
 	 * @preserveGlobalState disabled
 	 */
-	public function test_get_new_draft_permalink_normal() {
+	public function test_enqueue_block_editor_scripts() {
 		$utils                      = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
 		$post                       = Mockery::mock( \WP_Post::class );
 		$new_draft_link             = 'http://fakeu.rl/new_draft';
@@ -244,6 +278,7 @@ class Block_Editor_Test extends TestCase {
 		$this->permissions_helper
 			->expects( 'is_rewrite_and_republish_copy' )
 			->with( $post )
+			->twice()
 			->andReturnFalse();
 
 		$this->instance
@@ -322,6 +357,7 @@ class Block_Editor_Test extends TestCase {
 		$this->permissions_helper
 			->expects( 'is_rewrite_and_republish_copy' )
 			->with( $post )
+			->twice()
 			->andReturnTrue();
 
 		$this->instance
@@ -490,10 +526,6 @@ class Block_Editor_Test extends TestCase {
 			->expects( 'should_links_be_displayed' )
 			->with( $post )
 			->andReturnTrue();
-
-		$this->permissions_helper
-			->expects( 'is_elementor_active' )
-			->andReturnFalse();
 
 		$this->link_builder
 			->expects( 'build_rewrite_and_republish_link' )
@@ -749,4 +781,52 @@ class Block_Editor_Test extends TestCase {
 		);
 	}
 
+	/**
+	 * Tests the hiding of the Elementor post status field.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Block_Editor::hide_elementor_post_status
+	 */
+	public function test_hide_elementor_post_status() {
+		$post = Mockery::mock( \WP_Post::class );
+
+		Monkey\Functions\expect( '\get_post' )
+			->andReturn( $post );
+
+		$this->permissions_helper
+			->expects( 'is_rewrite_and_republish_copy' )
+			->with( $post )
+			->once()
+			->andReturnTrue();
+
+		Monkey\Functions\expect( '\wp_add_inline_style' )
+			->with(
+				'elementor-editor',
+				'.elementor-control-post_status { display: none !important; }'
+			);
+
+		$this->instance->hide_elementor_post_status();
+	}
+
+	/**
+	 * Tests the hiding of the Elementor post status field doesn't trigger on normal posts.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Block_Editor::hide_elementor_post_status
+	 */
+	public function test_dont_remove_elementor_post_status() {
+		$post = Mockery::mock( \WP_Post::class );
+
+		Monkey\Functions\expect( '\get_post' )
+			->andReturn( $post );
+
+		$this->permissions_helper
+			->expects( 'is_rewrite_and_republish_copy' )
+			->with( $post )
+			->once()
+			->andReturnFalse();
+
+		Monkey\Functions\expect( '\wp_add_inline_style' )
+			->never();
+
+		$this->instance->hide_elementor_post_status();
+	}
 }
