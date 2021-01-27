@@ -706,6 +706,11 @@ class Block_Editor_Test extends TestCase {
 		Monkey\Functions\expect( '\get_post' )
 			->andReturn( $post );
 
+		$this->permissions_helper
+			->expects( 'is_rewrite_and_republish_copy' )
+			->with( $post )
+			->andReturnTrue();
+
 		$utils
 			->expects( 'get_original_post_id' )
 			->with( $post->ID )
@@ -740,6 +745,34 @@ class Block_Editor_Test extends TestCase {
 	}
 
 	/**
+	 * Tests the unsuccessful get_original_post_edit_url when the post is not a Rewrite & Republish copy.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Block_Editor::get_original_post_edit_url
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 */
+	public function test_get_original_post_edit_url_not_rewrite_and_republish() {
+		$utils       = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
+		$post        = Mockery::mock( \WP_Post::class );
+		$post->ID    = 128;
+		$original_id = 64;
+		$nonce       = '12345678';
+
+		Monkey\Functions\expect( '\get_post' )
+			->andReturn( $post );
+
+		$this->permissions_helper
+			->expects( 'is_rewrite_and_republish_copy' )
+			->with( $post )
+			->andReturnFalse();
+
+		$this->assertSame(
+			'',
+			$this->instance->get_original_post_edit_url()
+		);
+	}
+
+	/**
 	 * Tests the get_original_post_edit_url when there is no post.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Block_Editor::get_original_post_edit_url
@@ -769,6 +802,11 @@ class Block_Editor_Test extends TestCase {
 
 		Monkey\Functions\expect( '\get_post' )
 			->andReturn( $post );
+
+		$this->permissions_helper
+			->expects( 'is_rewrite_and_republish_copy' )
+			->with( $post )
+			->andReturnTrue();
 
 		$utils
 			->expects( 'get_original_post_id' )
