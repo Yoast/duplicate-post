@@ -151,7 +151,7 @@ New features and customization, WP 3.0 compatibility: you should upgrade if you 
 
 == Changelog ==
 
-= 4.1 (TBD) =
+= 4.1 (2021-01-27) =
 
 Enhancements:
 
