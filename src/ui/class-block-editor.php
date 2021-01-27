@@ -199,7 +199,7 @@ class Block_Editor {
 	public function get_original_post_edit_url() {
 		$post = \get_post();
 
-		if ( ! $post instanceof WP_Post ) {
+		if ( ! $post instanceof WP_Post || ! $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
 			return '';
 		}
 
