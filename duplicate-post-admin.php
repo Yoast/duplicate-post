@@ -165,8 +165,10 @@ function duplicate_post_plugin_upgrade() {
 		update_site_option( 'duplicate_post_show_notice', 1 );
 	}
 
-	// Migrate the 'Show links in' options to the new array-based structure.
-	duplicate_post_migrate_show_links_in_options( $show_links_in_defaults );
+	if ( version_compare( $installed_version, '4.0.0' ) < 0 ) {
+		// Migrate the 'Show links in' options to the new array-based structure.
+		duplicate_post_migrate_show_links_in_options( $show_links_in_defaults );
+	}
 
 	delete_site_option( 'duplicate_post_version' );
 	update_option( 'duplicate_post_version', duplicate_post_get_current_version() );
