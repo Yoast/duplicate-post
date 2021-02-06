@@ -378,5 +378,5 @@ Enhancements:
 
 If you find this useful and if you want to contribute, there are two ways:
 
-   1. Submit your bug reports, suggestions and requests for features on GitHub;
+   1. Submit your bug reports, suggestions and requests for features on [GitHub](https://github.com/Yoast/duplicate-post);
    2. If you want to translate it to your language (there are just a few lines of text), you can use the [translation project](https://translate.wordpress.org/projects/wp-plugins/duplicate-post);
