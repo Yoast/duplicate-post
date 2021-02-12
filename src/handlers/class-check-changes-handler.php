@@ -114,14 +114,18 @@ class Check_Changes_Handler {
 						];
 
 						$post_array = \get_post( $post, \ARRAY_A );
-						$fields     = \apply_filters( '_wp_post_revision_fields', $fields, $post_array ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+						/** This filter is documented in wp-admin/includes/revision.php */
+						// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Reason: we want to use a WP filter from the revision feature.
+						$fields = \apply_filters( '_wp_post_revision_fields', $fields, $post_array );
 
 						foreach ( $fields as $field => $name ) {
 							/** This filter is documented in wp-admin/includes/revision.php */
-							$content_from = $original ? \apply_filters( "_wp_post_revision_field_{$field}", $original->$field, $field, $original, 'from' ) : '';  // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+							// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Reason: we want to use a WP filter from the revision feature.
+							$content_from = apply_filters( "_wp_post_revision_field_{$field}", $original->$field, $field, $original, 'from' );
 
 							/** This filter is documented in wp-admin/includes/revision.php */
-							$content_to = \apply_filters( "_wp_post_revision_field_{$field}", $post->$field, $field, $post, 'to' );  // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+							// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Reason: we want to use a WP filter from the revision feature.
+							$content_to = \apply_filters( "_wp_post_revision_field_{$field}", $post->$field, $field, $post, 'to' );
 
 							$diff = \wp_text_diff( $content_from, $content_to );
 
