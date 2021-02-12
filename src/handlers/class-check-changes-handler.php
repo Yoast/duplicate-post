@@ -117,7 +117,13 @@ class Check_Changes_Handler {
 						$fields     = \apply_filters( '_wp_post_revision_fields', $fields, $post_array ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 
 						foreach ( $fields as $field => $name ) {
-							$diff = \wp_text_diff( $original->$field, $post->$field );
+							/** This filter is documented in wp-admin/includes/revision.php */
+							$content_from = $original ? \apply_filters( "_wp_post_revision_field_{$field}", $original->$field, $field, $original, 'from' ) : '';  // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+
+							/** This filter is documented in wp-admin/includes/revision.php */
+							$content_to = \apply_filters( "_wp_post_revision_field_{$field}", $post->$field, $field, $post, 'to' );  // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+
+							$diff = \wp_text_diff( $content_from, $content_to );
 
 							if ( ! $diff && 'post_title' === $field ) {
 								// It's a better user experience to still show the Title, even if it didn't change.
