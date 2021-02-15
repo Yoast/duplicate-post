@@ -108,13 +108,26 @@ class Check_Changes_Handler {
 						<div class="diff">
 						<?php
 						$fields = [
-							\__( 'Title', 'default' )   => 'post_title',
-							\__( 'Content', 'default' ) => 'post_content',
-							\__( 'Excerpt', 'default' ) => 'post_excerpt',
+							'post_title'   => \__( 'Title', 'default' ),
+							'post_content' => \__( 'Content', 'default' ),
+							'post_excerpt' => \__( 'Excerpt', 'default' ),
 						];
 
-						foreach ( $fields as $name => $field ) {
-							$diff = \wp_text_diff( $original->$field, $post->$field );
+						$post_array = \get_post( $post, \ARRAY_A );
+						/** This filter is documented in wp-admin/includes/revision.php */
+						// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Reason: we want to use a WP filter from the revision feature.
+						$fields = \apply_filters( '_wp_post_revision_fields', $fields, $post_array );
+
+						foreach ( $fields as $field => $name ) {
+							/** This filter is documented in wp-admin/includes/revision.php */
+							// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Reason: we want to use a WP filter from the revision feature.
+							$content_from = apply_filters( "_wp_post_revision_field_{$field}", $original->$field, $field, $original, 'from' );
+
+							/** This filter is documented in wp-admin/includes/revision.php */
+							// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Reason: we want to use a WP filter from the revision feature.
+							$content_to = \apply_filters( "_wp_post_revision_field_{$field}", $post->$field, $field, $post, 'to' );
+
+							$diff = \wp_text_diff( $content_from, $content_to );
 
 							if ( ! $diff && 'post_title' === $field ) {
 								// It's a better user experience to still show the Title, even if it didn't change.
@@ -150,6 +163,7 @@ class Check_Changes_Handler {
 	 * @return void
 	 */
 	public function require_wordpress_header() {
+		\set_current_screen( 'revision' );
 		require_once ABSPATH . 'wp-admin/admin-header.php';
 	}
 
