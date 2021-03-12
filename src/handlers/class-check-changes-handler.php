@@ -47,6 +47,8 @@ class Check_Changes_Handler {
 	 * @return void
 	 */
 	public function check_changes_action_handler() {
+		global $wp_version;
+
 		if ( ! ( isset( $_GET['post'] ) || isset( $_POST['post'] ) || // Input var okay.
 			( isset( $_REQUEST['action'] ) && 'duplicate_post_check_changes' === $_REQUEST['action'] ) ) ) { // Input var okay.
 			\wp_die(
@@ -113,6 +115,17 @@ class Check_Changes_Handler {
 							'post_excerpt' => \__( 'Excerpt', 'default' ),
 						];
 
+						$args = array(
+							'show_split_view' => true,
+							'title_left'      => __( 'Removed', 'default' ),
+							'title_right'     => __( 'Added', 'default' ),
+						);
+
+						if ( \version_compare( $wp_version, '5.7' ) < 0 ) {
+							unset( $args['title_left'] );
+							unset( $args['title_right'] );
+						}
+
 						$post_array = \get_post( $post, \ARRAY_A );
 						/** This filter is documented in wp-admin/includes/revision.php */
 						// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Reason: we want to use a WP filter from the revision feature.
@@ -127,7 +140,7 @@ class Check_Changes_Handler {
 							// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Reason: we want to use a WP filter from the revision feature.
 							$content_to = \apply_filters( "_wp_post_revision_field_{$field}", $post->$field, $field, $post, 'to' );
 
-							$diff = \wp_text_diff( $content_from, $content_to );
+							$diff = \wp_text_diff( $content_from, $content_to, $args );
 
 							if ( ! $diff && 'post_title' === $field ) {
 								// It's a better user experience to still show the Title, even if it didn't change.
