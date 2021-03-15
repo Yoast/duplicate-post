@@ -74,8 +74,8 @@ class Metabox {
 	/**
 	 * Outputs the HTML for the metabox.
 	 *
-	 * @param \WP_Post $post The current post.
-	 * @param array    $args The array of arguments from the `add_meta_box()` call.
+	 * @param \WP_Post $post    The current post.
+	 * @param array    $metabox The array containing the metabox data.
 	 *
 	 * @return void
 	 */
