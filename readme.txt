@@ -151,6 +151,18 @@ New features and customization, WP 3.0 compatibility: you should upgrade if you 
 
 == Changelog ==
 
+= 4.1.2 (2021-04-06) =
+
+Enhancements:
+
+* Allows plugins such as ACF to add fields to the "Compare changes" screen for Rewrite & Republish.
+
+Bugfixes:
+
+* Fixes a bug where the "Compare changes" screen for the Rewrite & Republish feature displayed a broken layout in WordPress 5.7.
+* Fixes a bug where a post type enabled by filter couldn't be copied.
+* Fixes a bug where the "Show links in" settings were reset to the default value on version upgrade.
+
 = 4.1.1 (2021-01-27) =
 
 Bugfixes:
