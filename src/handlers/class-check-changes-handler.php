@@ -129,11 +129,11 @@ class Check_Changes_Handler {
 							'post_excerpt' => \__( 'Excerpt', 'default' ),
 						];
 
-						$args = array(
+						$args = [
 							'show_split_view' => true,
 							'title_left'      => __( 'Removed', 'default' ),
 							'title_right'     => __( 'Added', 'default' ),
-						);
+						];
 
 						if ( \version_compare( $wp_version, '5.7' ) < 0 ) {
 							unset( $args['title_left'] );

@@ -83,14 +83,14 @@ add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'duplicate_pos
  * @return array
  */
 function duplicate_post_plugin_actions( $actions ) {
-	$settings_action = array(
+	$settings_action = [
 		'settings' => sprintf(
 			'<a href="%1$s" %2$s>%3$s</a>',
 			menu_page_url( 'duplicatepost', false ),
 			'aria-label="' . __( 'Settings for Duplicate Post', 'duplicate-post' ) . '"',
 			esc_html__( 'Settings', 'default' )
 		),
-	);
+	];
 
 	$actions = $settings_action + $actions;
 	return $actions;
