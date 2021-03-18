@@ -54,7 +54,6 @@ before_script:
 script:
   - composer lint
   - if [[ "$SNIFF" == "1" ]]; then composer check-cs; fi
-  - if [[ "$SNIFF" == "1" ]]; then composer check-vip; fi
   # PHP Unit Tests
   - |
     if [[ "$PHPUNIT" == "1" ]]; then
