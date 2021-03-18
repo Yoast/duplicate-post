@@ -41,7 +41,7 @@
             "@php ./vendor/php-parallel-lint/php-parallel-lint/parallel-lint . -e php --exclude vendor --exclude node_modules --exclude .git"
         ],
         "check-cs": [
-            "@php ./vendor/squizlabs/php_codesniffer/bin/phpcs --runtime-set ignore_warnings_on_exit 1"
+            "@php ./vendor/squizlabs/php_codesniffer/bin/phpcs"
         ],
         "fix-cs": [
             "@php ./vendor/squizlabs/php_codesniffer/bin/phpcbf"
