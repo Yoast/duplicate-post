@@ -34,7 +34,13 @@ matrix:
     - php: "nightly"
 
 before_install:
-  - if [[ "$SNIFF" == "1" || "$PHPUNIT" == "1" ]]; then composer install; fi
+  - |
+    if [[ ${TRAVIS_PHP_VERSION:0:1} == "8" || $TRAVIS_PHP_VERSION == "nightly" ]]; then
+      composer install --ignore-platform-reqs
+    else
+      composer install
+    fi
+
 
 before_script:
 - export -f travis_fold
@@ -42,7 +48,7 @@ before_script:
 - export -f travis_time_finish
 
 script:
-  - find -L . ./compat/ ./src/ \( -path ./vendor -o -path ./node_modules \) -prune -o -name '*.php'  -print0 | xargs -0 -n 1 -P 4 php -l
+  - composer lint
   - if [[ "$SNIFF" == "1" ]]; then composer check-cs; fi
   - if [[ "$SNIFF" == "1" ]]; then composer check-vip; fi
   # PHP Unit Tests
