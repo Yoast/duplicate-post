@@ -17,21 +17,26 @@ cache:
     - $HOME/.composer/cache
 
 php:
-    - '5.6'
     - '7.0'
     - '7.1'
     - '7.2'
     - '7.3'
-    - '7.4'
-    - '8.0'
-    - "nightly"
+
+env:
+  - PHPUNIT=1
 
 jobs:
   fast_finish: true
   include:
     # Arbitrary PHP version to run the sniffs against.
+    - php: '5.6'
+      env: LINT=1 PHPUNIT=1
     - php: '7.4'
       env: SNIFF=1 PHPUNIT=1
+    - php: '8.0'
+      env: LINT=1
+    - php: "nightly"
+      env: LINT=1
 
   allow_failures:
     - php: "nightly"
@@ -52,7 +57,7 @@ before_script:
 - export -f travis_time_finish
 
 script:
-  - composer lint
+  - if [[ "$LINT" == "1" ]]; then composer lint; fi
   - if [[ "$SNIFF" == "1" ]]; then composer check-cs; fi
   # PHP Unit Tests
   - |
