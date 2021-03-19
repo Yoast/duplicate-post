@@ -4,6 +4,9 @@ namespace Yoast\WP\Duplicate_Post\Tests;
 
 use Brain\Monkey;
 use Mockery;
+use WP_Post;
+use WP_Post_Type;
+use WP_Screen;
 use Yoast\WP\Duplicate_Post\Permissions_Helper;
 
 /**
@@ -95,7 +98,7 @@ class Permissions_Helper_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::is_rewrite_and_republish_copy
 	 */
 	public function test_is_rewrite_and_republish_copy_successful() {
-		$post     = Mockery::mock( \WP_Post::class );
+		$post     = Mockery::mock( WP_Post::class );
 		$post->ID = 123;
 
 		Monkey\Functions\expect( '\get_post_meta' )
@@ -111,7 +114,7 @@ class Permissions_Helper_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::is_rewrite_and_republish_copy
 	 */
 	public function test_is_rewrite_and_republish_copy_unsuccessful() {
-		$post     = Mockery::mock( \WP_Post::class );
+		$post     = Mockery::mock( WP_Post::class );
 		$post->ID = 123;
 
 		Monkey\Functions\expect( '\get_post_meta' )
@@ -127,7 +130,7 @@ class Permissions_Helper_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::has_rewrite_and_republish_copy
 	 */
 	public function test_has_rewrite_and_republish_copy_successful() {
-		$post     = Mockery::mock( \WP_Post::class );
+		$post     = Mockery::mock( WP_Post::class );
 		$post->ID = 123;
 
 		Monkey\Functions\expect( '\get_post_meta' )
@@ -143,7 +146,7 @@ class Permissions_Helper_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::has_rewrite_and_republish_copy
 	 */
 	public function test_has_rewrite_and_republish_copy_unsuccessful() {
-		$post     = Mockery::mock( \WP_Post::class );
+		$post     = Mockery::mock( WP_Post::class );
 		$post->ID = 123;
 
 		Monkey\Functions\expect( '\get_post_meta' )
@@ -159,9 +162,9 @@ class Permissions_Helper_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::has_scheduled_rewrite_and_republish_copy
 	 */
 	public function test_has_scheduled_rewrite_and_republish_copy_successful() {
-		$post              = Mockery::mock( \WP_Post::class );
+		$post              = Mockery::mock( WP_Post::class );
 		$post->ID          = 123;
-		$copy              = Mockery::mock( \WP_Post::class );
+		$copy              = Mockery::mock( WP_Post::class );
 		$copy->post_status = 'future';
 		$copy_id           = 321;
 
@@ -185,7 +188,7 @@ class Permissions_Helper_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::has_scheduled_rewrite_and_republish_copy
 	 */
 	public function test_has_scheduled_rewrite_and_republish_copy_no_copy() {
-		$post     = Mockery::mock( \WP_Post::class );
+		$post     = Mockery::mock( WP_Post::class );
 		$post->ID = 123;
 
 		Monkey\Functions\expect( '\get_post_meta' )
@@ -204,9 +207,9 @@ class Permissions_Helper_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::has_scheduled_rewrite_and_republish_copy
 	 */
 	public function test_has_scheduled_rewrite_and_republish_copy_not_scheduled() {
-		$post              = Mockery::mock( \WP_Post::class );
+		$post              = Mockery::mock( WP_Post::class );
 		$post->ID          = 123;
-		$copy              = Mockery::mock( \WP_Post::class );
+		$copy              = Mockery::mock( WP_Post::class );
 		$copy->post_status = 'draft';
 		$copy_id           = 321;
 
@@ -231,7 +234,7 @@ class Permissions_Helper_Test extends TestCase {
 	 * @param mixed $expected Expected output.
 	 */
 	public function test_is_edit_post_screen( $original, $expected ) {
-		$screen         = Mockery::mock( \WP_Screen::class );
+		$screen         = Mockery::mock( WP_Screen::class );
 		$screen->base   = $original['base'];
 		$screen->action = $original['action'];
 
@@ -304,7 +307,7 @@ class Permissions_Helper_Test extends TestCase {
 	 * @param mixed $expected Expected output.
 	 */
 	public function test_is_new_post_screen( $original, $expected ) {
-		$screen         = Mockery::mock( \WP_Screen::class );
+		$screen         = Mockery::mock( WP_Screen::class );
 		$screen->base   = $original['base'];
 		$screen->action = $original['action'];
 
@@ -377,7 +380,7 @@ class Permissions_Helper_Test extends TestCase {
 	 * @param mixed $expected Expected output.
 	 */
 	public function test_is_classic_editor( $original, $expected ) {
-		$screen = Mockery::mock( \WP_Screen::class );
+		$screen = Mockery::mock( WP_Screen::class );
 
 		$this->instance->expects( 'is_edit_post_screen' )
 			->andReturn( $original['is_edit_post_screen'] );
@@ -453,10 +456,10 @@ class Permissions_Helper_Test extends TestCase {
 	 */
 	public function test_has_original_changed_successful() {
 		$utils                       = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
-		$post                        = Mockery::mock( \WP_Post::class );
+		$post                        = Mockery::mock( WP_Post::class );
 		$post->ID                    = 123;
 		$copy_creation_date_gmt      = '2020-12-01 12:35:55';
-		$original                    = Mockery::mock( \WP_Post::class );
+		$original                    = Mockery::mock( WP_Post::class );
 		$original->post_modified_gmt = '2020-12-02 11:30:45';
 
 		$this->instance
@@ -484,10 +487,10 @@ class Permissions_Helper_Test extends TestCase {
 	 */
 	public function test_has_original_changed_no() {
 		$utils                       = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
-		$post                        = Mockery::mock( \WP_Post::class );
+		$post                        = Mockery::mock( WP_Post::class );
 		$post->ID                    = 123;
 		$copy_creation_date_gmt      = '2020-12-01 12:35:55';
-		$original                    = Mockery::mock( \WP_Post::class );
+		$original                    = Mockery::mock( WP_Post::class );
 		$original->post_modified_gmt = '2020-12-01 12:35:55';
 
 		$this->instance
@@ -512,7 +515,7 @@ class Permissions_Helper_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::has_original_changed
 	 */
 	public function test_has_original_changed_not_rewrite_and_republish() {
-		$post = Mockery::mock( \WP_Post::class );
+		$post = Mockery::mock( WP_Post::class );
 
 		$this->instance
 			->expects( 'is_rewrite_and_republish_copy' )
@@ -528,7 +531,7 @@ class Permissions_Helper_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::should_links_be_displayed
 	 */
 	public function test_should_links_be_displayed_successful() {
-		$post            = Mockery::mock( \WP_Post::class );
+		$post            = Mockery::mock( WP_Post::class );
 		$post->post_type = 'post';
 
 		$this->instance
@@ -554,7 +557,7 @@ class Permissions_Helper_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::should_links_be_displayed
 	 */
 	public function test_should_links_be_displayed_unsuccessful_user_not_allowed_to_copy() {
-		$post            = Mockery::mock( \WP_Post::class );
+		$post            = Mockery::mock( WP_Post::class );
 		$post->post_type = 'post';
 
 		$this->instance
@@ -580,7 +583,7 @@ class Permissions_Helper_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::should_links_be_displayed
 	 */
 	public function test_should_links_be_displayed_unsuccessful_post_type_not_enabled_for_copy() {
-		$post            = Mockery::mock( \WP_Post::class );
+		$post            = Mockery::mock( WP_Post::class );
 		$post->post_type = 'post';
 
 		$this->instance
@@ -606,7 +609,7 @@ class Permissions_Helper_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::should_links_be_displayed
 	 */
 	public function test_should_links_be_displayed_unsuccessful_post_is_rewrite_and_republish() {
-		$post            = Mockery::mock( \WP_Post::class );
+		$post            = Mockery::mock( WP_Post::class );
 		$post->post_type = 'post';
 
 		$this->instance
@@ -636,7 +639,7 @@ class Permissions_Helper_Test extends TestCase {
 	 * @param mixed $expected Expected output.
 	 */
 	public function test_should_rewrite_and_republish_be_allowed( $original, $expected ) {
-		$post              = Mockery::mock( \WP_Post::class );
+		$post              = Mockery::mock( WP_Post::class );
 		$post->post_type   = 'post';
 		$post->post_status = $original['post_status'];
 
@@ -716,7 +719,7 @@ class Permissions_Helper_Test extends TestCase {
 	 */
 	public function test_post_type_has_admin_bar( $original, $expected ) {
 		$post_type                           = 'post';
-		$post_type_object                    = Mockery::mock( \WP_Post_Type::class );
+		$post_type_object                    = Mockery::mock( WP_Post_Type::class );
 		$post_type_object->public            = $original['public'];
 		$post_type_object->show_in_admin_bar = $original['show_in_admin_bar'];
 
@@ -791,7 +794,7 @@ class Permissions_Helper_Test extends TestCase {
 	 * @param mixed $expected    Expected output.
 	 */
 	public function test_is_copy_allowed_to_be_republished( $post_status, $expected ) {
-		$post              = Mockery::mock( \WP_Post::class );
+		$post              = Mockery::mock( WP_Post::class );
 		$post->post_status = $post_status;
 
 		$this->assertEquals( $expected, $this->instance->is_copy_allowed_to_be_republished( $post ) );
@@ -825,9 +828,9 @@ class Permissions_Helper_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::has_trashed_rewrite_and_republish_copy
 	 */
 	public function test_has_trashed_rewrite_and_republish_copy() {
-		$post              = Mockery::mock( \WP_Post::class );
+		$post              = Mockery::mock( WP_Post::class );
 		$post->ID          = 123;
-		$copy              = Mockery::mock( \WP_Post::class );
+		$copy              = Mockery::mock( WP_Post::class );
 		$copy->post_status = 'trash';
 		$copy_id           = 321;
 
@@ -848,9 +851,9 @@ class Permissions_Helper_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::has_trashed_rewrite_and_republish_copy
 	 */
 	public function test_does_not_have_trashed_rewrite_and_republish_copy() {
-		$post              = Mockery::mock( \WP_Post::class );
+		$post              = Mockery::mock( WP_Post::class );
 		$post->ID          = 123;
-		$copy              = Mockery::mock( \WP_Post::class );
+		$copy              = Mockery::mock( WP_Post::class );
 		$copy->post_status = 'draft';
 		$copy_id           = 321;
 

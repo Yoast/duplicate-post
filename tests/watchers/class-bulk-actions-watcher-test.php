@@ -2,6 +2,7 @@
 
 namespace Yoast\WP\Duplicate_Post\Tests\Watchers;
 
+use Mockery;
 use Yoast\WP\Duplicate_Post\Tests\TestCase;
 use Yoast\WP\Duplicate_Post\Watchers\Bulk_Actions_Watcher;
 
@@ -23,7 +24,7 @@ class Bulk_Actions_Watcher_Test extends TestCase {
 	public function setUp() {
 		parent::setUp();
 
-		$this->instance = \Mockery::mock( Bulk_Actions_Watcher::class )->makePartial();
+		$this->instance = Mockery::mock( Bulk_Actions_Watcher::class )->makePartial();
 	}
 
 	/**

@@ -122,7 +122,7 @@ class Post_Republisher {
 	/**
 	 * Executes the republish request.
 	 *
-	 * @param \WP_Post $post The copy's post object.
+	 * @param WP_Post $post The copy's post object.
 	 *
 	 * @return void
 	 */
@@ -152,7 +152,7 @@ class Post_Republisher {
 	/**
 	 * Republishes the original post with the passed post, when using the Block Editor.
 	 *
-	 * @param \WP_Post $post The copy's post object.
+	 * @param WP_Post $post The copy's post object.
 	 *
 	 * @return void
 	 */
@@ -166,8 +166,8 @@ class Post_Republisher {
 	 * Runs also in the Block Editor to save the custom meta data only when there
 	 * are custom meta boxes.
 	 *
-	 * @param int      $post_id The copy's post ID.
-	 * @param \WP_Post $post    The copy's post object.
+	 * @param int     $post_id The copy's post ID.
+	 * @param WP_Post $post    The copy's post object.
 	 *
 	 * @return void
 	 */
@@ -182,7 +182,7 @@ class Post_Republisher {
 	/**
 	 * Republishes the scheduled Rewrited and Republish post.
 	 *
-	 * @param \WP_Post $copy The scheduled copy.
+	 * @param WP_Post $copy The scheduled copy.
 	 *
 	 * @return void
 	 */
@@ -303,8 +303,8 @@ class Post_Republisher {
 	/**
 	 * Republishes the post elements overwriting the original post.
 	 *
-	 * @param \WP_Post $post          The post object.
-	 * @param \WP_Post $original_post The original post.
+	 * @param WP_Post $post          The post object.
+	 * @param WP_Post $original_post The original post.
 	 *
 	 * @return void
 	 */
@@ -335,7 +335,7 @@ class Post_Republisher {
 	/**
 	 * Republishes the post taxonomies overwriting the ones of the original post.
 	 *
-	 * @param \WP_Post $post The copy's post object.
+	 * @param WP_Post $post The copy's post object.
 	 *
 	 * @return void
 	 */
@@ -353,7 +353,7 @@ class Post_Republisher {
 	/**
 	 * Republishes the post meta overwriting the ones of the original post.
 	 *
-	 * @param \WP_Post $post The copy's post object.
+	 * @param WP_Post $post The copy's post object.
 	 *
 	 * @return void
 	 */
@@ -394,8 +394,8 @@ class Post_Republisher {
 	/**
 	 * Determines the post status to use when publishing the Rewrite & Republish copy.
 	 *
-	 * @param \WP_Post $post          The post object.
-	 * @param \WP_Post $original_post The original post object.
+	 * @param WP_Post $post          The post object.
+	 * @param WP_Post $original_post The original post object.
 	 *
 	 * @return string The post status to use.
 	 */

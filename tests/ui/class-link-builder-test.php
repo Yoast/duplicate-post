@@ -4,6 +4,7 @@ namespace Yoast\WP\Duplicate_Post\Tests\UI;
 
 use Brain\Monkey;
 use Mockery;
+use WP_Post;
 use Yoast\WP\Duplicate_Post\Tests\TestCase;
 use Yoast\WP\Duplicate_Post\UI\Link_Builder;
 
@@ -34,7 +35,7 @@ class Link_Builder_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Link_Builder::build_rewrite_and_republish_link
 	 */
 	public function test_build_rewrite_and_republish_link() {
-		$post    = Mockery::mock( \WP_Post::class );
+		$post    = Mockery::mock( WP_Post::class );
 		$context = 'display';
 		$url     = 'http://basic.wordpress.test/wp-admin/admin.php?action=duplicate_post_rewrite&amp;post=123';
 
@@ -55,7 +56,7 @@ class Link_Builder_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Link_Builder::build_clone_link
 	 */
 	public function test_build_clone_link() {
-		$post    = Mockery::mock( \WP_Post::class );
+		$post    = Mockery::mock( WP_Post::class );
 		$context = 'display';
 		$url     = 'http://basic.wordpress.test/wp-admin/admin.php?action=duplicate_post_clone&amp;post=123';
 
@@ -76,7 +77,7 @@ class Link_Builder_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Link_Builder::build_new_draft_link
 	 */
 	public function test_build_new_draft_link() {
-		$post    = Mockery::mock( \WP_Post::class );
+		$post    = Mockery::mock( WP_Post::class );
 		$context = 'display';
 		$url     = 'http://basic.wordpress.test/wp-admin/admin.php?action=duplicate_post_new_draft&amp;post=123';
 
@@ -97,7 +98,7 @@ class Link_Builder_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Link_Builder::build_check_link
 	 */
 	public function test_build_check_link() {
-		$post    = Mockery::mock( \WP_Post::class );
+		$post    = Mockery::mock( WP_Post::class );
 		$context = 'display';
 		$url     = 'http://basic.wordpress.test/wp-admin/admin.php?action=duplicate_post_check_changes&amp;post=123';
 
@@ -118,7 +119,7 @@ class Link_Builder_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Link_Builder::build_link
 	 */
 	public function test_build_link() {
-		$post        = Mockery::mock( \WP_Post::class );
+		$post        = Mockery::mock( WP_Post::class );
 		$post->ID    = 123;
 		$context     = 'display';
 		$action_name = 'duplicate_post_clone';
@@ -149,7 +150,7 @@ class Link_Builder_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Link_Builder::build_link
 	 */
 	public function test_build_link_not_display() {
-		$post        = Mockery::mock( \WP_Post::class );
+		$post        = Mockery::mock( WP_Post::class );
 		$post->ID    = 123;
 		$context     = '';
 		$action_name = 'duplicate_post_clone';

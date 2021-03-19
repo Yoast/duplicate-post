@@ -2,6 +2,7 @@
 
 namespace Yoast\WP\Duplicate_Post\Watchers;
 
+use WP_Post;
 use Yoast\WP\Duplicate_Post\Permissions_Helper;
 
 /**
@@ -65,7 +66,7 @@ class Original_Post_Watcher {
 
 		$post = \get_post();
 
-		if ( ! $post instanceof \WP_Post ) {
+		if ( ! $post instanceof WP_Post ) {
 			return;
 		}
 
@@ -84,7 +85,7 @@ class Original_Post_Watcher {
 	public function add_block_editor_notice() {
 		$post = \get_post();
 
-		if ( ! $post instanceof \WP_Post ) {
+		if ( ! $post instanceof WP_Post ) {
 			return;
 		}
 

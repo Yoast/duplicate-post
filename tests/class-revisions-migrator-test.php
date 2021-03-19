@@ -4,6 +4,7 @@ namespace Yoast\WP\Duplicate_Post\Tests;
 
 use Brain\Monkey;
 use Mockery;
+use WP_Post;
 use Yoast\WP\Duplicate_Post\Revisions_Migrator;
 
 /**
@@ -47,14 +48,14 @@ class Revisions_Migrator_Test extends TestCase {
 	public function test_migrate_revisions_unlimited() {
 		$post_id           = 128;
 		$original_id       = 64;
-		$post              = Mockery::mock( \WP_Post::class );
-		$original_post     = Mockery::mock( \WP_Post::class );
+		$post              = Mockery::mock( WP_Post::class );
+		$original_post     = Mockery::mock( WP_Post::class );
 		$original_post->ID = $original_id;
 		$revisions         = [
-			Mockery::mock( \WP_Post::class ),
-			Mockery::mock( \WP_Post::class ),
-			Mockery::mock( \WP_Post::class ),
-			Mockery::mock( \WP_Post::class ),
+			Mockery::mock( WP_Post::class ),
+			Mockery::mock( WP_Post::class ),
+			Mockery::mock( WP_Post::class ),
+			Mockery::mock( WP_Post::class ),
 		];
 
 		Monkey\Functions\expect( '\get_post' )
@@ -89,11 +90,11 @@ class Revisions_Migrator_Test extends TestCase {
 	public function test_migrate_revisions_limited() {
 		$post_id             = 128;
 		$original_id         = 64;
-		$post                = Mockery::mock( \WP_Post::class );
-		$revision            = Mockery::mock( \WP_Post::class );
+		$post                = Mockery::mock( WP_Post::class );
+		$revision            = Mockery::mock( WP_Post::class );
 		$revision->ID        = 123;
 		$revision->post_name = 'revision';
-		$original_post       = Mockery::mock( \WP_Post::class );
+		$original_post       = Mockery::mock( WP_Post::class );
 		$original_post->ID   = $original_id;
 		$revisions           = [
 			$revision,
@@ -145,8 +146,8 @@ class Revisions_Migrator_Test extends TestCase {
 	public function test_migrate_revisions_none() {
 		$post_id       = 128;
 		$original_id   = 64;
-		$post          = Mockery::mock( \WP_Post::class );
-		$original_post = Mockery::mock( \WP_Post::class );
+		$post          = Mockery::mock( WP_Post::class );
+		$original_post = Mockery::mock( WP_Post::class );
 
 		Monkey\Functions\expect( '\get_post' )
 			->andReturn( $post, $original_post );

@@ -111,7 +111,7 @@ class Classic_Editor {
 	/**
 	 * Adds a button in the post/page edit screen to create a clone
 	 *
-	 * @param \WP_Post|null $post The post object that's being edited.
+	 * @param WP_Post|null $post The post object that's being edited.
 	 *
 	 * @return void
 	 */
@@ -137,7 +137,7 @@ class Classic_Editor {
 	/**
 	 * Adds a button in the post/page edit screen to create a clone for Rewrite & Republish.
 	 *
-	 * @param \WP_Post|null $post The post object that's being edited.
+	 * @param WP_Post|null $post The post object that's being edited.
 	 *
 	 * @return void
 	 */
@@ -166,7 +166,7 @@ class Classic_Editor {
 	/**
 	 * Adds a message in the post/page edit screen to create a clone for Rewrite & Republish.
 	 *
-	 * @param \WP_Post|null $post The post object that's being edited.
+	 * @param WP_Post|null $post The post object that's being edited.
 	 *
 	 * @return void
 	 */
@@ -278,7 +278,7 @@ class Classic_Editor {
 	/**
 	 * Determines if the Rewrite & Republish copies for the post should be used.
 	 *
-	 * @param \WP_Post $post The current post object.
+	 * @param WP_Post $post The current post object.
 	 *
 	 * @return bool True if the Rewrite & Republish copies should be used.
 	 */
@@ -298,8 +298,8 @@ class Classic_Editor {
 	/**
 	 * Removes the slug meta box in the Classic Editor when the post is a Rewrite & Republish copy.
 	 *
-	 * @param string   $post_type Post type.
-	 * @param \WP_Post $post      Post object.
+	 * @param string  $post_type Post type.
+	 * @param WP_Post $post      Post object.
 	 *
 	 * @return void
 	 */
@@ -312,11 +312,11 @@ class Classic_Editor {
 	/**
 	 * Removes the sample permalink slug editor in the Classic Editor when the post is a Rewrite & Republish copy.
 	 *
-	 * @param string   $return    Sample permalink HTML markup.
-	 * @param int      $post_id   Post ID.
-	 * @param string   $new_title New sample permalink title.
-	 * @param string   $new_slug  New sample permalink slug.
-	 * @param \WP_Post $post      Post object.
+	 * @param string  $return    Sample permalink HTML markup.
+	 * @param int     $post_id   Post ID.
+	 * @param string  $new_title New sample permalink title.
+	 * @param string  $new_slug  New sample permalink slug.
+	 * @param WP_Post $post      Post object.
 	 *
 	 * @return string The filtered HTML of the sample permalink slug editor.
 	 */

@@ -3,6 +3,7 @@
 namespace Yoast\WP\Duplicate_Post\Tests\Watchers;
 
 use Brain\Monkey;
+use Mockery;
 use Yoast\WP\Duplicate_Post\Permissions_Helper;
 use Yoast\WP\Duplicate_Post\Tests\TestCase;
 use Yoast\WP\Duplicate_Post\Watchers\Link_Actions_Watcher;
@@ -32,9 +33,9 @@ class Link_Actions_Watcher_Test extends TestCase {
 	public function setUp() {
 		parent::setUp();
 
-		$this->permissions_helper = \Mockery::mock( Permissions_Helper::class );
+		$this->permissions_helper = Mockery::mock( Permissions_Helper::class );
 
-		$this->instance = \Mockery::mock(
+		$this->instance = Mockery::mock(
 			Link_Actions_Watcher::class
 		)->makePartial();
 		$this->instance->__construct( $this->permissions_helper );

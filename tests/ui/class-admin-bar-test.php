@@ -4,6 +4,10 @@ namespace Yoast\WP\Duplicate_Post\Tests\UI;
 
 use Brain\Monkey;
 use Mockery;
+use WP_Admin_Bar;
+use WP_Post;
+use WP_Query;
+use WP_Term;
 use Yoast\WP\Duplicate_Post\Permissions_Helper;
 use Yoast\WP\Duplicate_Post\Tests\TestCase;
 use Yoast\WP\Duplicate_Post\UI\Admin_Bar;
@@ -105,8 +109,8 @@ class Admin_Bar_Test extends TestCase {
 	 */
 	public function test_admin_bar_render_successful_both() {
 		global $wp_admin_bar;
-		$wp_admin_bar      = Mockery::mock( \WP_Admin_Bar::class ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Intended, to be able to test the method.
-		$post              = Mockery::mock( \WP_Post::class );
+		$wp_admin_bar      = Mockery::mock( WP_Admin_Bar::class ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Intended, to be able to test the method.
+		$post              = Mockery::mock( WP_Post::class );
 		$post->post_status = 'publish';
 
 		Monkey\Functions\expect( '\is_admin_bar_showing' )
@@ -158,8 +162,8 @@ class Admin_Bar_Test extends TestCase {
 	 */
 	public function test_admin_bar_render_successful_one() {
 		global $wp_admin_bar;
-		$wp_admin_bar      = Mockery::mock( \WP_Admin_Bar::class ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Intended, to be able to test the method.
-		$post              = Mockery::mock( \WP_Post::class );
+		$wp_admin_bar      = Mockery::mock( WP_Admin_Bar::class ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Intended, to be able to test the method.
+		$post              = Mockery::mock( WP_Post::class );
 		$post->post_status = 'pending';
 
 		Monkey\Functions\expect( '\is_admin_bar_showing' )
@@ -204,8 +208,8 @@ class Admin_Bar_Test extends TestCase {
 	 */
 	public function test_admin_bar_render_unsuccessful_no_admin_bar() {
 		global $wp_admin_bar;
-		$wp_admin_bar      = Mockery::mock( \WP_Admin_Bar::class ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Intended, to be able to test the method.
-		$post              = Mockery::mock( \WP_Post::class );
+		$wp_admin_bar      = Mockery::mock( WP_Admin_Bar::class ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Intended, to be able to test the method.
+		$post              = Mockery::mock( WP_Post::class );
 		$post->post_status = 'publish';
 
 		Monkey\Functions\expect( '\is_admin_bar_showing' )
@@ -240,8 +244,8 @@ class Admin_Bar_Test extends TestCase {
 	 */
 	public function test_admin_bar_render_unsuccessful_no_post() {
 		global $wp_admin_bar;
-		$wp_admin_bar      = Mockery::mock( \WP_Admin_Bar::class ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Intended, to be able to test the method.
-		$post              = Mockery::mock( \WP_Post::class );
+		$wp_admin_bar      = Mockery::mock( WP_Admin_Bar::class ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Intended, to be able to test the method.
+		$post              = Mockery::mock( WP_Post::class );
 		$post->post_status = 'publish';
 
 		Monkey\Functions\expect( '\is_admin_bar_showing' )
@@ -274,7 +278,7 @@ class Admin_Bar_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Admin_Bar::enqueue_styles
 	 */
 	public function test_enqueue_styles_successful() {
-		$post              = Mockery::mock( \WP_Post::class );
+		$post              = Mockery::mock( WP_Post::class );
 		$post->post_status = 'publish';
 
 		Monkey\Functions\expect( '\is_admin_bar_showing' )
@@ -294,7 +298,7 @@ class Admin_Bar_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Admin_Bar::enqueue_styles
 	 */
 	public function test_enqueue_styles_unsuccessful_no_admin_bar() {
-		$post              = Mockery::mock( \WP_Post::class );
+		$post              = Mockery::mock( WP_Post::class );
 		$post->post_status = 'publish';
 
 		Monkey\Functions\expect( '\is_admin_bar_showing' )
@@ -316,7 +320,7 @@ class Admin_Bar_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Admin_Bar::enqueue_styles
 	 */
 	public function test_enqueue_styles_unsuccessful_no_post() {
-		$post              = Mockery::mock( \WP_Post::class );
+		$post              = Mockery::mock( WP_Post::class );
 		$post->post_status = 'publish';
 
 		Monkey\Functions\expect( '\is_admin_bar_showing' )
@@ -338,8 +342,8 @@ class Admin_Bar_Test extends TestCase {
 	 */
 	public function test_get_current_post_successful_backend() {
 		global $wp_the_query;
-		$wp_the_query    = Mockery::mock( \WP_Query::class ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Intended, to be able to test the method.
-		$post            = Mockery::mock( \WP_Post::class );
+		$wp_the_query    = Mockery::mock( WP_Query::class ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Intended, to be able to test the method.
+		$post            = Mockery::mock( WP_Post::class );
 		$post->post_type = 'post';
 
 		Monkey\Functions\expect( '\is_admin' )
@@ -375,8 +379,8 @@ class Admin_Bar_Test extends TestCase {
 	 */
 	public function test_get_current_post_successful_frontend() {
 		global $wp_the_query;
-		$wp_the_query    = Mockery::mock( \WP_Query::class ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Intended, to be able to test the method.
-		$post            = Mockery::mock( \WP_Post::class );
+		$wp_the_query    = Mockery::mock( WP_Query::class ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Intended, to be able to test the method.
+		$post            = Mockery::mock( WP_Post::class );
 		$post->post_type = 'post';
 
 		Monkey\Functions\expect( '\is_admin' )
@@ -413,7 +417,7 @@ class Admin_Bar_Test extends TestCase {
 	 */
 	public function test_get_current_post_unsuccessful_backend() {
 		global $wp_the_query;
-		$wp_the_query = Mockery::mock( \WP_Query::class ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Intended, to be able to test the method.
+		$wp_the_query = Mockery::mock( WP_Query::class ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Intended, to be able to test the method.
 		$post         = null;
 
 		Monkey\Functions\expect( '\is_admin' )
@@ -450,8 +454,8 @@ class Admin_Bar_Test extends TestCase {
 	 */
 	public function test_get_current_post_unsuccessful_frontend() {
 		global $wp_the_query;
-		$wp_the_query    = Mockery::mock( \WP_Query::class ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Intended, to be able to test the method.
-		$post            = Mockery::mock( \WP_Term::class );
+		$wp_the_query    = Mockery::mock( WP_Query::class ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Intended, to be able to test the method.
+		$post            = Mockery::mock( WP_Term::class );
 		$post->post_type = 'post';
 
 		Monkey\Functions\expect( '\is_admin' )
@@ -489,8 +493,8 @@ class Admin_Bar_Test extends TestCase {
 	 */
 	public function test_get_current_post_unsuccessful_should_not_be_displayed() {
 		global $wp_the_query;
-		$wp_the_query    = Mockery::mock( \WP_Query::class ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Intended, to be able to test the method.
-		$post            = Mockery::mock( \WP_Post::class );
+		$wp_the_query    = Mockery::mock( WP_Query::class ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Intended, to be able to test the method.
+		$post            = Mockery::mock( WP_Post::class );
 		$post->post_type = 'post';
 
 		Monkey\Functions\expect( '\is_admin' )

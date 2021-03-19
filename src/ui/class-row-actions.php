@@ -65,8 +65,8 @@ class Row_Actions {
 	/**
 	 * Hooks in the `post_row_actions` and `page_row_actions` filters to add a 'Clone' link.
 	 *
-	 * @param array    $actions The array of actions from the filter.
-	 * @param \WP_Post $post    The post object.
+	 * @param array   $actions The array of actions from the filter.
+	 * @param WP_Post $post    The post object.
 	 *
 	 * @return array The updated array of actions.
 	 */
@@ -92,8 +92,8 @@ class Row_Actions {
 	/**
 	 * Hooks in the `post_row_actions` and `page_row_actions` filters to add a 'New Draft' link.
 	 *
-	 * @param array    $actions The array of actions from the filter.
-	 * @param \WP_Post $post    The post object.
+	 * @param array   $actions The array of actions from the filter.
+	 * @param WP_Post $post    The post object.
 	 *
 	 * @return array The updated array of actions.
 	 */
@@ -120,8 +120,8 @@ class Row_Actions {
 	/**
 	 * Hooks in the `post_row_actions` and `page_row_actions` filters to add a 'Rewrite & Republish' link.
 	 *
-	 * @param array    $actions The array of actions from the filter.
-	 * @param \WP_Post $post    The post object.
+	 * @param array   $actions The array of actions from the filter.
+	 * @param WP_Post $post    The post object.
 	 *
 	 * @return array The updated array of actions.
 	 */
