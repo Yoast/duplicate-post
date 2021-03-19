@@ -173,7 +173,7 @@ class Post_Duplicator_Test extends TestCase {
 		Monkey\Functions\expect( '\is_post_type_hierarchical' )
 			->with( $post->post_type )
 			->andReturnUsing(
-				function( $post_type ) {
+				static function ( $post_type ) {
 					return $post_type !== 'post' && $post_type === 'page';
 				}
 			);
@@ -277,7 +277,7 @@ class Post_Duplicator_Test extends TestCase {
 		Monkey\Functions\expect( '\is_post_type_hierarchical' )
 			->with( $post->post_type )
 			->andReturnUsing(
-				function( $post_type ) {
+				static function ( $post_type ) {
 					return $post_type !== 'post' && $post_type === 'page';
 				}
 			);

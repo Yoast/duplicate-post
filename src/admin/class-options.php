@@ -39,7 +39,7 @@ class Options {
 
 		$options = \array_filter(
 			$options,
-			function ( $option ) use ( $tab ) {
+			static function ( $option ) use ( $tab ) {
 				return \array_key_exists( 'tab', $option ) && $option['tab'] === $tab;
 			}
 		);
@@ -52,7 +52,7 @@ class Options {
 		if ( ! empty( $fieldset ) ) {
 			$options = \array_filter(
 				$options,
-				function ( $option ) use ( $fieldset ) {
+				static function ( $option ) use ( $fieldset ) {
 					return \array_key_exists( 'fieldset', $option ) && $option['fieldset'] === $fieldset;
 				}
 			);

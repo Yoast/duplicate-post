@@ -267,7 +267,7 @@ class Block_Editor {
 
 		return \array_filter(
 			$suggestions,
-			function( $suggestion ) use ( $original_post_id ) {
+			static function ( $suggestion ) use ( $original_post_id ) {
 				return $suggestion->object_id !== $original_post_id;
 			}
 		);
