@@ -651,6 +651,7 @@ class Classic_Editor_Test extends TestCase {
 		$time_format    = 'g:i a';
 		$scheduled_time = '2:30 pm';
 
+		$messages         = [];
 		$messages['post'] = [
 			0  => '', // Unused. Messages start at index 1.
 			1  => 'Post updated.',
@@ -680,6 +681,7 @@ class Classic_Editor_Test extends TestCase {
 
 		$new_copy = 'This rewritten post <a href="' . $permalink . '">' . $post->post_title . '</a> is now scheduled to replace the original post. It will be published on <strong>' . $scheduled_date . ' ' . $scheduled_time . '</strong>.';
 
+		$result         = [];
 		$result['post'] = [
 			0  => '', // Unused. Messages start at index 1.
 			1  => 'Post updated.',
@@ -761,6 +763,7 @@ class Classic_Editor_Test extends TestCase {
 		$time_format    = 'g:i a';
 		$scheduled_time = '2:30 pm';
 
+		$messages         = [];
 		$messages['post'] = [
 			0  => '', // Unused. Messages start at index 1.
 			1  => 'Post updated.',
@@ -790,6 +793,7 @@ class Classic_Editor_Test extends TestCase {
 
 		$new_copy = 'This rewritten page <a href="' . $permalink . '">' . $post->post_title . '</a> is now scheduled to replace the original page. It will be published on <strong>' . $scheduled_date . ' ' . $scheduled_time . '</strong>.';
 
+		$result         = [];
 		$result['post'] = [
 			0  => '', // Unused. Messages start at index 1.
 			1  => 'Post updated.',
