@@ -63,7 +63,7 @@ class Link_Handler {
 		}
 
 		if ( ! ( isset( $_GET['post'] ) || isset( $_POST['post'] ) || // Input var okay.
-			( isset( $_REQUEST['action'] ) && 'duplicate_post_new_draft' === $_REQUEST['action'] ) ) ) { // Input var okay.
+			( isset( $_REQUEST['action'] ) && $_REQUEST['action'] === 'duplicate_post_new_draft' ) ) ) { // Input var okay.
 			\wp_die( \esc_html__( 'No post to duplicate has been supplied!', 'duplicate-post' ) );
 		}
 
@@ -119,7 +119,7 @@ class Link_Handler {
 		}
 
 		if ( ! ( isset( $_GET['post'] ) || isset( $_POST['post'] ) || // Input var okay.
-			( isset( $_REQUEST['action'] ) && 'duplicate_post_clone' === $_REQUEST['action'] ) ) ) { // Input var okay.
+			( isset( $_REQUEST['action'] ) && $_REQUEST['action'] === 'duplicate_post_clone' ) ) ) { // Input var okay.
 			\wp_die( \esc_html__( 'No post to duplicate has been supplied!', 'duplicate-post' ) );
 		}
 
@@ -155,7 +155,7 @@ class Link_Handler {
 		$post_type = $post->post_type;
 		$sendback  = \wp_get_referer();
 		if ( ! $sendback || strpos( $sendback, 'post.php' ) !== false || strpos( $sendback, 'post-new.php' ) !== false ) {
-			if ( 'attachment' === $post_type ) {
+			if ( $post_type === 'attachment' ) {
 				$sendback = \admin_url( 'upload.php' );
 			} else {
 				$sendback = \admin_url( 'edit.php' );
@@ -191,7 +191,7 @@ class Link_Handler {
 		}
 
 		if ( ! ( isset( $_GET['post'] ) || isset( $_POST['post'] ) || // Input var okay.
-			( isset( $_REQUEST['action'] ) && 'duplicate_post_rewrite' === $_REQUEST['action'] ) ) ) { // Input var okay.
+			( isset( $_REQUEST['action'] ) && $_REQUEST['action'] === 'duplicate_post_rewrite' ) ) ) { // Input var okay.
 			\wp_die( \esc_html__( 'No post to duplicate has been supplied!', 'duplicate-post' ) );
 		}
 

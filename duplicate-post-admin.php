@@ -136,7 +136,7 @@ function duplicate_post_plugin_upgrade() {
 	add_option( 'duplicate_post_show_link_in', $show_links_in_defaults );
 
 	$taxonomies_blacklist = get_option( 'duplicate_post_taxonomies_blacklist' );
-	if ( '' === $taxonomies_blacklist ) {
+	if ( $taxonomies_blacklist === '' ) {
 		$taxonomies_blacklist = [];
 	}
 	if ( in_array( 'post_format', $taxonomies_blacklist, true ) ) {
@@ -146,7 +146,7 @@ function duplicate_post_plugin_upgrade() {
 	}
 
 	$meta_blacklist = explode( ',', get_option( 'duplicate_post_blacklist' ) );
-	if ( '' === $meta_blacklist ) {
+	if ( $meta_blacklist === '' ) {
 		$meta_blacklist = [];
 	}
 	$meta_blacklist = array_map( 'trim', $meta_blacklist );
@@ -306,7 +306,7 @@ function duplicate_post_copy_post_taxonomies( $new_id, $post ) {
 		}
 
 		$taxonomies_blacklist = get_option( 'duplicate_post_taxonomies_blacklist' );
-		if ( '' === $taxonomies_blacklist ) {
+		if ( $taxonomies_blacklist === '' ) {
 			$taxonomies_blacklist = [];
 		}
 		if ( intval( get_option( 'duplicate_post_copyformat' ) ) === 0 ) {
@@ -347,7 +347,7 @@ function duplicate_post_copy_post_meta_info( $new_id, $post ) {
 		return;
 	}
 	$meta_blacklist = get_option( 'duplicate_post_blacklist' );
-	if ( '' === $meta_blacklist ) {
+	if ( $meta_blacklist === '' ) {
 		$meta_blacklist = [];
 	} else {
 		$meta_blacklist = explode( ',', $meta_blacklist );
@@ -468,7 +468,7 @@ function duplicate_post_copy_attachments( $new_id, $post ) {
 	);
 	// Clone old attachments.
 	foreach ( $children as $child ) {
-		if ( 'attachment' !== $child->post_type ) {
+		if ( $child->post_type !== 'attachment' ) {
 			continue;
 		}
 		$url = wp_get_attachment_url( $child->ID );
@@ -530,7 +530,7 @@ function duplicate_post_copy_children( $new_id, $post, $status = '' ) {
 	);
 
 	foreach ( $children as $child ) {
-		if ( 'attachment' === $child->post_type ) {
+		if ( $child->post_type === 'attachment' ) {
 			continue;
 		}
 		duplicate_post_create_duplicate( $child, $status, $new_id );
@@ -621,7 +621,7 @@ function duplicate_post_create_duplicate( $post, $status = '', $parent_id = '' )
 		wp_die( esc_html( __( 'You aren\'t allowed to duplicate this post', 'duplicate-post' ) ) );
 	}
 
-	if ( ! duplicate_post_is_post_type_enabled( $post->post_type ) && 'attachment' !== $post->post_type ) {
+	if ( ! duplicate_post_is_post_type_enabled( $post->post_type ) && $post->post_type !== 'attachment' ) {
 		wp_die(
 			esc_html(
 				__( 'Copy features for this post type are not enabled in options page', 'duplicate-post' ) . ': ' .
@@ -633,7 +633,7 @@ function duplicate_post_create_duplicate( $post, $status = '', $parent_id = '' )
 	$new_post_status = ( empty( $status ) ) ? $post->post_status : $status;
 	$title           = ' ';
 
-	if ( 'attachment' !== $post->post_type ) {
+	if ( $post->post_type !== 'attachment' ) {
 		$prefix = sanitize_text_field( get_option( 'duplicate_post_title_prefix' ) );
 		$suffix = sanitize_text_field( get_option( 'duplicate_post_title_suffix' ) );
 		if ( intval( get_option( 'duplicate_post_copytitle' ) ) === 1 ) {
@@ -660,7 +660,7 @@ function duplicate_post_create_duplicate( $post, $status = '', $parent_id = '' )
 		if ( intval( get_option( 'duplicate_post_copystatus' ) ) === 0 ) {
 			$new_post_status = 'draft';
 		} else {
-			if ( 'publish' === $new_post_status || 'future' === $new_post_status ) {
+			if ( $new_post_status === 'publish' || $new_post_status === 'future' ) {
 				// Check if the user has the right capability.
 				if ( is_post_type_hierarchical( $post->post_type ) ) {
 					if ( ! current_user_can( 'publish_pages' ) ) {
@@ -738,9 +738,9 @@ function duplicate_post_create_duplicate( $post, $status = '', $parent_id = '' )
 
 	// If you have written a plugin which uses non-WP database tables to save
 	// information about a post you can hook this action to dupe that data.
-	if ( 0 !== $new_post_id && ! is_wp_error( $new_post_id ) ) {
+	if ( $new_post_id !== 0 && ! is_wp_error( $new_post_id ) ) {
 
-		if ( 'page' === $post->post_type || is_post_type_hierarchical( $post->post_type ) ) {
+		if ( $post->post_type === 'page' || is_post_type_hierarchical( $post->post_type ) ) {
 			do_action( 'dp_duplicate_page', $new_post_id, $post, $status );
 		} else {
 			do_action( 'dp_duplicate_post', $new_post_id, $post, $status );

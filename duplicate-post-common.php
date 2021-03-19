@@ -73,7 +73,7 @@ function duplicate_post_clone_post_link( $link = null, $before = '', $after = ''
 		return;
 	}
 
-	if ( null === $link ) {
+	if ( $link === null ) {
 		$link = esc_html__( 'Copy to a new draft', 'duplicate-post' );
 	}
 

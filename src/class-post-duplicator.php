@@ -59,7 +59,7 @@ class Post_Duplicator {
 
 		$title           = '';
 		$new_post_status = $post->post_status;
-		if ( 'attachment' !== $post->post_type ) {
+		if ( $post->post_type !== 'attachment' ) {
 			$title           = $this->generate_copy_title( $post, $options );
 			$new_post_status = $this->generate_copy_status( $post, $options );
 		}
