@@ -130,8 +130,8 @@ class Check_Changes_Handler {
 
 						$args = [
 							'show_split_view' => true,
-							'title_left'      => __( 'Removed', 'default' ),
-							'title_right'     => __( 'Added', 'default' ),
+							'title_left'      => \__( 'Removed', 'default' ),
+							'title_right'     => \__( 'Added', 'default' ),
 						];
 
 						if ( \version_compare( $wp_version, '5.7' ) < 0 ) {
@@ -148,7 +148,7 @@ class Check_Changes_Handler {
 						foreach ( $fields as $field => $name ) {
 							/** This filter is documented in wp-admin/includes/revision.php */
 							// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Reason: we want to use a WP filter from the revision feature.
-							$content_from = apply_filters( "_wp_post_revision_field_{$field}", $this->original->$field, $field, $this->original, 'from' );
+							$content_from = \apply_filters( "_wp_post_revision_field_{$field}", $this->original->$field, $field, $this->original, 'from' );
 
 							/** This filter is documented in wp-admin/includes/revision.php */
 							// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Reason: we want to use a WP filter from the revision feature.

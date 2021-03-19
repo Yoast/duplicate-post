@@ -64,7 +64,7 @@ class Options_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Admin\Options::register_settings
 	 */
 	public function test_register_settings() {
-		foreach ( array_keys( $this->fake_options ) as $fake_option ) {
+		foreach ( \array_keys( $this->fake_options ) as $fake_option ) {
 			Monkey\Functions\expect( '\register_setting' )
 				->once()
 				->with( 'duplicate_post_group', $fake_option );
