@@ -54,7 +54,7 @@ class Revisions_Migrator {
 		}
 
 		$revisions = \wp_get_post_revisions( $original_post, [ 'order' => 'ASC' ] );
-		$delete    = \count( $revisions ) - $revisions_to_keep;
+		$delete    = ( \count( $revisions ) - $revisions_to_keep );
 		if ( $delete < 1 ) {
 			return;
 		}
