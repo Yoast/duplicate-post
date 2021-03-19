@@ -751,11 +751,8 @@ class Block_Editor_Test extends TestCase {
 	 * @preserveGlobalState disabled
 	 */
 	public function test_get_original_post_edit_url_not_rewrite_and_republish() {
-		$utils       = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
-		$post        = Mockery::mock( \WP_Post::class );
-		$post->ID    = 128;
-		$original_id = 64;
-		$nonce       = '12345678';
+		$post     = Mockery::mock( \WP_Post::class );
+		$post->ID = 128;
 
 		Monkey\Functions\expect( '\get_post' )
 			->andReturn( $post );
