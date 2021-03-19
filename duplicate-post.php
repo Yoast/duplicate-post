@@ -67,7 +67,7 @@ function __duplicate_post_main() {
  * Initialises the internationalisation domain.
  */
 function duplicate_post_load_plugin_textdomain() {
-	load_plugin_textdomain( 'duplicate-post', false, basename( dirname( __FILE__ ) ) . '/languages/' );
+	load_plugin_textdomain( 'duplicate-post', false, basename( __DIR__ ) . '/languages/' );
 }
 add_action( 'plugins_loaded', 'duplicate_post_load_plugin_textdomain' );
 
@@ -96,8 +96,8 @@ function duplicate_post_plugin_actions( $actions ) {
 	return $actions;
 }
 
-require_once dirname( __FILE__ ) . '/duplicate-post-common.php';
+require_once __DIR__ . '/duplicate-post-common.php';
 
 if ( is_admin() ) {
-	include_once dirname( __FILE__ ) . '/duplicate-post-admin.php';
+	include_once __DIR__ . '/duplicate-post-admin.php';
 }
