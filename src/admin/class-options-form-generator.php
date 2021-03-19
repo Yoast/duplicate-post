@@ -1,18 +1,11 @@
 <?php
-/**
- * Duplicate Post plugin file.
- *
- * @package Yoast\WP\Duplicate_Post\Admin
- */
 
 namespace Yoast\WP\Duplicate_Post\Admin;
 
 use Yoast\WP\Duplicate_Post\Utils;
 
 /**
- * Class Options_Form_Generator
- *
- * @package Yoast\WP\Duplicate_Post\Admin
+ * Class Options_Form_Generator.
  */
 class Options_Form_Generator {
 

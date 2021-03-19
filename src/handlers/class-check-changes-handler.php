@@ -1,10 +1,4 @@
 <?php
-/**
- * Duplicate Post handler class for changes overview.
- *
- * @package Duplicate_Post
- * @since 4.0
- */
 
 namespace Yoast\WP\Duplicate_Post\Handlers;
 
@@ -12,7 +6,11 @@ use Yoast\WP\Duplicate_Post\Permissions_Helper;
 use Yoast\WP\Duplicate_Post\Utils;
 
 /**
+ * Duplicate Post handler class for changes overview.
+ *
  * Represents the handler for checking the changes between a copy and the original post.
+ *
+ * @since 4.0
  */
 class Check_Changes_Handler {
 

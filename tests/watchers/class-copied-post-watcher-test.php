@@ -1,9 +1,4 @@
 <?php
-/**
- * Duplicate Post test file.
- *
- * @package Duplicate_Post\Tests
- */
 
 namespace Yoast\WP\Duplicate_Post\Tests\Watchers;
 

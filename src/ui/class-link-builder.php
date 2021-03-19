@@ -1,16 +1,9 @@
 <?php
-/**
- * Duplicate Post link builder.
- *
- * @package Duplicate_Post
- */
 
 namespace Yoast\WP\Duplicate_Post\UI;
 
 /**
- * Class Link_Builder
- *
- * @package Yoast\WP\Duplicate_Post
+ * Duplicate Post link builder.
  */
 class Link_Builder {
 

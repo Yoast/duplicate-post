@@ -1,9 +1,4 @@
 <?php
-/**
- * Duplicate Post plugin file.
- *
- * @package Yoast\WP\Duplicate_Post\Admin
- */
 
 namespace Yoast\WP\Duplicate_Post\Admin;
 
@@ -11,7 +6,7 @@ use Yoast\WP\Duplicate_Post\UI\Asset_Manager;
 use Yoast\WP\Duplicate_Post\Utils;
 
 /**
- * Class Options_Page
+ * Class Options_Page.
  */
 class Options_Page {
 

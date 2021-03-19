@@ -1,17 +1,13 @@
 <?php
-/**
- * Duplicate Post handler class for save_post action.
- *
- * @package Duplicate_Post
- * @since 4.0
- */
 
 namespace Yoast\WP\Duplicate_Post\Handlers;
 
 use Yoast\WP\Duplicate_Post\Permissions_Helper;
 
 /**
- * Represents the handler for save_post action.
+ * Duplicate Post handler class for save_post action.
+ *
+ * @since 4.0
  */
 class Save_Post_Handler {
 

@@ -1,16 +1,11 @@
 <?php
-/**
- * Duplicate Post class to watch for the link actions and show notices.
- *
- * @package Duplicate_Post
- */
 
 namespace Yoast\WP\Duplicate_Post\Watchers;
 
 use Yoast\WP\Duplicate_Post\Permissions_Helper;
 
 /**
- * Represents the Link_Actions_Watcher class.
+ * Duplicate Post class to watch for the link actions and show notices.
  */
 class Link_Actions_Watcher {
 

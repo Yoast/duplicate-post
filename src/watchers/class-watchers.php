@@ -1,16 +1,11 @@
 <?php
-/**
- * Duplicate Post user interface.
- *
- * @package Duplicate_Post
- */
 
 namespace Yoast\WP\Duplicate_Post\Watchers;
 
 use Yoast\WP\Duplicate_Post\Permissions_Helper;
 
 /**
- * Represents the Duplicate Post User Interface class.
+ * Duplicate Post user interface.
  */
 class Watchers {
 
