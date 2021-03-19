@@ -380,10 +380,10 @@ class Options_Form_Generator_Test extends TestCase {
 	 * @dataProvider is_checked_provider
 	 * @covers       \Yoast\WP\Duplicate_Post\Admin\Options_Form_Generator::is_checked
 	 *
-	 * @param string $option The option name.
+	 * @param string $option        The option name.
 	 * @param array  $option_values The option values.
 	 * @param string $parent_option The parent option.
-	 * @param array  $assertion The assumed assertion values.
+	 * @param array  $assertion     The assumed assertion values.
 	 */
 	public function test_is_checked( $option, $option_values, $parent_option, $assertion = [] ) {
 		if ( $assertion['expected'] === false ) {

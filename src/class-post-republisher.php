@@ -279,8 +279,8 @@ class Post_Republisher {
 	/**
 	 * Deletes the copy and associated post meta, if applicable.
 	 *
-	 * @param int      $copy_id The copy's ID.
-	 * @param int|null $post_id The original post's ID. Optional.
+	 * @param int      $copy_id            The copy's ID.
+	 * @param int|null $post_id            The original post's ID. Optional.
 	 * @param bool     $permanently_delete Whether to permanently delete the copy. Defaults to true.
 	 *
 	 * @return void

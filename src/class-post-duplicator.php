@@ -335,7 +335,7 @@ class Post_Duplicator {
 		if ( $options['copy_status'] ) {
 			$new_post_status = $post->post_status;
 			if ( $new_post_status === 'publish' || $new_post_status === 'future' ) {
-				// check if the user has the right capability.
+				// Check if the user has the right capability.
 				if ( \is_post_type_hierarchical( $post->post_type ) ) {
 					if ( ! \current_user_can( 'publish_pages' ) ) {
 						$new_post_status = 'pending';
@@ -363,7 +363,7 @@ class Post_Duplicator {
 		$new_post_author    = \wp_get_current_user();
 		$new_post_author_id = $new_post_author->ID;
 		if ( $options['copy_author'] ) {
-			// check if the user has the right capability.
+			// Check if the user has the right capability.
 			if ( \is_post_type_hierarchical( $post->post_type ) ) {
 				if ( \current_user_can( 'edit_others_pages' ) ) {
 					$new_post_author_id = $post->post_author;

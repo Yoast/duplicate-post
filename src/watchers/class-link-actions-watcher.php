@@ -74,7 +74,7 @@ class Link_Actions_Watcher {
 			\printf(
 				'<div id="message" class="notice notice-success fade"><p>' .
 				\esc_html(
-				/* translators: %s: Number of posts copied. */
+					/* translators: %s: Number of posts copied. */
 					\_n(
 						'%s item copied.',
 						'%s items copied.',

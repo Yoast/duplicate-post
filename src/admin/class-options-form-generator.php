@@ -291,10 +291,11 @@ class Options_Form_Generator {
 	/**
 	 * Checks whether or not a post type is enabled.
 	 *
+	 * @codeCoverageIgnore As this is a simple wrapper for a function that is also being used elsewhere, we can skip testing for now.
+	 *
 	 * @param string $post_type The post type.
 	 *
 	 * @return bool Whether or not the post type is enabled.
-	 * @codeCoverageIgnore As this is a simple wrapper for a function that is also being used elsewhere, we can skip testing for now.
 	 */
 	public function is_post_type_enabled( $post_type ) {
 		$duplicate_post_types_enabled = \get_option( 'duplicate_post_types_enabled', [ 'post', 'page' ] );

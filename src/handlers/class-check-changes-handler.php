@@ -108,7 +108,7 @@ class Check_Changes_Handler {
 			<h1 class="long-header">
 			<?php
 				echo \sprintf(
-						/* translators: %s: original item link (to view or edit) or title. */
+					/* translators: %s: original item link (to view or edit) or title. */
 					\esc_html__( 'Compare changes of duplicated post with the original (&#8220;%s&#8221;)', 'duplicate-post' ),
 					Utils::get_edit_or_view_link( $this->original ) // phpcs:ignore WordPress.Security.EscapeOutput
 				);
@@ -141,6 +141,7 @@ class Check_Changes_Handler {
 						}
 
 						$post_array = \get_post( $this->post, \ARRAY_A );
+
 						/** This filter is documented in wp-admin/includes/revision.php */
 						// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Reason: we want to use a WP filter from the revision feature.
 						$fields = \apply_filters( '_wp_post_revision_fields', $fields, $post_array );
