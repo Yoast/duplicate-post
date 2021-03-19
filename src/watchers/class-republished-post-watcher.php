@@ -83,9 +83,9 @@ class Republished_Post_Watcher {
 		}
 
 		if ( ! empty( $_REQUEST['dprepublished'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-			echo '<div id="message" class="notice notice-success is-dismissible"><p>' .
-				\esc_html( $this->get_notice_text() ) .
-				'</p></div>';
+			echo '<div id="message" class="notice notice-success is-dismissible"><p>'
+				. \esc_html( $this->get_notice_text() )
+				. '</p></div>';
 		}
 	}
 

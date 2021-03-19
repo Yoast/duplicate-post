@@ -72,8 +72,8 @@ class Link_Actions_Watcher {
 
 			$copied_posts = \intval( $_REQUEST['cloned'] ); // phpcs:ignore WordPress.Security.NonceVerification
 			\printf(
-				'<div id="message" class="notice notice-success fade"><p>' .
-				\esc_html(
+				'<div id="message" class="notice notice-success fade"><p>'
+				. \esc_html(
 					/* translators: %s: Number of posts copied. */
 					\_n(
 						'%s item copied.',
@@ -98,11 +98,11 @@ class Link_Actions_Watcher {
 				return;
 			}
 
-			print '<div id="message" class="notice notice-warning is-dismissible fade"><p>' .
-			\esc_html__(
-				'You can now start rewriting your post in this duplicate of the original post. If you click "Republish", your changes will be merged into the original post and you’ll be redirected there.',
-				'duplicate-post'
-			) . '</p></div>';
+			print '<div id="message" class="notice notice-warning is-dismissible fade"><p>'
+				. \esc_html__(
+					'You can now start rewriting your post in this duplicate of the original post. If you click "Republish", your changes will be merged into the original post and you’ll be redirected there.',
+					'duplicate-post'
+				) . '</p></div>';
 		}
 	}
 

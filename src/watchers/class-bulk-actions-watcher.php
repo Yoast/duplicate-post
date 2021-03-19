@@ -54,8 +54,8 @@ class Bulk_Actions_Watcher {
 		if ( ! empty( $_REQUEST['bulk_cloned'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			$copied_posts = \intval( $_REQUEST['bulk_cloned'] ); // phpcs:ignore WordPress.Security.NonceVerification
 			\printf(
-				'<div id="message" class="notice notice-success fade"><p>' .
-				\esc_html(
+				'<div id="message" class="notice notice-success fade"><p>'
+				. \esc_html(
 					/* translators: %s: Number of posts copied. */
 					\_n(
 						'%s item copied.',
@@ -78,8 +78,8 @@ class Bulk_Actions_Watcher {
 		if ( ! empty( $_REQUEST['bulk_rewriting'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			$copied_posts = \intval( $_REQUEST['bulk_rewriting'] ); // phpcs:ignore WordPress.Security.NonceVerification
 			\printf(
-				'<div id="message" class="notice notice-success fade"><p>' .
-				\esc_html(
+				'<div id="message" class="notice notice-success fade"><p>'
+				. \esc_html(
 					/* translators: %s: Number of posts copied. */
 					\_n(
 						'%s post duplicated. You can now start rewriting your post in the duplicate of the original post. Once you choose to republish it your changes will be merged back into the original post.',

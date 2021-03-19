@@ -624,8 +624,8 @@ function duplicate_post_create_duplicate( $post, $status = '', $parent_id = '' )
 	if ( ! duplicate_post_is_post_type_enabled( $post->post_type ) && $post->post_type !== 'attachment' ) {
 		wp_die(
 			esc_html(
-				__( 'Copy features for this post type are not enabled in options page', 'duplicate-post' ) . ': ' .
-				$post->post_type
+				__( 'Copy features for this post type are not enabled in options page', 'duplicate-post' ) . ': '
+				. $post->post_type
 			)
 		);
 	}
