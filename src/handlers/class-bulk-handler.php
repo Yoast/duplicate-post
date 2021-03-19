@@ -99,7 +99,7 @@ class Bulk_Handler {
 				if ( ! empty( $post ) && $this->permissions_helper->should_rewrite_and_republish_be_allowed( $post ) ) {
 					$new_post_id = $this->post_duplicator->create_duplicate_for_rewrite_and_republish( $post );
 					if ( ! \is_wp_error( $new_post_id ) ) {
-						$counter ++;
+						++$counter;
 					}
 				}
 			}
@@ -131,7 +131,7 @@ class Bulk_Handler {
 						|| ( \is_post_type_hierarchical( $post->post_type ) && ! Utils::has_ancestors_marked( $post, $post_ids ) )
 					) {
 						if ( ! \is_wp_error( \duplicate_post_create_duplicate( $post ) ) ) {
-							$counter ++;
+							++$counter;
 						}
 					}
 				}
