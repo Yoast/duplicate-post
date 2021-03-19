@@ -81,7 +81,7 @@ class Options_Test extends TestCase {
 	public function test_get_options_for_first_tab() {
 		$options = $this->instance->get_options_for_tab( 'tab1' );
 
-		$this->assertEquals(
+		$this->assertSame(
 			[
 				'option_1' => [
 					'tab'      => 'tab1',
@@ -109,7 +109,7 @@ class Options_Test extends TestCase {
 	public function test_get_options_for_first_tab_and_fieldset() {
 		$options = $this->instance->get_options_for_tab( 'tab1', 'fieldset1' );
 
-		$this->assertEquals(
+		$this->assertSame(
 			[
 				'option_1' => [
 					'tab'      => 'tab1',
@@ -153,7 +153,7 @@ class Options_Test extends TestCase {
 	public function test_get_valid_option() {
 		$options = $this->instance->get_option( 'option_1' );
 
-		$this->assertEquals(
+		$this->assertSame(
 			[
 				'option_1' => [
 					'tab'      => 'tab1',

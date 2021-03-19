@@ -33,12 +33,12 @@ class Options_Inputs_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Admin\Options_Inputs::checkbox
 	 */
 	public function test_checkbox() {
-		$this->assertEquals(
+		$this->assertSame(
 			'<input type="checkbox" name="test_checkbox" id="test-checkbox-id" value="1"  />',
 			$this->instance->checkbox( 'test_checkbox', 1, 'test-checkbox-id', false )
 		);
 
-		$this->assertEquals(
+		$this->assertSame(
 			'<input type="checkbox" name="test_checkbox2" id="test-checkbox-id2" value="1" checked="checked" />',
 			$this->instance->checkbox( 'test_checkbox2', 1, 'test-checkbox-id2', true )
 		);
@@ -50,7 +50,7 @@ class Options_Inputs_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Admin\Options_Inputs::text
 	 */
 	public function test_text() {
-		$this->assertEquals(
+		$this->assertSame(
 			'<input type="text" name="test_text" id="test-text-id" value="Hello world"  />',
 			$this->instance->text( 'test_text', 'Hello world', 'test-text-id' )
 		);
@@ -62,7 +62,7 @@ class Options_Inputs_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Admin\Options_Inputs::number
 	 */
 	public function test_number() {
-		$this->assertEquals(
+		$this->assertSame(
 			'<input type="number" name="test_number" id="test-number-id" value="1" min="0" step="1" />',
 			$this->instance->number( 'test_number', '1', 'test-number-id' )
 		);

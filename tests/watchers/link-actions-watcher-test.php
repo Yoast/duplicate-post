@@ -99,7 +99,7 @@ class Link_Actions_Watcher_Test extends TestCase {
 			'wp-post-new-reload',
 		];
 
-		$this->assertEquals(
+		$this->assertSame(
 			[
 				'activate',
 				'activated',

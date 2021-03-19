@@ -156,7 +156,7 @@ class Bulk_Actions_Test extends TestCase {
 			'trash' => 'Move to Trash',
 		];
 
-		$this->assertEquals(
+		$this->assertSame(
 			[
 				'edit'                                  => 'Edit',
 				'trash'                                 => 'Move to Trash',

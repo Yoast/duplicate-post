@@ -42,7 +42,7 @@ class Permissions_Helper_Test extends TestCase {
 			->with( 'duplicate_post_types_enabled', [ 'post', 'page' ] )
 			->andReturn( $post_types );
 
-		$this->assertEquals( $post_types, $this->instance->get_enabled_post_types() );
+		$this->assertSame( $post_types, $this->instance->get_enabled_post_types() );
 	}
 
 	/**
@@ -57,7 +57,7 @@ class Permissions_Helper_Test extends TestCase {
 			->with( 'duplicate_post_types_enabled', [ 'post', 'page' ] )
 			->andReturn( $post_types );
 
-		$this->assertEquals( [ $post_types ], $this->instance->get_enabled_post_types() );
+		$this->assertSame( [ $post_types ], $this->instance->get_enabled_post_types() );
 	}
 
 	/**
@@ -655,7 +655,7 @@ class Permissions_Helper_Test extends TestCase {
 			->with( $post )
 			->andReturn( $original['has_rewrite_and_republish_copy'] );
 
-		$this->assertEquals( $expected, $this->instance->should_rewrite_and_republish_be_allowed( $post ) );
+		$this->assertSame( $expected, $this->instance->should_rewrite_and_republish_be_allowed( $post ) );
 	}
 
 	/**
@@ -797,7 +797,7 @@ class Permissions_Helper_Test extends TestCase {
 		$post              = Mockery::mock( WP_Post::class );
 		$post->post_status = $post_status;
 
-		$this->assertEquals( $expected, $this->instance->is_copy_allowed_to_be_republished( $post ) );
+		$this->assertSame( $expected, $this->instance->is_copy_allowed_to_be_republished( $post ) );
 	}
 
 	/**
