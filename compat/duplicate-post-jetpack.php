@@ -2,8 +2,8 @@
 /**
  * JetPack compatibility functions.
  *
- * @package Duplicate Post
- * @since 3.2
+ * @package Yoast\WP\Duplicate_Post
+ * @since   3.2
  */
 
 add_action( 'admin_init', 'duplicate_post_jetpack_init' );

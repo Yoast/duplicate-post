@@ -2,7 +2,7 @@
 /**
  * Backend functions.
  *
- * @package Duplicate Post
+ * @package Yoast\WP\Duplicate_Post
  * @since   2.0
  */
 

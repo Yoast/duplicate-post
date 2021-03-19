@@ -4,8 +4,8 @@
  *
  * @global array $duplicated_posts Array to store the posts being duplicated.
  *
- * @package Duplicate Post
- * @since 3.2
+ * @package Yoast\WP\Duplicate_Post
+ * @since   3.2
  */
 
 add_action( 'admin_init', 'duplicate_post_wpml_init' );

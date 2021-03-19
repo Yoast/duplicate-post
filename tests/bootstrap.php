@@ -2,7 +2,7 @@
 /**
  * PHPUnit bootstrap file
  *
- * @package Duplicate_Post
+ * @package Yoast\WP\Duplicate_Post\Tests
  */
 
 // phpcs:disable WordPress.NamingConventions.PrefixAllGlobals -- Reason: CS configuration is not complete yet.
