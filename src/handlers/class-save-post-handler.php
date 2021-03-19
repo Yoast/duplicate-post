@@ -47,7 +47,7 @@ class Save_Post_Handler {
 	 * @return void
 	 */
 	public function delete_on_save_post( $post_id ) {
-		if ( ( \defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE )
+		if ( ( \defined( 'DOING_AUTOSAVE' ) && \DOING_AUTOSAVE )
 			|| empty( $_POST['duplicate_post_remove_original'] ) // phpcs:ignore WordPress.Security.NonceVerification
 			|| ! \current_user_can( 'edit_post', $post_id ) ) {
 			return;

@@ -149,7 +149,7 @@ class Options_Page {
 	public function generate_page() {
 		$this->register_capabilities();
 
-		require_once DUPLICATE_POST_PATH . 'src/admin/views/options.php';
+		require_once \DUPLICATE_POST_PATH . 'src/admin/views/options.php';
 	}
 
 	/**

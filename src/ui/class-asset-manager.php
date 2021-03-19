@@ -25,8 +25,8 @@ class Asset_Manager {
 	 * @return void
 	 */
 	public function register_styles() {
-		\wp_register_style( 'duplicate-post', \plugins_url( '/css/duplicate-post.css', DUPLICATE_POST_FILE ), [], DUPLICATE_POST_CURRENT_VERSION );
-		\wp_register_style( 'duplicate-post-options', \plugins_url( '/css/duplicate-post-options.css', DUPLICATE_POST_FILE ), [], DUPLICATE_POST_CURRENT_VERSION );
+		\wp_register_style( 'duplicate-post', \plugins_url( '/css/duplicate-post.css', \DUPLICATE_POST_FILE ), [], \DUPLICATE_POST_CURRENT_VERSION );
+		\wp_register_style( 'duplicate-post-options', \plugins_url( '/css/duplicate-post-options.css', \DUPLICATE_POST_FILE ), [], \DUPLICATE_POST_CURRENT_VERSION );
 	}
 
 	/**
@@ -35,45 +35,45 @@ class Asset_Manager {
 	 * @return void
 	 */
 	public function register_scripts() {
-		$flattened_version = Utils::flatten_version( DUPLICATE_POST_CURRENT_VERSION );
+		$flattened_version = Utils::flatten_version( \DUPLICATE_POST_CURRENT_VERSION );
 
 		\wp_register_script(
 			'duplicate_post_edit_script',
-			\plugins_url( \sprintf( 'js/dist/duplicate-post-edit-%s.js', $flattened_version ), DUPLICATE_POST_FILE ),
+			\plugins_url( \sprintf( 'js/dist/duplicate-post-edit-%s.js', $flattened_version ), \DUPLICATE_POST_FILE ),
 			[
 				'wp-components',
 				'wp-element',
 				'wp-i18n',
 			],
-			DUPLICATE_POST_CURRENT_VERSION,
+			\DUPLICATE_POST_CURRENT_VERSION,
 			true
 		);
 
 		\wp_register_script(
 			'duplicate_post_strings',
-			\plugins_url( \sprintf( 'js/dist/duplicate-post-strings-%s.js', $flattened_version ), DUPLICATE_POST_FILE ),
+			\plugins_url( \sprintf( 'js/dist/duplicate-post-strings-%s.js', $flattened_version ), \DUPLICATE_POST_FILE ),
 			[
 				'wp-components',
 				'wp-element',
 				'wp-i18n',
 			],
-			DUPLICATE_POST_CURRENT_VERSION,
+			\DUPLICATE_POST_CURRENT_VERSION,
 			true
 		);
 
 		\wp_register_script(
 			'duplicate_post_quick_edit_script',
-			\plugins_url( \sprintf( 'js/dist/duplicate-post-quick-edit-%s.js', $flattened_version ), DUPLICATE_POST_FILE ),
+			\plugins_url( \sprintf( 'js/dist/duplicate-post-quick-edit-%s.js', $flattened_version ), \DUPLICATE_POST_FILE ),
 			[ 'jquery' ],
-			DUPLICATE_POST_CURRENT_VERSION,
+			\DUPLICATE_POST_CURRENT_VERSION,
 			true
 		);
 
 		\wp_register_script(
 			'duplicate_post_options_script',
-			\plugins_url( \sprintf( 'js/dist/duplicate-post-options-%s.js', $flattened_version ), DUPLICATE_POST_FILE ),
+			\plugins_url( \sprintf( 'js/dist/duplicate-post-options-%s.js', $flattened_version ), \DUPLICATE_POST_FILE ),
 			[ 'jquery' ],
-			DUPLICATE_POST_CURRENT_VERSION,
+			\DUPLICATE_POST_CURRENT_VERSION,
 			true
 		);
 	}
@@ -161,14 +161,14 @@ class Asset_Manager {
 	 * @return void
 	 */
 	public function enqueue_elementor_script( $object = [] ) {
-		$flattened_version = Utils::flatten_version( DUPLICATE_POST_CURRENT_VERSION );
+		$flattened_version = Utils::flatten_version( \DUPLICATE_POST_CURRENT_VERSION );
 		$handle            = 'duplicate_post_elementor_script';
 
 		\wp_register_script(
 			$handle,
-			\plugins_url( \sprintf( 'js/dist/duplicate-post-elementor-%s.js', $flattened_version ), DUPLICATE_POST_FILE ),
+			\plugins_url( \sprintf( 'js/dist/duplicate-post-elementor-%s.js', $flattened_version ), \DUPLICATE_POST_FILE ),
 			[ 'jquery' ],
-			DUPLICATE_POST_CURRENT_VERSION,
+			\DUPLICATE_POST_CURRENT_VERSION,
 			true
 		);
 		\wp_enqueue_script( $handle );
