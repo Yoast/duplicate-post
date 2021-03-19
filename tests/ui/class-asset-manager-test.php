@@ -10,7 +10,7 @@ namespace Yoast\WP\Duplicate_Post\Tests\UI;
 use Brain\Monkey;
 use Mockery;
 use Yoast\WP\Duplicate_Post\Tests\TestCase;
-use \Yoast\WP\Duplicate_Post\UI\Asset_Manager;
+use Yoast\WP\Duplicate_Post\UI\Asset_Manager;
 
 /**
  * Test the Asset_Manager class.

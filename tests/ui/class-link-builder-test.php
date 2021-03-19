@@ -10,7 +10,7 @@ namespace Yoast\WP\Duplicate_Post\Tests\UI;
 use Brain\Monkey;
 use Mockery;
 use Yoast\WP\Duplicate_Post\Tests\TestCase;
-use \Yoast\WP\Duplicate_Post\UI\Link_Builder;
+use Yoast\WP\Duplicate_Post\UI\Link_Builder;
 
 /**
  * Test the Link_Builder class.
