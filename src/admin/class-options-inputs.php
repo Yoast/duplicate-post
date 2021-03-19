@@ -45,7 +45,7 @@ class Options_Inputs {
 	 * @return string The checkbox' HTML output.
 	 */
 	public function checkbox( $name, $value, $id, $checked = false ) {
-		$checked = $checked ? 'checked="checked"' : '';
+		$checked = ( $checked ) ? 'checked="checked"' : '';
 
 		return $this->input( 'checkbox', $name, $value, $id, $checked );
 	}

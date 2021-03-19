@@ -66,23 +66,27 @@ class Post_Duplicator {
 
 		$new_post_author_id = $this->generate_copy_author( $post, $options );
 
-		$menu_order = $options['copy_menu_order'] ? $post->menu_order : 0;
+		$menu_order = 0;
+		if ( $options['copy_menu_order'] ) {
+			$menu_order = $post->menu_order;
+		}
+
 		if ( ! empty( $options['increase_menu_order_by'] ) && \is_numeric( $options['increase_menu_order_by'] ) ) {
 			$menu_order += \intval( $options['increase_menu_order_by'] );
 		}
 
 		$new_post = [
 			'post_author'           => $new_post_author_id,
-			'post_content'          => $options['copy_content'] ? $post->post_content : '',
-			'post_content_filtered' => $options['copy_content'] ? $post->post_content_filtered : '',
+			'post_content'          => ( $options['copy_content'] ) ? $post->post_content : '',
+			'post_content_filtered' => ( $options['copy_content'] ) ? $post->post_content_filtered : '',
 			'post_title'            => $title,
-			'post_excerpt'          => $options['copy_excerpt'] ? $post->post_excerpt : '',
+			'post_excerpt'          => ( $options['copy_excerpt'] ) ? $post->post_excerpt : '',
 			'post_status'           => $new_post_status,
 			'post_type'             => $post->post_type,
 			'comment_status'        => $post->comment_status,
 			'ping_status'           => $post->ping_status,
-			'post_password'         => $options['copy_password'] ? $post->post_password : '',
-			'post_name'             => $options['copy_name'] ? $post->post_name : '',
+			'post_password'         => ( $options['copy_password'] ) ? $post->post_password : '',
+			'post_name'             => ( $options['copy_name'] ) ? $post->post_name : '',
 			'post_parent'           => empty( $options['parent_id'] ) ? $post->post_parent : $options['parent_id'],
 			'menu_order'            => $menu_order,
 			'post_mime_type'        => $post->post_mime_type,

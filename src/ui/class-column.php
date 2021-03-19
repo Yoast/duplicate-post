@@ -91,7 +91,11 @@ class Column {
 				$post                          = \get_post( $post_id );
 				$is_rewrite_and_republish_copy = \is_null( $post ) ? false : $this->permissions_helper->is_rewrite_and_republish_copy( $post );
 
-				$data_attr      = $is_rewrite_and_republish_copy ? ' data-copy-is-for-rewrite-and-republish="1"' : '';
+				$data_attr = '';
+				if ( $is_rewrite_and_republish_copy ) {
+					$data_attr = ' data-copy-is-for-rewrite-and-republish="1"';
+				}
+
 				$column_content = Utils::get_edit_or_view_link( $original_item );
 			}
 			echo \sprintf(
