@@ -222,7 +222,8 @@ class Post_Republisher {
 
 			if ( \intval( \get_post_meta( $copy_id, '_dp_has_been_republished', true ) ) === 1 ) {
 				$this->delete_copy( $copy_id, $post_id );
-			} else {
+			}
+			else {
 				\wp_die( \esc_html__( 'An error occurred while deleting the Rewrite & Republish copy.', 'duplicate-post' ) );
 			}
 		}

@@ -111,7 +111,8 @@ class Admin_Bar {
 					'href'   => $this->link_builder->build_rewrite_and_republish_link( $post ),
 				]
 			);
-		} else {
+		}
+		else {
 			if ( $show_new_draft ) {
 				$wp_admin_bar->add_menu(
 					[
@@ -167,7 +168,8 @@ class Admin_Bar {
 
 		if ( \is_admin() ) {
 			$post = \get_post();
-		} else {
+		}
+		else {
 			$post = $wp_the_query->get_queried_object();
 		}
 

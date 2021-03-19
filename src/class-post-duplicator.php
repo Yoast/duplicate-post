@@ -272,7 +272,8 @@ class Post_Duplicator {
 					$meta_keys[] = $meta_key;
 				}
 			}
-		} else {
+		}
+		else {
 			$meta_keys = \array_diff( $post_meta_keys, $meta_excludelist );
 		}
 
@@ -315,7 +316,8 @@ class Post_Duplicator {
 			if ( ! empty( $suffix ) ) {
 				$suffix = ' ' . $suffix;
 			}
-		} else {
+		}
+		else {
 			$title = '';
 		}
 		return \trim( $prefix . $title . $suffix );
@@ -340,7 +342,8 @@ class Post_Duplicator {
 					if ( ! \current_user_can( 'publish_pages' ) ) {
 						$new_post_status = 'pending';
 					}
-				} else {
+				}
+				else {
 					if ( ! \current_user_can( 'publish_posts' ) ) {
 						$new_post_status = 'pending';
 					}
@@ -368,7 +371,8 @@ class Post_Duplicator {
 				if ( \current_user_can( 'edit_others_pages' ) ) {
 					$new_post_author_id = $post->post_author;
 				}
-			} else {
+			}
+			else {
 				if ( \current_user_can( 'edit_others_posts' ) ) {
 					$new_post_author_id = $post->post_author;
 				}

@@ -124,7 +124,8 @@ class Utils {
 				\esc_attr( \sprintf( \__( 'Edit &#8220;%s&#8221;', 'default' ), $title ) ),
 				$title
 			);
-		} elseif ( \is_post_type_viewable( $post_type_object ) ) {
+		}
+		elseif ( \is_post_type_viewable( $post_type_object ) ) {
 			if ( \in_array( $post->post_status, [ 'pending', 'draft', 'future' ], true ) ) {
 				if ( $can_edit_post ) {
 					$preview_link = \get_preview_post_link( $post );
@@ -136,7 +137,8 @@ class Utils {
 						$title
 					);
 				}
-			} elseif ( $post->post_status !== 'trash' ) {
+			}
+			elseif ( $post->post_status !== 'trash' ) {
 				return \sprintf(
 					'<a href="%s" rel="bookmark" aria-label="%s">%s</a>',
 					\get_permalink( $post->ID ),

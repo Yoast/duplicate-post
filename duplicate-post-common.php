@@ -50,7 +50,8 @@ function duplicate_post_get_clone_post_link( $id = 0, $context = 'display', $dra
 
 	if ( $draft ) {
 		return $link_builder->build_new_draft_link( $post, $context );
-	} else {
+	}
+	else {
 		return $link_builder->build_clone_link( $post, $context );
 	}
 }
