@@ -174,5 +174,4 @@ class Revisions_Migrator_Test extends TestCase {
 
 		$this->instance->migrate_revisions( $post_id, $original_id );
 	}
-
 }

@@ -154,7 +154,6 @@ class Check_Changes_Handler_Test extends TestCase {
 		$this->instance->check_changes_action_handler();
 	}
 
-
 	/**
 	 * Tests the check_changes_action_handler function when there is no post.
 	 *

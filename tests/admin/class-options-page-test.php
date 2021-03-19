@@ -57,12 +57,11 @@ class Options_Page_Test extends TestCase {
 		$this->options        = Mockery::mock( Options::class )->makePartial();
 		$this->form_generator = Mockery::mock( Options_Form_Generator::class )->makePartial();
 		$this->asset_manager  = Mockery::mock( Asset_Manager::class );
-		$this->instance       = Mockery::mock(
-			Options_Page::class,
-			[ $this->options, $this->form_generator, $this->asset_manager ]
-		)
-		->makePartial()
-		->shouldAllowMockingProtectedMethods();
+
+		$parameters     = [ $this->options, $this->form_generator, $this->asset_manager ];
+		$this->instance = Mockery::mock( Options_Page::class, $parameters )
+			->makePartial()
+			->shouldAllowMockingProtectedMethods();
 	}
 
 	/**

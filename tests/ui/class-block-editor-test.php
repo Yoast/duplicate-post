@@ -448,7 +448,6 @@ class Block_Editor_Test extends TestCase {
 		$this->instance->enqueue_block_editor_scripts();
 	}
 
-
 	/**
 	 * Tests the get_new_draft_permalink function when a link is returned.
 	 *
