@@ -109,7 +109,7 @@ class Admin_Bar_Test extends TestCase {
 	 */
 	public function test_admin_bar_render_successful_both() {
 		global $wp_admin_bar;
-		$wp_admin_bar      = Mockery::mock( WP_Admin_Bar::class ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Intended, to be able to test the method.
+		$wp_admin_bar      = Mockery::mock( WP_Admin_Bar::class );
 		$post              = Mockery::mock( WP_Post::class );
 		$post->post_status = 'publish';
 
@@ -162,7 +162,7 @@ class Admin_Bar_Test extends TestCase {
 	 */
 	public function test_admin_bar_render_successful_one() {
 		global $wp_admin_bar;
-		$wp_admin_bar      = Mockery::mock( WP_Admin_Bar::class ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Intended, to be able to test the method.
+		$wp_admin_bar      = Mockery::mock( WP_Admin_Bar::class );
 		$post              = Mockery::mock( WP_Post::class );
 		$post->post_status = 'pending';
 
@@ -208,7 +208,7 @@ class Admin_Bar_Test extends TestCase {
 	 */
 	public function test_admin_bar_render_unsuccessful_no_admin_bar() {
 		global $wp_admin_bar;
-		$wp_admin_bar      = Mockery::mock( WP_Admin_Bar::class ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Intended, to be able to test the method.
+		$wp_admin_bar      = Mockery::mock( WP_Admin_Bar::class );
 		$post              = Mockery::mock( WP_Post::class );
 		$post->post_status = 'publish';
 
@@ -244,7 +244,7 @@ class Admin_Bar_Test extends TestCase {
 	 */
 	public function test_admin_bar_render_unsuccessful_no_post() {
 		global $wp_admin_bar;
-		$wp_admin_bar      = Mockery::mock( WP_Admin_Bar::class ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Intended, to be able to test the method.
+		$wp_admin_bar      = Mockery::mock( WP_Admin_Bar::class );
 		$post              = Mockery::mock( WP_Post::class );
 		$post->post_status = 'publish';
 
@@ -342,7 +342,7 @@ class Admin_Bar_Test extends TestCase {
 	 */
 	public function test_get_current_post_successful_backend() {
 		global $wp_the_query;
-		$wp_the_query    = Mockery::mock( WP_Query::class ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Intended, to be able to test the method.
+		$wp_the_query    = Mockery::mock( WP_Query::class );
 		$post            = Mockery::mock( WP_Post::class );
 		$post->post_type = 'post';
 
@@ -379,7 +379,7 @@ class Admin_Bar_Test extends TestCase {
 	 */
 	public function test_get_current_post_successful_frontend() {
 		global $wp_the_query;
-		$wp_the_query    = Mockery::mock( WP_Query::class ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Intended, to be able to test the method.
+		$wp_the_query    = Mockery::mock( WP_Query::class );
 		$post            = Mockery::mock( WP_Post::class );
 		$post->post_type = 'post';
 
@@ -417,7 +417,7 @@ class Admin_Bar_Test extends TestCase {
 	 */
 	public function test_get_current_post_unsuccessful_backend() {
 		global $wp_the_query;
-		$wp_the_query = Mockery::mock( WP_Query::class ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Intended, to be able to test the method.
+		$wp_the_query = Mockery::mock( WP_Query::class );
 		$post         = null;
 
 		Monkey\Functions\expect( '\is_admin' )
@@ -454,7 +454,7 @@ class Admin_Bar_Test extends TestCase {
 	 */
 	public function test_get_current_post_unsuccessful_frontend() {
 		global $wp_the_query;
-		$wp_the_query    = Mockery::mock( WP_Query::class ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Intended, to be able to test the method.
+		$wp_the_query    = Mockery::mock( WP_Query::class );
 		$post            = Mockery::mock( WP_Term::class );
 		$post->post_type = 'post';
 
@@ -493,7 +493,7 @@ class Admin_Bar_Test extends TestCase {
 	 */
 	public function test_get_current_post_unsuccessful_should_not_be_displayed() {
 		global $wp_the_query;
-		$wp_the_query    = Mockery::mock( WP_Query::class ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Intended, to be able to test the method.
+		$wp_the_query    = Mockery::mock( WP_Query::class );
 		$post            = Mockery::mock( WP_Post::class );
 		$post->post_type = 'post';
 

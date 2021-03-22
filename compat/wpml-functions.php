@@ -21,7 +21,7 @@ function duplicate_post_wpml_init() {
 	}
 }
 
-global $duplicated_posts;    // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals
+global $duplicated_posts;
 $duplicated_posts = []; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals
 
 /**

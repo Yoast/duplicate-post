@@ -240,7 +240,7 @@ class Classic_Editor_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::add_new_draft_post_button
 	 */
 	public function test_add_new_draft_post_button_unsuccessful_no_post() {
-		unset( $_GET['post'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Intended, to be able to test the method.
+		unset( $_GET['post'] );
 
 		Monkey\Functions\expect( '\get_option' )
 			->with( 'duplicate_post_show_submitbox' )
@@ -375,7 +375,7 @@ class Classic_Editor_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::add_rewrite_and_republish_post_button
 	 */
 	public function test_add_rewrite_and_republish_post_button_no_post() {
-		unset( $_GET['post'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Intended, to be able to test the method.
+		unset( $_GET['post'] );
 
 		Monkey\Functions\expect( '\get_option' )
 			->with( 'duplicate_post_show_submitbox' )
@@ -861,7 +861,7 @@ class Classic_Editor_Test extends TestCase {
 	 */
 	public function test_should_change_rewrite_republish_copy_post() {
 		global $pagenow;
-		$pagenow = 'post.php'; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Intended, to be able to test the method.
+		$pagenow = 'post.php';
 
 		$post            = Mockery::mock( WP_Post::class );
 		$post->post_type = 'post';
@@ -881,7 +881,7 @@ class Classic_Editor_Test extends TestCase {
 	 */
 	public function test_should_change_rewrite_republish_copy_new_post() {
 		global $pagenow;
-		$pagenow = 'post-new.php'; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Intended, to be able to test the method.
+		$pagenow = 'post-new.php';
 
 		$post            = Mockery::mock( WP_Post::class );
 		$post->post_type = 'post';
@@ -902,7 +902,7 @@ class Classic_Editor_Test extends TestCase {
 	 */
 	public function test_should_not_change_rewrite_republish_copy_not_post_edit_screen() {
 		global $pagenow;
-		$pagenow = 'xx.php'; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Intended, to be able to test the method.
+		$pagenow = 'xx.php';
 
 		$post            = Mockery::mock( WP_Post::class );
 		$post->post_type = 'post';
@@ -918,7 +918,7 @@ class Classic_Editor_Test extends TestCase {
 	 */
 	public function test_should_not_change_rewrite_republish_copy_post_is_null() {
 		global $pagenow;
-		$pagenow = 'post.php'; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Intended, to be able to test the method.
+		$pagenow = 'post.php';
 
 		$this->assertFalse( $this->instance->should_change_rewrite_republish_copy( null ) );
 	}
@@ -931,7 +931,7 @@ class Classic_Editor_Test extends TestCase {
 	 */
 	public function test_should_not_change_rewrite_republish_copy_not_republish_copy() {
 		global $pagenow;
-		$pagenow = 'post.php'; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Intended, to be able to test the method.
+		$pagenow = 'post.php';
 
 		$post            = Mockery::mock( WP_Post::class );
 		$post->post_type = 'post';
