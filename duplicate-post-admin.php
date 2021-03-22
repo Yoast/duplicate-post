@@ -10,10 +10,10 @@ if ( ! is_admin() ) {
 	return;
 }
 
-require_once dirname( __FILE__ ) . '/duplicate-post-options.php';
+require_once __DIR__ . '/duplicate-post-options.php';
 
-require_once dirname( __FILE__ ) . '/compat/duplicate-post-wpml.php';
-require_once dirname( __FILE__ ) . '/compat/duplicate-post-jetpack.php';
+require_once __DIR__ . '/compat/duplicate-post-wpml.php';
+require_once __DIR__ . '/compat/duplicate-post-jetpack.php';
 
 /**
  * Wrapper for the option 'duplicate_post_version'.
@@ -771,7 +771,7 @@ function duplicate_post_create_duplicate( $post, $status = '', $parent_id = '' )
  * @return array
  */
 function duplicate_post_add_plugin_links( $links, $file ) {
-	if ( plugin_basename( dirname( __FILE__ ) . '/duplicate-post.php' ) === $file ) {
+	if ( plugin_basename( __DIR__ . '/duplicate-post.php' ) === $file ) {
 		$links[] = '<a href="https://yoast.com/wordpress/plugins/duplicate-post">' . esc_html__( 'Documentation', 'duplicate-post' ) . '</a>';
 	}
 	return $links;
