@@ -67,6 +67,8 @@ class Post_States_Test extends TestCase {
 	 * @preserveGlobalState disabled
 	 */
 	public function test_show_original_in_post_states_successful() {
+		$this->stubTranslationFunctions();
+
 		$utils       = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
 		$post        = Mockery::mock( WP_Post::class );
 		$original    = Mockery::mock( WP_Post::class );
@@ -145,6 +147,8 @@ class Post_States_Test extends TestCase {
 	 * @preserveGlobalState disabled
 	 */
 	public function test_show_original_in_rewrite_republish_post_successful() {
+		$this->stubTranslationFunctions();
+
 		$utils       = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
 		$post        = Mockery::mock( WP_Post::class );
 		$original    = Mockery::mock( WP_Post::class );

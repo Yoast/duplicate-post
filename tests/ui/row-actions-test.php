@@ -105,6 +105,9 @@ class Row_Actions_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Row_Actions::add_clone_action_link
 	 */
 	public function test_add_clone_action_link_successful() {
+		$this->stubEscapeFunctions();
+		$this->stubTranslationFunctions();
+
 		$actions          = [
 			'edit'                 => '<a href="http://basic.wordpress.test/wp-admin/post.php?post=464&amp;action=edit" aria-label="Edit &#8220;Title&#8221;">Edit</a>',
 			'inline hide-if-no-js' => '<button type="button" class="button-link editinline" aria-label="Quick edit &#8220;Title&#8221; inline" aria-expanded="false">Quick&nbsp;Edit</button>',
@@ -190,6 +193,9 @@ class Row_Actions_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Row_Actions::add_new_draft_action_link
 	 */
 	public function test_add_new_draft_action_link_successful() {
+		$this->stubEscapeFunctions();
+		$this->stubTranslationFunctions();
+
 		$actions          = [
 			'edit'                 => '<a href="http://basic.wordpress.test/wp-admin/post.php?post=464&amp;action=edit" aria-label="Edit &#8220;Title&#8221;">Edit</a>',
 			'inline hide-if-no-js' => '<button type="button" class="button-link editinline" aria-label="Quick edit &#8220;Title&#8221; inline" aria-expanded="false">Quick&nbsp;Edit</button>',
@@ -275,6 +281,9 @@ class Row_Actions_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Row_Actions::add_rewrite_and_republish_action_link
 	 */
 	public function test_add_rewrite_and_republish_action_link_successful() {
+		$this->stubEscapeFunctions();
+		$this->stubTranslationFunctions();
+
 		$actions           = [
 			'edit'                 => '<a href="http://basic.wordpress.test/wp-admin/post.php?post=464&amp;action=edit" aria-label="Edit &#8220;Title&#8221;">Edit</a>',
 			'inline hide-if-no-js' => '<button type="button" class="button-link editinline" aria-label="Quick edit &#8220;Title&#8221; inline" aria-expanded="false">Quick&nbsp;Edit</button>',

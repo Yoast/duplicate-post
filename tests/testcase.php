@@ -25,9 +25,6 @@ abstract class TestCase extends YoastTestCase {
 
 		parent::set_up();
 
-		$this->stubEscapeFunctions();
-		$this->stubTranslationFunctions();
-
 		// Mock roles to use across several tests.
 		$role1               = Mockery::mock( 'WP_Role' );
 		$role1->name         = 'Editor';

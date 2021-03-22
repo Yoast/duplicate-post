@@ -74,6 +74,8 @@ class Metabox_Test extends TestCase {
 	 * @preserveGlobalState disabled
 	 */
 	public function test_add_custom_metabox() {
+		$this->stubTranslationFunctions();
+
 		$utils              = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
 		$enabled_post_types = [ 'post', 'page' ];
 		$post               = Mockery::mock( WP_Post::class );

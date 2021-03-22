@@ -139,6 +139,8 @@ class Bulk_Actions_Test extends TestCase {
 	 * @preserveGlobalState disabled
 	 */
 	public function test_register_bulk_action() {
+		$this->stubTranslationFunctions();
+
 		$utils = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
 
 		$utils->expects( 'get_option' )

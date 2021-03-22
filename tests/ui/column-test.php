@@ -91,6 +91,8 @@ class Column_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Column::add_original_column
 	 */
 	public function test_add_original_column_action() {
+		$this->stubTranslationFunctions();
+
 		$array = [
 			'cb'         => '<input type="checkbox" />',
 			'title'      => 'Title',

@@ -181,6 +181,9 @@ class Classic_Editor_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::add_new_draft_post_button
 	 */
 	public function test_add_new_draft_post_button_successful() {
+		$this->stubEscapeFunctions();
+		$this->stubTranslationFunctions();
+
 		$post            = Mockery::mock( WP_Post::class );
 		$post->post_type = 'post';
 		$url             = 'http://basic.wordpress.test/wp-admin/admin.php?action=duplicate_post_new_draft&post=201&_wpnonce=94038b7dee';
@@ -216,6 +219,9 @@ class Classic_Editor_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::add_new_draft_post_button
 	 */
 	public function test_add_new_draft_post_button_successful_post_from_GET() {
+		$this->stubEscapeFunctions();
+		$this->stubTranslationFunctions();
+
 		$_GET['post']    = '123';
 		$post            = Mockery::mock( WP_Post::class );
 		$post->post_type = 'post';
@@ -309,6 +315,9 @@ class Classic_Editor_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::add_rewrite_and_republish_post_button
 	 */
 	public function test_add_rewrite_and_republish_post_button_successful() {
+		$this->stubEscapeFunctions();
+		$this->stubTranslationFunctions();
+
 		$post              = Mockery::mock( WP_Post::class );
 		$post->post_type   = 'post';
 		$post->post_status = 'publish';
@@ -350,6 +359,9 @@ class Classic_Editor_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::add_rewrite_and_republish_post_button
 	 */
 	public function test_add_rewrite_and_republish_post_button_post_from_GET() {
+		$this->stubEscapeFunctions();
+		$this->stubTranslationFunctions();
+
 		$_GET['post']      = '123';
 		$post              = Mockery::mock( WP_Post::class );
 		$post->post_type   = 'post';
@@ -484,6 +496,8 @@ class Classic_Editor_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::change_republish_strings_classic_editor
 	 */
 	public function test_should_change_republish_strings_date_label() {
+		$this->stubTranslationFunctions();
+
 		$text = 'Publish on: %s';
 
 		$post            = Mockery::mock( WP_Post::class );
@@ -507,6 +521,8 @@ class Classic_Editor_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::change_republish_strings_classic_editor
 	 */
 	public function test_should_change_republish_strings() {
+		$this->stubTranslationFunctions();
+
 		$text = 'Publish';
 
 		$post            = Mockery::mock( WP_Post::class );
@@ -579,6 +595,8 @@ class Classic_Editor_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::change_schedule_strings_classic_editor
 	 */
 	public function test_should_change_schedule_strings() {
+		$this->stubTranslationFunctions();
+
 		$text = 'Schedule';
 
 		$post            = Mockery::mock( WP_Post::class );
@@ -651,6 +669,8 @@ class Classic_Editor_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::change_scheduled_notice_classic_editor
 	 */
 	public function test_should_change_scheduled_notice_post() {
+		$this->stubTranslationFunctions();
+
 		$post             = Mockery::mock( WP_Post::class );
 		$post->post_type  = 'post';
 		$post->post_title = 'example_post';
@@ -763,6 +783,8 @@ class Classic_Editor_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::change_scheduled_notice_classic_editor
 	 */
 	public function test_should_change_scheduled_notice_page() {
+		$this->stubTranslationFunctions();
+
 		$post             = Mockery::mock( WP_Post::class );
 		$post->post_type  = 'page';
 		$post->post_title = 'example_page';

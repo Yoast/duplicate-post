@@ -146,6 +146,8 @@ class Post_Republisher_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Post_Republisher::register_post_statuses
 	 */
 	public function test_register_post_statuses() {
+		$this->stubTranslationFunctions();
+
 		$options = [
 			'label'                     => 'Republish',
 			'public'                    => true,

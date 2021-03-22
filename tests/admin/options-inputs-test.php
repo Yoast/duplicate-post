@@ -25,6 +25,8 @@ class Options_Inputs_Test extends TestCase {
 	protected function set_up() {
 		parent::set_up();
 
+		$this->stubEscapeFunctions();
+
 		$this->instance = Mockery::mock( Options_Inputs::class )->makePartial();
 	}
 

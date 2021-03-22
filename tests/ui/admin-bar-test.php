@@ -108,6 +108,8 @@ class Admin_Bar_Test extends TestCase {
 	 * @preserveGlobalState disabled
 	 */
 	public function test_admin_bar_render_successful_both() {
+		$this->stubTranslationFunctions();
+
 		global $wp_admin_bar;
 		$wp_admin_bar      = Mockery::mock( WP_Admin_Bar::class );
 		$post              = Mockery::mock( WP_Post::class );
@@ -164,6 +166,8 @@ class Admin_Bar_Test extends TestCase {
 	 * @preserveGlobalState disabled
 	 */
 	public function test_admin_bar_render_successful_one() {
+		$this->stubTranslationFunctions();
+
 		global $wp_admin_bar;
 		$wp_admin_bar      = Mockery::mock( WP_Admin_Bar::class );
 		$post              = Mockery::mock( WP_Post::class );

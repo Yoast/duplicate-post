@@ -34,6 +34,8 @@ class Options_Form_Generator_Test extends TestCase {
 	protected function set_up() {
 		parent::set_up();
 
+		$this->stubEscapeFunctions();
+
 		$this->options_inputs = Mockery::mock( Options_Inputs::class )->makePartial();
 		$this->instance       = Mockery::mock( Options_Form_Generator::class, [ $this->options_inputs ] )->makePartial();
 

@@ -34,6 +34,9 @@ class Check_Changes_Handler_Test extends TestCase {
 	protected function set_up() {
 		parent::set_up();
 
+		$this->stubEscapeFunctions();
+		$this->stubTranslationFunctions();
+
 		$this->permissions_helper = Mockery::mock( Permissions_Helper::class );
 
 		$this->instance = Mockery::mock( Check_Changes_Handler::class, [ $this->permissions_helper ] )->makePartial();

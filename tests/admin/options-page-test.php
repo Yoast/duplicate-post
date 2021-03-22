@@ -128,6 +128,8 @@ class Options_Page_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Admin\Options_Page::register_menu
 	 */
 	public function test_register_menu() {
+		$this->stubTranslationFunctions();
+
 		Monkey\Functions\expect( '\add_options_page' )
 			->with(
 				[
