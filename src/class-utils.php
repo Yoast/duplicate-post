@@ -92,7 +92,7 @@ class Utils {
 		$parent             = \wp_get_post_parent_id( $post->ID );
 		while ( $parent ) {
 			if ( \in_array( $parent, $post_ids, true ) ) {
-				$ancestors_in_array++;
+				++$ancestors_in_array;
 			}
 			$parent = \wp_get_post_parent_id( $parent );
 		}
