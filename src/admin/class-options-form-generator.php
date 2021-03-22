@@ -115,7 +115,6 @@ class Options_Form_Generator {
 	 * @param \WP_Taxonomy $taxonomy2 Second taxonomy object.
 	 *
 	 * @return bool True when the first taxonomy is public.
-	 * @ignore
 	 */
 	public function sort_taxonomy_objects( $taxonomy1, $taxonomy2 ) {
 		return ( $taxonomy1->public < $taxonomy2->public );
