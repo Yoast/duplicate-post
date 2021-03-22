@@ -83,10 +83,14 @@ class Column {
 			$data_attr      = ' data-no-original="1"';
 			$original_item  = Utils::get_original( $post_id );
 			if ( $original_item ) {
-				$post                          = \get_post( $post_id );
-				$is_rewrite_and_republish_copy = \is_null( $post ) ? false : $this->permissions_helper->is_rewrite_and_republish_copy( $post );
+				$post      = \get_post( $post_id );
+				$data_attr = '';
 
-				$data_attr      = $is_rewrite_and_republish_copy ? ' data-copy-is-for-rewrite-and-republish="1"' : '';
+				if ( $post instanceof \WP_Post
+					&& $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
+					$data_attr = ' data-copy-is-for-rewrite-and-republish="1"';
+				}
+
 				$column_content = Utils::get_edit_or_view_link( $original_item );
 			}
 			echo \sprintf(
