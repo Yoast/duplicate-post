@@ -194,7 +194,7 @@ class Check_Changes_Handler {
 		\set_current_screen( 'revision' );
 		// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- The revision screen expects $post to be set.
 		$post = $this->post;
-		require_once ABSPATH . 'wp-admin/admin-header.php';
+		require_once \ABSPATH . 'wp-admin/admin-header.php';
 	}
 
 	/**
@@ -205,6 +205,6 @@ class Check_Changes_Handler {
 	 * @return void
 	 */
 	public function require_wordpress_footer() {
-		require_once ABSPATH . 'wp-admin/admin-footer.php';
+		require_once \ABSPATH . 'wp-admin/admin-footer.php';
 	}
 }

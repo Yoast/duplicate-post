@@ -58,7 +58,7 @@ class Asset_Manager_Test extends TestCase {
 				'duplicate-post',
 				$styles_url,
 				[],
-				DUPLICATE_POST_CURRENT_VERSION
+				\DUPLICATE_POST_CURRENT_VERSION
 			);
 
 		Monkey\Functions\expect( '\wp_register_style' )
@@ -66,7 +66,7 @@ class Asset_Manager_Test extends TestCase {
 				'duplicate-post-options',
 				$options_styles_url,
 				[],
-				DUPLICATE_POST_CURRENT_VERSION
+				\DUPLICATE_POST_CURRENT_VERSION
 			);
 
 		$this->instance->register_styles();
@@ -88,7 +88,7 @@ class Asset_Manager_Test extends TestCase {
 		$options_script_url    = 'http://basic.wordpress.test/wp-content/plugins/duplicate-post/js/dist/duplicate-post-options-40.js';
 
 		$utils->expects( 'flatten_version' )
-			->with( DUPLICATE_POST_CURRENT_VERSION )
+			->with( \DUPLICATE_POST_CURRENT_VERSION )
 			->andReturn( $flattened_version );
 
 		Monkey\Functions\expect( '\plugins_url' )
@@ -103,7 +103,7 @@ class Asset_Manager_Test extends TestCase {
 					'wp-element',
 					'wp-i18n',
 				],
-				DUPLICATE_POST_CURRENT_VERSION,
+				\DUPLICATE_POST_CURRENT_VERSION,
 				true
 			);
 
@@ -116,7 +116,7 @@ class Asset_Manager_Test extends TestCase {
 					'wp-element',
 					'wp-i18n',
 				],
-				DUPLICATE_POST_CURRENT_VERSION,
+				\DUPLICATE_POST_CURRENT_VERSION,
 				true
 			);
 
@@ -125,7 +125,7 @@ class Asset_Manager_Test extends TestCase {
 				'duplicate_post_quick_edit_script',
 				$quick_edit_script_url,
 				[ 'jquery' ],
-				DUPLICATE_POST_CURRENT_VERSION,
+				\DUPLICATE_POST_CURRENT_VERSION,
 				true
 			);
 
@@ -134,7 +134,7 @@ class Asset_Manager_Test extends TestCase {
 				'duplicate_post_options_script',
 				$options_script_url,
 				[ 'jquery' ],
-				DUPLICATE_POST_CURRENT_VERSION,
+				\DUPLICATE_POST_CURRENT_VERSION,
 				true
 			);
 

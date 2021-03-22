@@ -244,7 +244,7 @@ class Post_Republisher {
 	 * @return bool Whether or not the request is a REST request.
 	 */
 	public function is_rest_request() {
-		return \defined( 'REST_REQUEST' ) && REST_REQUEST;
+		return \defined( 'REST_REQUEST' ) && \REST_REQUEST;
 	}
 
 	/**
