@@ -2,8 +2,8 @@
 /**
  * Gutenberg (Block editor)/Classic Editor compatibility functions
  *
- * @package Duplicate Post
- * @since 4.0
+ * @package Yoast\WP\Duplicate_Post
+ * @since   4.0
  */
 
 add_filter( 'duplicate_post_get_clone_post_link', 'duplicate_post_classic_editor_clone_link', 10, 4 );

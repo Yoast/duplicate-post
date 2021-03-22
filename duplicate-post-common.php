@@ -2,8 +2,8 @@
 /**
  * Common functions.
  *
- * @package Duplicate Post
- * @since 2.0
+ * @package Yoast\WP\Duplicate_Post
+ * @since   2.0
  */
 
 use Yoast\WP\Duplicate_Post\Permissions_Helper;

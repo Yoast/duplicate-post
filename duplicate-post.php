@@ -2,8 +2,8 @@
 /**
  * Duplicate Post plugin.
  *
- * @package Duplicate Post
- * @since 0.1
+ * @package Yoast\WP\Duplicate_Post
+ * @since   0.1
  *
  * @wordpress-plugin
  * Plugin Name: Yoast Duplicate Post
