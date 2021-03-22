@@ -366,6 +366,7 @@ function duplicate_post_copy_post_meta_info( $new_id, $post ) {
 	}
 
 	$meta_blacklist = apply_filters_deprecated( 'duplicate_post_blacklist_filter', [ $meta_blacklist ], '3.2.5', 'duplicate_post_excludelist_filter' );
+
 	/**
 	 * Filters the meta fields excludelist when copying a post.
 	 *

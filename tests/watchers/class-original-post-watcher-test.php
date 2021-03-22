@@ -123,7 +123,6 @@ class Original_Post_Watcher_Test extends TestCase {
 	}
 
 	/**
-	 *
 	 * Tests the add_admin_notice function when the original has not changed.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Copied_Post_Watcher::add_admin_notice

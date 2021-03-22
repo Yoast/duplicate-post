@@ -56,7 +56,7 @@ class Bulk_Actions_Watcher {
 			\printf(
 				'<div id="message" class="notice notice-success fade"><p>' .
 				\esc_html(
-				/* translators: %s: Number of posts copied. */
+					/* translators: %s: Number of posts copied. */
 					\_n(
 						'%s item copied.',
 						'%s items copied.',
@@ -80,7 +80,7 @@ class Bulk_Actions_Watcher {
 			\printf(
 				'<div id="message" class="notice notice-success fade"><p>' .
 				\esc_html(
-				/* translators: %s: Number of posts copied. */
+					/* translators: %s: Number of posts copied. */
 					\_n(
 						'%s post duplicated. You can now start rewriting your post in the duplicate of the original post. Once you choose to republish it your changes will be merged back into the original post.',
 						'%s posts duplicated. You can now start rewriting your posts in the duplicates of the original posts. Once you choose to republish them your changes will be merged back into the original post.',

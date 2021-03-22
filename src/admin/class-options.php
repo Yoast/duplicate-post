@@ -77,8 +77,9 @@ class Options {
 	/**
 	 * Gets the list of registered options.
 	 *
-	 * @return array The options.
 	 * @codeCoverageIgnore
+	 *
+	 * @return array The options.
 	 */
 	public function get_options() {
 		return [

@@ -100,7 +100,7 @@ class Metabox {
 			<?php
 			\printf(
 				\wp_kses(
-				/* translators: %s: post title */
+					/* translators: %s: post title */
 					\__(
 						'The original item this was copied from is: <span class="duplicate_post_original_item_title_span">%s</span>',
 						'duplicate-post'
