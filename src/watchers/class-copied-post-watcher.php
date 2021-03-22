@@ -93,9 +93,9 @@ class Copied_Post_Watcher {
 		}
 
 		if ( $this->permissions_helper->has_rewrite_and_republish_copy( $post ) ) {
-			print '<div id="message" class="notice notice-warning is-dismissible fade"><p>' .
-				\esc_html( $this->get_notice_text( $post ) ) .
-				'</p></div>';
+			print '<div id="message" class="notice notice-warning is-dismissible fade"><p>'
+				. \esc_html( $this->get_notice_text( $post ) )
+				. '</p></div>';
 		}
 	}
 

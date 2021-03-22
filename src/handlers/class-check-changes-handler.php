@@ -63,8 +63,8 @@ class Check_Changes_Handler {
 	public function check_changes_action_handler() {
 		global $wp_version;
 
-		if ( ! ( isset( $_GET['post'] ) || isset( $_POST['post'] ) || // Input var okay.
-			( isset( $_REQUEST['action'] ) && $_REQUEST['action'] === 'duplicate_post_check_changes' ) ) ) { // Input var okay.
+		if ( ! ( isset( $_GET['post'] ) || isset( $_POST['post'] ) // Input var okay.
+			|| ( isset( $_REQUEST['action'] ) && $_REQUEST['action'] === 'duplicate_post_check_changes' ) ) ) { // Input var okay.
 			\wp_die(
 				\esc_html__( 'No post has been supplied!', 'duplicate-post' )
 			);

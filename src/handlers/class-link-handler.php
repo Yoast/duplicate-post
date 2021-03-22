@@ -62,8 +62,8 @@ class Link_Handler {
 			\wp_die( \esc_html__( 'Current user is not allowed to copy posts.', 'duplicate-post' ) );
 		}
 
-		if ( ! ( isset( $_GET['post'] ) || isset( $_POST['post'] ) || // Input var okay.
-			( isset( $_REQUEST['action'] ) && $_REQUEST['action'] === 'duplicate_post_new_draft' ) ) ) { // Input var okay.
+		if ( ! ( isset( $_GET['post'] ) || isset( $_POST['post'] ) // Input var okay.
+			|| ( isset( $_REQUEST['action'] ) && $_REQUEST['action'] === 'duplicate_post_new_draft' ) ) ) { // Input var okay.
 			\wp_die( \esc_html__( 'No post to duplicate has been supplied!', 'duplicate-post' ) );
 		}
 
@@ -118,8 +118,8 @@ class Link_Handler {
 			\wp_die( \esc_html__( 'Current user is not allowed to copy posts.', 'duplicate-post' ) );
 		}
 
-		if ( ! ( isset( $_GET['post'] ) || isset( $_POST['post'] ) || // Input var okay.
-			( isset( $_REQUEST['action'] ) && $_REQUEST['action'] === 'duplicate_post_clone' ) ) ) { // Input var okay.
+		if ( ! ( isset( $_GET['post'] ) || isset( $_POST['post'] ) // Input var okay.
+			|| ( isset( $_REQUEST['action'] ) && $_REQUEST['action'] === 'duplicate_post_clone' ) ) ) { // Input var okay.
 			\wp_die( \esc_html__( 'No post to duplicate has been supplied!', 'duplicate-post' ) );
 		}
 
@@ -192,8 +192,8 @@ class Link_Handler {
 			\wp_die( \esc_html__( 'Current user is not allowed to copy posts.', 'duplicate-post' ) );
 		}
 
-		if ( ! ( isset( $_GET['post'] ) || isset( $_POST['post'] ) || // Input var okay.
-			( isset( $_REQUEST['action'] ) && $_REQUEST['action'] === 'duplicate_post_rewrite' ) ) ) { // Input var okay.
+		if ( ! ( isset( $_GET['post'] ) || isset( $_POST['post'] ) // Input var okay.
+			|| ( isset( $_REQUEST['action'] ) && $_REQUEST['action'] === 'duplicate_post_rewrite' ) ) ) { // Input var okay.
 			\wp_die( \esc_html__( 'No post to duplicate has been supplied!', 'duplicate-post' ) );
 		}
 

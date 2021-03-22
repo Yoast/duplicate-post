@@ -74,9 +74,9 @@ class Original_Post_Watcher {
 		}
 
 		if ( $this->permissions_helper->has_original_changed( $post ) ) {
-			print '<div id="message" class="notice notice-warning is-dismissible fade"><p>' .
-				\esc_html( $this->get_notice_text() ) .
-				'</p></div>';
+			print '<div id="message" class="notice notice-warning is-dismissible fade"><p>'
+				. \esc_html( $this->get_notice_text() )
+				. '</p></div>';
 		}
 	}
 
