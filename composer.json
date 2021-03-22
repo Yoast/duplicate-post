@@ -1,4 +1,24 @@
 {
+    "name": "yoast/duplicate-post",
+    "description": "The go-to tool for cloning posts and pages, including the powerful Rewrite & Republish feature.",
+    "homepage": "https://wordpress.org/plugins/duplicate-post/",
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "Enrico Battocchi & Team Yoast",
+            "email": "support@yoast.com",
+            "homepage": "https://yoast.com"
+        }
+    ],
+    "type": "wordpress-plugin",
+    "support": {
+        "issues": "https://github.com/Yoast/duplicate-post/issues",
+        "forum":  "https://wordpress.org/plugins/duplicate-post/",
+        "source": "https://github.com/Yoast/duplicate-post"
+    },
+    "require": {
+        "php": ">=5.6"
+    },
     "require-dev": {
         "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
         "wp-coding-standards/wpcs": "^2.1",
@@ -7,11 +27,11 @@
         "phpunit/phpunit": "^5.7",
         "brain/monkey": "^2.5"
     },
-	"autoload": {
-		"classmap": [
-			"src/"
-		]
-	},
+    "autoload": {
+        "classmap": [
+            "src/"
+        ]
+    },
     "autoload-dev": {
         "classmap": [
             "tests/"
