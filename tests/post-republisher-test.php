@@ -38,8 +38,8 @@ class Post_Republisher_Test extends TestCase {
 	/**
 	 * Sets the instance.
 	 */
-	public function setUp() {
-		parent::setUp();
+	protected function set_up() {
+		parent::set_up();
 
 		$this->post_duplicator    = Mockery::mock( Post_Duplicator::class );
 		$this->permissions_helper = Mockery::mock( Permissions_Helper::class );

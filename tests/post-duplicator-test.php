@@ -7,11 +7,12 @@ use Mockery;
 use WP_Post;
 use WP_User;
 use Yoast\WP\Duplicate_Post\Post_Duplicator;
+use Yoast\WPTestUtils\BrainMonkey\TestCase as BMTestCase;
 
 /**
  * Test the Post_Duplicator class.
  */
-class Post_Duplicator_Test extends TestCase {
+class Post_Duplicator_Test extends BMTestCase {
 
 	/**
 	 * The instance.
@@ -23,8 +24,8 @@ class Post_Duplicator_Test extends TestCase {
 	/**
 	 * Sets the instance.
 	 */
-	public function setUp() {
-		parent::setUp();
+	protected function set_up() {
+		parent::set_up();
 
 		$this->instance = new Post_Duplicator();
 	}

@@ -46,8 +46,8 @@ class Options_Page_Test extends TestCase {
 	/**
 	 * Sets the instance.
 	 */
-	public function setUp() {
-		parent::setUp();
+	protected function set_up() {
+		parent::set_up();
 
 		$this->options        = Mockery::mock( Options::class )->makePartial();
 		$this->form_generator = Mockery::mock( Options_Form_Generator::class )->makePartial();

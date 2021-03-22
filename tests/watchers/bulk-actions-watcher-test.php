@@ -21,8 +21,8 @@ class Bulk_Actions_Watcher_Test extends TestCase {
 	/**
 	 * Sets the instance.
 	 */
-	public function setUp() {
-		parent::setUp();
+	protected function set_up() {
+		parent::set_up();
 
 		$this->instance = Mockery::mock( Bulk_Actions_Watcher::class )->makePartial();
 	}

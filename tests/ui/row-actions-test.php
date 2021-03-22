@@ -39,8 +39,8 @@ class Row_Actions_Test extends TestCase {
 	/**
 	 * Sets the instance.
 	 */
-	public function setUp() {
-		parent::setUp();
+	protected function set_up() {
+		parent::set_up();
 
 		$this->link_builder       = Mockery::mock( Link_Builder::class );
 		$this->permissions_helper = Mockery::mock( Permissions_Helper::class );

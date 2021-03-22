@@ -30,8 +30,8 @@ class Republished_Post_Watcher_Test extends TestCase {
 	/**
 	 * Sets the instance.
 	 */
-	public function setUp() {
-		parent::setUp();
+	protected function set_up() {
+		parent::set_up();
 
 		$this->permissions_helper = Mockery::mock( Permissions_Helper::class );
 

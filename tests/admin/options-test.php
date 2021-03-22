@@ -29,8 +29,8 @@ class Options_Test extends TestCase {
 	/**
 	 * Sets the instance.
 	 */
-	public function setUp() {
-		parent::setUp();
+	protected function set_up() {
+		parent::set_up();
 
 		$this->fake_options = [
 			'option_1' => [
