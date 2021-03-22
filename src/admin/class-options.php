@@ -1,15 +1,11 @@
 <?php
-/**
- * Options class
- *
- * @package Duplicate Post
- * @since   4.0
- */
 
 namespace Yoast\WP\Duplicate_Post\Admin;
 
 /**
- * Class Options
+ * Options class.
+ *
+ * @since 4.0
  */
 class Options {
 

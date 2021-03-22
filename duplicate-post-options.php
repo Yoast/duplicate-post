@@ -1,10 +1,4 @@
 <?php
-/**
- * Options page
- *
- * @package Duplicate Post
- * @since   2.0
- */
 
 namespace Yoast\WP\Duplicate_Post;
 

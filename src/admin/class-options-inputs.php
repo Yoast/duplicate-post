@@ -1,14 +1,9 @@
 <?php
-/**
- * Duplicate Post plugin file.
- *
- * @package Yoast\WP\Duplicate_Post\Admin
- */
 
 namespace Yoast\WP\Duplicate_Post\Admin;
 
 /**
- * Class Options_Inputs
+ * Class Options_Inputs.
  */
 class Options_Inputs {
 

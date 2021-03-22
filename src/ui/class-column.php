@@ -1,9 +1,4 @@
 <?php
-/**
- * Duplicate Post class to manage the custom column + quick edit.
- *
- * @package Duplicate_Post
- */
 
 namespace Yoast\WP\Duplicate_Post\UI;
 
@@ -11,7 +6,7 @@ use Yoast\WP\Duplicate_Post\Permissions_Helper;
 use Yoast\WP\Duplicate_Post\Utils;
 
 /**
- * Represents the Column class.
+ * Duplicate Post class to manage the custom column + quick edit.
  */
 class Column {
 

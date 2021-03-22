@@ -1,10 +1,4 @@
 <?php
-/**
- * Duplicate Post handler class for duplication actions from links.
- *
- * @package Duplicate_Post
- * @since 4.0
- */
 
 namespace Yoast\WP\Duplicate_Post\Handlers;
 
@@ -12,7 +6,9 @@ use Yoast\WP\Duplicate_Post\Permissions_Helper;
 use Yoast\WP\Duplicate_Post\Post_Duplicator;
 
 /**
- * Represents the handler for duplication actions from links.
+ * Duplicate Post handler class for duplication actions from links.
+ *
+ * @since 4.0
  */
 class Link_Handler {
 

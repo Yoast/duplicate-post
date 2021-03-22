@@ -1,19 +1,15 @@
 <?php
-/**
- * Duplicate Post Original post watcher class.
- *
- * @package Duplicate_Post
- * @since 4.0
- */
 
 namespace Yoast\WP\Duplicate_Post\Watchers;
 
 use Yoast\WP\Duplicate_Post\Permissions_Helper;
 
 /**
- * Original post watcher.
+ * Duplicate Post Original post watcher class.
  *
  * Watches the original post for changes.
+ *
+ * @since 4.0
  */
 class Original_Post_Watcher {
 

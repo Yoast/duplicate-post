@@ -1,16 +1,11 @@
 <?php
-/**
- * Duplicate Post class to watch if the current post has a Rewrite & Republish copy.
- *
- * @package Duplicate_Post
- */
 
 namespace Yoast\WP\Duplicate_Post\Watchers;
 
 use Yoast\WP\Duplicate_Post\Permissions_Helper;
 
 /**
- * Represents the Copied_Post_Watcher class.
+ * Duplicate Post class to watch if the current post has a Rewrite & Republish copy.
  */
 class Copied_Post_Watcher {
 

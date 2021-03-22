@@ -1,10 +1,4 @@
 <?php
-/**
- * Duplicate Post handler class for duplication bulk actions.
- *
- * @package Duplicate_Post
- * @since 4.0
- */
 
 namespace Yoast\WP\Duplicate_Post\Handlers;
 
@@ -13,7 +7,9 @@ use Yoast\WP\Duplicate_Post\Post_Duplicator;
 use Yoast\WP\Duplicate_Post\Utils;
 
 /**
- * Represents the handler for duplication bulk actions.
+ * Duplicate Post handler class for duplication bulk actions.
+ *
+ * @since 4.0
  */
 class Bulk_Handler {
 

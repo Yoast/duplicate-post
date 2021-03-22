@@ -1,9 +1,4 @@
 <?php
-/**
- * Duplicate Post class to manage the bulk actions menu.
- *
- * @package Duplicate_Post
- */
 
 namespace Yoast\WP\Duplicate_Post\UI;
 
@@ -11,7 +6,7 @@ use Yoast\WP\Duplicate_Post\Permissions_Helper;
 use Yoast\WP\Duplicate_Post\Utils;
 
 /**
- * Represents the Bulk_Actions class.
+ * Duplicate Post class to manage the bulk actions menu.
  */
 class Bulk_Actions {
 

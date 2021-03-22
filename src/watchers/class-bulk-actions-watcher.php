@@ -1,14 +1,9 @@
 <?php
-/**
- * Duplicate Post class to watch for the bulk actions and show notices.
- *
- * @package Duplicate_Post
- */
 
 namespace Yoast\WP\Duplicate_Post\Watchers;
 
 /**
- * Represents the Bulk_Actions_Watcher class.
+ * Duplicate Post class to watch for the bulk actions and show notices.
  */
 class Bulk_Actions_Watcher {
 

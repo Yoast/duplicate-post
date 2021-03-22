@@ -1,15 +1,11 @@
 <?php
-/**
- * Duplicate Post class to create copies.
- *
- * @package Duplicate_Post
- * @since 4.0
- */
 
 namespace Yoast\WP\Duplicate_Post;
 
 /**
- * Represents the Post Duplicator class.
+ * Duplicate Post class to create copies.
+ *
+ * @since 4.0
  */
 class Post_Duplicator {
 

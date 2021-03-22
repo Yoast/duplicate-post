@@ -1,10 +1,4 @@
 <?php
-/**
- * Duplicate Post main class.
- *
- * @package Duplicate_Post
- * @since 4.0
- */
 
 namespace Yoast\WP\Duplicate_Post;
 
@@ -13,7 +7,9 @@ use Yoast\WP\Duplicate_Post\UI\User_Interface;
 use Yoast\WP\Duplicate_Post\Watchers\Watchers;
 
 /**
- * Represents the Duplicate Post main class.
+ * Duplicate Post main class.
+ *
+ * @since 4.0
  */
 class Duplicate_Post {
 

@@ -1,15 +1,11 @@
 <?php
-/**
- * Utility methods for Duplicate Post.
- *
- * @package Duplicate_Post
- * @since 4.0
- */
 
 namespace Yoast\WP\Duplicate_Post;
 
 /**
- * Represents the Utils class.
+ * Utility methods for Duplicate Post.
+ *
+ * @since 4.0
  */
 class Utils {
 

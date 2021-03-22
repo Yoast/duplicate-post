@@ -1,15 +1,11 @@
 <?php
-/**
- * Permissions helper for Duplicate Post.
- *
- * @package Duplicate_Post
- * @since   4.0
- */
 
 namespace Yoast\WP\Duplicate_Post;
 
 /**
- * Represents the Permissions_Helper class.
+ * Permissions helper for Duplicate Post.
+ *
+ * @since 4.0
  */
 class Permissions_Helper {
 

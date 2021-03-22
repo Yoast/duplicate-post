@@ -1,15 +1,11 @@
 <?php
-/**
- * Duplicate Post class to migrate revisions from the Rewrite & Republish copy to the original post.
- *
- * @package Duplicate_Post
- * @since 4.0
- */
 
 namespace Yoast\WP\Duplicate_Post;
 
 /**
- * Represents the Revisions Migrator class.
+ * Duplicate Post class to migrate revisions from the Rewrite & Republish copy to the original post.
+ *
+ * @since 4.0
  */
 class Revisions_Migrator {
 
