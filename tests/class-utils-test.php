@@ -7,7 +7,7 @@
 
 namespace Yoast\WP\Duplicate_Post\Tests;
 
-use \Yoast\WP\Duplicate_Post\Utils;
+use Yoast\WP\Duplicate_Post\Utils;
 
 /**
  * Test the Utils class.
