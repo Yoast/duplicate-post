@@ -3,6 +3,8 @@
 namespace Yoast\WP\Duplicate_Post\Tests\Handlers;
 
 use Brain\Monkey;
+use Mockery;
+use WP_Post;
 use Yoast\WP\Duplicate_Post\Handlers\Check_Changes_Handler;
 use Yoast\WP\Duplicate_Post\Permissions_Helper;
 use Yoast\WP\Duplicate_Post\Tests\TestCase;
@@ -32,9 +34,9 @@ class Check_Changes_Handler_Test extends TestCase {
 	public function setUp() {
 		parent::setUp();
 
-		$this->permissions_helper = \Mockery::mock( Permissions_Helper::class );
+		$this->permissions_helper = Mockery::mock( Permissions_Helper::class );
 
-		$this->instance = \Mockery::mock( Check_Changes_Handler::class, [ $this->permissions_helper ] )->makePartial();
+		$this->instance = Mockery::mock( Check_Changes_Handler::class, [ $this->permissions_helper ] )->makePartial();
 	}
 
 	/**
@@ -65,15 +67,15 @@ class Check_Changes_Handler_Test extends TestCase {
 	 * @preserveGlobalState disabled
 	 */
 	public function test_check_changes_action_handler_successful() {
-		$utils                  = \Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
+		$utils                  = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
 		$_GET['post']           = '123';
 		$_REQUEST['action']     = 'duplicate_post_check_changes';
-		$post                   = \Mockery::mock( \WP_Post::class );
+		$post                   = Mockery::mock( WP_Post::class );
 		$post->ID               = 123;
 		$post->post_title       = 'Unchanged Title';
 		$post->post_content     = 'Updated content';
 		$post->post_excerpt     = 'Updated excerpt';
-		$original               = \Mockery::mock( \WP_Post::class );
+		$original               = Mockery::mock( WP_Post::class );
 		$original->ID           = 100;
 		$original->post_title   = 'Unchanged Title';
 		$original->post_content = 'Original content';
@@ -179,10 +181,10 @@ class Check_Changes_Handler_Test extends TestCase {
 	 * @preserveGlobalState disabled
 	 */
 	public function test_check_changes_action_handler_no_original() {
-		$utils              = \Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
+		$utils              = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
 		$_GET['post']       = '123';
 		$_REQUEST['action'] = 'duplicate_post_check_changes';
-		$post               = \Mockery::mock( \WP_Post::class );
+		$post               = Mockery::mock( WP_Post::class );
 
 		Monkey\Functions\expect( '\check_admin_referer' )
 			->with( 'duplicate_post_check_changes_123' );

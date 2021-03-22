@@ -2,6 +2,8 @@
 
 namespace Yoast\WP\Duplicate_Post\UI;
 
+use WP_Post;
+
 /**
  * Duplicate Post link builder.
  */
@@ -10,8 +12,8 @@ class Link_Builder {
 	/**
 	 * Builds URL for duplication action for the Rewrite & Republish feature.
 	 *
-	 * @param int|\WP_Post $post    The post object or ID.
-	 * @param string       $context The context in which the URL will be used.
+	 * @param int|WP_Post $post    The post object or ID.
+	 * @param string      $context The context in which the URL will be used.
 	 *
 	 * @return string The URL for the link.
 	 */
@@ -22,8 +24,8 @@ class Link_Builder {
 	/**
 	 * Builds URL for the "Clone" action.
 	 *
-	 * @param int|\WP_Post $post    The post object or ID.
-	 * @param string       $context The context in which the URL will be used.
+	 * @param int|WP_Post $post    The post object or ID.
+	 * @param string      $context The context in which the URL will be used.
 	 *
 	 * @return string The URL for the link.
 	 */
@@ -34,8 +36,8 @@ class Link_Builder {
 	/**
 	 * Builds URL for the "Copy to a new draft" action.
 	 *
-	 * @param int|\WP_Post $post    The post object or ID.
-	 * @param string       $context The context in which the URL will be used.
+	 * @param int|WP_Post $post    The post object or ID.
+	 * @param string      $context The context in which the URL will be used.
 	 *
 	 * @return string The URL for the link.
 	 */
@@ -46,8 +48,8 @@ class Link_Builder {
 	/**
 	 * Builds URL for the "Check Changes" action.
 	 *
-	 * @param int|\WP_Post $post    The post object or ID.
-	 * @param string       $context The context in which the URL will be used.
+	 * @param int|WP_Post $post    The post object or ID.
+	 * @param string      $context The context in which the URL will be used.
 	 *
 	 * @return string The URL for the link.
 	 */
@@ -58,15 +60,15 @@ class Link_Builder {
 	/**
 	 * Builds URL for duplication action.
 	 *
-	 * @param int|\WP_Post $post        The post object or ID.
-	 * @param string       $context     The context in which the URL will be used.
-	 * @param string       $action_name The action for the URL.
+	 * @param int|WP_Post $post        The post object or ID.
+	 * @param string      $context     The context in which the URL will be used.
+	 * @param string      $action_name The action for the URL.
 	 *
 	 * @return string The URL for the link.
 	 */
 	public function build_link( $post, $context, $action_name ) {
 		$post = \get_post( $post );
-		if ( ! $post instanceof \WP_Post ) {
+		if ( ! $post instanceof WP_Post ) {
 			return '';
 		}
 

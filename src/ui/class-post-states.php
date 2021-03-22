@@ -39,8 +39,8 @@ class Post_States {
 	/**
 	 * Shows link to original post in the post states.
 	 *
-	 * @param array    $post_states The array of post states.
-	 * @param \WP_Post $post        The current post.
+	 * @param array   $post_states The array of post states.
+	 * @param WP_Post $post        The current post.
 	 *
 	 * @return array The updated post states array.
 	 */

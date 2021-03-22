@@ -3,6 +3,8 @@
 namespace Yoast\WP\Duplicate_Post\Tests\Watchers;
 
 use Brain\Monkey;
+use Mockery;
+use WP_Post;
 use Yoast\WP\Duplicate_Post\Permissions_Helper;
 use Yoast\WP\Duplicate_Post\Tests\TestCase;
 use Yoast\WP\Duplicate_Post\Watchers\Original_Post_Watcher;
@@ -32,9 +34,9 @@ class Original_Post_Watcher_Test extends TestCase {
 	public function setUp() {
 		parent::setUp();
 
-		$this->permissions_helper = \Mockery::mock( Permissions_Helper::class );
+		$this->permissions_helper = Mockery::mock( Permissions_Helper::class );
 
-		$this->instance = \Mockery::mock(
+		$this->instance = Mockery::mock(
 			Original_Post_Watcher::class
 		)->makePartial();
 		$this->instance->__construct( $this->permissions_helper );
@@ -79,7 +81,7 @@ class Original_Post_Watcher_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Original_Post_Watcher::add_admin_notice
 	 */
 	public function test_add_admin_notice_classic() {
-		$post = \Mockery::mock( \WP_Post::class );
+		$post = Mockery::mock( WP_Post::class );
 
 		$this->permissions_helper
 			->expects( 'is_classic_editor' )
@@ -123,7 +125,7 @@ class Original_Post_Watcher_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Copied_Post_Watcher::add_admin_notice
 	 */
 	public function test_add_admin_notice_original_not_changed() {
-		$post = \Mockery::mock( \WP_Post::class );
+		$post = Mockery::mock( WP_Post::class );
 
 		$this->permissions_helper
 			->expects( 'is_classic_editor' )
@@ -148,7 +150,7 @@ class Original_Post_Watcher_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Copied_Post_Watcher::add_block_editor_notice
 	 */
 	public function test_add_block_editor_notice() {
-		$post = \Mockery::mock( \WP_Post::class );
+		$post = Mockery::mock( WP_Post::class );
 
 		Monkey\Functions\expect( '\get_post' )
 			->andReturn( $post );
@@ -188,7 +190,7 @@ class Original_Post_Watcher_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Copied_Post_Watcher::add_block_editor_notice
 	 */
 	public function test_add_block_editor_notice_original_not_changed() {
-		$post = \Mockery::mock( \WP_Post::class );
+		$post = Mockery::mock( WP_Post::class );
 
 		Monkey\Functions\expect( '\get_post' )
 			->andReturn( $post );

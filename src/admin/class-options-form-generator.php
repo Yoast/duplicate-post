@@ -2,6 +2,7 @@
 
 namespace Yoast\WP\Duplicate_Post\Admin;
 
+use WP_Taxonomy;
 use Yoast\WP\Duplicate_Post\Utils;
 
 /**
@@ -104,8 +105,8 @@ class Options_Form_Generator {
 	/**
 	 * Sorts taxonomy objects based on being public, followed by being private.
 	 *
-	 * @param \WP_Taxonomy $taxonomy1 First taxonomy object.
-	 * @param \WP_Taxonomy $taxonomy2 Second taxonomy object.
+	 * @param WP_Taxonomy $taxonomy1 First taxonomy object.
+	 * @param WP_Taxonomy $taxonomy2 Second taxonomy object.
 	 *
 	 * @return bool True when the first taxonomy is public.
 	 */

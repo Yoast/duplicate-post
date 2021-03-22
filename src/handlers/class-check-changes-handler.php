@@ -2,6 +2,7 @@
 
 namespace Yoast\WP\Duplicate_Post\Handlers;
 
+use WP_Post;
 use Yoast\WP\Duplicate_Post\Permissions_Helper;
 use Yoast\WP\Duplicate_Post\Utils;
 
@@ -24,14 +25,14 @@ class Check_Changes_Handler {
 	/**
 	 * Holds the current post object.
 	 *
-	 * @var \WP_Post
+	 * @var WP_Post
 	 */
 	private $post;
 
 	/**
 	 * Holds the original post object.
 	 *
-	 * @var \WP_Post
+	 * @var WP_Post
 	 */
 	private $original;
 

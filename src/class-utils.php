@@ -2,6 +2,8 @@
 
 namespace Yoast\WP\Duplicate_Post;
 
+use WP_Post;
+
 /**
  * Utility methods for Duplicate Post.
  *
@@ -53,10 +55,10 @@ class Utils {
 	/**
 	 * Gets the original post.
 	 *
-	 * @param int|\WP_Post|null $post   Optional. Post ID or Post object.
-	 * @param string            $output Optional, default is Object. Either OBJECT, ARRAY_A, or ARRAY_N.
+	 * @param int|WP_Post|null $post   Optional. Post ID or Post object.
+	 * @param string           $output Optional, default is Object. Either OBJECT, ARRAY_A, or ARRAY_N.
 	 *
-	 * @return \WP_Post|null Post data if successful, null otherwise.
+	 * @return WP_Post|null Post data if successful, null otherwise.
 	 */
 	public static function get_original( $post = null, $output = \OBJECT ) {
 		$post = \get_post( $post );
@@ -78,8 +80,8 @@ class Utils {
 	 *
 	 * If we are copying children, and the post has already an ancestor marked for copy, we have to filter it out.
 	 *
-	 * @param \WP_Post $post     The post object.
-	 * @param array    $post_ids The array of marked post IDs.
+	 * @param WP_Post $post     The post object.
+	 * @param array   $post_ids The array of marked post IDs.
 	 *
 	 * @return bool Whether the post has ancestors marked for copy.
 	 */
@@ -98,7 +100,7 @@ class Utils {
 	/**
 	 * Returns a link to edit, preview or view a post, in accordance to user capabilities.
 	 *
-	 * @param \WP_Post $post Post ID or Post object.
+	 * @param WP_Post $post Post ID or Post object.
 	 *
 	 * @return string|null The link to edit, preview or view a post.
 	 */

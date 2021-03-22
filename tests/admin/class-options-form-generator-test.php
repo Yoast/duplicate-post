@@ -4,6 +4,7 @@ namespace Yoast\WP\Duplicate_Post\Tests\Admin;
 
 use Brain\Monkey;
 use Mockery;
+use stdClass;
 use Yoast\WP\Duplicate_Post\Admin\Options_Form_Generator;
 use Yoast\WP\Duplicate_Post\Admin\Options_Inputs;
 use Yoast\WP\Duplicate_Post\Tests\TestCase;
@@ -36,7 +37,7 @@ class Options_Form_Generator_Test extends TestCase {
 		$this->options_inputs = Mockery::mock( Options_Inputs::class )->makePartial();
 		$this->instance       = Mockery::mock( Options_Form_Generator::class, [ $this->options_inputs ] )->makePartial();
 
-		$labels       = new \stdClass();
+		$labels       = new stdClass();
 		$labels->name = 'Custom Type';
 
 		$caps = [
@@ -278,7 +279,7 @@ class Options_Form_Generator_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Admin\Options_Form_Generator::generate_taxonomy_exclusion_list
 	 */
 	public function test_generate_taxonomy_exclusion_list() {
-		$labels       = new \stdClass();
+		$labels       = new stdClass();
 		$labels->name = 'Custom Taxonomy';
 
 		$taxonomy1         = Mockery::mock( 'WP_Taxonomy' );

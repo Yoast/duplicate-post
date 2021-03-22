@@ -2,6 +2,7 @@
 
 namespace Yoast\WP\Duplicate_Post\Watchers;
 
+use WP_Post;
 use Yoast\WP\Duplicate_Post\Permissions_Helper;
 
 /**
@@ -40,7 +41,7 @@ class Copied_Post_Watcher {
 	/**
 	 * Generates the translated text for the notice.
 	 *
-	 * @param \WP_Post $post The current post object.
+	 * @param WP_Post $post The current post object.
 	 *
 	 * @return string The translated text for the notice.
 	 */
@@ -83,7 +84,7 @@ class Copied_Post_Watcher {
 
 		$post = \get_post();
 
-		if ( ! $post instanceof \WP_Post ) {
+		if ( ! $post instanceof WP_Post ) {
 			return;
 		}
 
@@ -102,7 +103,7 @@ class Copied_Post_Watcher {
 	public function add_block_editor_notice() {
 		$post = \get_post();
 
-		if ( ! $post instanceof \WP_Post ) {
+		if ( ! $post instanceof WP_Post ) {
 			return;
 		}
 

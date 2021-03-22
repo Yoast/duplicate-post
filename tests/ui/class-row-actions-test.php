@@ -4,6 +4,7 @@ namespace Yoast\WP\Duplicate_Post\Tests\UI;
 
 use Brain\Monkey;
 use Mockery;
+use WP_Post;
 use Yoast\WP\Duplicate_Post\Permissions_Helper;
 use Yoast\WP\Duplicate_Post\Tests\TestCase;
 use Yoast\WP\Duplicate_Post\UI\Link_Builder;
@@ -66,7 +67,7 @@ class Row_Actions_Test extends TestCase {
 	 * @preserveGlobalState disabled
 	 */
 	public function test_register_hooks() {
-		$utils = \Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
+		$utils = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
 
 		$utils->expects( 'get_option' )
 			->with( 'duplicate_post_show_link_in', 'row' )
@@ -110,7 +111,7 @@ class Row_Actions_Test extends TestCase {
 			'trash'                => '<a href="http://basic.wordpress.test/wp-admin/post.php?post=464&amp;action=trash&amp;_wpnonce=e52d0bff9b" class="submitdelete" aria-label="Move &#8220;Title&#8221; to the Trash">Trash</a>',
 			'view'                 => '<a href="http://basic.wordpress.test/?p=464&#038;preview=true" rel="bookmark" aria-label="Preview &#8220;Title&#8221;">Preview</a>',
 		];
-		$post             = Mockery::mock( \WP_Post::class );
+		$post             = Mockery::mock( WP_Post::class );
 		$post->post_title = 'Title';
 		$post->post_type  = 'post';
 		$post->ID         = '464';
@@ -158,7 +159,7 @@ class Row_Actions_Test extends TestCase {
 			'trash'                => '<a href="http://basic.wordpress.test/wp-admin/post.php?post=464&amp;action=trash&amp;_wpnonce=e52d0bff9b" class="submitdelete" aria-label="Move &#8220;Title&#8221; to the Trash">Trash</a>',
 			'view'                 => '<a href="http://basic.wordpress.test/?p=464&#038;preview=true" rel="bookmark" aria-label="Preview &#8220;Title&#8221;">Preview</a>',
 		];
-		$post    = Mockery::mock( \WP_Post::class );
+		$post    = Mockery::mock( WP_Post::class );
 
 		$this->permissions_helper
 			->expects( 'should_links_be_displayed' )
@@ -195,7 +196,7 @@ class Row_Actions_Test extends TestCase {
 			'trash'                => '<a href="http://basic.wordpress.test/wp-admin/post.php?post=464&amp;action=trash&amp;_wpnonce=e52d0bff9b" class="submitdelete" aria-label="Move &#8220;Title&#8221; to the Trash">Trash</a>',
 			'view'                 => '<a href="http://basic.wordpress.test/?p=464&#038;preview=true" rel="bookmark" aria-label="Preview &#8220;Title&#8221;">Preview</a>',
 		];
-		$post             = Mockery::mock( \WP_Post::class );
+		$post             = Mockery::mock( WP_Post::class );
 		$post->post_title = 'Title';
 		$post->post_type  = 'post';
 		$post->ID         = '464';
@@ -243,7 +244,7 @@ class Row_Actions_Test extends TestCase {
 			'trash'                => '<a href="http://basic.wordpress.test/wp-admin/post.php?post=464&amp;action=trash&amp;_wpnonce=e52d0bff9b" class="submitdelete" aria-label="Move &#8220;Title&#8221; to the Trash">Trash</a>',
 			'view'                 => '<a href="http://basic.wordpress.test/?p=464&#038;preview=true" rel="bookmark" aria-label="Preview &#8220;Title&#8221;">Preview</a>',
 		];
-		$post    = Mockery::mock( \WP_Post::class );
+		$post    = Mockery::mock( WP_Post::class );
 
 		$this->permissions_helper
 			->expects( 'should_links_be_displayed' )
@@ -280,7 +281,7 @@ class Row_Actions_Test extends TestCase {
 			'trash'                => '<a href="http://basic.wordpress.test/wp-admin/post.php?post=464&amp;action=trash&amp;_wpnonce=e52d0bff9b" class="submitdelete" aria-label="Move &#8220;Title&#8221; to the Trash">Trash</a>',
 			'view'                 => '<a href="http://basic.wordpress.test/?p=464&#038;preview=true" rel="bookmark" aria-label="Preview &#8220;Title&#8221;">Preview</a>',
 		];
-		$post              = Mockery::mock( \WP_Post::class );
+		$post              = Mockery::mock( WP_Post::class );
 		$post->post_title  = 'Title';
 		$post->post_type   = 'post';
 		$post->post_status = 'publish';
@@ -334,7 +335,7 @@ class Row_Actions_Test extends TestCase {
 			'trash'                => '<a href="http://basic.wordpress.test/wp-admin/post.php?post=464&amp;action=trash&amp;_wpnonce=e52d0bff9b" class="submitdelete" aria-label="Move &#8220;Title&#8221; to the Trash">Trash</a>',
 			'view'                 => '<a href="http://basic.wordpress.test/?p=464&#038;preview=true" rel="bookmark" aria-label="Preview &#8220;Title&#8221;">Preview</a>',
 		];
-		$post              = Mockery::mock( \WP_Post::class );
+		$post              = Mockery::mock( WP_Post::class );
 		$post->post_status = 'publish';
 
 		$this->permissions_helper
@@ -377,7 +378,7 @@ class Row_Actions_Test extends TestCase {
 			'trash'                => '<a href="http://basic.wordpress.test/wp-admin/post.php?post=464&amp;action=trash&amp;_wpnonce=e52d0bff9b" class="submitdelete" aria-label="Move &#8220;Title&#8221; to the Trash">Trash</a>',
 			'view'                 => '<a href="http://basic.wordpress.test/?p=464&#038;preview=true" rel="bookmark" aria-label="Preview &#8220;Title&#8221;">Preview</a>',
 		];
-		$post              = Mockery::mock( \WP_Post::class );
+		$post              = Mockery::mock( WP_Post::class );
 		$post->post_status = 'draft';
 
 		$this->permissions_helper
