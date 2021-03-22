@@ -151,7 +151,7 @@ New features and customization, WP 3.0 compatibility: you should upgrade if you 
 
 == Changelog ==
 
-= 4.1.2 (2021-04-06) =
+= 4.1.2 (2021-03-23) =
 
 Enhancements:
 
