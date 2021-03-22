@@ -77,7 +77,7 @@ class Link_Builder {
 			return '';
 		}
 
-		if ( 'display' === $context ) {
+		if ( $context === 'display' ) {
 			$action = '?action=' . $action_name . '&amp;post=' . $post->ID;
 		} else {
 			$action = '?action=' . $action_name . '&post=' . $post->ID;

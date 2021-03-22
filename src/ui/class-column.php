@@ -83,7 +83,7 @@ class Column {
 	 * @return void
 	 */
 	public function show_original_item( $column_name, $post_id ) {
-		if ( 'duplicate_post_original_item' === $column_name ) {
+		if ( $column_name === 'duplicate_post_original_item' ) {
 			$column_content = '-';
 			$data_attr      = ' data-no-original="1"';
 			$original_item  = Utils::get_original( $post_id );
@@ -110,7 +110,7 @@ class Column {
 	 * @return void
 	 */
 	public function quick_edit_remove_original( $column_name ) {
-		if ( 'duplicate_post_original_item' !== $column_name ) {
+		if ( $column_name !== 'duplicate_post_original_item' ) {
 			return;
 		}
 		\printf(
@@ -153,7 +153,7 @@ class Column {
 	 * @return void
 	 */
 	public function admin_enqueue_scripts( $hook ) {
-		if ( 'edit.php' === $hook ) {
+		if ( $hook === 'edit.php' ) {
 			$this->asset_manager->enqueue_quick_edit_script();
 		}
 	}
@@ -166,7 +166,7 @@ class Column {
 	 * @return void
 	 */
 	public function admin_enqueue_styles( $hook ) {
-		if ( 'edit.php' === $hook ) {
+		if ( $hook === 'edit.php' ) {
 			$this->asset_manager->enqueue_styles();
 		}
 	}

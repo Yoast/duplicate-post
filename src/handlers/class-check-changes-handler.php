@@ -64,7 +64,7 @@ class Check_Changes_Handler {
 		global $wp_version;
 
 		if ( ! ( isset( $_GET['post'] ) || isset( $_POST['post'] ) || // Input var okay.
-			( isset( $_REQUEST['action'] ) && 'duplicate_post_check_changes' === $_REQUEST['action'] ) ) ) { // Input var okay.
+			( isset( $_REQUEST['action'] ) && $_REQUEST['action'] === 'duplicate_post_check_changes' ) ) ) { // Input var okay.
 			\wp_die(
 				\esc_html__( 'No post has been supplied!', 'duplicate-post' )
 			);
@@ -156,7 +156,7 @@ class Check_Changes_Handler {
 
 							$diff = \wp_text_diff( $content_from, $content_to, $args );
 
-							if ( ! $diff && 'post_title' === $field ) {
+							if ( ! $diff && $field === 'post_title' ) {
 								// It's a better user experience to still show the Title, even if it didn't change.
 								$diff  = '<table class="diff"><colgroup><col class="content diffsplit left"><col class="content diffsplit middle"><col class="content diffsplit right"></colgroup><tbody><tr>';
 								$diff .= '<td>' . \esc_html( $this->original->post_title ) . '</td><td></td><td>' . \esc_html( $this->post->post_title ) . '</td>';
