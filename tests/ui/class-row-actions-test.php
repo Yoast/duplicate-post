@@ -11,8 +11,8 @@ use Brain\Monkey;
 use Mockery;
 use Yoast\WP\Duplicate_Post\Permissions_Helper;
 use Yoast\WP\Duplicate_Post\Tests\TestCase;
-use Yoast\WP\Duplicate_Post\UI\Row_Actions;
 use Yoast\WP\Duplicate_Post\UI\Link_Builder;
+use Yoast\WP\Duplicate_Post\UI\Row_Actions;
 
 /**
  * Test the Row_Actions class.

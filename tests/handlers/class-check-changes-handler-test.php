@@ -8,9 +8,9 @@
 namespace Yoast\WP\Duplicate_Post\Tests\Handlers;
 
 use Brain\Monkey;
+use Yoast\WP\Duplicate_Post\Handlers\Check_Changes_Handler;
 use Yoast\WP\Duplicate_Post\Permissions_Helper;
 use Yoast\WP\Duplicate_Post\Tests\TestCase;
-use Yoast\WP\Duplicate_Post\Handlers\Check_Changes_Handler;
 
 /**
  * Test the Check_Changes_Handler class.

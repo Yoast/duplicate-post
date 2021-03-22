@@ -9,9 +9,9 @@ namespace Yoast\WP\Duplicate_Post\Tests;
 
 use Brain\Monkey;
 use Mockery;
-use Yoast\WP\Duplicate_Post\Post_Republisher;
-use Yoast\WP\Duplicate_Post\Post_Duplicator;
 use Yoast\WP\Duplicate_Post\Permissions_Helper;
+use Yoast\WP\Duplicate_Post\Post_Duplicator;
+use Yoast\WP\Duplicate_Post\Post_Republisher;
 
 /**
  * Test the Post_Republisher class.
