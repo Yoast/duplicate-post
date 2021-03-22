@@ -41,13 +41,13 @@ abstract class TestCase extends BaseTestCase {
 		];
 		$role1->allows(
 			[
-				'has_cap' => function( $cap ) {
+				'has_cap' => static function ( $cap ) {
 					return true;
 				},
-				'add_cap' => function( $cap ) {
+				'add_cap' => static function ( $cap ) {
 					return true;
 				},
-				'remove_cap' => function( $cap ) {
+				'remove_cap' => static function ( $cap ) {
 				},
 			]
 		);
@@ -61,13 +61,13 @@ abstract class TestCase extends BaseTestCase {
 		];
 		$role2->allows(
 			[
-				'has_cap' => function( $cap ) {
+				'has_cap' => static function ( $cap ) {
 					return false;
 				},
-				'add_cap' => function( $cap ) {
+				'add_cap' => static function ( $cap ) {
 					return true;
 				},
-				'remove_cap' => function( $cap ) {
+				'remove_cap' => static function ( $cap ) {
 				},
 			]
 		);
@@ -77,13 +77,13 @@ abstract class TestCase extends BaseTestCase {
 		$role3->capabilities = [];
 		$role3->allows(
 			[
-				'has_cap' => function( $cap ) {
+				'has_cap' => static function ( $cap ) {
 					return false;
 				},
-				'add_cap' => function( $cap ) {
+				'add_cap' => static function ( $cap ) {
 					return true;
 				},
-				'remove_cap' => function( $cap ) {
+				'remove_cap' => static function ( $cap ) {
 				},
 			]
 		);
@@ -103,7 +103,7 @@ abstract class TestCase extends BaseTestCase {
 				'esc_html'       => null,
 				'esc_textarea'   => null,
 				'__'             => null,
-				'_n'             => function( $single, $plural, $number ) {
+				'_n'             => static function ( $single, $plural, $number ) {
 					if ( $number === 1 ) {
 						return $single;
 					}
@@ -121,16 +121,16 @@ abstract class TestCase extends BaseTestCase {
 				'is_multisite'   => false,
 				'site_url'       => 'https://www.example.org',
 				'wp_slash'       => null,
-				'wp_unslash'     => function( $value ) {
+				'wp_unslash'     => static function ( $value ) {
 					return \is_string( $value ) ? \stripslashes( $value ) : $value;
 				},
-				'absint'         => function( $value ) {
+				'absint'         => static function ( $value ) {
 					return \abs( \intval( $value ) );
 				},
-				'wp_parse_args'  => function ( $settings, $defaults ) {
+				'wp_parse_args'  => static function ( $settings, $defaults ) {
 					return \array_merge( $defaults, $settings );
 				},
-				'get_role'       => function( $name ) use ( $role_objects ) {
+				'get_role'       => static function ( $name ) use ( $role_objects ) {
 					return $role_objects[ $name ];
 				},
 			]

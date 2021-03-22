@@ -65,7 +65,7 @@ class Options_Form_Generator_Test extends TestCase {
 		Monkey\Functions\stubs(
 			[
 				'get_post_types'      => [ $post_type1, $post_type2 ],
-				'translate_user_role' => function( $role ) {
+				'translate_user_role' => static function ( $role ) {
 					return $role;
 				},
 			]

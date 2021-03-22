@@ -129,7 +129,7 @@ class Row_Actions_Test extends TestCase {
 		Monkey\Functions\expect( '\_draft_or_post_title' )
 			->with( $post )
 			->andReturnUsing(
-				function ( $post ) {
+				static function ( $post ) {
 					return $post->post_title;
 				}
 			);
@@ -214,7 +214,7 @@ class Row_Actions_Test extends TestCase {
 		Monkey\Functions\expect( '\_draft_or_post_title' )
 			->with( $post )
 			->andReturnUsing(
-				function ( $post ) {
+				static function ( $post ) {
 					return $post->post_title;
 				}
 			);
@@ -305,7 +305,7 @@ class Row_Actions_Test extends TestCase {
 		Monkey\Functions\expect( '\_draft_or_post_title' )
 			->with( $post )
 			->andReturnUsing(
-				function ( $post ) {
+				static function ( $post ) {
 					return $post->post_title;
 				}
 			);
