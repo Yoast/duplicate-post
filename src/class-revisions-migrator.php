@@ -61,7 +61,7 @@ class Revisions_Migrator {
 
 		$revisions = \array_slice( $revisions, 0, $delete );
 
-		for ( $i = 0; isset( $revisions[ $i ] ); $i ++ ) {
+		for ( $i = 0; isset( $revisions[ $i ] ); $i++ ) {
 			if ( \strpos( $revisions[ $i ]->post_name, 'autosave' ) !== false ) {
 				continue;
 			}

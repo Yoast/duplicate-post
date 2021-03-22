@@ -50,7 +50,7 @@ class Row_Actions_Test extends TestCase {
 		$this->permissions_helper = Mockery::mock( Permissions_Helper::class );
 
 		$this->instance = Mockery::mock( Row_Actions::class, [ $this->link_builder, $this->permissions_helper ] )
-								->makePartial();
+			->makePartial();
 	}
 
 	/**

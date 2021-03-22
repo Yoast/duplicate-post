@@ -54,7 +54,6 @@ class Bulk_Actions_Watcher_Test extends TestCase {
 		$this->assertNotFalse( \has_action( 'admin_notices', [ $this->instance, 'add_bulk_rewrite_and_republish_admin_notice' ] ), 'Does not have expected admin_notices action' );
 	}
 
-
 	/**
 	 * Tests the add_removable_query_args function.
 	 *

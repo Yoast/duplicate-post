@@ -14,6 +14,7 @@ use Yoast\WP\Duplicate_Post\Utils;
  * Class Options_Page
  */
 class Options_Page {
+
 	/**
 	 * The Options instance.
 	 *

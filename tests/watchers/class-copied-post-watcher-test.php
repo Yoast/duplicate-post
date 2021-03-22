@@ -189,6 +189,7 @@ class Copied_Post_Watcher_Test extends TestCase {
 
 		$this->expectOutputString( '' );
 	}
+
 	/**
 	 *
 	 * Tests the add_admin_notice function when the post does not have a copy intended for Rewrite & Republish.
