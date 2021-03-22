@@ -275,10 +275,6 @@ class Permissions_Helper {
 
 		$copy = \get_post( $copy_id );
 
-		if ( $copy && $copy->post_status === 'trash' ) {
-			return true;
-		}
-
-		return false;
+		return ( $copy && $copy->post_status === 'trash' );
 	}
 }
