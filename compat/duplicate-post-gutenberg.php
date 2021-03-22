@@ -31,7 +31,8 @@ function duplicate_post_classic_editor_clone_link( $url, $post_id, $context, $dr
 		|| ( $draft && function_exists( 'has_blocks' ) && ! has_blocks( $post ) ) ) {
 		if ( $context === 'display' ) {
 			$url .= '&amp;classic-editor';
-		} else {
+		}
+		else {
 			$url .= '&classic-editor';
 		}
 	}

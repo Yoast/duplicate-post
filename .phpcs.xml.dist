@@ -54,6 +54,9 @@
 
 		<!-- Demanding Yoda conditions is stupid. -->
 		<exclude name="WordPress.PHP.YodaConditions"/>
+
+		<!-- YoastCS demands else on new line. -->
+		<exclude name="Squiz.ControlStructures.ControlSignature.SpaceAfterCloseBrace"/>
 	</rule>
 
 	<config name="testVersion" value="5.5-"/>

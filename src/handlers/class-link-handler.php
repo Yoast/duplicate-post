@@ -157,13 +157,15 @@ class Link_Handler {
 		if ( ! $sendback || strpos( $sendback, 'post.php' ) !== false || strpos( $sendback, 'post-new.php' ) !== false ) {
 			if ( $post_type === 'attachment' ) {
 				$sendback = \admin_url( 'upload.php' );
-			} else {
+			}
+			else {
 				$sendback = \admin_url( 'edit.php' );
 				if ( ! empty( $post_type ) ) {
 					$sendback = \add_query_arg( 'post_type', $post_type, $sendback );
 				}
 			}
-		} else {
+		}
+		else {
 			$sendback = \remove_query_arg( [ 'trashed', 'untrashed', 'deleted', 'cloned', 'ids' ], $sendback );
 		}
 
