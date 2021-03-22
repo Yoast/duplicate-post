@@ -92,7 +92,7 @@ function duplicate_post_plugin_actions( $actions ) {
 		),
 	];
 
-	$actions = $settings_action + $actions;
+	$actions = ( $settings_action + $actions );
 	return $actions;
 }
 
