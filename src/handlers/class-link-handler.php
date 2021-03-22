@@ -150,7 +150,7 @@ class Link_Handler {
 
 		$post_type = $post->post_type;
 		$sendback  = \wp_get_referer();
-		if ( ! $sendback || strpos( $sendback, 'post.php' ) !== false || strpos( $sendback, 'post-new.php' ) !== false ) {
+		if ( ! $sendback || \strpos( $sendback, 'post.php' ) !== false || \strpos( $sendback, 'post-new.php' ) !== false ) {
 			if ( $post_type === 'attachment' ) {
 				$sendback = \admin_url( 'upload.php' );
 			}

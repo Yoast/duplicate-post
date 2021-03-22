@@ -192,7 +192,7 @@ class Options_Form_Generator {
 		foreach ( Utils::get_roles() as $name => $display_name ) {
 			$role = \get_role( $name );
 
-			if ( count( \array_intersect_key( $role->capabilities, $edit_capabilities ) ) > 0 ) {
+			if ( \count( \array_intersect_key( $role->capabilities, $edit_capabilities ) ) > 0 ) {
 				$output .= $this->generate_options_input(
 					[
 						'duplicate_post_roles[]' => [

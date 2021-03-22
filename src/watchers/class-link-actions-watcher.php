@@ -110,7 +110,7 @@ class Link_Actions_Watcher {
 		if ( ! empty( $_REQUEST['rewriting'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			$notice = [
 				'text'          => \wp_slash(
-					__(
+					\__(
 						'You can now start rewriting your post in this duplicate of the original post. If you click "Republish", this rewritten post will replace the original post.',
 						'duplicate-post'
 					)

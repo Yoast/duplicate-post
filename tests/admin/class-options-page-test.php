@@ -131,8 +131,8 @@ class Options_Page_Test extends TestCase {
 		Monkey\Functions\expect( '\add_options_page' )
 			->with(
 				[
-					__( 'Duplicate Post Options', 'duplicate-post' ),
-					__( 'Duplicate Post', 'duplicate-post' ),
+					\__( 'Duplicate Post Options', 'duplicate-post' ),
+					\__( 'Duplicate Post', 'duplicate-post' ),
 					'manage_options',
 					'duplicatepost',
 					[ $this, 'generate_page' ],

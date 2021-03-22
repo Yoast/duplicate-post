@@ -64,7 +64,7 @@ class Bulk_Actions {
 	 */
 	public function register_bulk_action( $bulk_actions ) {
 		// phpcs:ignore WordPress.Security.NonceVerification
-		$is_draft_or_trash = isset( $_REQUEST['post_status'] ) && in_array( $_REQUEST['post_status'], [ 'draft', 'trash' ], true );
+		$is_draft_or_trash = isset( $_REQUEST['post_status'] ) && \in_array( $_REQUEST['post_status'], [ 'draft', 'trash' ], true );
 
 		if ( \intval( Utils::get_option( 'duplicate_post_show_link', 'clone' ) ) === 1 ) {
 			$bulk_actions['duplicate_post_bulk_clone'] = \esc_html__( 'Clone', 'duplicate-post' );

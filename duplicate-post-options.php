@@ -8,7 +8,7 @@ use Yoast\WP\Duplicate_Post\Admin\Options_Inputs;
 use Yoast\WP\Duplicate_Post\Admin\Options_Page;
 use Yoast\WP\Duplicate_Post\UI\Asset_Manager;
 
-if ( ! defined( 'ABSPATH' ) ) {
+if ( ! \defined( 'ABSPATH' ) ) {
 	exit();
 }
 

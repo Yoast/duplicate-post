@@ -213,8 +213,8 @@ class Options {
 				'label'       => \__( 'Do not copy these fields', 'duplicate-post' ),
 				'value'       => \get_option( 'duplicate_post_blacklist' ),
 				'description' => [
-					__( 'Comma-separated list of meta fields that must not be copied.', 'duplicate-post' ),
-					__( 'You can use * to match zero or more alphanumeric characters or underscores: e.g. field*', 'duplicate-post' ),
+					\__( 'Comma-separated list of meta fields that must not be copied.', 'duplicate-post' ),
+					\__( 'You can use * to match zero or more alphanumeric characters or underscores: e.g. field*', 'duplicate-post' ),
 				],
 			],
 			'duplicate_post_taxonomies_blacklist'         => [
@@ -236,7 +236,7 @@ class Options {
 				'label'       => \__( 'In a metabox in the Edit screen', 'duplicate-post' ),
 				'value'       => 1,
 				'description' => [
-					__( "You'll also be able to delete the reference to the original item with a checkbox", 'duplicate-post' ),
+					\__( "You'll also be able to delete the reference to the original item with a checkbox", 'duplicate-post' ),
 				],
 			],
 			'duplicate_post_show_original_column'         => [
@@ -246,7 +246,7 @@ class Options {
 				'label'       => \__( 'In a column in the Post list', 'duplicate-post' ),
 				'value'       => 1,
 				'description' => [
-					__( "You'll also be able to delete the reference to the original item with a checkbox in Quick Edit", 'duplicate-post' ),
+					\__( "You'll also be able to delete the reference to the original item with a checkbox in Quick Edit", 'duplicate-post' ),
 				],
 			],
 			'duplicate_post_show_original_in_post_states' => [
