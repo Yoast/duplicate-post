@@ -22,7 +22,7 @@ function duplicate_post_wpml_init() {
 }
 
 global $duplicated_posts;    // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals
-$duplicated_posts = array(); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals
+$duplicated_posts = []; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals
 
 /**
  * Copy post translations.
@@ -84,7 +84,7 @@ function duplicate_wpml_string_packages() { // phpcs:ignore WordPress.NamingConv
 		$new_string_packages      = apply_filters( 'wpml_st_get_post_string_packages', false, $duplicate_post_id ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals
 		if ( is_array( $original_string_packages ) ) {
 			foreach ( $original_string_packages as $original_string_package ) {
-				$translated_original_strings = $original_string_package->get_translated_strings( array() );
+				$translated_original_strings = $original_string_package->get_translated_strings( [] );
 
 				foreach ( $new_string_packages as $new_string_package ) {
 					$cache = new WPML_WP_Cache( 'WPML_Package' );
