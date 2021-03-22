@@ -53,8 +53,15 @@ class Column_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Column::__construct
 	 */
 	public function test_constructor() {
-		$this->assertAttributeInstanceOf( Permissions_Helper::class, 'permissions_helper', $this->instance );
-		$this->assertAttributeInstanceOf( Asset_Manager::class, 'asset_manager', $this->instance );
+		$this->assertInstanceOf(
+			Permissions_Helper::class,
+			$this->getPropertyValue( $this->instance, 'permissions_helper' )
+		);
+
+		$this->assertInstanceOf(
+			Asset_Manager::class,
+			$this->getPropertyValue( $this->instance, 'asset_manager' )
+		);
 	}
 
 	/**

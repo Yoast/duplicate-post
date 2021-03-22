@@ -78,7 +78,10 @@ class Options_Form_Generator_Test extends TestCase {
 	public function test_constructor() {
 		$this->instance->__construct( $this->options_inputs );
 
-		$this->assertAttributeInstanceOf( Options_Inputs::class, 'options_inputs', $this->instance );
+		$this->assertInstanceOf(
+			Options_Inputs::class,
+			$this->getPropertyValue( $this->instance, 'options_inputs' )
+		);
 	}
 
 	/**

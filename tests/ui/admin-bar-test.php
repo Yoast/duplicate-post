@@ -73,9 +73,20 @@ class Admin_Bar_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Admin_Bar::__construct
 	 */
 	public function test_constructor() {
-		$this->assertAttributeInstanceOf( Link_Builder::class, 'link_builder', $this->instance );
-		$this->assertAttributeInstanceOf( Permissions_Helper::class, 'permissions_helper', $this->instance );
-		$this->assertAttributeInstanceOf( Asset_Manager::class, 'asset_manager', $this->instance );
+		$this->assertInstanceOf(
+			Link_Builder::class,
+			$this->getPropertyValue( $this->instance, 'link_builder' )
+		);
+
+		$this->assertInstanceOf(
+			Permissions_Helper::class,
+			$this->getPropertyValue( $this->instance, 'permissions_helper' )
+		);
+
+		$this->assertInstanceOf(
+			Asset_Manager::class,
+			$this->getPropertyValue( $this->instance, 'asset_manager' )
+		);
 	}
 
 	/**

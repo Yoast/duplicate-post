@@ -48,7 +48,10 @@ class Copied_Post_Watcher_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Copied_Post_Watcher::__construct
 	 */
 	public function test_constructor() {
-		$this->assertAttributeInstanceOf( Permissions_Helper::class, 'permissions_helper', $this->instance );
+		$this->assertInstanceOf(
+			Permissions_Helper::class,
+			$this->getPropertyValue( $this->instance, 'permissions_helper' )
+		);
 	}
 
 	/**
