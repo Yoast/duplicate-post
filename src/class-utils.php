@@ -1,15 +1,13 @@
 <?php
-/**
- * Utility methods for Duplicate Post.
- *
- * @package Duplicate_Post
- * @since 4.0
- */
 
 namespace Yoast\WP\Duplicate_Post;
 
+use WP_Post;
+
 /**
- * Represents the Utils class.
+ * Utility methods for Duplicate Post.
+ *
+ * @since 4.0
  */
 class Utils {
 
@@ -57,10 +55,10 @@ class Utils {
 	/**
 	 * Gets the original post.
 	 *
-	 * @param int|\WP_Post|null $post   Optional. Post ID or Post object.
-	 * @param string            $output Optional, default is Object. Either OBJECT, ARRAY_A, or ARRAY_N.
+	 * @param int|WP_Post|null $post   Optional. Post ID or Post object.
+	 * @param string           $output Optional, default is Object. Either OBJECT, ARRAY_A, or ARRAY_N.
 	 *
-	 * @return \WP_Post|null Post data if successful, null otherwise.
+	 * @return WP_Post|null Post data if successful, null otherwise.
 	 */
 	public static function get_original( $post = null, $output = \OBJECT ) {
 		$post = \get_post( $post );
@@ -82,8 +80,8 @@ class Utils {
 	 *
 	 * If we are copying children, and the post has already an ancestor marked for copy, we have to filter it out.
 	 *
-	 * @param \WP_Post $post     The post object.
-	 * @param array    $post_ids The array of marked post IDs.
+	 * @param WP_Post $post     The post object.
+	 * @param array   $post_ids The array of marked post IDs.
 	 *
 	 * @return bool Whether the post has ancestors marked for copy.
 	 */
@@ -92,7 +90,7 @@ class Utils {
 		$parent             = \wp_get_post_parent_id( $post->ID );
 		while ( $parent ) {
 			if ( \in_array( $parent, $post_ids, true ) ) {
-				$ancestors_in_array++;
+				++$ancestors_in_array;
 			}
 			$parent = \wp_get_post_parent_id( $parent );
 		}
@@ -102,7 +100,7 @@ class Utils {
 	/**
 	 * Returns a link to edit, preview or view a post, in accordance to user capabilities.
 	 *
-	 * @param \WP_Post $post Post ID or Post object.
+	 * @param WP_Post $post Post ID or Post object.
 	 *
 	 * @return string|null The link to edit, preview or view a post.
 	 */
@@ -124,7 +122,8 @@ class Utils {
 				\esc_attr( \sprintf( \__( 'Edit &#8220;%s&#8221;', 'default' ), $title ) ),
 				$title
 			);
-		} elseif ( \is_post_type_viewable( $post_type_object ) ) {
+		}
+		elseif ( \is_post_type_viewable( $post_type_object ) ) {
 			if ( \in_array( $post->post_status, [ 'pending', 'draft', 'future' ], true ) ) {
 				if ( $can_edit_post ) {
 					$preview_link = \get_preview_post_link( $post );
@@ -136,7 +135,8 @@ class Utils {
 						$title
 					);
 				}
-			} elseif ( $post->post_status !== 'trash' ) {
+			}
+			elseif ( $post->post_status !== 'trash' ) {
 				return \sprintf(
 					'<a href="%s" rel="bookmark" aria-label="%s">%s</a>',
 					\get_permalink( $post->ID ),
@@ -163,8 +163,9 @@ class Utils {
 	/**
 	 * Gets the registered WordPress roles.
 	 *
-	 * @return array The roles.
 	 * @codeCoverageIgnore As this is a simple wrapper method for a built-in WordPress method, we don't have to test it.
+	 *
+	 * @return array The roles.
 	 */
 	public static function get_roles() {
 		global $wp_roles;

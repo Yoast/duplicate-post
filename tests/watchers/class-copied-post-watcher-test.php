@@ -1,13 +1,10 @@
 <?php
-/**
- * Duplicate Post test file.
- *
- * @package Duplicate_Post\Tests
- */
 
 namespace Yoast\WP\Duplicate_Post\Tests\Watchers;
 
 use Brain\Monkey;
+use Mockery;
+use WP_Post;
 use Yoast\WP\Duplicate_Post\Permissions_Helper;
 use Yoast\WP\Duplicate_Post\Tests\TestCase;
 use Yoast\WP\Duplicate_Post\Watchers\Copied_Post_Watcher;
@@ -37,9 +34,9 @@ class Copied_Post_Watcher_Test extends TestCase {
 	public function setUp() {
 		parent::setUp();
 
-		$this->permissions_helper = \Mockery::mock( Permissions_Helper::class );
+		$this->permissions_helper = Mockery::mock( Permissions_Helper::class );
 
-		$this->instance = \Mockery::mock(
+		$this->instance = Mockery::mock(
 			Copied_Post_Watcher::class
 		)->makePartial();
 		$this->instance->__construct( $this->permissions_helper );
@@ -72,7 +69,7 @@ class Copied_Post_Watcher_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Copied_Post_Watcher::get_notice_text
 	 */
 	public function test_get_notice_text_not_scheduled() {
-		$post = \Mockery::mock( \WP_Post::class );
+		$post = Mockery::mock( WP_Post::class );
 
 		$this->permissions_helper
 			->expects( 'has_scheduled_rewrite_and_republish_copy' )
@@ -96,8 +93,8 @@ class Copied_Post_Watcher_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Copied_Post_Watcher::get_notice_text
 	 */
 	public function test_get_notice_text_scheduled() {
-		$post = \Mockery::mock( \WP_Post::class );
-		$copy = \Mockery::mock( \WP_Post::class );
+		$post = Mockery::mock( WP_Post::class );
+		$copy = Mockery::mock( WP_Post::class );
 
 		$this->permissions_helper
 			->expects( 'has_scheduled_rewrite_and_republish_copy' )
@@ -129,7 +126,7 @@ class Copied_Post_Watcher_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Copied_Post_Watcher::get_notice_text
 	 */
 	public function test_get_notice_text_copy_in_the_trash() {
-		$post = \Mockery::mock( \WP_Post::class );
+		$post = Mockery::mock( WP_Post::class );
 
 		$this->permissions_helper
 			->expects( 'has_scheduled_rewrite_and_republish_copy' )
@@ -152,7 +149,7 @@ class Copied_Post_Watcher_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Copied_Post_Watcher::add_admin_notice
 	 */
 	public function test_add_admin_notice_classic() {
-		$post = \Mockery::mock( \WP_Post::class );
+		$post = Mockery::mock( WP_Post::class );
 
 		$this->permissions_helper
 			->expects( 'is_classic_editor' )
@@ -189,14 +186,14 @@ class Copied_Post_Watcher_Test extends TestCase {
 
 		$this->expectOutputString( '' );
 	}
+
 	/**
-	 *
 	 * Tests the add_admin_notice function when the post does not have a copy intended for Rewrite & Republish.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Copied_Post_Watcher::add_admin_notice
 	 */
 	public function test_add_admin_notice_not_rewrite_and_republish() {
-		$post = \Mockery::mock( \WP_Post::class );
+		$post = Mockery::mock( WP_Post::class );
 
 		$this->permissions_helper
 			->expects( 'is_classic_editor' )
@@ -221,7 +218,7 @@ class Copied_Post_Watcher_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Copied_Post_Watcher::add_block_editor_notice
 	 */
 	public function test_add_block_editor_notice() {
-		$post = \Mockery::mock( \WP_Post::class );
+		$post = Mockery::mock( WP_Post::class );
 
 		Monkey\Functions\expect( '\get_post' )
 			->andReturn( $post );
@@ -262,7 +259,7 @@ class Copied_Post_Watcher_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Copied_Post_Watcher::add_block_editor_notice
 	 */
 	public function test_add_block_editor_notice_not_rewrite_and_republish() {
-		$post = \Mockery::mock( \WP_Post::class );
+		$post = Mockery::mock( WP_Post::class );
 
 		Monkey\Functions\expect( '\get_post' )
 			->andReturn( $post );

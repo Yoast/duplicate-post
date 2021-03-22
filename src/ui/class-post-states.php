@@ -1,9 +1,4 @@
 <?php
-/**
- * Duplicate Post class to manage the post states display.
- *
- * @package Duplicate_Post
- */
 
 namespace Yoast\WP\Duplicate_Post\UI;
 
@@ -12,7 +7,7 @@ use Yoast\WP\Duplicate_Post\Permissions_Helper;
 use Yoast\WP\Duplicate_Post\Utils;
 
 /**
- * Represents the Post_States class.
+ * Duplicate Post class to manage the post states display.
  */
 class Post_States {
 
@@ -44,8 +39,8 @@ class Post_States {
 	/**
 	 * Shows link to original post in the post states.
 	 *
-	 * @param array    $post_states The array of post states.
-	 * @param \WP_Post $post        The current post.
+	 * @param array   $post_states The array of post states.
+	 * @param WP_Post $post        The current post.
 	 *
 	 * @return array The updated post states array.
 	 */

@@ -1,14 +1,11 @@
 <?php
-/**
- * Duplicate Post test file.
- *
- * @package Duplicate_Post\Tests
- */
 
 namespace Yoast\WP\Duplicate_Post\Tests;
 
 use Brain\Monkey;
 use Mockery;
+use WP_Post;
+use WP_User;
 use Yoast\WP\Duplicate_Post\Post_Duplicator;
 
 /**
@@ -77,7 +74,7 @@ class Post_Duplicator_Test extends TestCase {
 	 * @param mixed $expected Expected output.
 	 */
 	public function test_generate_copy_title( $original, $expected ) {
-		$post             = Mockery::mock( \WP_Post::class );
+		$post             = Mockery::mock( WP_Post::class );
 		$post->post_title = 'Title';
 
 		Monkey\Functions\expect( '\sanitize_text_field' )
@@ -163,7 +160,7 @@ class Post_Duplicator_Test extends TestCase {
 	 * @param mixed $expected Expected output.
 	 */
 	public function test_generate_copy_status( $original, $expected ) {
-		$post              = Mockery::mock( \WP_Post::class );
+		$post              = Mockery::mock( WP_Post::class );
 		$post->post_status = $original['post_status'];
 		$post->post_type   = $original['post_type'];
 
@@ -173,7 +170,7 @@ class Post_Duplicator_Test extends TestCase {
 		Monkey\Functions\expect( '\is_post_type_hierarchical' )
 			->with( $post->post_type )
 			->andReturnUsing(
-				function( $post_type ) {
+				static function ( $post_type ) {
 					return $post_type !== 'post' && $post_type === 'page';
 				}
 			);
@@ -260,14 +257,14 @@ class Post_Duplicator_Test extends TestCase {
 	 * @param mixed $expected Expected output.
 	 */
 	public function test_generate_copy_author( $original, $expected ) {
-		$post              = Mockery::mock( \WP_Post::class );
+		$post              = Mockery::mock( WP_Post::class );
 		$post->post_author = 1;
 		$post->post_type   = $original['post_type'];
 
 		$options                = [];
 		$options['copy_author'] = $original['copy_author'];
 
-		$user     = Mockery::mock( \WP_User::class );
+		$user     = Mockery::mock( WP_User::class );
 		$user->ID = 2;
 
 		Monkey\Functions\expect( '\wp_get_current_user' )
@@ -277,7 +274,7 @@ class Post_Duplicator_Test extends TestCase {
 		Monkey\Functions\expect( '\is_post_type_hierarchical' )
 			->with( $post->post_type )
 			->andReturnUsing(
-				function( $post_type ) {
+				static function ( $post_type ) {
 					return $post_type !== 'post' && $post_type === 'page';
 				}
 			);

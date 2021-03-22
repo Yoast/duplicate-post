@@ -1,9 +1,4 @@
 <?php
-/**
- * Duplicate Post test file.
- *
- * @package Duplicate_Post\Tests
- */
 
 namespace Yoast\WP\Duplicate_Post\Tests\Admin;
 
@@ -57,12 +52,11 @@ class Options_Page_Test extends TestCase {
 		$this->options        = Mockery::mock( Options::class )->makePartial();
 		$this->form_generator = Mockery::mock( Options_Form_Generator::class )->makePartial();
 		$this->asset_manager  = Mockery::mock( Asset_Manager::class );
-		$this->instance       = Mockery::mock(
-			Options_Page::class,
-			[ $this->options, $this->form_generator, $this->asset_manager ]
-		)
-		->makePartial()
-		->shouldAllowMockingProtectedMethods();
+
+		$parameters     = [ $this->options, $this->form_generator, $this->asset_manager ];
+		$this->instance = Mockery::mock( Options_Page::class, $parameters )
+			->makePartial()
+			->shouldAllowMockingProtectedMethods();
 	}
 
 	/**
@@ -137,8 +131,8 @@ class Options_Page_Test extends TestCase {
 		Monkey\Functions\expect( '\add_options_page' )
 			->with(
 				[
-					__( 'Duplicate Post Options', 'duplicate-post' ),
-					__( 'Duplicate Post', 'duplicate-post' ),
+					\__( 'Duplicate Post Options', 'duplicate-post' ),
+					\__( 'Duplicate Post', 'duplicate-post' ),
 					'manage_options',
 					'duplicatepost',
 					[ $this, 'generate_page' ],

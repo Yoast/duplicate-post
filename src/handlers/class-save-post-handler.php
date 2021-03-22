@@ -1,17 +1,13 @@
 <?php
-/**
- * Duplicate Post handler class for save_post action.
- *
- * @package Duplicate_Post
- * @since 4.0
- */
 
 namespace Yoast\WP\Duplicate_Post\Handlers;
 
 use Yoast\WP\Duplicate_Post\Permissions_Helper;
 
 /**
- * Represents the handler for save_post action.
+ * Duplicate Post handler class for save_post action.
+ *
+ * @since 4.0
  */
 class Save_Post_Handler {
 
@@ -51,7 +47,7 @@ class Save_Post_Handler {
 	 * @return void
 	 */
 	public function delete_on_save_post( $post_id ) {
-		if ( ( \defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE )
+		if ( ( \defined( 'DOING_AUTOSAVE' ) && \DOING_AUTOSAVE )
 			|| empty( $_POST['duplicate_post_remove_original'] ) // phpcs:ignore WordPress.Security.NonceVerification
 			|| ! \current_user_can( 'edit_post', $post_id ) ) {
 			return;

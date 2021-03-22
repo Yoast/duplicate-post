@@ -1,16 +1,12 @@
 <?php
-/**
- * Duplicate Post class to watch if the current post has a Rewrite & Republish copy.
- *
- * @package Duplicate_Post
- */
 
 namespace Yoast\WP\Duplicate_Post\Watchers;
 
+use WP_Post;
 use Yoast\WP\Duplicate_Post\Permissions_Helper;
 
 /**
- * Represents the Copied_Post_Watcher class.
+ * Duplicate Post class to watch if the current post has a Rewrite & Republish copy.
  */
 class Copied_Post_Watcher {
 
@@ -45,7 +41,7 @@ class Copied_Post_Watcher {
 	/**
 	 * Generates the translated text for the notice.
 	 *
-	 * @param \WP_Post $post The current post object.
+	 * @param WP_Post $post The current post object.
 	 *
 	 * @return string The translated text for the notice.
 	 */
@@ -88,14 +84,14 @@ class Copied_Post_Watcher {
 
 		$post = \get_post();
 
-		if ( ! $post instanceof \WP_Post ) {
+		if ( ! $post instanceof WP_Post ) {
 			return;
 		}
 
 		if ( $this->permissions_helper->has_rewrite_and_republish_copy( $post ) ) {
-			print '<div id="message" class="notice notice-warning is-dismissible fade"><p>' .
-				\esc_html( $this->get_notice_text( $post ) ) .
-				'</p></div>';
+			print '<div id="message" class="notice notice-warning is-dismissible fade"><p>'
+				. \esc_html( $this->get_notice_text( $post ) )
+				. '</p></div>';
 		}
 	}
 
@@ -107,7 +103,7 @@ class Copied_Post_Watcher {
 	public function add_block_editor_notice() {
 		$post = \get_post();
 
-		if ( ! $post instanceof \WP_Post ) {
+		if ( ! $post instanceof WP_Post ) {
 			return;
 		}
 

@@ -37,6 +37,7 @@ tests/cli/vendor
 ############
 ## Composer
 ############
+composer.lock
 /vendor/
 
 /js/dist/

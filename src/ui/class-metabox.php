@@ -1,17 +1,13 @@
 <?php
-/**
- * Duplicate Post class to manage the metabox.
- *
- * @package Duplicate_Post
- */
 
 namespace Yoast\WP\Duplicate_Post\UI;
 
+use WP_Post;
 use Yoast\WP\Duplicate_Post\Permissions_Helper;
 use Yoast\WP\Duplicate_Post\Utils;
 
 /**
- * Represents the Metabox class.
+ * Duplicate Post class to manage the metabox.
  */
 class Metabox {
 
@@ -45,8 +41,8 @@ class Metabox {
 	/**
 	 * Adds a metabox to Edit screen.
 	 *
-	 * @param string   $post_type The post type.
-	 * @param \WP_Post $post      The current post object.
+	 * @param string  $post_type The post type.
+	 * @param WP_Post $post      The current post object.
 	 *
 	 * @return void
 	 */
@@ -54,10 +50,10 @@ class Metabox {
 		$enabled_post_types = $this->permissions_helper->get_enabled_post_types();
 
 		if ( \in_array( $post_type, $enabled_post_types, true )
-			&& $post instanceof \WP_Post ) {
+			&& $post instanceof WP_Post ) {
 			$original_item = Utils::get_original( $post );
 
-			if ( $original_item instanceof \WP_Post ) {
+			if ( $original_item instanceof WP_Post ) {
 				\add_meta_box(
 					'duplicate_post_show_original',
 					\__( 'Duplicate Post', 'duplicate-post' ),
@@ -74,8 +70,8 @@ class Metabox {
 	/**
 	 * Outputs the HTML for the metabox.
 	 *
-	 * @param \WP_Post $post    The current post.
-	 * @param array    $metabox The array containing the metabox data.
+	 * @param WP_Post $post    The current post.
+	 * @param array   $metabox The array containing the metabox data.
 	 *
 	 * @return void
 	 */
@@ -100,7 +96,7 @@ class Metabox {
 			<?php
 			\printf(
 				\wp_kses(
-				/* translators: %s: post title */
+					/* translators: %s: post title */
 					\__(
 						'The original item this was copied from is: <span class="duplicate_post_original_item_title_span">%s</span>',
 						'duplicate-post'

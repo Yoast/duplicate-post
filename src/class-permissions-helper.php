@@ -1,15 +1,13 @@
 <?php
-/**
- * Permissions helper for Duplicate Post.
- *
- * @package Duplicate_Post
- * @since   4.0
- */
 
 namespace Yoast\WP\Duplicate_Post;
 
+use WP_Post;
+
 /**
- * Represents the Permissions_Helper class.
+ * Permissions helper for Duplicate Post.
+ *
+ * @since 4.0
  */
 class Permissions_Helper {
 
@@ -61,33 +59,33 @@ class Permissions_Helper {
 	/**
 	 * Determines if the post is a copy intended for Rewrite & Republish.
 	 *
-	 * @param \WP_Post $post The post object.
+	 * @param WP_Post $post The post object.
 	 *
 	 * @return bool Whether the post is a copy intended for Rewrite & Republish.
 	 */
-	public function is_rewrite_and_republish_copy( \WP_Post $post ) {
+	public function is_rewrite_and_republish_copy( WP_Post $post ) {
 		return ( \intval( \get_post_meta( $post->ID, '_dp_is_rewrite_republish_copy', true ) ) === 1 );
 	}
 
 	/**
 	 * Gets the Rewrite & Republish copy ID for the passed post.
 	 *
-	 * @param \WP_Post $post The post object.
+	 * @param WP_Post $post The post object.
 	 *
 	 * @return int The Rewrite & Republish copy ID.
 	 */
-	public function get_rewrite_and_republish_copy_id( \WP_Post $post ) {
+	public function get_rewrite_and_republish_copy_id( WP_Post $post ) {
 		return \get_post_meta( $post->ID, '_dp_has_rewrite_republish_copy', true );
 	}
 
 	/**
 	 * Gets the copy post object for the passed post.
 	 *
-	 * @param \WP_Post $post The post to get the copy for.
+	 * @param WP_Post $post The post to get the copy for.
 	 *
-	 * @return \WP_Post|null The copy's post object or null if it doesn't exist.
+	 * @return WP_Post|null The copy's post object or null if it doesn't exist.
 	 */
-	public function get_rewrite_and_republish_copy( \WP_Post $post ) {
+	public function get_rewrite_and_republish_copy( WP_Post $post ) {
 		$copy_id = $this->get_rewrite_and_republish_copy_id( $post );
 
 		if ( empty( $copy_id ) ) {
@@ -100,22 +98,22 @@ class Permissions_Helper {
 	/**
 	 * Determines if the post has a copy intended for Rewrite & Republish.
 	 *
-	 * @param \WP_Post $post The post object.
+	 * @param WP_Post $post The post object.
 	 *
 	 * @return bool Whether the post has a copy intended for Rewrite & Republish.
 	 */
-	public function has_rewrite_and_republish_copy( \WP_Post $post ) {
+	public function has_rewrite_and_republish_copy( WP_Post $post ) {
 		return ( ! empty( $this->get_rewrite_and_republish_copy_id( $post ) ) );
 	}
 
 	/**
 	 * Determines if the post has a copy intended for Rewrite & Republish which is scheduled to be published.
 	 *
-	 * @param \WP_Post $post The post object.
+	 * @param WP_Post $post The post object.
 	 *
-	 * @return bool|\WP_Post The scheduled copy if present, false if the post has no scheduled copy.
+	 * @return bool|WP_Post The scheduled copy if present, false if the post has no scheduled copy.
 	 */
-	public function has_scheduled_rewrite_and_republish_copy( \WP_Post $post ) {
+	public function has_scheduled_rewrite_and_republish_copy( WP_Post $post ) {
 		$copy = $this->get_rewrite_and_republish_copy( $post );
 
 		if ( ! empty( $copy ) && $copy->post_status === 'future' ) {
@@ -176,11 +174,11 @@ class Permissions_Helper {
 	/**
 	 * Determines if the original post has changed since the creation of the copy.
 	 *
-	 * @param \WP_Post $post The post object.
+	 * @param WP_Post $post The post object.
 	 *
 	 * @return bool Whether the original post has changed since the creation of the copy.
 	 */
-	public function has_original_changed( \WP_Post $post ) {
+	public function has_original_changed( WP_Post $post ) {
 		if ( ! $this->is_rewrite_and_republish_copy( $post ) ) {
 			return false;
 		}
@@ -200,16 +198,16 @@ class Permissions_Helper {
 	/**
 	 * Determines if duplicate links for the post can be displayed.
 	 *
-	 * @param \WP_Post $post The post object.
+	 * @param WP_Post $post The post object.
 	 *
 	 * @return bool Whether the links can be displayed.
 	 */
-	public function should_links_be_displayed( \WP_Post $post ) {
+	public function should_links_be_displayed( WP_Post $post ) {
 		/**
 		 * Filter allowing displaying duplicate post links for current post.
 		 *
-		 * @param bool     $display_links Whether the duplicate links will be displayed.
-		 * @param \WP_Post $post          The post object.
+		 * @param bool    $display_links Whether the duplicate links will be displayed.
+		 * @param WP_Post $post          The post object.
 		 *
 		 * @return bool Whether or not to display the duplicate post links.
 		 */
@@ -221,11 +219,11 @@ class Permissions_Helper {
 	/**
 	 * Determines if the Rewrite & Republish link for the post should be displayed.
 	 *
-	 * @param \WP_Post $post The post object.
+	 * @param WP_Post $post The post object.
 	 *
 	 * @return bool Whether the links should be displayed.
 	 */
-	public function should_rewrite_and_republish_be_allowed( \WP_Post $post ) {
+	public function should_rewrite_and_republish_be_allowed( WP_Post $post ) {
 		return $post->post_status === 'publish'
 			&& ! $this->is_rewrite_and_republish_copy( $post )
 			&& ! $this->has_rewrite_and_republish_copy( $post );
@@ -251,22 +249,22 @@ class Permissions_Helper {
 	/**
 	 * Determines whether a Rewrite & Republish copy can be republished.
 	 *
-	 * @param \WP_Post $post The post object.
+	 * @param WP_Post $post The post object.
 	 *
 	 * @return bool Whether the Rewrite & Republish copy can be republished.
 	 */
-	public function is_copy_allowed_to_be_republished( \WP_Post $post ) {
+	public function is_copy_allowed_to_be_republished( WP_Post $post ) {
 		return \in_array( $post->post_status, [ 'dp-rewrite-republish', 'private' ], true );
 	}
 
 	/**
 	 * Determines if the post has a trashed copy intended for Rewrite & Republish.
 	 *
-	 * @param \WP_Post $post The post object.
+	 * @param WP_Post $post The post object.
 	 *
 	 * @return bool Whether the post has a trashed copy intended for Rewrite & Republish.
 	 */
-	public function has_trashed_rewrite_and_republish_copy( \WP_Post $post ) {
+	public function has_trashed_rewrite_and_republish_copy( WP_Post $post ) {
 		$copy_id = \get_post_meta( $post->ID, '_dp_has_rewrite_republish_copy', true );
 
 		if ( ! $copy_id ) {
@@ -275,10 +273,6 @@ class Permissions_Helper {
 
 		$copy = \get_post( $copy_id );
 
-		if ( $copy && $copy->post_status === 'trash' ) {
-			return true;
-		}
-
-		return false;
+		return ( $copy && $copy->post_status === 'trash' );
 	}
 }

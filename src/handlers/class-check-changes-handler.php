@@ -1,18 +1,17 @@
 <?php
-/**
- * Duplicate Post handler class for changes overview.
- *
- * @package Duplicate_Post
- * @since 4.0
- */
 
 namespace Yoast\WP\Duplicate_Post\Handlers;
 
+use WP_Post;
 use Yoast\WP\Duplicate_Post\Permissions_Helper;
 use Yoast\WP\Duplicate_Post\Utils;
 
 /**
+ * Duplicate Post handler class for changes overview.
+ *
  * Represents the handler for checking the changes between a copy and the original post.
+ *
+ * @since 4.0
  */
 class Check_Changes_Handler {
 
@@ -26,14 +25,14 @@ class Check_Changes_Handler {
 	/**
 	 * Holds the current post object.
 	 *
-	 * @var \WP_Post
+	 * @var WP_Post
 	 */
 	private $post;
 
 	/**
 	 * Holds the original post object.
 	 *
-	 * @var \WP_Post
+	 * @var WP_Post
 	 */
 	private $original;
 
@@ -63,8 +62,8 @@ class Check_Changes_Handler {
 	public function check_changes_action_handler() {
 		global $wp_version;
 
-		if ( ! ( isset( $_GET['post'] ) || isset( $_POST['post'] ) || // Input var okay.
-			( isset( $_REQUEST['action'] ) && 'duplicate_post_check_changes' === $_REQUEST['action'] ) ) ) { // Input var okay.
+		if ( ! ( isset( $_GET['post'] ) || isset( $_POST['post'] ) // Input var okay.
+			|| ( isset( $_REQUEST['action'] ) && $_REQUEST['action'] === 'duplicate_post_check_changes' ) ) ) { // Input var okay.
 			\wp_die(
 				\esc_html__( 'No post has been supplied!', 'duplicate-post' )
 			);
@@ -108,7 +107,7 @@ class Check_Changes_Handler {
 			<h1 class="long-header">
 			<?php
 				echo \sprintf(
-						/* translators: %s: original item link (to view or edit) or title. */
+					/* translators: %s: original item link (to view or edit) or title. */
 					\esc_html__( 'Compare changes of duplicated post with the original (&#8220;%s&#8221;)', 'duplicate-post' ),
 					Utils::get_edit_or_view_link( $this->original ) // phpcs:ignore WordPress.Security.EscapeOutput
 				);
@@ -129,11 +128,11 @@ class Check_Changes_Handler {
 							'post_excerpt' => \__( 'Excerpt', 'default' ),
 						];
 
-						$args = array(
+						$args = [
 							'show_split_view' => true,
-							'title_left'      => __( 'Removed', 'default' ),
-							'title_right'     => __( 'Added', 'default' ),
-						);
+							'title_left'      => \__( 'Removed', 'default' ),
+							'title_right'     => \__( 'Added', 'default' ),
+						];
 
 						if ( \version_compare( $wp_version, '5.7' ) < 0 ) {
 							unset( $args['title_left'] );
@@ -141,6 +140,7 @@ class Check_Changes_Handler {
 						}
 
 						$post_array = \get_post( $this->post, \ARRAY_A );
+
 						/** This filter is documented in wp-admin/includes/revision.php */
 						// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Reason: we want to use a WP filter from the revision feature.
 						$fields = \apply_filters( '_wp_post_revision_fields', $fields, $post_array );
@@ -148,7 +148,7 @@ class Check_Changes_Handler {
 						foreach ( $fields as $field => $name ) {
 							/** This filter is documented in wp-admin/includes/revision.php */
 							// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Reason: we want to use a WP filter from the revision feature.
-							$content_from = apply_filters( "_wp_post_revision_field_{$field}", $this->original->$field, $field, $this->original, 'from' );
+							$content_from = \apply_filters( "_wp_post_revision_field_{$field}", $this->original->$field, $field, $this->original, 'from' );
 
 							/** This filter is documented in wp-admin/includes/revision.php */
 							// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Reason: we want to use a WP filter from the revision feature.
@@ -156,7 +156,7 @@ class Check_Changes_Handler {
 
 							$diff = \wp_text_diff( $content_from, $content_to, $args );
 
-							if ( ! $diff && 'post_title' === $field ) {
+							if ( ! $diff && $field === 'post_title' ) {
 								// It's a better user experience to still show the Title, even if it didn't change.
 								$diff  = '<table class="diff"><colgroup><col class="content diffsplit left"><col class="content diffsplit middle"><col class="content diffsplit right"></colgroup><tbody><tr>';
 								$diff .= '<td>' . \esc_html( $this->original->post_title ) . '</td><td></td><td>' . \esc_html( $this->post->post_title ) . '</td>';
@@ -194,7 +194,7 @@ class Check_Changes_Handler {
 		\set_current_screen( 'revision' );
 		// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- The revision screen expects $post to be set.
 		$post = $this->post;
-		require_once ABSPATH . 'wp-admin/admin-header.php';
+		require_once \ABSPATH . 'wp-admin/admin-header.php';
 	}
 
 	/**
@@ -205,6 +205,6 @@ class Check_Changes_Handler {
 	 * @return void
 	 */
 	public function require_wordpress_footer() {
-		require_once ABSPATH . 'wp-admin/admin-footer.php';
+		require_once \ABSPATH . 'wp-admin/admin-footer.php';
 	}
 }

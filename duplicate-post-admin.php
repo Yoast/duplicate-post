@@ -2,7 +2,7 @@
 /**
  * Backend functions.
  *
- * @package Duplicate Post
+ * @package Yoast\WP\Duplicate_Post
  * @since   2.0
  */
 
@@ -10,10 +10,10 @@ if ( ! is_admin() ) {
 	return;
 }
 
-require_once dirname( __FILE__ ) . '/duplicate-post-options.php';
+require_once __DIR__ . '/duplicate-post-options.php';
 
-require_once dirname( __FILE__ ) . '/compat/duplicate-post-wpml.php';
-require_once dirname( __FILE__ ) . '/compat/duplicate-post-jetpack.php';
+require_once __DIR__ . '/compat/duplicate-post-wpml.php';
+require_once __DIR__ . '/compat/duplicate-post-jetpack.php';
 
 /**
  * Wrapper for the option 'duplicate_post_version'.
@@ -40,7 +40,8 @@ function duplicate_post_admin_init() {
 	if ( intval( get_site_option( 'duplicate_post_show_notice' ) ) === 1 ) {
 		if ( is_multisite() ) {
 			add_action( 'network_admin_notices', 'duplicate_post_show_update_notice' );
-		} else {
+		}
+		else {
 			add_action( 'admin_notices', 'duplicate_post_show_update_notice' );
 		}
 		add_action( 'wp_ajax_duplicate_post_dismiss_notice', 'duplicate_post_dismiss_notice' );
@@ -82,12 +83,12 @@ function duplicate_post_plugin_upgrade() {
 
 	if ( empty( $installed_version ) ) {
 		// Get default roles.
-		$default_roles = array(
+		$default_roles = [
 			'editor',
 			'administrator',
 			'wpseo_manager',
 			'wpseo_editor',
-		);
+		];
 
 		foreach ( $default_roles as $name ) {
 			$role = get_role( $name );
@@ -119,9 +120,9 @@ function duplicate_post_plugin_upgrade() {
 	add_option( 'duplicate_post_copychildren', '0' );
 	add_option( 'duplicate_post_copycomments', '0' );
 	add_option( 'duplicate_post_copymenuorder', '1' );
-	add_option( 'duplicate_post_taxonomies_blacklist', array() );
+	add_option( 'duplicate_post_taxonomies_blacklist', [] );
 	add_option( 'duplicate_post_blacklist', '' );
-	add_option( 'duplicate_post_types_enabled', array( 'post', 'page' ) );
+	add_option( 'duplicate_post_types_enabled', [ 'post', 'page' ] );
 	add_option( 'duplicate_post_show_original_column', '0' );
 	add_option( 'duplicate_post_show_original_in_post_states', '0' );
 	add_option( 'duplicate_post_show_original_meta_box', '0' );
@@ -136,27 +137,27 @@ function duplicate_post_plugin_upgrade() {
 	add_option( 'duplicate_post_show_link_in', $show_links_in_defaults );
 
 	$taxonomies_blacklist = get_option( 'duplicate_post_taxonomies_blacklist' );
-	if ( '' === $taxonomies_blacklist ) {
-		$taxonomies_blacklist = array();
+	if ( $taxonomies_blacklist === '' ) {
+		$taxonomies_blacklist = [];
 	}
 	if ( in_array( 'post_format', $taxonomies_blacklist, true ) ) {
 		update_option( 'duplicate_post_copyformat', 0 );
-		$taxonomies_blacklist = array_diff( $taxonomies_blacklist, array( 'post_format' ) );
+		$taxonomies_blacklist = array_diff( $taxonomies_blacklist, [ 'post_format' ] );
 		update_option( 'duplicate_post_taxonomies_blacklist', $taxonomies_blacklist );
 	}
 
 	$meta_blacklist = explode( ',', get_option( 'duplicate_post_blacklist' ) );
-	if ( '' === $meta_blacklist ) {
-		$meta_blacklist = array();
+	if ( $meta_blacklist === '' ) {
+		$meta_blacklist = [];
 	}
 	$meta_blacklist = array_map( 'trim', $meta_blacklist );
 	if ( in_array( '_wp_page_template', $meta_blacklist, true ) ) {
 		update_option( 'duplicate_post_copytemplate', 0 );
-		$meta_blacklist = array_diff( $meta_blacklist, array( '_wp_page_template' ) );
+		$meta_blacklist = array_diff( $meta_blacklist, [ '_wp_page_template' ] );
 	}
 	if ( in_array( '_thumbnail_id', $meta_blacklist, true ) ) {
 		update_option( 'duplicate_post_copythumbnail', 0 );
-		$meta_blacklist = array_diff( $meta_blacklist, array( '_thumbnail_id' ) );
+		$meta_blacklist = array_diff( $meta_blacklist, [ '_thumbnail_id' ] );
 	}
 	update_option( 'duplicate_post_blacklist', implode( ',', $meta_blacklist ) );
 
@@ -210,10 +211,9 @@ function duplicate_post_show_update_notice() {
 	}
 
 	$current_screen = get_current_screen();
-	if (
-		empty( $current_screen ) ||
-		empty( $current_screen->base ) ||
-		( $current_screen->base !== 'dashboard' && $current_screen->base !== 'plugins' )
+	if ( empty( $current_screen )
+		|| empty( $current_screen->base )
+		|| ( $current_screen->base !== 'dashboard' && $current_screen->base !== 'plugins' )
 	) {
 		return;
 	}
@@ -237,14 +237,14 @@ function duplicate_post_show_update_notice() {
 
 	$message .= '<p>%%SIGNUP_FORM%%</p>';
 
-	$allowed_tags = array(
-		'a'      => array(
-			'href'  => array(),
-		),
-		'br'     => array(),
-		'p'      => array(),
-		'strong' => array(),
-	);
+	$allowed_tags = [
+		'a'      => [
+			'href'  => [],
+		],
+		'br'     => [],
+		'p'      => [],
+		'strong' => [],
+	];
 
 	$sanitized_message = wp_kses( $message, $allowed_tags );
 	$sanitized_message = str_replace( '%%SIGNUP_FORM%%', duplicate_post_newsletter_signup_form(), $sanitized_message );
@@ -281,8 +281,7 @@ function duplicate_post_show_update_notice() {
  * @return bool
  */
 function duplicate_post_dismiss_notice() {
-	$result = update_site_option( 'duplicate_post_show_notice', 0 );
-	return $result;
+	return update_site_option( 'duplicate_post_show_notice', 0 );
 }
 
 /**
@@ -306,8 +305,8 @@ function duplicate_post_copy_post_taxonomies( $new_id, $post ) {
 		}
 
 		$taxonomies_blacklist = get_option( 'duplicate_post_taxonomies_blacklist' );
-		if ( '' === $taxonomies_blacklist ) {
-			$taxonomies_blacklist = array();
+		if ( $taxonomies_blacklist === '' ) {
+			$taxonomies_blacklist = [];
 		}
 		if ( intval( get_option( 'duplicate_post_copyformat' ) ) === 0 ) {
 			$taxonomies_blacklist[] = 'post_format';
@@ -324,8 +323,8 @@ function duplicate_post_copy_post_taxonomies( $new_id, $post ) {
 
 		$taxonomies = array_diff( $post_taxonomies, $taxonomies_blacklist );
 		foreach ( $taxonomies as $taxonomy ) {
-			$post_terms = wp_get_object_terms( $post->ID, $taxonomy, array( 'orderby' => 'term_order' ) );
-			$terms      = array();
+			$post_terms = wp_get_object_terms( $post->ID, $taxonomy, [ 'orderby' => 'term_order' ] );
+			$terms      = [];
 			$num_terms  = count( $post_terms );
 			for ( $i = 0; $i < $num_terms; $i++ ) {
 				$terms[] = $post_terms[ $i ]->slug;
@@ -347,9 +346,10 @@ function duplicate_post_copy_post_meta_info( $new_id, $post ) {
 		return;
 	}
 	$meta_blacklist = get_option( 'duplicate_post_blacklist' );
-	if ( '' === $meta_blacklist ) {
-		$meta_blacklist = array();
-	} else {
+	if ( $meta_blacklist === '' ) {
+		$meta_blacklist = [];
+	}
+	else {
 		$meta_blacklist = explode( ',', $meta_blacklist );
 		$meta_blacklist = array_filter( $meta_blacklist );
 		$meta_blacklist = array_map( 'trim', $meta_blacklist );
@@ -365,7 +365,8 @@ function duplicate_post_copy_post_meta_info( $new_id, $post ) {
 		$meta_blacklist[] = '_thumbnail_id';
 	}
 
-	$meta_blacklist = apply_filters_deprecated( 'duplicate_post_blacklist_filter', array( $meta_blacklist ), '3.2.5', 'duplicate_post_excludelist_filter' );
+	$meta_blacklist = apply_filters_deprecated( 'duplicate_post_blacklist_filter', [ $meta_blacklist ], '3.2.5', 'duplicate_post_excludelist_filter' );
+
 	/**
 	 * Filters the meta fields excludelist when copying a post.
 	 *
@@ -377,15 +378,16 @@ function duplicate_post_copy_post_meta_info( $new_id, $post ) {
 
 	$meta_blacklist_string = '(' . implode( ')|(', $meta_blacklist ) . ')';
 	if ( strpos( $meta_blacklist_string, '*' ) !== false ) {
-		$meta_blacklist_string = str_replace( array( '*' ), array( '[a-zA-Z0-9_]*' ), $meta_blacklist_string );
+		$meta_blacklist_string = str_replace( [ '*' ], [ '[a-zA-Z0-9_]*' ], $meta_blacklist_string );
 
-		$meta_keys = array();
+		$meta_keys = [];
 		foreach ( $post_meta_keys as $meta_key ) {
 			if ( ! preg_match( '#^' . $meta_blacklist_string . '$#', $meta_key ) ) {
 				$meta_keys[] = $meta_key;
 			}
 		}
-	} else {
+	}
+	else {
 		$meta_keys = array_diff( $post_meta_keys, $meta_blacklist );
 	}
 
@@ -419,7 +421,8 @@ function duplicate_post_copy_post_meta_info( $new_id, $post ) {
 function duplicate_post_addslashes_deep( $value ) {
 	if ( function_exists( 'map_deep' ) ) {
 		return map_deep( $value, 'duplicate_post_addslashes_to_strings_only' );
-	} else {
+	}
+	else {
 		return wp_slash( $value );
 	}
 }
@@ -459,16 +462,16 @@ function duplicate_post_copy_attachments( $new_id, $post ) {
 	$old_thumbnail_id = get_post_thumbnail_id( $post->ID );
 	// Get children.
 	$children = get_posts(
-		array(
+		[
 			'post_type'   => 'any',
 			'numberposts' => -1,
 			'post_status' => 'any',
 			'post_parent' => $post->ID,
-		)
+		]
 	);
 	// Clone old attachments.
 	foreach ( $children as $child ) {
-		if ( 'attachment' !== $child->post_type ) {
+		if ( $child->post_type !== 'attachment' ) {
 			continue;
 		}
 		$url = wp_get_attachment_url( $child->ID );
@@ -480,7 +483,7 @@ function duplicate_post_copy_attachments( $new_id, $post ) {
 
 		$desc = wp_slash( $child->post_content );
 
-		$file_array             = array();
+		$file_array             = [];
 		$file_array['name']     = basename( $url );
 		$file_array['tmp_name'] = $tmp;
 		// "Upload" to the media collection
@@ -491,12 +494,12 @@ function duplicate_post_copy_attachments( $new_id, $post ) {
 			continue;
 		}
 		$new_post_author = wp_get_current_user();
-		$cloned_child    = array(
+		$cloned_child    = [
 			'ID'           => $new_attachment_id,
 			'post_title'   => $child->post_title,
 			'post_exceprt' => $child->post_title,
 			'post_author'  => $new_post_author->ID,
-		);
+		];
 		wp_update_post( wp_slash( $cloned_child ) );
 
 		$alt_title = get_post_meta( $child->ID, '_wp_attachment_image_alt', true );
@@ -521,16 +524,16 @@ function duplicate_post_copy_attachments( $new_id, $post ) {
 function duplicate_post_copy_children( $new_id, $post, $status = '' ) {
 	// Get children.
 	$children = get_posts(
-		array(
+		[
 			'post_type'   => 'any',
 			'numberposts' => -1,
 			'post_status' => 'any',
 			'post_parent' => $post->ID,
-		)
+		]
 	);
 
 	foreach ( $children as $child ) {
-		if ( 'attachment' === $child->post_type ) {
+		if ( $child->post_type === 'attachment' ) {
 			continue;
 		}
 		duplicate_post_create_duplicate( $child, $status, $new_id );
@@ -545,21 +548,21 @@ function duplicate_post_copy_children( $new_id, $post, $status = '' ) {
  */
 function duplicate_post_copy_comments( $new_id, $post ) {
 	$comments = get_comments(
-		array(
+		[
 			'post_id' => $post->ID,
 			'order'   => 'ASC',
 			'orderby' => 'comment_date_gmt',
-		)
+		]
 	);
 
-	$old_id_to_new = array();
+	$old_id_to_new = [];
 	foreach ( $comments as $comment ) {
 		// Do not copy pingbacks or trackbacks.
 		if ( $comment->comment_type === 'pingback' || $comment->comment_type === 'trackback' ) {
 			continue;
 		}
 		$parent      = ( $comment->comment_parent && $old_id_to_new[ $comment->comment_parent ] ) ? $old_id_to_new[ $comment->comment_parent ] : 0;
-		$commentdata = array(
+		$commentdata = [
 			'comment_post_ID'      => $new_id,
 			'comment_author'       => $comment->comment_author,
 			'comment_author_email' => $comment->comment_author_email,
@@ -572,7 +575,7 @@ function duplicate_post_copy_comments( $new_id, $post ) {
 			'comment_agent'        => $comment->comment_agent,
 			'comment_karma'        => $comment->comment_karma,
 			'comment_approved'     => $comment->comment_approved,
-		);
+		];
 		if ( intval( get_option( 'duplicate_post_copydate' ) ) === 1 ) {
 			$commentdata['comment_date']     = $comment->comment_date;
 			$commentdata['comment_date_gmt'] = get_gmt_from_date( $comment->comment_date );
@@ -621,11 +624,11 @@ function duplicate_post_create_duplicate( $post, $status = '', $parent_id = '' )
 		wp_die( esc_html( __( 'You aren\'t allowed to duplicate this post', 'duplicate-post' ) ) );
 	}
 
-	if ( ! duplicate_post_is_post_type_enabled( $post->post_type ) && 'attachment' !== $post->post_type ) {
+	if ( ! duplicate_post_is_post_type_enabled( $post->post_type ) && $post->post_type !== 'attachment' ) {
 		wp_die(
 			esc_html(
-				__( 'Copy features for this post type are not enabled in options page', 'duplicate-post' ) . ': ' .
-				$post->post_type
+				__( 'Copy features for this post type are not enabled in options page', 'duplicate-post' ) . ': '
+				. $post->post_type
 			)
 		);
 	}
@@ -633,7 +636,7 @@ function duplicate_post_create_duplicate( $post, $status = '', $parent_id = '' )
 	$new_post_status = ( empty( $status ) ) ? $post->post_status : $status;
 	$title           = ' ';
 
-	if ( 'attachment' !== $post->post_type ) {
+	if ( $post->post_type !== 'attachment' ) {
 		$prefix = sanitize_text_field( get_option( 'duplicate_post_title_prefix' ) );
 		$suffix = sanitize_text_field( get_option( 'duplicate_post_title_suffix' ) );
 		if ( intval( get_option( 'duplicate_post_copytitle' ) ) === 1 ) {
@@ -644,7 +647,8 @@ function duplicate_post_create_duplicate( $post, $status = '', $parent_id = '' )
 			if ( ! empty( $suffix ) ) {
 				$suffix = ' ' . $suffix;
 			}
-		} else {
+		}
+		else {
 			$title = ' ';
 		}
 		$title = trim( $prefix . $title . $suffix );
@@ -659,14 +663,16 @@ function duplicate_post_create_duplicate( $post, $status = '', $parent_id = '' )
 
 		if ( intval( get_option( 'duplicate_post_copystatus' ) ) === 0 ) {
 			$new_post_status = 'draft';
-		} else {
-			if ( 'publish' === $new_post_status || 'future' === $new_post_status ) {
+		}
+		else {
+			if ( $new_post_status === 'publish' || $new_post_status === 'future' ) {
 				// Check if the user has the right capability.
 				if ( is_post_type_hierarchical( $post->post_type ) ) {
 					if ( ! current_user_can( 'publish_pages' ) ) {
 						$new_post_status = 'pending';
 					}
-				} else {
+				}
+				else {
 					if ( ! current_user_can( 'publish_posts' ) ) {
 						$new_post_status = 'pending';
 					}
@@ -683,7 +689,8 @@ function duplicate_post_create_duplicate( $post, $status = '', $parent_id = '' )
 			if ( current_user_can( 'edit_others_pages' ) ) {
 				$new_post_author_id = $post->post_author;
 			}
-		} else {
+		}
+		else {
 			if ( current_user_can( 'edit_others_posts' ) ) {
 				$new_post_author_id = $post->post_author;
 			}
@@ -702,7 +709,7 @@ function duplicate_post_create_duplicate( $post, $status = '', $parent_id = '' )
 	}
 	$new_post_parent = empty( $parent_id ) ? $post->post_parent : $parent_id;
 
-	$new_post = array(
+	$new_post = [
 		'menu_order'            => $menu_order,
 		'comment_status'        => $post->comment_status,
 		'ping_status'           => $post->ping_status,
@@ -717,7 +724,7 @@ function duplicate_post_create_duplicate( $post, $status = '', $parent_id = '' )
 		'post_title'            => $title,
 		'post_type'             => $post->post_type,
 		'post_name'             => $post_name,
-	);
+	];
 
 	if ( intval( get_option( 'duplicate_post_copydate' ) ) === 1 ) {
 		$new_post_date             = $post->post_date;
@@ -738,11 +745,12 @@ function duplicate_post_create_duplicate( $post, $status = '', $parent_id = '' )
 
 	// If you have written a plugin which uses non-WP database tables to save
 	// information about a post you can hook this action to dupe that data.
-	if ( 0 !== $new_post_id && ! is_wp_error( $new_post_id ) ) {
+	if ( $new_post_id !== 0 && ! is_wp_error( $new_post_id ) ) {
 
-		if ( 'page' === $post->post_type || is_post_type_hierarchical( $post->post_type ) ) {
+		if ( $post->post_type === 'page' || is_post_type_hierarchical( $post->post_type ) ) {
 			do_action( 'dp_duplicate_page', $new_post_id, $post, $status );
-		} else {
+		}
+		else {
 			do_action( 'dp_duplicate_post', $new_post_id, $post, $status );
 		}
 
@@ -771,7 +779,7 @@ function duplicate_post_create_duplicate( $post, $status = '', $parent_id = '' )
  * @return array
  */
 function duplicate_post_add_plugin_links( $links, $file ) {
-	if ( plugin_basename( dirname( __FILE__ ) . '/duplicate-post.php' ) === $file ) {
+	if ( plugin_basename( __DIR__ . '/duplicate-post.php' ) === $file ) {
 		$links[] = '<a href="https://yoast.com/wordpress/plugins/duplicate-post">' . esc_html__( 'Documentation', 'duplicate-post' ) . '</a>';
 	}
 	return $links;

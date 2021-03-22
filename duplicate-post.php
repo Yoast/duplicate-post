@@ -1,15 +1,18 @@
 <?php
 /**
- * Plugin Name: Yoast Duplicate Post
- * Plugin URI: https://yoast.com/wordpress/plugins/duplicate-post/
- * Description: The go-to tool for cloning posts and pages, including the powerful Rewrite & Republish feature.
- * Version: 4.1.2-RC1
- * Author: Enrico Battocchi & Team Yoast
- * Author URI: https://yoast.com
- * Text Domain: duplicate-post
+ * Duplicate Post plugin.
  *
- * @package Duplicate Post
- * @since 0.1
+ * @package Yoast\WP\Duplicate_Post
+ * @since   0.1
+ *
+ * @wordpress-plugin
+ * Plugin Name: Yoast Duplicate Post
+ * Plugin URI:  https://yoast.com/wordpress/plugins/duplicate-post/
+ * Description: The go-to tool for cloning posts and pages, including the powerful Rewrite & Republish feature.
+ * Version:     4.1.2-RC1
+ * Author:      Enrico Battocchi & Team Yoast
+ * Author URI:  https://yoast.com
+ * Text Domain: duplicate-post
  *
  * Copyright 2020 Yoast BV (email : info@yoast.com)
  *
@@ -67,7 +70,7 @@ function __duplicate_post_main() {
  * Initialises the internationalisation domain.
  */
 function duplicate_post_load_plugin_textdomain() {
-	load_plugin_textdomain( 'duplicate-post', false, basename( dirname( __FILE__ ) ) . '/languages/' );
+	load_plugin_textdomain( 'duplicate-post', false, basename( __DIR__ ) . '/languages/' );
 }
 add_action( 'plugins_loaded', 'duplicate_post_load_plugin_textdomain' );
 
@@ -83,21 +86,21 @@ add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'duplicate_pos
  * @return array
  */
 function duplicate_post_plugin_actions( $actions ) {
-	$settings_action = array(
+	$settings_action = [
 		'settings' => sprintf(
 			'<a href="%1$s" %2$s>%3$s</a>',
 			menu_page_url( 'duplicatepost', false ),
 			'aria-label="' . __( 'Settings for Duplicate Post', 'duplicate-post' ) . '"',
 			esc_html__( 'Settings', 'default' )
 		),
-	);
+	];
 
-	$actions = $settings_action + $actions;
+	$actions = ( $settings_action + $actions );
 	return $actions;
 }
 
-require_once dirname( __FILE__ ) . '/duplicate-post-common.php';
+require_once __DIR__ . '/duplicate-post-common.php';
 
 if ( is_admin() ) {
-	include_once dirname( __FILE__ ) . '/duplicate-post-admin.php';
+	include_once __DIR__ . '/duplicate-post-admin.php';
 }

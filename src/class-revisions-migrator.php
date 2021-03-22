@@ -1,15 +1,11 @@
 <?php
-/**
- * Duplicate Post class to migrate revisions from the Rewrite & Republish copy to the original post.
- *
- * @package Duplicate_Post
- * @since 4.0
- */
 
 namespace Yoast\WP\Duplicate_Post;
 
 /**
- * Represents the Revisions Migrator class.
+ * Duplicate Post class to migrate revisions from the Rewrite & Republish copy to the original post.
+ *
+ * @since 4.0
  */
 class Revisions_Migrator {
 
@@ -54,14 +50,14 @@ class Revisions_Migrator {
 		}
 
 		$revisions = \wp_get_post_revisions( $original_post, [ 'order' => 'ASC' ] );
-		$delete    = \count( $revisions ) - $revisions_to_keep;
+		$delete    = ( \count( $revisions ) - $revisions_to_keep );
 		if ( $delete < 1 ) {
 			return;
 		}
 
 		$revisions = \array_slice( $revisions, 0, $delete );
 
-		for ( $i = 0; isset( $revisions[ $i ] ); $i ++ ) {
+		for ( $i = 0; isset( $revisions[ $i ] ); $i++ ) {
 			if ( \strpos( $revisions[ $i ]->post_name, 'autosave' ) !== false ) {
 				continue;
 			}

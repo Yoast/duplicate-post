@@ -54,6 +54,12 @@
 
 		<!-- Demanding Yoda conditions is stupid. -->
 		<exclude name="WordPress.PHP.YodaConditions"/>
+
+		<!-- YoastCS demands else on new line. -->
+		<exclude name="Squiz.ControlStructures.ControlSignature.SpaceAfterCloseBrace"/>
+
+		<!-- YoastCS recommends no file docblock in namespaced files. -->
+		<exclude name="Squiz.Commenting.FileComment.Missing"/>
 	</rule>
 
 	<config name="testVersion" value="5.5-"/>

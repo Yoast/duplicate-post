@@ -1,17 +1,13 @@
 <?php
-/**
- * Duplicate Post class to republish a rewritten post.
- *
- * @package Duplicate_Post
- * @since   4.0
- */
 
 namespace Yoast\WP\Duplicate_Post;
 
 use WP_Post;
 
 /**
- * Represents the Post Republisher class.
+ * Duplicate Post class to republish a rewritten post.
+ *
+ * @since 4.0
  */
 class Post_Republisher {
 
@@ -126,7 +122,7 @@ class Post_Republisher {
 	/**
 	 * Executes the republish request.
 	 *
-	 * @param \WP_Post $post The copy's post object.
+	 * @param WP_Post $post The copy's post object.
 	 *
 	 * @return void
 	 */
@@ -156,7 +152,7 @@ class Post_Republisher {
 	/**
 	 * Republishes the original post with the passed post, when using the Block Editor.
 	 *
-	 * @param \WP_Post $post The copy's post object.
+	 * @param WP_Post $post The copy's post object.
 	 *
 	 * @return void
 	 */
@@ -170,8 +166,8 @@ class Post_Republisher {
 	 * Runs also in the Block Editor to save the custom meta data only when there
 	 * are custom meta boxes.
 	 *
-	 * @param int      $post_id The copy's post ID.
-	 * @param \WP_Post $post    The copy's post object.
+	 * @param int     $post_id The copy's post ID.
+	 * @param WP_Post $post    The copy's post object.
 	 *
 	 * @return void
 	 */
@@ -186,7 +182,7 @@ class Post_Republisher {
 	/**
 	 * Republishes the scheduled Rewrited and Republish post.
 	 *
-	 * @param \WP_Post $copy The scheduled copy.
+	 * @param WP_Post $copy The scheduled copy.
 	 *
 	 * @return void
 	 */
@@ -222,7 +218,8 @@ class Post_Republisher {
 
 			if ( \intval( \get_post_meta( $copy_id, '_dp_has_been_republished', true ) ) === 1 ) {
 				$this->delete_copy( $copy_id, $post_id );
-			} else {
+			}
+			else {
 				\wp_die( \esc_html__( 'An error occurred while deleting the Rewrite & Republish copy.', 'duplicate-post' ) );
 			}
 		}
@@ -247,7 +244,7 @@ class Post_Republisher {
 	 * @return bool Whether or not the request is a REST request.
 	 */
 	public function is_rest_request() {
-		return defined( 'REST_REQUEST' ) && REST_REQUEST;
+		return \defined( 'REST_REQUEST' ) && \REST_REQUEST;
 	}
 
 	/**
@@ -279,8 +276,8 @@ class Post_Republisher {
 	/**
 	 * Deletes the copy and associated post meta, if applicable.
 	 *
-	 * @param int      $copy_id The copy's ID.
-	 * @param int|null $post_id The original post's ID. Optional.
+	 * @param int      $copy_id            The copy's ID.
+	 * @param int|null $post_id            The original post's ID. Optional.
 	 * @param bool     $permanently_delete Whether to permanently delete the copy. Defaults to true.
 	 *
 	 * @return void
@@ -306,8 +303,8 @@ class Post_Republisher {
 	/**
 	 * Republishes the post elements overwriting the original post.
 	 *
-	 * @param \WP_Post $post          The post object.
-	 * @param \WP_Post $original_post The original post.
+	 * @param WP_Post $post          The post object.
+	 * @param WP_Post $original_post The original post.
 	 *
 	 * @return void
 	 */
@@ -338,7 +335,7 @@ class Post_Republisher {
 	/**
 	 * Republishes the post taxonomies overwriting the ones of the original post.
 	 *
-	 * @param \WP_Post $post The copy's post object.
+	 * @param WP_Post $post The copy's post object.
 	 *
 	 * @return void
 	 */
@@ -356,7 +353,7 @@ class Post_Republisher {
 	/**
 	 * Republishes the post meta overwriting the ones of the original post.
 	 *
-	 * @param \WP_Post $post The copy's post object.
+	 * @param WP_Post $post The copy's post object.
 	 *
 	 * @return void
 	 */
@@ -397,8 +394,8 @@ class Post_Republisher {
 	/**
 	 * Determines the post status to use when publishing the Rewrite & Republish copy.
 	 *
-	 * @param \WP_Post $post          The post object.
-	 * @param \WP_Post $original_post The original post object.
+	 * @param WP_Post $post          The post object.
+	 * @param WP_Post $original_post The original post object.
 	 *
 	 * @return string The post status to use.
 	 */

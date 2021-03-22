@@ -1,13 +1,8 @@
 <?php
-/**
- * Duplicate Post test file.
- *
- * @package Duplicate_Post\Tests
- */
 
 namespace Yoast\WP\Duplicate_Post\Tests;
 
-use \Yoast\WP\Duplicate_Post\Utils;
+use Yoast\WP\Duplicate_Post\Utils;
 
 /**
  * Test the Utils class.

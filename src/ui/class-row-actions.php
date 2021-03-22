@@ -1,9 +1,4 @@
 <?php
-/**
- * Duplicate Post class to manage the row actions.
- *
- * @package Duplicate_Post
- */
 
 namespace Yoast\WP\Duplicate_Post\UI;
 
@@ -12,7 +7,7 @@ use Yoast\WP\Duplicate_Post\Permissions_Helper;
 use Yoast\WP\Duplicate_Post\Utils;
 
 /**
- * Represents the Row_Action class.
+ * Duplicate Post class to manage the row actions.
  */
 class Row_Actions {
 
@@ -70,8 +65,8 @@ class Row_Actions {
 	/**
 	 * Hooks in the `post_row_actions` and `page_row_actions` filters to add a 'Clone' link.
 	 *
-	 * @param array    $actions The array of actions from the filter.
-	 * @param \WP_Post $post    The post object.
+	 * @param array   $actions The array of actions from the filter.
+	 * @param WP_Post $post    The post object.
 	 *
 	 * @return array The updated array of actions.
 	 */
@@ -84,12 +79,12 @@ class Row_Actions {
 
 		$title = \_draft_or_post_title( $post );
 
-		$actions['clone'] = '<a href="' . $this->link_builder->build_clone_link( $post->ID ) .
-			'" aria-label="' . \esc_attr(
-			/* translators: %s: Post title. */
+		$actions['clone'] = '<a href="' . $this->link_builder->build_clone_link( $post->ID )
+			. '" aria-label="' . \esc_attr(
+				/* translators: %s: Post title. */
 				\sprintf( \__( 'Clone &#8220;%s&#8221;', 'duplicate-post' ), $title )
-			) . '">' .
-			\esc_html_x( 'Clone', 'verb', 'duplicate-post' ) . '</a>';
+			) . '">'
+			. \esc_html_x( 'Clone', 'verb', 'duplicate-post' ) . '</a>';
 
 		return $actions;
 	}
@@ -97,8 +92,8 @@ class Row_Actions {
 	/**
 	 * Hooks in the `post_row_actions` and `page_row_actions` filters to add a 'New Draft' link.
 	 *
-	 * @param array    $actions The array of actions from the filter.
-	 * @param \WP_Post $post    The post object.
+	 * @param array   $actions The array of actions from the filter.
+	 * @param WP_Post $post    The post object.
 	 *
 	 * @return array The updated array of actions.
 	 */
@@ -111,13 +106,13 @@ class Row_Actions {
 
 		$title = \_draft_or_post_title( $post );
 
-		$actions['edit_as_new_draft'] = '<a href="' . $this->link_builder->build_new_draft_link( $post->ID ) .
-			'" aria-label="' . \esc_attr(
-			/* translators: %s: Post title. */
+		$actions['edit_as_new_draft'] = '<a href="' . $this->link_builder->build_new_draft_link( $post->ID )
+			. '" aria-label="' . \esc_attr(
+				/* translators: %s: Post title. */
 				\sprintf( \__( 'New draft of &#8220;%s&#8221;', 'duplicate-post' ), $title )
-			) . '">' .
-			\esc_html__( 'New Draft', 'duplicate-post' ) .
-			'</a>';
+			) . '">'
+			. \esc_html__( 'New Draft', 'duplicate-post' )
+			. '</a>';
 
 		return $actions;
 	}
@@ -125,8 +120,8 @@ class Row_Actions {
 	/**
 	 * Hooks in the `post_row_actions` and `page_row_actions` filters to add a 'Rewrite & Republish' link.
 	 *
-	 * @param array    $actions The array of actions from the filter.
-	 * @param \WP_Post $post    The post object.
+	 * @param array   $actions The array of actions from the filter.
+	 * @param WP_Post $post    The post object.
 	 *
 	 * @return array The updated array of actions.
 	 */
@@ -142,12 +137,12 @@ class Row_Actions {
 
 		$title = \_draft_or_post_title( $post );
 
-		$actions['rewrite'] = '<a href="' . $this->link_builder->build_rewrite_and_republish_link( $post->ID ) .
-			'" aria-label="' . \esc_attr(
-			/* translators: %s: Post title. */
+		$actions['rewrite'] = '<a href="' . $this->link_builder->build_rewrite_and_republish_link( $post->ID )
+			. '" aria-label="' . \esc_attr(
+				/* translators: %s: Post title. */
 				\sprintf( \__( 'Rewrite & Republish &#8220;%s&#8221;', 'duplicate-post' ), $title )
-			) . '">' .
-			\esc_html_x( 'Rewrite & Republish', 'verb', 'duplicate-post' ) . '</a>';
+			) . '">'
+			. \esc_html_x( 'Rewrite & Republish', 'verb', 'duplicate-post' ) . '</a>';
 
 		return $actions;
 	}

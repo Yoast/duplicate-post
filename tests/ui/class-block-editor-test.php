@@ -1,14 +1,10 @@
 <?php
-/**
- * Duplicate Post test file.
- *
- * @package Duplicate_Post\Tests
- */
 
 namespace Yoast\WP\Duplicate_Post\Tests\UI;
 
 use Brain\Monkey;
 use Mockery;
+use WP_Post;
 use Yoast\WP\Duplicate_Post\Permissions_Helper;
 use Yoast\WP\Duplicate_Post\Tests\TestCase;
 use Yoast\WP\Duplicate_Post\UI\Asset_Manager;
@@ -152,7 +148,7 @@ class Block_Editor_Test extends TestCase {
 	 * @param mixed $expected Expected output.
 	 */
 	public function test_should_previously_used_keyword_assessment_run( $original, $expected ) {
-		$post = Mockery::mock( \WP_Post::class );
+		$post = Mockery::mock( WP_Post::class );
 
 		$this->permissions_helper
 			->expects( 'is_edit_post_screen' )
@@ -253,7 +249,7 @@ class Block_Editor_Test extends TestCase {
 	 */
 	public function test_enqueue_block_editor_scripts() {
 		$utils                      = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
-		$post                       = Mockery::mock( \WP_Post::class );
+		$post                       = Mockery::mock( WP_Post::class );
 		$new_draft_link             = 'http://fakeu.rl/new_draft';
 		$rewrite_and_republish_link = 'http://fakeu.rl/rewrite_and_republish';
 		$rewriting                  = 0;
@@ -331,7 +327,7 @@ class Block_Editor_Test extends TestCase {
 	 */
 	public function test_get_new_draft_permalink_rewrite_and_republish() {
 		$utils                      = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
-		$post                       = Mockery::mock( \WP_Post::class );
+		$post                       = Mockery::mock( WP_Post::class );
 		$new_draft_link             = 'http://fakeu.rl/new_draft';
 		$rewrite_and_republish_link = 'http://fakeu.rl/rewrite_and_republish';
 		$rewriting                  = 1;
@@ -448,14 +444,13 @@ class Block_Editor_Test extends TestCase {
 		$this->instance->enqueue_block_editor_scripts();
 	}
 
-
 	/**
 	 * Tests the get_new_draft_permalink function when a link is returned.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Block_Editor::get_new_draft_permalink
 	 */
 	public function test_get_new_draft_permalink_successful() {
-		$post = Mockery::mock( \WP_Post::class );
+		$post = Mockery::mock( WP_Post::class );
 		$url  = 'http://basic.wordpress.test/wp-admin/admin.php?action=duplicate_post_new_draft&post=201&_wpnonce=94038b7dee';
 
 		Monkey\Functions\expect( '\get_post' )
@@ -481,7 +476,7 @@ class Block_Editor_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Block_Editor::get_new_draft_permalink
 	 */
 	public function test_get_new_draft_permalink_unsuccessful() {
-		$post = Mockery::mock( \WP_Post::class );
+		$post = Mockery::mock( WP_Post::class );
 
 		Monkey\Functions\expect( '\get_post' )
 			->andReturn( $post );
@@ -506,7 +501,7 @@ class Block_Editor_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Block_Editor::get_rewrite_republish_permalink
 	 */
 	public function test_get_rewrite_republish_permalink_successful() {
-		$post = Mockery::mock( \WP_Post::class );
+		$post = Mockery::mock( WP_Post::class );
 		$url  = 'http://basic.wordpress.test/wp-admin/admin.php?action=duplicate_post_rewrite&post=201&_wpnonce=5e7abf68c9';
 
 		Monkey\Functions\expect( '\get_post' )
@@ -541,7 +536,7 @@ class Block_Editor_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Block_Editor::get_rewrite_republish_permalink
 	 */
 	public function test_get_rewrite_republish_permalink_unsuccessful_is_rewrite_and_republish() {
-		$post = Mockery::mock( \WP_Post::class );
+		$post = Mockery::mock( WP_Post::class );
 
 		Monkey\Functions\expect( '\get_post' )
 			->andReturn( $post );
@@ -576,7 +571,7 @@ class Block_Editor_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Block_Editor::get_rewrite_republish_permalink
 	 */
 	public function test_get_rewrite_republish_permalink_unsuccessful_has_a_rewrite_and_republish() {
-		$post = Mockery::mock( \WP_Post::class );
+		$post = Mockery::mock( WP_Post::class );
 
 		Monkey\Functions\expect( '\get_post' )
 			->andReturn( $post );
@@ -610,7 +605,7 @@ class Block_Editor_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Block_Editor::get_rewrite_republish_permalink
 	 */
 	public function test_get_rewrite_republish_permalink_unsuccessful_links_should_not_be_displayed() {
-		$post              = Mockery::mock( \WP_Post::class );
+		$post              = Mockery::mock( WP_Post::class );
 		$post->post_status = 'publish';
 
 		Monkey\Functions\expect( '\get_post' )
@@ -645,7 +640,7 @@ class Block_Editor_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Block_Editor::get_check_permalink
 	 */
 	public function test_get_check_permalink_successful() {
-		$post = Mockery::mock( \WP_Post::class );
+		$post = Mockery::mock( WP_Post::class );
 		$url  = 'http://basic.wordpress.test/wp-admin/admin.php?action=duplicate_post_check_changes&post=201&_wpnonce=5e7abf68c9';
 
 		Monkey\Functions\expect( '\get_post' )
@@ -671,7 +666,7 @@ class Block_Editor_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Block_Editor::get_check_permalink
 	 */
 	public function test_get_check_permalink_not_rewrite_and_republish() {
-		$post = Mockery::mock( \WP_Post::class );
+		$post = Mockery::mock( WP_Post::class );
 
 		Monkey\Functions\expect( '\get_post' )
 			->andReturn( $post );
@@ -698,7 +693,7 @@ class Block_Editor_Test extends TestCase {
 	 */
 	public function test_get_original_post_edit_url_successful() {
 		$utils       = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
-		$post        = Mockery::mock( \WP_Post::class );
+		$post        = Mockery::mock( WP_Post::class );
 		$post->ID    = 128;
 		$original_id = 64;
 		$nonce       = '12345678';
@@ -718,7 +713,7 @@ class Block_Editor_Test extends TestCase {
 
 		Monkey\Functions\expect( '\admin_url' )
 			->andReturnUsing(
-				function ( $string ) {
+				static function ( $string ) {
 					return 'http://basic.wordpress.test/wp-admin/' . $string;
 				}
 			);
@@ -729,7 +724,7 @@ class Block_Editor_Test extends TestCase {
 
 		Monkey\Functions\expect( '\add_query_arg' )
 			->andReturnUsing(
-				function ( $array, $string ) {
+				static function ( $array, $string ) {
 					foreach ( $array as $key => $value ) {
 						$string .= '&' . $key . '=' . $value;
 					}
@@ -752,11 +747,8 @@ class Block_Editor_Test extends TestCase {
 	 * @preserveGlobalState disabled
 	 */
 	public function test_get_original_post_edit_url_not_rewrite_and_republish() {
-		$utils       = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
-		$post        = Mockery::mock( \WP_Post::class );
-		$post->ID    = 128;
-		$original_id = 64;
-		$nonce       = '12345678';
+		$post     = Mockery::mock( WP_Post::class );
+		$post->ID = 128;
 
 		Monkey\Functions\expect( '\get_post' )
 			->andReturn( $post );
@@ -796,7 +788,7 @@ class Block_Editor_Test extends TestCase {
 	 */
 	public function test_get_original_post_edit_url_no_original() {
 		$utils       = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
-		$post        = Mockery::mock( \WP_Post::class );
+		$post        = Mockery::mock( WP_Post::class );
 		$post->ID    = 128;
 		$original_id = '';
 
@@ -825,7 +817,7 @@ class Block_Editor_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Block_Editor::hide_elementor_post_status
 	 */
 	public function test_hide_elementor_post_status() {
-		$post = Mockery::mock( \WP_Post::class );
+		$post = Mockery::mock( WP_Post::class );
 
 		Monkey\Functions\expect( '\get_post' )
 			->andReturn( $post );
@@ -851,7 +843,7 @@ class Block_Editor_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Block_Editor::hide_elementor_post_status
 	 */
 	public function test_dont_remove_elementor_post_status() {
-		$post = Mockery::mock( \WP_Post::class );
+		$post = Mockery::mock( WP_Post::class );
 
 		Monkey\Functions\expect( '\get_post' )
 			->andReturn( $post );

@@ -1,17 +1,13 @@
 <?php
-/**
- * Duplicate Post test file.
- *
- * @package Duplicate_Post\Tests
- */
 
 namespace Yoast\WP\Duplicate_Post\Tests;
 
 use Brain\Monkey;
 use Mockery;
-use Yoast\WP\Duplicate_Post\Post_Republisher;
-use Yoast\WP\Duplicate_Post\Post_Duplicator;
+use WP_Post;
 use Yoast\WP\Duplicate_Post\Permissions_Helper;
+use Yoast\WP\Duplicate_Post\Post_Duplicator;
+use Yoast\WP\Duplicate_Post\Post_Republisher;
 
 /**
  * Test the Post_Republisher class.
@@ -112,7 +108,7 @@ class Post_Republisher_Test extends TestCase {
 	 */
 	public function test_is_classic_editor_post_request_when_rest_request() {
 		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound -- WordPress constant used in a test.
-		define( 'REST_REQUEST', true );
+		\define( 'REST_REQUEST', true );
 		$this->assertFalse( $this->instance->is_classic_editor_post_request() );
 	}
 
@@ -174,7 +170,7 @@ class Post_Republisher_Test extends TestCase {
 	 * @param mixed $expected Expected output.
 	 */
 	public function test_change_post_copy_status( $input, $expected ) {
-		$post              = Mockery::mock( \WP_Post::class );
+		$post              = Mockery::mock( WP_Post::class );
 		$post->ID          = 123;
 		$post->post_status = $input['post_status'];
 		$postarr           = [];
@@ -229,11 +225,11 @@ class Post_Republisher_Test extends TestCase {
 	 * @preserveGlobalState disabled
 	 */
 	public function test_republish_scheduled_post() {
-		$original              = Mockery::mock( \WP_Post::class );
+		$original              = Mockery::mock( WP_Post::class );
 		$original->ID          = 1;
 		$original->post_status = 'publish';
 
-		$copy              = Mockery::mock( \WP_Post::class );
+		$copy              = Mockery::mock( WP_Post::class );
 		$copy->ID          = 123;
 		$copy->post_status = 'future';
 
@@ -262,7 +258,7 @@ class Post_Republisher_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Post_Republisher::republish_scheduled_post
 	 */
 	public function test_republish_scheduled_post_invalid_copy() {
-		$copy              = Mockery::mock( \WP_Post::class );
+		$copy              = Mockery::mock( WP_Post::class );
 		$copy->ID          = 123;
 		$copy->post_status = 'publish';
 
@@ -286,7 +282,7 @@ class Post_Republisher_Test extends TestCase {
 	 * @preserveGlobalState disabled
 	 */
 	public function test_republish_scheduled_post_original_deleted() {
-		$copy              = Mockery::mock( \WP_Post::class );
+		$copy              = Mockery::mock( WP_Post::class );
 		$copy->ID          = 123;
 		$copy->post_status = 'publish';
 

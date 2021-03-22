@@ -1,13 +1,9 @@
 <?php
-/**
- * Duplicate Post test file.
- *
- * @package Duplicate_Post\Tests
- */
 
 namespace Yoast\WP\Duplicate_Post\Tests\UI;
 
 use Brain\Monkey;
+use Mockery;
 use Yoast\WP\Duplicate_Post\Permissions_Helper;
 use Yoast\WP\Duplicate_Post\Tests\TestCase;
 use Yoast\WP\Duplicate_Post\UI\Bulk_Actions;
@@ -37,8 +33,8 @@ class Bulk_Actions_Test extends TestCase {
 	public function setUp() {
 		parent::setUp();
 
-		$this->permissions_helper = \Mockery::mock( Permissions_Helper::class );
-		$this->instance           = \Mockery::mock( Bulk_Actions::class, [ $this->permissions_helper ] )->makePartial();
+		$this->permissions_helper = Mockery::mock( Permissions_Helper::class );
+		$this->instance           = Mockery::mock( Bulk_Actions::class, [ $this->permissions_helper ] )->makePartial();
 	}
 
 	/**
@@ -58,7 +54,7 @@ class Bulk_Actions_Test extends TestCase {
 	 * @preserveGlobalState disabled
 	 */
 	public function test_register_hooks() {
-		$utils = \Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
+		$utils = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
 
 		$utils->expects( 'get_option' )
 			->with( 'duplicate_post_show_link_in', 'bulkactions' )
@@ -143,7 +139,7 @@ class Bulk_Actions_Test extends TestCase {
 	 * @preserveGlobalState disabled
 	 */
 	public function test_register_bulk_action() {
-		$utils = \Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
+		$utils = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
 
 		$utils->expects( 'get_option' )
 			->with( 'duplicate_post_show_link', 'clone' )

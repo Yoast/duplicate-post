@@ -1,18 +1,12 @@
 <?php
-/**
- * Duplicate Post plugin file.
- *
- * @package Yoast\WP\Duplicate_Post\Admin
- */
 
 namespace Yoast\WP\Duplicate_Post\Admin;
 
+use WP_Taxonomy;
 use Yoast\WP\Duplicate_Post\Utils;
 
 /**
- * Class Options_Form_Generator
- *
- * @package Yoast\WP\Duplicate_Post\Admin
+ * Class Options_Form_Generator.
  */
 class Options_Form_Generator {
 
@@ -111,11 +105,10 @@ class Options_Form_Generator {
 	/**
 	 * Sorts taxonomy objects based on being public, followed by being private.
 	 *
-	 * @param \WP_Taxonomy $taxonomy1 First taxonomy object.
-	 * @param \WP_Taxonomy $taxonomy2 Second taxonomy object.
+	 * @param WP_Taxonomy $taxonomy1 First taxonomy object.
+	 * @param WP_Taxonomy $taxonomy2 Second taxonomy object.
 	 *
 	 * @return bool True when the first taxonomy is public.
-	 * @ignore
 	 */
 	public function sort_taxonomy_objects( $taxonomy1, $taxonomy2 ) {
 		return ( $taxonomy1->public < $taxonomy2->public );
@@ -199,7 +192,7 @@ class Options_Form_Generator {
 		foreach ( Utils::get_roles() as $name => $display_name ) {
 			$role = \get_role( $name );
 
-			if ( count( \array_intersect_key( $role->capabilities, $edit_capabilities ) ) > 0 ) {
+			if ( \count( \array_intersect_key( $role->capabilities, $edit_capabilities ) ) > 0 ) {
 				$output .= $this->generate_options_input(
 					[
 						'duplicate_post_roles[]' => [
@@ -291,10 +284,11 @@ class Options_Form_Generator {
 	/**
 	 * Checks whether or not a post type is enabled.
 	 *
+	 * @codeCoverageIgnore As this is a simple wrapper for a function that is also being used elsewhere, we can skip testing for now.
+	 *
 	 * @param string $post_type The post type.
 	 *
 	 * @return bool Whether or not the post type is enabled.
-	 * @codeCoverageIgnore As this is a simple wrapper for a function that is also being used elsewhere, we can skip testing for now.
 	 */
 	public function is_post_type_enabled( $post_type ) {
 		$duplicate_post_types_enabled = \get_option( 'duplicate_post_types_enabled', [ 'post', 'page' ] );

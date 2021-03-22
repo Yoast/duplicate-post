@@ -1,14 +1,10 @@
 <?php
-/**
- * Duplicate Post test file.
- *
- * @package Duplicate_Post\Tests
- */
 
 namespace Yoast\WP\Duplicate_Post\Tests\UI;
 
 use Brain\Monkey;
 use Mockery;
+use WP_Post;
 use Yoast\WP\Duplicate_Post\Permissions_Helper;
 use Yoast\WP\Duplicate_Post\Tests\TestCase;
 use Yoast\WP\Duplicate_Post\UI\Post_States;
@@ -72,8 +68,8 @@ class Post_States_Test extends TestCase {
 	 */
 	public function test_show_original_in_post_states_successful() {
 		$utils       = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
-		$post        = Mockery::mock( \WP_Post::class );
-		$original    = Mockery::mock( \WP_Post::class );
+		$post        = Mockery::mock( WP_Post::class );
+		$original    = Mockery::mock( WP_Post::class );
 		$post_states = [
 			'draft' => 'Draft',
 		];
@@ -113,7 +109,7 @@ class Post_States_Test extends TestCase {
 	 */
 	public function test_show_original_in_post_states_unsuccessful() {
 		$utils       = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
-		$post        = Mockery::mock( \WP_Post::class );
+		$post        = Mockery::mock( WP_Post::class );
 		$post_states = [
 			'draft' => 'Draft',
 		];
@@ -150,8 +146,8 @@ class Post_States_Test extends TestCase {
 	 */
 	public function test_show_original_in_rewrite_republish_post_successful() {
 		$utils       = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
-		$post        = Mockery::mock( \WP_Post::class );
-		$original    = Mockery::mock( \WP_Post::class );
+		$post        = Mockery::mock( WP_Post::class );
+		$original    = Mockery::mock( WP_Post::class );
 		$post_states = [
 			'draft' => 'Draft',
 		];
@@ -191,7 +187,7 @@ class Post_States_Test extends TestCase {
 	 */
 	public function test_show_original_in_rewrite_republish_post_unsuccessful() {
 		$utils       = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
-		$post        = Mockery::mock( \WP_Post::class );
+		$post        = Mockery::mock( WP_Post::class );
 		$post_states = [
 			'draft' => 'Draft',
 		];

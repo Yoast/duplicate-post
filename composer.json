@@ -1,23 +1,48 @@
 {
+    "name": "yoast/duplicate-post",
+    "description": "The go-to tool for cloning posts and pages, including the powerful Rewrite & Republish feature.",
+    "homepage": "https://wordpress.org/plugins/duplicate-post/",
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "Enrico Battocchi & Team Yoast",
+            "email": "support@yoast.com",
+            "homepage": "https://yoast.com"
+        }
+    ],
+    "type": "wordpress-plugin",
+    "support": {
+        "issues": "https://github.com/Yoast/duplicate-post/issues",
+        "forum":  "https://wordpress.org/plugins/duplicate-post/",
+        "source": "https://github.com/Yoast/duplicate-post"
+    },
+    "require": {
+        "php": ">=5.6"
+    },
     "require-dev": {
         "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
         "wp-coding-standards/wpcs": "^2.1",
         "phpcompatibility/phpcompatibility-wp": "^2.1.0",
         "automattic/vipwpcs": "^2.0",
         "phpunit/phpunit": "^5.7",
-        "brain/monkey": "^2.5"
+        "brain/monkey": "^2.5",
+        "php-parallel-lint/php-parallel-lint": "^1.2",
+        "php-parallel-lint/php-console-highlighter": "^0.5"
     },
-	"autoload": {
-		"classmap": [
-			"src/"
-		]
-	},
+    "autoload": {
+        "classmap": [
+            "src/"
+        ]
+    },
     "autoload-dev": {
         "classmap": [
             "tests/"
         ]
     },
     "scripts": {
+        "lint": [
+            "@php ./vendor/php-parallel-lint/php-parallel-lint/parallel-lint . -e php --exclude vendor --exclude node_modules --exclude .git"
+        ],
         "check-cs": [
             "@php ./vendor/squizlabs/php_codesniffer/bin/phpcs --runtime-set ignore_warnings_on_exit 1"
         ],

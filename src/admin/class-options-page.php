@@ -1,9 +1,4 @@
 <?php
-/**
- * Duplicate Post plugin file.
- *
- * @package Yoast\WP\Duplicate_Post\Admin
- */
 
 namespace Yoast\WP\Duplicate_Post\Admin;
 
@@ -11,9 +6,10 @@ use Yoast\WP\Duplicate_Post\UI\Asset_Manager;
 use Yoast\WP\Duplicate_Post\Utils;
 
 /**
- * Class Options_Page
+ * Class Options_Page.
  */
 class Options_Page {
+
 	/**
 	 * The Options instance.
 	 *
@@ -90,11 +86,12 @@ class Options_Page {
 	/**
 	 * Generates the inputs for the specified tab / fieldset.
 	 *
+	 * @codeCoverageIgnore As this is a simple wrapper for two functions that are already tested elsewhere, we can skip testing.
+	 *
 	 * @param string $tab      The tab to get the configuration for.
 	 * @param string $fieldset The fieldset to get the configuration for. Optional.
 	 *
 	 * @return string The HTML output for the controls present on the tab / fieldset.
-	 * @codeCoverageIgnore As this is a simple wrapper for two functions that are already tested elsewhere, we can skip testing.
 	 */
 	public function generate_tab_inputs( $tab, $fieldset = '' ) {
 		$options = $this->options->get_options_for_tab( $tab, $fieldset );
@@ -105,10 +102,11 @@ class Options_Page {
 	/**
 	 * Generates an input for a single option.
 	 *
+	 * @codeCoverageIgnore As this is a simple wrapper for two functions that are already tested elsewhere, we can skip testing.
+	 *
 	 * @param string $option The option configuration to base the input on.
 	 *
 	 * @return string The input HTML.
-	 * @codeCoverageIgnore As this is a simple wrapper for two functions that are already tested elsewhere, we can skip testing.
 	 */
 	public function generate_input( $option ) {
 		return $this->generator->generate_options_input( $this->options->get_option( $option ) );
@@ -144,13 +142,14 @@ class Options_Page {
 	/**
 	 * Generates the options page.
 	 *
-	 * @return void
 	 * @codeCoverageIgnore
+	 *
+	 * @return void
 	 */
 	public function generate_page() {
 		$this->register_capabilities();
 
-		require_once DUPLICATE_POST_PATH . 'src/admin/views/options.php';
+		require_once \DUPLICATE_POST_PATH . 'src/admin/views/options.php';
 	}
 
 	/**

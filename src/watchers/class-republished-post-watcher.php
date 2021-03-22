@@ -1,17 +1,13 @@
 <?php
-/**
- * Duplicate Post class to watch if the post has been republished for Rewrite & Republish.
- *
- * @package Duplicate_Post
- * @since 4.0
- */
 
 namespace Yoast\WP\Duplicate_Post\Watchers;
 
 use Yoast\WP\Duplicate_Post\Permissions_Helper;
 
 /**
- * Represents the Republished_Post_Watcher class.
+ * Duplicate Post class to watch if the post has been republished for Rewrite & Republish.
+ *
+ * @since 4.0
  */
 class Republished_Post_Watcher {
 
@@ -83,9 +79,9 @@ class Republished_Post_Watcher {
 		}
 
 		if ( ! empty( $_REQUEST['dprepublished'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-			echo '<div id="message" class="notice notice-success is-dismissible"><p>' .
-				\esc_html( $this->get_notice_text() ) .
-				'</p></div>';
+			echo '<div id="message" class="notice notice-success is-dismissible"><p>'
+				. \esc_html( $this->get_notice_text() )
+				. '</p></div>';
 		}
 	}
 

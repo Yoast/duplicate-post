@@ -1,16 +1,11 @@
 <?php
-/**
- * Duplicate Post class to watch for the link actions and show notices.
- *
- * @package Duplicate_Post
- */
 
 namespace Yoast\WP\Duplicate_Post\Watchers;
 
 use Yoast\WP\Duplicate_Post\Permissions_Helper;
 
 /**
- * Represents the Link_Actions_Watcher class.
+ * Duplicate Post class to watch for the link actions and show notices.
  */
 class Link_Actions_Watcher {
 
@@ -72,9 +67,9 @@ class Link_Actions_Watcher {
 
 			$copied_posts = \intval( $_REQUEST['cloned'] ); // phpcs:ignore WordPress.Security.NonceVerification
 			\printf(
-				'<div id="message" class="notice notice-success fade"><p>' .
-				\esc_html(
-				/* translators: %s: Number of posts copied. */
+				'<div id="message" class="notice notice-success fade"><p>'
+				. \esc_html(
+					/* translators: %s: Number of posts copied. */
 					\_n(
 						'%s item copied.',
 						'%s items copied.',
@@ -98,11 +93,11 @@ class Link_Actions_Watcher {
 				return;
 			}
 
-			print '<div id="message" class="notice notice-warning is-dismissible fade"><p>' .
-			\esc_html__(
-				'You can now start rewriting your post in this duplicate of the original post. If you click "Republish", your changes will be merged into the original post and you’ll be redirected there.',
-				'duplicate-post'
-			) . '</p></div>';
+			print '<div id="message" class="notice notice-warning is-dismissible fade"><p>'
+				. \esc_html__(
+					'You can now start rewriting your post in this duplicate of the original post. If you click "Republish", your changes will be merged into the original post and you’ll be redirected there.',
+					'duplicate-post'
+				) . '</p></div>';
 		}
 	}
 
@@ -115,7 +110,7 @@ class Link_Actions_Watcher {
 		if ( ! empty( $_REQUEST['rewriting'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 			$notice = [
 				'text'          => \wp_slash(
-					__(
+					\__(
 						'You can now start rewriting your post in this duplicate of the original post. If you click "Republish", this rewritten post will replace the original post.',
 						'duplicate-post'
 					)

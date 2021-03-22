@@ -2,8 +2,8 @@
 /**
  * Common functions.
  *
- * @package Duplicate Post
- * @since 2.0
+ * @package Yoast\WP\Duplicate_Post
+ * @since   2.0
  */
 
 use Yoast\WP\Duplicate_Post\Permissions_Helper;
@@ -17,10 +17,11 @@ use Yoast\WP\Duplicate_Post\Utils;
  * @return bool
  */
 function duplicate_post_is_post_type_enabled( $post_type ) {
-	$duplicate_post_types_enabled = get_option( 'duplicate_post_types_enabled', array( 'post', 'page' ) );
+	$duplicate_post_types_enabled = get_option( 'duplicate_post_types_enabled', [ 'post', 'page' ] );
 	if ( ! is_array( $duplicate_post_types_enabled ) ) {
-		$duplicate_post_types_enabled = array( $duplicate_post_types_enabled );
+		$duplicate_post_types_enabled = [ $duplicate_post_types_enabled ];
 	}
+
 	/** This filter is documented in src/class-permissions-helper.php */
 	$duplicate_post_types_enabled = apply_filters( 'duplicate_post_enabled_post_types', $duplicate_post_types_enabled );
 	return in_array( $post_type, $duplicate_post_types_enabled, true );
@@ -49,7 +50,8 @@ function duplicate_post_get_clone_post_link( $id = 0, $context = 'display', $dra
 
 	if ( $draft ) {
 		return $link_builder->build_new_draft_link( $post, $context );
-	} else {
+	}
+	else {
 		return $link_builder->build_clone_link( $post, $context );
 	}
 }
@@ -73,7 +75,7 @@ function duplicate_post_clone_post_link( $link = null, $before = '', $after = ''
 		return;
 	}
 
-	if ( null === $link ) {
+	if ( $link === null ) {
 		$link = esc_html__( 'Copy to a new draft', 'duplicate-post' );
 	}
 

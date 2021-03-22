@@ -1,14 +1,10 @@
 <?php
-/**
- * Duplicate Post test file.
- *
- * @package Duplicate_Post\Tests
- */
 
 namespace Yoast\WP\Duplicate_Post\Tests\UI;
 
 use Brain\Monkey;
 use Mockery;
+use WP_Post;
 use Yoast\WP\Duplicate_Post\Permissions_Helper;
 use Yoast\WP\Duplicate_Post\Tests\TestCase;
 use Yoast\WP\Duplicate_Post\UI\Metabox;
@@ -80,8 +76,8 @@ class Metabox_Test extends TestCase {
 	public function test_add_custom_metabox() {
 		$utils              = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
 		$enabled_post_types = [ 'post', 'page' ];
-		$post               = Mockery::mock( \WP_Post::class );
-		$original_item      = Mockery::mock( \WP_Post::class );
+		$post               = Mockery::mock( WP_Post::class );
+		$original_item      = Mockery::mock( WP_Post::class );
 
 		$this->permissions_helper->expects( 'get_enabled_post_types' )
 			->andReturn( $enabled_post_types );
@@ -113,7 +109,7 @@ class Metabox_Test extends TestCase {
 	 */
 	public function test_add_custom_metabox_post_type_not_enabled() {
 		$enabled_post_types = [ 'post' ];
-		$post               = Mockery::mock( \WP_Post::class );
+		$post               = Mockery::mock( WP_Post::class );
 
 		$this->permissions_helper
 			->expects( 'get_enabled_post_types' )
@@ -135,7 +131,7 @@ class Metabox_Test extends TestCase {
 	public function test_add_custom_metabox_not_copy() {
 		$utils              = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
 		$enabled_post_types = [ 'post', 'page' ];
-		$post               = Mockery::mock( \WP_Post::class );
+		$post               = Mockery::mock( WP_Post::class );
 
 		$this->permissions_helper
 			->expects( 'get_enabled_post_types' )

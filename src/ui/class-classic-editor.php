@@ -1,9 +1,4 @@
 <?php
-/**
- * Duplicate Post class to manage the classic editor UI.
- *
- * @package Duplicate_Post
- */
 
 namespace Yoast\WP\Duplicate_Post\UI;
 
@@ -12,7 +7,7 @@ use Yoast\WP\Duplicate_Post\Permissions_Helper;
 use Yoast\WP\Duplicate_Post\Utils;
 
 /**
- * Represents the Classic_Editor class.
+ * Duplicate Post class to manage the classic editor UI.
  */
 class Classic_Editor {
 
@@ -116,7 +111,7 @@ class Classic_Editor {
 	/**
 	 * Adds a button in the post/page edit screen to create a clone
 	 *
-	 * @param \WP_Post|null $post The post object that's being edited.
+	 * @param WP_Post|null $post The post object that's being edited.
 	 *
 	 * @return void
 	 */
@@ -142,7 +137,7 @@ class Classic_Editor {
 	/**
 	 * Adds a button in the post/page edit screen to create a clone for Rewrite & Republish.
 	 *
-	 * @param \WP_Post|null $post The post object that's being edited.
+	 * @param WP_Post|null $post The post object that's being edited.
 	 *
 	 * @return void
 	 */
@@ -171,7 +166,7 @@ class Classic_Editor {
 	/**
 	 * Adds a message in the post/page edit screen to create a clone for Rewrite & Republish.
 	 *
-	 * @param \WP_Post|null $post The post object that's being edited.
+	 * @param WP_Post|null $post The post object that's being edited.
 	 *
 	 * @return void
 	 */
@@ -254,7 +249,7 @@ class Classic_Editor {
 
 		if ( $post->post_type === 'post' ) {
 			$messages['post'][9] = \sprintf(
-			/* translators: 1: The post title with a link to the frontend page, 2: The scheduled date and time. */
+				/* translators: 1: The post title with a link to the frontend page, 2: The scheduled date and time. */
 				\esc_html__(
 					'This rewritten post %1$s is now scheduled to replace the original post. It will be published on %2$s.',
 					'duplicate-post'
@@ -267,7 +262,7 @@ class Classic_Editor {
 
 		if ( $post->post_type === 'page' ) {
 			$messages['page'][9] = \sprintf(
-					/* translators: 1: The page title with a link to the frontend page, 2: The scheduled date and time. */
+				/* translators: 1: The page title with a link to the frontend page, 2: The scheduled date and time. */
 				\esc_html__(
 					'This rewritten page %1$s is now scheduled to replace the original page. It will be published on %2$s.',
 					'duplicate-post'
@@ -283,7 +278,7 @@ class Classic_Editor {
 	/**
 	 * Determines if the Rewrite & Republish copies for the post should be used.
 	 *
-	 * @param \WP_Post $post The current post object.
+	 * @param WP_Post $post The current post object.
 	 *
 	 * @return bool True if the Rewrite & Republish copies should be used.
 	 */
@@ -303,8 +298,8 @@ class Classic_Editor {
 	/**
 	 * Removes the slug meta box in the Classic Editor when the post is a Rewrite & Republish copy.
 	 *
-	 * @param string   $post_type Post type.
-	 * @param \WP_Post $post      Post object.
+	 * @param string  $post_type Post type.
+	 * @param WP_Post $post      Post object.
 	 *
 	 * @return void
 	 */
@@ -317,11 +312,11 @@ class Classic_Editor {
 	/**
 	 * Removes the sample permalink slug editor in the Classic Editor when the post is a Rewrite & Republish copy.
 	 *
-	 * @param string   $return    Sample permalink HTML markup.
-	 * @param int      $post_id   Post ID.
-	 * @param string   $new_title New sample permalink title.
-	 * @param string   $new_slug  New sample permalink slug.
-	 * @param \WP_Post $post      Post object.
+	 * @param string  $return    Sample permalink HTML markup.
+	 * @param int     $post_id   Post ID.
+	 * @param string  $new_title New sample permalink title.
+	 * @param string  $new_slug  New sample permalink slug.
+	 * @param WP_Post $post      Post object.
 	 *
 	 * @return string The filtered HTML of the sample permalink slug editor.
 	 */

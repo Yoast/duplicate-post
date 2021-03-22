@@ -1,9 +1,4 @@
 <?php
-/**
- * Duplicate Post class to manage the admin bar.
- *
- * @package Duplicate_Post
- */
 
 namespace Yoast\WP\Duplicate_Post\UI;
 
@@ -12,7 +7,7 @@ use Yoast\WP\Duplicate_Post\Permissions_Helper;
 use Yoast\WP\Duplicate_Post\Utils;
 
 /**
- * Represents the Admin_Bar class.
+ * Duplicate Post class to manage the admin bar.
  */
 class Admin_Bar {
 
@@ -111,7 +106,8 @@ class Admin_Bar {
 					'href'   => $this->link_builder->build_rewrite_and_republish_link( $post ),
 				]
 			);
-		} else {
+		}
+		else {
 			if ( $show_new_draft ) {
 				$wp_admin_bar->add_menu(
 					[
@@ -167,7 +163,8 @@ class Admin_Bar {
 
 		if ( \is_admin() ) {
 			$post = \get_post();
-		} else {
+		}
+		else {
 			$post = $wp_the_query->get_queried_object();
 		}
 

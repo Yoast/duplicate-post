@@ -1,14 +1,10 @@
 <?php
-/**
- * Duplicate Post test file.
- *
- * @package Duplicate_Post\Tests
- */
 
 namespace Yoast\WP\Duplicate_Post\Tests\UI;
 
 use Brain\Monkey;
 use Mockery;
+use WP_Post;
 use Yoast\WP\Duplicate_Post\Permissions_Helper;
 use Yoast\WP\Duplicate_Post\Tests\TestCase;
 use Yoast\WP\Duplicate_Post\UI\Asset_Manager;
@@ -127,7 +123,7 @@ class Classic_Editor_Test extends TestCase {
 	 */
 	public function test_enqueue_classic_editor_scripts() {
 		$_GET['post'] = '123';
-		$post         = Mockery::mock( \WP_Post::class );
+		$post         = Mockery::mock( WP_Post::class );
 
 		$this->permissions_helper->expects( 'is_classic_editor' )
 			->andReturnTrue();
@@ -154,7 +150,7 @@ class Classic_Editor_Test extends TestCase {
 	 */
 	public function test_enqueue_classic_editor_styles() {
 		$_GET['post'] = '123';
-		$post         = Mockery::mock( \WP_Post::class );
+		$post         = Mockery::mock( WP_Post::class );
 
 		$this->permissions_helper->expects( 'is_classic_editor' )
 			->andReturnTrue();
@@ -179,7 +175,7 @@ class Classic_Editor_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::add_new_draft_post_button
 	 */
 	public function test_add_new_draft_post_button_successful() {
-		$post            = Mockery::mock( \WP_Post::class );
+		$post            = Mockery::mock( WP_Post::class );
 		$post->post_type = 'post';
 		$url             = 'http://basic.wordpress.test/wp-admin/admin.php?action=duplicate_post_new_draft&post=201&_wpnonce=94038b7dee';
 
@@ -201,7 +197,7 @@ class Classic_Editor_Test extends TestCase {
 			->with( $post )
 			->andReturn( $url );
 
-		$this->setOutputCallback( function() {} );
+		$this->setOutputCallback( static function () {} );
 		$this->instance->add_new_draft_post_button( $post );
 	}
 
@@ -212,7 +208,7 @@ class Classic_Editor_Test extends TestCase {
 	 */
 	public function test_add_new_draft_post_button_successful_post_from_GET() {
 		$_GET['post']    = '123';
-		$post            = Mockery::mock( \WP_Post::class );
+		$post            = Mockery::mock( WP_Post::class );
 		$post->post_type = 'post';
 		$url             = 'http://basic.wordpress.test/wp-admin/admin.php?action=duplicate_post_new_draft&post=123&_wpnonce=94038b7dee';
 
@@ -234,7 +230,7 @@ class Classic_Editor_Test extends TestCase {
 			->with( $post )
 			->andReturn( $url );
 
-		$this->setOutputCallback( function() {} );
+		$this->setOutputCallback( static function () {} );
 		$this->instance->add_new_draft_post_button();
 	}
 
@@ -261,7 +257,7 @@ class Classic_Editor_Test extends TestCase {
 			->expects( 'build_new_draft_link' )
 			->never();
 
-		$this->setOutputCallback( function() {} );
+		$this->setOutputCallback( static function () {} );
 		$this->instance->add_new_draft_post_button();
 		$this->assertTrue( Monkey\Filters\applied( 'duplicate_post_show_link' ) === 0 );
 	}
@@ -272,7 +268,7 @@ class Classic_Editor_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::add_new_draft_post_button
 	 */
 	public function test_add_new_draft_post_button_unsuccessful_no_link_allowed() {
-		$post            = Mockery::mock( \WP_Post::class );
+		$post            = Mockery::mock( WP_Post::class );
 		$post->post_type = 'post';
 
 		Monkey\Functions\expect( '\get_option' )
@@ -292,7 +288,7 @@ class Classic_Editor_Test extends TestCase {
 			->expects( 'build_new_draft_link' )
 			->never();
 
-		$this->setOutputCallback( function() {} );
+		$this->setOutputCallback( static function () {} );
 		$this->instance->add_new_draft_post_button( $post );
 	}
 
@@ -302,7 +298,7 @@ class Classic_Editor_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::add_rewrite_and_republish_post_button
 	 */
 	public function test_add_rewrite_and_republish_post_button_successful() {
-		$post              = Mockery::mock( \WP_Post::class );
+		$post              = Mockery::mock( WP_Post::class );
 		$post->post_type   = 'post';
 		$post->post_status = 'publish';
 		$url               = 'http://basic.wordpress.test/wp-admin/admin.php?action=duplicate_post_rewrite&post=201&_wpnonce=94038b7dee';
@@ -330,7 +326,7 @@ class Classic_Editor_Test extends TestCase {
 			->with( $post )
 			->andReturn( $url );
 
-		$this->setOutputCallback( function() {} );
+		$this->setOutputCallback( static function () {} );
 		$this->instance->add_rewrite_and_republish_post_button( $post );
 	}
 
@@ -341,7 +337,7 @@ class Classic_Editor_Test extends TestCase {
 	 */
 	public function test_add_rewrite_and_republish_post_button_post_from_GET() {
 		$_GET['post']      = '123';
-		$post              = Mockery::mock( \WP_Post::class );
+		$post              = Mockery::mock( WP_Post::class );
 		$post->post_type   = 'post';
 		$post->post_status = 'publish';
 		$url               = 'http://basic.wordpress.test/wp-admin/admin.php?action=duplicate_post_rewrite&post=201&_wpnonce=94038b7dee';
@@ -369,7 +365,7 @@ class Classic_Editor_Test extends TestCase {
 			->with( $post )
 			->andReturn( $url );
 
-		$this->setOutputCallback( function() {} );
+		$this->setOutputCallback( static function () {} );
 		$this->instance->add_rewrite_and_republish_post_button();
 	}
 
@@ -396,7 +392,7 @@ class Classic_Editor_Test extends TestCase {
 			->expects( 'build_rewrite_and_republish_link' )
 			->never();
 
-		$this->setOutputCallback( function() {} );
+		$this->setOutputCallback( static function () {} );
 		$this->instance->add_rewrite_and_republish_post_button();
 		$this->assertTrue( Monkey\Filters\applied( 'duplicate_post_show_link' ) === 0 );
 	}
@@ -407,7 +403,7 @@ class Classic_Editor_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::add_rewrite_and_republish_post_button
 	 */
 	public function test_add_rewrite_and_republish_post_button_unsuccessful_is_for_rewrite_and_republish() {
-		$post              = Mockery::mock( \WP_Post::class );
+		$post              = Mockery::mock( WP_Post::class );
 		$post->post_type   = 'post';
 		$post->post_status = 'publish';
 
@@ -433,7 +429,7 @@ class Classic_Editor_Test extends TestCase {
 			->expects( 'build_rewrite_and_republish_link' )
 			->never();
 
-		$this->setOutputCallback( function() {} );
+		$this->setOutputCallback( static function () {} );
 		$this->instance->add_rewrite_and_republish_post_button( $post );
 	}
 
@@ -443,7 +439,7 @@ class Classic_Editor_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::add_rewrite_and_republish_post_button
 	 */
 	public function test_add_rewrite_and_republish_post_button_not_publish() {
-		$post              = Mockery::mock( \WP_Post::class );
+		$post              = Mockery::mock( WP_Post::class );
 		$post->post_type   = 'post';
 		$post->post_status = 'draft';
 
@@ -462,7 +458,7 @@ class Classic_Editor_Test extends TestCase {
 			->expects( 'build_rewrite_and_republish_link' )
 			->never();
 
-		$this->setOutputCallback( function() {} );
+		$this->setOutputCallback( static function () {} );
 		$this->instance->add_rewrite_and_republish_post_button();
 		$this->assertTrue( Monkey\Filters\applied( 'duplicate_post_show_link' ) === 0 );
 	}
@@ -475,7 +471,7 @@ class Classic_Editor_Test extends TestCase {
 	public function test_should_change_republish_strings_date_label() {
 		$text = 'Publish on: %s';
 
-		$post            = Mockery::mock( \WP_Post::class );
+		$post            = Mockery::mock( WP_Post::class );
 		$post->post_type = 'post';
 
 		Monkey\Functions\expect( '\get_post' )
@@ -498,7 +494,7 @@ class Classic_Editor_Test extends TestCase {
 	public function test_should_change_republish_strings() {
 		$text = 'Publish';
 
-		$post            = Mockery::mock( \WP_Post::class );
+		$post            = Mockery::mock( WP_Post::class );
 		$post->post_type = 'post';
 
 		Monkey\Functions\expect( '\get_post' )
@@ -522,7 +518,7 @@ class Classic_Editor_Test extends TestCase {
 		$text        = 'Publish';
 		$translation = 'Publish';
 
-		$post            = Mockery::mock( \WP_Post::class );
+		$post            = Mockery::mock( WP_Post::class );
 		$post->post_type = 'post';
 
 		Monkey\Functions\expect( '\get_post' )
@@ -547,7 +543,7 @@ class Classic_Editor_Test extends TestCase {
 		$text        = 'Test';
 		$translation = 'Test';
 
-		$post            = Mockery::mock( \WP_Post::class );
+		$post            = Mockery::mock( WP_Post::class );
 		$post->post_type = 'post';
 
 		Monkey\Functions\expect( '\get_post' )
@@ -570,7 +566,7 @@ class Classic_Editor_Test extends TestCase {
 	public function test_should_change_schedule_strings() {
 		$text = 'Schedule';
 
-		$post            = Mockery::mock( \WP_Post::class );
+		$post            = Mockery::mock( WP_Post::class );
 		$post->post_type = 'post';
 
 		Monkey\Functions\expect( '\get_post' )
@@ -594,7 +590,7 @@ class Classic_Editor_Test extends TestCase {
 		$text        = 'Schedule';
 		$translation = 'Schedule';
 
-		$post            = Mockery::mock( \WP_Post::class );
+		$post            = Mockery::mock( WP_Post::class );
 		$post->post_type = 'post';
 
 		Monkey\Functions\expect( '\get_post' )
@@ -619,7 +615,7 @@ class Classic_Editor_Test extends TestCase {
 		$text        = 'Test';
 		$translation = 'Test';
 
-		$post            = Mockery::mock( \WP_Post::class );
+		$post            = Mockery::mock( WP_Post::class );
 		$post->post_type = 'post';
 
 		Monkey\Functions\expect( '\get_post' )
@@ -640,7 +636,7 @@ class Classic_Editor_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::change_scheduled_notice_classic_editor
 	 */
 	public function test_should_change_scheduled_notice_post() {
-		$post             = Mockery::mock( \WP_Post::class );
+		$post             = Mockery::mock( WP_Post::class );
 		$post->post_type  = 'post';
 		$post->post_title = 'example_post';
 		$post->ID         = 1;
@@ -651,6 +647,7 @@ class Classic_Editor_Test extends TestCase {
 		$time_format    = 'g:i a';
 		$scheduled_time = '2:30 pm';
 
+		$messages         = [];
 		$messages['post'] = [
 			0  => '', // Unused. Messages start at index 1.
 			1  => 'Post updated.',
@@ -680,6 +677,7 @@ class Classic_Editor_Test extends TestCase {
 
 		$new_copy = 'This rewritten post <a href="' . $permalink . '">' . $post->post_title . '</a> is now scheduled to replace the original post. It will be published on <strong>' . $scheduled_date . ' ' . $scheduled_time . '</strong>.';
 
+		$result         = [];
 		$result['post'] = [
 			0  => '', // Unused. Messages start at index 1.
 			1  => 'Post updated.',
@@ -750,7 +748,7 @@ class Classic_Editor_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::change_scheduled_notice_classic_editor
 	 */
 	public function test_should_change_scheduled_notice_page() {
-		$post             = Mockery::mock( \WP_Post::class );
+		$post             = Mockery::mock( WP_Post::class );
 		$post->post_type  = 'page';
 		$post->post_title = 'example_page';
 		$post->ID         = 1;
@@ -761,6 +759,7 @@ class Classic_Editor_Test extends TestCase {
 		$time_format    = 'g:i a';
 		$scheduled_time = '2:30 pm';
 
+		$messages         = [];
 		$messages['post'] = [
 			0  => '', // Unused. Messages start at index 1.
 			1  => 'Post updated.',
@@ -790,6 +789,7 @@ class Classic_Editor_Test extends TestCase {
 
 		$new_copy = 'This rewritten page <a href="' . $permalink . '">' . $post->post_title . '</a> is now scheduled to replace the original page. It will be published on <strong>' . $scheduled_date . ' ' . $scheduled_time . '</strong>.';
 
+		$result         = [];
 		$result['post'] = [
 			0  => '', // Unused. Messages start at index 1.
 			1  => 'Post updated.',
@@ -863,7 +863,7 @@ class Classic_Editor_Test extends TestCase {
 		global $pagenow;
 		$pagenow = 'post.php'; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Intended, to be able to test the method.
 
-		$post            = Mockery::mock( \WP_Post::class );
+		$post            = Mockery::mock( WP_Post::class );
 		$post->post_type = 'post';
 
 		$this->permissions_helper->expects( 'is_rewrite_and_republish_copy' )
@@ -883,7 +883,7 @@ class Classic_Editor_Test extends TestCase {
 		global $pagenow;
 		$pagenow = 'post-new.php'; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Intended, to be able to test the method.
 
-		$post            = Mockery::mock( \WP_Post::class );
+		$post            = Mockery::mock( WP_Post::class );
 		$post->post_type = 'post';
 
 		$this->permissions_helper->expects( 'is_rewrite_and_republish_copy' )
@@ -904,7 +904,7 @@ class Classic_Editor_Test extends TestCase {
 		global $pagenow;
 		$pagenow = 'xx.php'; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Intended, to be able to test the method.
 
-		$post            = Mockery::mock( \WP_Post::class );
+		$post            = Mockery::mock( WP_Post::class );
 		$post->post_type = 'post';
 
 		$this->assertFalse( $this->instance->should_change_rewrite_republish_copy( $post ) );
@@ -933,7 +933,7 @@ class Classic_Editor_Test extends TestCase {
 		global $pagenow;
 		$pagenow = 'post.php'; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Intended, to be able to test the method.
 
-		$post            = Mockery::mock( \WP_Post::class );
+		$post            = Mockery::mock( WP_Post::class );
 		$post->post_type = 'post';
 
 		$this->permissions_helper->expects( 'is_rewrite_and_republish_copy' )
@@ -950,7 +950,7 @@ class Classic_Editor_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::remove_slug_meta_box
 	 */
 	public function test_remove_slug_meta_box() {
-		$post            = Mockery::mock( \WP_Post::class );
+		$post            = Mockery::mock( WP_Post::class );
 		$post->post_type = 'post';
 
 		$this->permissions_helper->expects( 'is_rewrite_and_republish_copy' )
@@ -971,7 +971,7 @@ class Classic_Editor_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::remove_slug_meta_box
 	 */
 	public function test_remove_slug_meta_box_not_rewrite_and_republish_copy() {
-		$post            = Mockery::mock( \WP_Post::class );
+		$post            = Mockery::mock( WP_Post::class );
 		$post->post_type = 'post';
 
 		$this->permissions_helper->expects( 'is_rewrite_and_republish_copy' )
@@ -995,7 +995,7 @@ class Classic_Editor_Test extends TestCase {
 		$post_id         = '123';
 		$new_title       = null;
 		$new_slug        = null;
-		$post            = Mockery::mock( \WP_Post::class );
+		$post            = Mockery::mock( WP_Post::class );
 		$post->post_type = 'post';
 
 		$this->permissions_helper->expects( 'is_rewrite_and_republish_copy' )
@@ -1016,7 +1016,7 @@ class Classic_Editor_Test extends TestCase {
 		$post_id         = '123';
 		$new_title       = null;
 		$new_slug        = null;
-		$post            = Mockery::mock( \WP_Post::class );
+		$post            = Mockery::mock( WP_Post::class );
 		$post->post_type = 'post';
 
 		$this->permissions_helper->expects( 'is_rewrite_and_republish_copy' )

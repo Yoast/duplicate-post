@@ -1,10 +1,4 @@
 <?php
-/**
- * Duplicate Post handler class for duplication bulk actions.
- *
- * @package Duplicate_Post
- * @since 4.0
- */
 
 namespace Yoast\WP\Duplicate_Post\Handlers;
 
@@ -13,7 +7,9 @@ use Yoast\WP\Duplicate_Post\Post_Duplicator;
 use Yoast\WP\Duplicate_Post\Utils;
 
 /**
- * Represents the handler for duplication bulk actions.
+ * Duplicate Post handler class for duplication bulk actions.
+ *
+ * @since 4.0
  */
 class Bulk_Handler {
 
@@ -99,7 +95,7 @@ class Bulk_Handler {
 				if ( ! empty( $post ) && $this->permissions_helper->should_rewrite_and_republish_be_allowed( $post ) ) {
 					$new_post_id = $this->post_duplicator->create_duplicate_for_rewrite_and_republish( $post );
 					if ( ! \is_wp_error( $new_post_id ) ) {
-						$counter ++;
+						++$counter;
 					}
 				}
 			}
@@ -131,7 +127,7 @@ class Bulk_Handler {
 						|| ( \is_post_type_hierarchical( $post->post_type ) && ! Utils::has_ancestors_marked( $post, $post_ids ) )
 					) {
 						if ( ! \is_wp_error( \duplicate_post_create_duplicate( $post ) ) ) {
-							$counter ++;
+							++$counter;
 						}
 					}
 				}

@@ -2,8 +2,8 @@
 /**
  * Gutenberg (Block editor)/Classic Editor compatibility functions
  *
- * @package Duplicate Post
- * @since 4.0
+ * @package Yoast\WP\Duplicate_Post
+ * @since   4.0
  */
 
 add_filter( 'duplicate_post_get_clone_post_link', 'duplicate_post_classic_editor_clone_link', 10, 4 );
@@ -29,9 +29,10 @@ function duplicate_post_classic_editor_clone_link( $url, $post_id, $context, $dr
 	if ( isset( $_GET['classic-editor'] ) // phpcs:ignore WordPress.Security.NonceVerification
 		|| ( $draft && function_exists( 'gutenberg_post_has_blocks' ) && ! gutenberg_post_has_blocks( $post ) )
 		|| ( $draft && function_exists( 'has_blocks' ) && ! has_blocks( $post ) ) ) {
-		if ( 'display' === $context ) {
+		if ( $context === 'display' ) {
 			$url .= '&amp;classic-editor';
-		} else {
+		}
+		else {
 			$url .= '&classic-editor';
 		}
 	}

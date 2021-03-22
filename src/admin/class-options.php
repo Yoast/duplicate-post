@@ -1,15 +1,11 @@
 <?php
-/**
- * Options class
- *
- * @package Duplicate Post
- * @since   4.0
- */
 
 namespace Yoast\WP\Duplicate_Post\Admin;
 
 /**
- * Class Options
+ * Options class.
+ *
+ * @since 4.0
  */
 class Options {
 
@@ -39,7 +35,7 @@ class Options {
 
 		$options = \array_filter(
 			$options,
-			function ( $option ) use ( $tab ) {
+			static function ( $option ) use ( $tab ) {
 				return \array_key_exists( 'tab', $option ) && $option['tab'] === $tab;
 			}
 		);
@@ -52,7 +48,7 @@ class Options {
 		if ( ! empty( $fieldset ) ) {
 			$options = \array_filter(
 				$options,
-				function ( $option ) use ( $fieldset ) {
+				static function ( $option ) use ( $fieldset ) {
 					return \array_key_exists( 'fieldset', $option ) && $option['fieldset'] === $fieldset;
 				}
 			);
@@ -77,8 +73,9 @@ class Options {
 	/**
 	 * Gets the list of registered options.
 	 *
-	 * @return array The options.
 	 * @codeCoverageIgnore
+	 *
+	 * @return array The options.
 	 */
 	public function get_options() {
 		return [
@@ -216,8 +213,8 @@ class Options {
 				'label'       => \__( 'Do not copy these fields', 'duplicate-post' ),
 				'value'       => \get_option( 'duplicate_post_blacklist' ),
 				'description' => [
-					__( 'Comma-separated list of meta fields that must not be copied.', 'duplicate-post' ),
-					__( 'You can use * to match zero or more alphanumeric characters or underscores: e.g. field*', 'duplicate-post' ),
+					\__( 'Comma-separated list of meta fields that must not be copied.', 'duplicate-post' ),
+					\__( 'You can use * to match zero or more alphanumeric characters or underscores: e.g. field*', 'duplicate-post' ),
 				],
 			],
 			'duplicate_post_taxonomies_blacklist'         => [
@@ -239,7 +236,7 @@ class Options {
 				'label'       => \__( 'In a metabox in the Edit screen', 'duplicate-post' ),
 				'value'       => 1,
 				'description' => [
-					__( "You'll also be able to delete the reference to the original item with a checkbox", 'duplicate-post' ),
+					\__( "You'll also be able to delete the reference to the original item with a checkbox", 'duplicate-post' ),
 				],
 			],
 			'duplicate_post_show_original_column'         => [
@@ -249,7 +246,7 @@ class Options {
 				'label'       => \__( 'In a column in the Post list', 'duplicate-post' ),
 				'value'       => 1,
 				'description' => [
-					__( "You'll also be able to delete the reference to the original item with a checkbox in Quick Edit", 'duplicate-post' ),
+					\__( "You'll also be able to delete the reference to the original item with a checkbox in Quick Edit", 'duplicate-post' ),
 				],
 			],
 			'duplicate_post_show_original_in_post_states' => [

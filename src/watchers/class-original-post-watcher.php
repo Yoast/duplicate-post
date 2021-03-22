@@ -1,19 +1,16 @@
 <?php
-/**
- * Duplicate Post Original post watcher class.
- *
- * @package Duplicate_Post
- * @since 4.0
- */
 
 namespace Yoast\WP\Duplicate_Post\Watchers;
 
+use WP_Post;
 use Yoast\WP\Duplicate_Post\Permissions_Helper;
 
 /**
- * Original post watcher.
+ * Duplicate Post Original post watcher class.
  *
  * Watches the original post for changes.
+ *
+ * @since 4.0
  */
 class Original_Post_Watcher {
 
@@ -69,14 +66,14 @@ class Original_Post_Watcher {
 
 		$post = \get_post();
 
-		if ( ! $post instanceof \WP_Post ) {
+		if ( ! $post instanceof WP_Post ) {
 			return;
 		}
 
 		if ( $this->permissions_helper->has_original_changed( $post ) ) {
-			print '<div id="message" class="notice notice-warning is-dismissible fade"><p>' .
-				\esc_html( $this->get_notice_text() ) .
-				'</p></div>';
+			print '<div id="message" class="notice notice-warning is-dismissible fade"><p>'
+				. \esc_html( $this->get_notice_text() )
+				. '</p></div>';
 		}
 	}
 
@@ -88,7 +85,7 @@ class Original_Post_Watcher {
 	public function add_block_editor_notice() {
 		$post = \get_post();
 
-		if ( ! $post instanceof \WP_Post ) {
+		if ( ! $post instanceof WP_Post ) {
 			return;
 		}
 

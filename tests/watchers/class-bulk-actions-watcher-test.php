@@ -1,12 +1,8 @@
 <?php
-/**
- * Duplicate Post test file.
- *
- * @package Duplicate_Post\Tests
- */
 
 namespace Yoast\WP\Duplicate_Post\Tests\Watchers;
 
+use Mockery;
 use Yoast\WP\Duplicate_Post\Tests\TestCase;
 use Yoast\WP\Duplicate_Post\Watchers\Bulk_Actions_Watcher;
 
@@ -28,7 +24,7 @@ class Bulk_Actions_Watcher_Test extends TestCase {
 	public function setUp() {
 		parent::setUp();
 
-		$this->instance = \Mockery::mock( Bulk_Actions_Watcher::class )->makePartial();
+		$this->instance = Mockery::mock( Bulk_Actions_Watcher::class )->makePartial();
 	}
 
 	/**
@@ -53,7 +49,6 @@ class Bulk_Actions_Watcher_Test extends TestCase {
 		$this->assertNotFalse( \has_action( 'admin_notices', [ $this->instance, 'add_bulk_clone_admin_notice' ] ), 'Does not have expected admin_notices action' );
 		$this->assertNotFalse( \has_action( 'admin_notices', [ $this->instance, 'add_bulk_rewrite_and_republish_admin_notice' ] ), 'Does not have expected admin_notices action' );
 	}
-
 
 	/**
 	 * Tests the add_removable_query_args function.

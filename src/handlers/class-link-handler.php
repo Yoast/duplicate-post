@@ -1,10 +1,4 @@
 <?php
-/**
- * Duplicate Post handler class for duplication actions from links.
- *
- * @package Duplicate_Post
- * @since 4.0
- */
 
 namespace Yoast\WP\Duplicate_Post\Handlers;
 
@@ -12,7 +6,9 @@ use Yoast\WP\Duplicate_Post\Permissions_Helper;
 use Yoast\WP\Duplicate_Post\Post_Duplicator;
 
 /**
- * Represents the handler for duplication actions from links.
+ * Duplicate Post handler class for duplication actions from links.
+ *
+ * @since 4.0
  */
 class Link_Handler {
 
@@ -62,8 +58,8 @@ class Link_Handler {
 			\wp_die( \esc_html__( 'Current user is not allowed to copy posts.', 'duplicate-post' ) );
 		}
 
-		if ( ! ( isset( $_GET['post'] ) || isset( $_POST['post'] ) || // Input var okay.
-			( isset( $_REQUEST['action'] ) && 'duplicate_post_new_draft' === $_REQUEST['action'] ) ) ) { // Input var okay.
+		if ( ! ( isset( $_GET['post'] ) || isset( $_POST['post'] ) // Input var okay.
+			|| ( isset( $_REQUEST['action'] ) && $_REQUEST['action'] === 'duplicate_post_new_draft' ) ) ) { // Input var okay.
 			\wp_die( \esc_html__( 'No post to duplicate has been supplied!', 'duplicate-post' ) );
 		}
 
@@ -118,8 +114,8 @@ class Link_Handler {
 			\wp_die( \esc_html__( 'Current user is not allowed to copy posts.', 'duplicate-post' ) );
 		}
 
-		if ( ! ( isset( $_GET['post'] ) || isset( $_POST['post'] ) || // Input var okay.
-			( isset( $_REQUEST['action'] ) && 'duplicate_post_clone' === $_REQUEST['action'] ) ) ) { // Input var okay.
+		if ( ! ( isset( $_GET['post'] ) || isset( $_POST['post'] ) // Input var okay.
+			|| ( isset( $_REQUEST['action'] ) && $_REQUEST['action'] === 'duplicate_post_clone' ) ) ) { // Input var okay.
 			\wp_die( \esc_html__( 'No post to duplicate has been supplied!', 'duplicate-post' ) );
 		}
 
@@ -154,16 +150,18 @@ class Link_Handler {
 
 		$post_type = $post->post_type;
 		$sendback  = \wp_get_referer();
-		if ( ! $sendback || strpos( $sendback, 'post.php' ) !== false || strpos( $sendback, 'post-new.php' ) !== false ) {
-			if ( 'attachment' === $post_type ) {
+		if ( ! $sendback || \strpos( $sendback, 'post.php' ) !== false || \strpos( $sendback, 'post-new.php' ) !== false ) {
+			if ( $post_type === 'attachment' ) {
 				$sendback = \admin_url( 'upload.php' );
-			} else {
+			}
+			else {
 				$sendback = \admin_url( 'edit.php' );
 				if ( ! empty( $post_type ) ) {
 					$sendback = \add_query_arg( 'post_type', $post_type, $sendback );
 				}
 			}
-		} else {
+		}
+		else {
 			$sendback = \remove_query_arg( [ 'trashed', 'untrashed', 'deleted', 'cloned', 'ids' ], $sendback );
 		}
 
@@ -190,8 +188,8 @@ class Link_Handler {
 			\wp_die( \esc_html__( 'Current user is not allowed to copy posts.', 'duplicate-post' ) );
 		}
 
-		if ( ! ( isset( $_GET['post'] ) || isset( $_POST['post'] ) || // Input var okay.
-			( isset( $_REQUEST['action'] ) && 'duplicate_post_rewrite' === $_REQUEST['action'] ) ) ) { // Input var okay.
+		if ( ! ( isset( $_GET['post'] ) || isset( $_POST['post'] ) // Input var okay.
+			|| ( isset( $_REQUEST['action'] ) && $_REQUEST['action'] === 'duplicate_post_rewrite' ) ) ) { // Input var okay.
 			\wp_die( \esc_html__( 'No post to duplicate has been supplied!', 'duplicate-post' ) );
 		}
 
