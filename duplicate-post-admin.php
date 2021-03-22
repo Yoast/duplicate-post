@@ -281,8 +281,7 @@ function duplicate_post_show_update_notice() {
  * @return bool
  */
 function duplicate_post_dismiss_notice() {
-	$result = update_site_option( 'duplicate_post_show_notice', 0 );
-	return $result;
+	return update_site_option( 'duplicate_post_show_notice', 0 );
 }
 
 /**
