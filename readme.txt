@@ -4,7 +4,7 @@ Donate link: 		https://yoast.com/wordpress/plugins/duplicate-post/
 Tags: 				duplicate post, copy, clone
 Requires at least: 	5.6
 Tested up to: 		5.7
-Stable tag: 		4.1.1
+Stable tag: 		4.1.2
 Requires PHP:		5.6.20
 License: 			GPLv2 or later
 License URI: 		http://www.gnu.org/licenses/gpl-2.0.html
@@ -151,7 +151,7 @@ New features and customization, WP 3.0 compatibility: you should upgrade if you 
 
 == Changelog ==
 
-= 4.1.2 (2021-04-06) =
+= 4.1.2 (2021-03-23) =
 
 Enhancements:
 
