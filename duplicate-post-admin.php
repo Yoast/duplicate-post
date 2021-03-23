@@ -413,8 +413,6 @@ function duplicate_post_copy_post_meta_info( $new_id, $post ) {
  * Workaround for inconsistent wp_slash.
  * Works only with WP 4.4+ (map_deep)
  *
- * @ignore
- *
  * @param mixed $value Array or object to be recursively slashed.
  * @return string|mixed
  */
@@ -430,8 +428,6 @@ function duplicate_post_addslashes_deep( $value ) {
 /**
  * Adds slashes only to strings.
  *
- * @ignore
- *
  * @param mixed $value Value to slash only if string.
  * @return string|mixed
  */
@@ -441,8 +437,6 @@ function duplicate_post_addslashes_to_strings_only( $value ) {
 
 /**
  * Replacement function for faulty core wp_slash().
- *
- * @ignore
  *
  * @param mixed $value What to add slash to.
  * @return mixed

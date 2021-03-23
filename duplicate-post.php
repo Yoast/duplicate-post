@@ -79,7 +79,6 @@ add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'duplicate_pos
 /**
  * Adds 'Settings' link to plugin entry in the Plugins list.
  *
- * @ignore
  * @see 'plugin_action_links_$plugin_file'
  *
  * @param array $actions An array of plugin action links.
