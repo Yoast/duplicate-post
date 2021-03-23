@@ -1,15 +1,13 @@
 <?php
-/**
- * Duplicate Post plugin file.
- *
- * @package Yoast\WP\Duplicate_Post\Admin\Views
- */
 
-if ( ! defined( 'DUPLICATE_POST_CURRENT_VERSION' ) ) {
-	header( 'Status: 403 Forbidden' );
-	header( 'HTTP/1.1 403 Forbidden' );
+namespace Yoast\WP\Duplicate_Post\Admin\Views;
+
+if ( ! \defined( 'DUPLICATE_POST_CURRENT_VERSION' ) ) {
+	\header( 'Status: 403 Forbidden' );
+	\header( 'HTTP/1.1 403 Forbidden' );
 	exit();
 }
+
 ?>
 <div class="wrap">
 	<h1>
