@@ -164,7 +164,7 @@ class Options_Form_Generator {
 						'id'      => 'duplicate-post-' . $this->prepare_input_id( $name ),
 						'value'   => $name,
 						'checked' => \in_array( $taxonomy->name, $taxonomies_blacklist, true ),
-						'label'   => \esc_html( $taxonomy->labels->name . ' [' . $taxonomy->name . ']' ),
+						'label'   => $taxonomy->labels->name . ' [' . $taxonomy->name . ']',
 					],
 				]
 			);
@@ -200,7 +200,7 @@ class Options_Form_Generator {
 							'id'      => 'duplicate-post-' . $this->prepare_input_id( $name ),
 							'value'   => $name,
 							'checked' => $role->has_cap( 'copy_posts' ),
-							'label'   => \esc_html( \translate_user_role( $display_name ) ),
+							'label'   => \translate_user_role( $display_name ),
 						],
 					]
 				);
@@ -234,7 +234,7 @@ class Options_Form_Generator {
 						'id'      => 'duplicate-post-' . $this->prepare_input_id( $name ),
 						'value'   => $name,
 						'checked' => $this->is_post_type_enabled( $post_type_object->name ),
-						'label'   => \esc_html( $post_type_object->labels->name ),
+						'label'   => $post_type_object->labels->name,
 					],
 				]
 			);
