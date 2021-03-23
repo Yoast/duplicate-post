@@ -47,7 +47,7 @@ if ( ! defined( 'DUPLICATE_POST_PATH' ) ) {
 
 define( 'DUPLICATE_POST_CURRENT_VERSION', '4.1.2' );
 
-$duplicate_post_autoload_file = __DIR__ . '/vendor/autoload.php';
+$duplicate_post_autoload_file = DUPLICATE_POST_PATH . 'vendor/autoload.php';
 
 if ( is_readable( $duplicate_post_autoload_file ) ) {
 	require $duplicate_post_autoload_file;
@@ -99,8 +99,8 @@ function duplicate_post_plugin_actions( $actions ) {
 	return $actions;
 }
 
-require_once __DIR__ . '/duplicate-post-common.php';
+require_once DUPLICATE_POST_PATH . 'duplicate-post-common.php';
 
 if ( is_admin() ) {
-	include_once __DIR__ . '/duplicate-post-admin.php';
+	include_once DUPLICATE_POST_PATH . 'duplicate-post-admin.php';
 }
