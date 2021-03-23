@@ -117,7 +117,7 @@ class Utils {
 		if ( $can_edit_post && $post->post_status !== 'trash' ) {
 			return \sprintf(
 				'<a href="%s" aria-label="%s">%s</a>',
-				\get_edit_post_link( $post->ID ),
+				\esc_url( \get_edit_post_link( $post->ID ) ),
 				/* translators: %s: post title */
 				\esc_attr( \sprintf( \__( 'Edit &#8220;%s&#8221;', 'default' ), $title ) ),
 				$title
@@ -139,13 +139,14 @@ class Utils {
 			elseif ( $post->post_status !== 'trash' ) {
 				return \sprintf(
 					'<a href="%s" rel="bookmark" aria-label="%s">%s</a>',
-					\get_permalink( $post->ID ),
+					\esc_url( \get_permalink( $post->ID ) ),
 					/* translators: %s: post title */
 					\esc_attr( \sprintf( \__( 'View &#8220;%s&#8221;', 'default' ), $title ) ),
 					$title
 				);
 			}
 		}
+
 		return $title;
 	}
 
