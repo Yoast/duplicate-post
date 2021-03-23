@@ -58,14 +58,14 @@ class Link_Handler {
 			\wp_die( \esc_html__( 'Current user is not allowed to copy posts.', 'duplicate-post' ) );
 		}
 
-		if ( ! ( isset( $_GET['post'] ) || isset( $_POST['post'] ) // Input var okay.
-			|| ( isset( $_REQUEST['action'] ) && $_REQUEST['action'] === 'duplicate_post_new_draft' ) ) ) { // Input var okay.
+		if ( ! ( isset( $_GET['post'] ) || isset( $_POST['post'] )
+			|| ( isset( $_REQUEST['action'] ) && $_REQUEST['action'] === 'duplicate_post_new_draft' ) ) ) {
 			\wp_die( \esc_html__( 'No post to duplicate has been supplied!', 'duplicate-post' ) );
 		}
 
-		$id = ( isset( $_GET['post'] ) ? \intval( \wp_unslash( $_GET['post'] ) ) : \intval( \wp_unslash( $_POST['post'] ) ) ); // Input var okay.
+		$id = ( isset( $_GET['post'] ) ? \intval( \wp_unslash( $_GET['post'] ) ) : \intval( \wp_unslash( $_POST['post'] ) ) );
 
-		\check_admin_referer( 'duplicate_post_new_draft_' . $id ); // Input var okay.
+		\check_admin_referer( 'duplicate_post_new_draft_' . $id );
 
 		$post = \get_post( $id );
 
@@ -114,14 +114,14 @@ class Link_Handler {
 			\wp_die( \esc_html__( 'Current user is not allowed to copy posts.', 'duplicate-post' ) );
 		}
 
-		if ( ! ( isset( $_GET['post'] ) || isset( $_POST['post'] ) // Input var okay.
-			|| ( isset( $_REQUEST['action'] ) && $_REQUEST['action'] === 'duplicate_post_clone' ) ) ) { // Input var okay.
+		if ( ! ( isset( $_GET['post'] ) || isset( $_POST['post'] )
+			|| ( isset( $_REQUEST['action'] ) && $_REQUEST['action'] === 'duplicate_post_clone' ) ) ) {
 			\wp_die( \esc_html__( 'No post to duplicate has been supplied!', 'duplicate-post' ) );
 		}
 
-		$id = ( isset( $_GET['post'] ) ? \intval( \wp_unslash( $_GET['post'] ) ) : \intval( \wp_unslash( $_POST['post'] ) ) ); // Input var okay.
+		$id = ( isset( $_GET['post'] ) ? \intval( \wp_unslash( $_GET['post'] ) ) : \intval( \wp_unslash( $_POST['post'] ) ) );
 
-		\check_admin_referer( 'duplicate_post_clone_' . $id ); // Input var okay.
+		\check_admin_referer( 'duplicate_post_clone_' . $id );
 
 		$post = \get_post( $id );
 
@@ -188,14 +188,14 @@ class Link_Handler {
 			\wp_die( \esc_html__( 'Current user is not allowed to copy posts.', 'duplicate-post' ) );
 		}
 
-		if ( ! ( isset( $_GET['post'] ) || isset( $_POST['post'] ) // Input var okay.
-			|| ( isset( $_REQUEST['action'] ) && $_REQUEST['action'] === 'duplicate_post_rewrite' ) ) ) { // Input var okay.
+		if ( ! ( isset( $_GET['post'] ) || isset( $_POST['post'] )
+			|| ( isset( $_REQUEST['action'] ) && $_REQUEST['action'] === 'duplicate_post_rewrite' ) ) ) {
 			\wp_die( \esc_html__( 'No post to duplicate has been supplied!', 'duplicate-post' ) );
 		}
 
-		$id = ( isset( $_GET['post'] ) ? \intval( \wp_unslash( $_GET['post'] ) ) : \intval( \wp_unslash( $_POST['post'] ) ) ); // Input var okay.
+		$id = ( isset( $_GET['post'] ) ? \intval( \wp_unslash( $_GET['post'] ) ) : \intval( \wp_unslash( $_POST['post'] ) ) );
 
-		\check_admin_referer( 'duplicate_post_rewrite_' . $id ); // Input var okay.
+		\check_admin_referer( 'duplicate_post_rewrite_' . $id );
 
 		$post = \get_post( $id );
 
