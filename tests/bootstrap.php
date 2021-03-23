@@ -15,6 +15,10 @@
 \define( 'MONTH_IN_SECONDS', 2592000 );
 \define( 'YEAR_IN_SECONDS', 31536000 );
 
+\define( 'OBJECT', 'OBJECT' );
+\define( 'ARRAY_A', 'ARRAY_A' );
+\define( 'ARRAY_N', 'ARRAY_N' );
+
 \define( 'DUPLICATE_POST_FILE', '/var/www/html/wp-content/plugins/duplicate-post/duplicate-post.php' );
 \define( 'DUPLICATE_POST_CURRENT_VERSION', '4.0' );
 // phpcs:enable

@@ -30,5 +30,8 @@
         "test": [
             "@php ./vendor/phpunit/phpunit/phpunit"
         ]
+    },
+    "config": {
+      "classmap-authoritative": true
     }
 }
