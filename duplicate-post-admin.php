@@ -192,12 +192,12 @@ function duplicate_post_migrate_show_links_in_options( $defaults ) {
 
 	$new_options = [];
 	foreach ( $options_to_migrate as $old => $new ) {
-		$new_options[ $new ] = \get_option( $old, $defaults[ $new ] );
+		$new_options[ $new ] = get_option( $old, $defaults[ $new ] );
 
-		\delete_option( $old );
+		delete_option( $old );
 	}
 
-	\update_option( 'duplicate_post_show_link_in', $new_options );
+	update_option( 'duplicate_post_show_link_in', $new_options );
 }
 
 /**
