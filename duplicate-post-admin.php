@@ -787,14 +787,14 @@ function duplicate_post_add_plugin_links( $links, $file ) {
 function duplicate_post_newsletter_signup_form() {
 	$copy = sprintf(
 		/* translators: 1: Yoast */
-		__(
+		esc_html__(
 			'If you want to stay up to date about all the exciting developments around Duplicate Post, subscribe to the %1$s newsletter!',
 			'duplicate-post'
 		),
 		'Yoast'
 	);
 
-	$email_label = __( 'Email Address', 'duplicate-post' );
+	$email_label = esc_html__( 'Email Address', 'duplicate-post' );
 
 	$html = '
 <!-- Begin Mailchimp Signup Form -->
