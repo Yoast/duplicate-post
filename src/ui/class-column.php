@@ -2,6 +2,7 @@
 
 namespace Yoast\WP\Duplicate_Post\UI;
 
+use WP_Post;
 use Yoast\WP\Duplicate_Post\Permissions_Helper;
 use Yoast\WP\Duplicate_Post\Utils;
 
@@ -86,7 +87,7 @@ class Column {
 				$post      = \get_post( $post_id );
 				$data_attr = '';
 
-				if ( $post instanceof \WP_Post
+				if ( $post instanceof WP_Post
 					&& $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
 					$data_attr = ' data-copy-is-for-rewrite-and-republish="1"';
 				}
