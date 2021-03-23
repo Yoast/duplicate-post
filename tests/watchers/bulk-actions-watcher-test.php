@@ -131,6 +131,9 @@ class Bulk_Actions_Watcher_Test extends TestCase {
 		$this->instance->add_bulk_clone_admin_notice();
 
 		$this->expectOutputString( '<div id="message" class="notice notice-success fade"><p>1 item copied.</p></div>' );
+
+		// Clean up after the test.
+		unset( $_REQUEST['bulk_cloned'] );
 	}
 
 	/**
@@ -144,6 +147,9 @@ class Bulk_Actions_Watcher_Test extends TestCase {
 		$this->instance->add_bulk_clone_admin_notice();
 
 		$this->expectOutputString( '<div id="message" class="notice notice-success fade"><p>2 items copied.</p></div>' );
+
+		// Clean up after the test.
+		unset( $_REQUEST['bulk_cloned'] );
 	}
 
 	/**
@@ -157,6 +163,9 @@ class Bulk_Actions_Watcher_Test extends TestCase {
 		$this->instance->add_bulk_rewrite_and_republish_admin_notice();
 
 		$this->expectOutputString( '<div id="message" class="notice notice-success fade"><p>1 post duplicated. You can now start rewriting your post in the duplicate of the original post. Once you choose to republish it your changes will be merged back into the original post.</p></div>' );
+
+		// Clean up after the test.
+		unset( $_REQUEST['bulk_rewriting'] );
 	}
 
 	/**
@@ -170,5 +179,8 @@ class Bulk_Actions_Watcher_Test extends TestCase {
 		$this->instance->add_bulk_rewrite_and_republish_admin_notice();
 
 		$this->expectOutputString( '<div id="message" class="notice notice-success fade"><p>2 posts duplicated. You can now start rewriting your posts in the duplicates of the original posts. Once you choose to republish them your changes will be merged back into the original post.</p></div>' );
+
+		// Clean up after the test.
+		unset( $_REQUEST['bulk_rewriting'] );
 	}
 }

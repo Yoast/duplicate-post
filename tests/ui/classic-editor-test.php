@@ -141,6 +141,9 @@ class Classic_Editor_Test extends TestCase {
 			->expects( 'enqueue_strings_script' );
 
 		$this->instance->enqueue_classic_editor_scripts();
+
+		// Clean up after the test.
+		unset( $_GET['post'] );
 	}
 
 	/**
@@ -167,6 +170,9 @@ class Classic_Editor_Test extends TestCase {
 			->expects( 'enqueue_styles' );
 
 		$this->instance->enqueue_classic_editor_styles();
+
+		// Clean up after the test.
+		unset( $_GET['post'] );
 	}
 
 	/**
@@ -232,6 +238,9 @@ class Classic_Editor_Test extends TestCase {
 
 		$this->setOutputCallback( static function () {} );
 		$this->instance->add_new_draft_post_button();
+
+		// Clean up after the test.
+		unset( $_GET['post'] );
 	}
 
 	/**
@@ -240,8 +249,6 @@ class Classic_Editor_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::add_new_draft_post_button
 	 */
 	public function test_add_new_draft_post_button_unsuccessful_no_post() {
-		unset( $_GET['post'] );
-
 		Monkey\Functions\expect( '\get_option' )
 			->with( 'duplicate_post_show_submitbox' )
 			->andReturn( '1' );
@@ -367,6 +374,9 @@ class Classic_Editor_Test extends TestCase {
 
 		$this->setOutputCallback( static function () {} );
 		$this->instance->add_rewrite_and_republish_post_button();
+
+		// Clean up after the test.
+		unset( $_GET['post'] );
 	}
 
 	/**
@@ -375,8 +385,6 @@ class Classic_Editor_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::add_rewrite_and_republish_post_button
 	 */
 	public function test_add_rewrite_and_republish_post_button_no_post() {
-		unset( $_GET['post'] );
-
 		Monkey\Functions\expect( '\get_option' )
 			->with( 'duplicate_post_show_submitbox' )
 			->andReturn( '1' );
@@ -872,6 +880,9 @@ class Classic_Editor_Test extends TestCase {
 			->andReturnTrue();
 
 		$this->assertTrue( $this->instance->should_change_rewrite_republish_copy( $post ) );
+
+		// Clean up after the test.
+		unset( $GLOBALS['pagenow'] );
 	}
 
 	/**
@@ -892,6 +903,9 @@ class Classic_Editor_Test extends TestCase {
 			->andReturnTrue();
 
 		$this->assertTrue( $this->instance->should_change_rewrite_republish_copy( $post ) );
+
+		// Clean up after the test.
+		unset( $GLOBALS['pagenow'] );
 	}
 
 	/**
@@ -908,6 +922,9 @@ class Classic_Editor_Test extends TestCase {
 		$post->post_type = 'post';
 
 		$this->assertFalse( $this->instance->should_change_rewrite_republish_copy( $post ) );
+
+		// Clean up after the test.
+		unset( $GLOBALS['pagenow'] );
 	}
 
 	/**
@@ -921,6 +938,9 @@ class Classic_Editor_Test extends TestCase {
 		$pagenow = 'post.php';
 
 		$this->assertFalse( $this->instance->should_change_rewrite_republish_copy( null ) );
+
+		// Clean up after the test.
+		unset( $GLOBALS['pagenow'] );
 	}
 
 	/**
@@ -942,6 +962,9 @@ class Classic_Editor_Test extends TestCase {
 			->andReturnFalse();
 
 		$this->assertFalse( $this->instance->should_change_rewrite_republish_copy( $post ) );
+
+		// Clean up after the test.
+		unset( $GLOBALS['pagenow'] );
 	}
 
 	/**

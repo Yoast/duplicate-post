@@ -137,6 +137,9 @@ class Check_Changes_Handler_Test extends TestCase {
 		'
 		);
 		$this->instance->check_changes_action_handler();
+
+		// Clean up after the test.
+		unset( $_GET['post'], $_REQUEST['action'] );
 	}
 
 	/**
@@ -171,6 +174,9 @@ class Check_Changes_Handler_Test extends TestCase {
 			->with( 'Changes overview failed, could not find post with ID 123.' );
 
 		$this->instance->check_changes_action_handler();
+
+		// Clean up after the test.
+		unset( $_GET['post'], $_REQUEST['action'] );
 	}
 
 	/**
@@ -201,5 +207,8 @@ class Check_Changes_Handler_Test extends TestCase {
 			->with( 'Changes overview failed, could not find original post.' );
 
 		$this->instance->check_changes_action_handler();
+
+		// Clean up after the test.
+		unset( $_GET['post'], $_REQUEST['action'] );
 	}
 }

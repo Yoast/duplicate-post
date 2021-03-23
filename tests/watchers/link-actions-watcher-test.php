@@ -149,6 +149,9 @@ class Link_Actions_Watcher_Test extends TestCase {
 		$this->instance->add_clone_admin_notice();
 
 		$this->expectOutputString( '<div id="message" class="notice notice-success fade"><p>1 item copied.</p></div>' );
+
+		// Clean up after the test.
+		unset( $_REQUEST['cloned'] );
 	}
 
 	/**
@@ -166,6 +169,9 @@ class Link_Actions_Watcher_Test extends TestCase {
 		$this->instance->add_clone_admin_notice();
 
 		$this->expectOutputString( '' );
+
+		// Clean up after the test.
+		unset( $_REQUEST['cloned'] );
 	}
 
 	/**
@@ -183,6 +189,9 @@ class Link_Actions_Watcher_Test extends TestCase {
 		$this->instance->add_rewrite_and_republish_admin_notice();
 
 		$this->expectOutputString( '<div id="message" class="notice notice-warning is-dismissible fade"><p>You can now start rewriting your post in this duplicate of the original post. If you click "Republish", your changes will be merged into the original post and you’ll be redirected there.</p></div>' );
+
+		// Clean up after the test.
+		unset( $_REQUEST['rewriting'] );
 	}
 
 	/**
@@ -200,6 +209,9 @@ class Link_Actions_Watcher_Test extends TestCase {
 		$this->instance->add_rewrite_and_republish_admin_notice();
 
 		$this->expectOutputString( '' );
+
+		// Clean up after the test.
+		unset( $_REQUEST['rewriting'] );
 	}
 
 	/**
@@ -228,5 +240,8 @@ class Link_Actions_Watcher_Test extends TestCase {
 			);
 
 		$this->instance->add_rewrite_and_republish_block_editor_notice();
+
+		// Clean up after the test.
+		unset( $_REQUEST['rewriting'] );
 	}
 }
