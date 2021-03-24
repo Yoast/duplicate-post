@@ -359,6 +359,8 @@ class Options_Form_Generator_Test extends TestCase {
 	 * @preserveGlobalState disabled
 	 */
 	public function test_generate_roles_permission_list() {
+		$this->stub_wp_roles();
+
 		$utils = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
 		$utils
 			->expects( 'get_roles' )

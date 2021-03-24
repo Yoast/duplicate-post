@@ -158,6 +158,8 @@ class Options_Page_Test extends TestCase {
 	 * @preserveGlobalState disabled
 	 */
 	public function test_register_roles() {
+		$this->stub_wp_roles();
+
 		$utils = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
 
 		Monkey\Functions\expect( '\current_user_can' )

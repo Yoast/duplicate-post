@@ -2,7 +2,7 @@
 
 namespace Yoast\WP\Duplicate_Post\Tests;
 
-use Brain\Monkey;
+use Brain\Monkey\Functions;
 use Mockery;
 use Yoast\WPTestUtils\BrainMonkey\YoastTestCase;
 
@@ -12,18 +12,11 @@ use Yoast\WPTestUtils\BrainMonkey\YoastTestCase;
 abstract class TestCase extends YoastTestCase {
 
 	/**
-	 * Holds an array of dummy roles.
+	 * Mock various roles as WP_Role objects and stub the get_roles() function.
 	 *
-	 * @var array
+	 * @return void
 	 */
-	protected $roles;
-
-	/**
-	 * Test setup.
-	 */
-	protected function set_up() {
-
-		parent::set_up();
+	protected function stub_wp_roles() {
 
 		// Mock roles to use across several tests.
 		$role1               = Mockery::mock( 'WP_Role' );
@@ -73,9 +66,7 @@ abstract class TestCase extends YoastTestCase {
 			'subscriber'    => $role3,
 		];
 
-		$this->roles = $role_objects;
-
-		Monkey\Functions\stubs(
+		Functions\stubs(
 			[
 				'get_role' => static function ( $name ) use ( $role_objects ) {
 					return $role_objects[ $name ];
