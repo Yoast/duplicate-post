@@ -60,12 +60,12 @@ class Link_Actions_Watcher {
 	 * @return void
 	 */
 	public function add_clone_admin_notice() {
-		if ( ! empty( $_REQUEST['cloned'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+		if ( ! empty( $_REQUEST['cloned'] ) ) {
 			if ( ! $this->permissions_helper->is_classic_editor() ) {
 				return;
 			}
 
-			$copied_posts = \intval( $_REQUEST['cloned'] ); // phpcs:ignore WordPress.Security.NonceVerification
+			$copied_posts = \intval( $_REQUEST['cloned'] );
 			\printf(
 				'<div id="message" class="notice notice-success fade"><p>'
 				. \esc_html(
@@ -88,7 +88,7 @@ class Link_Actions_Watcher {
 	 * @return void
 	 */
 	public function add_rewrite_and_republish_admin_notice() {
-		if ( ! empty( $_REQUEST['rewriting'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+		if ( ! empty( $_REQUEST['rewriting'] ) ) {
 			if ( ! $this->permissions_helper->is_classic_editor() ) {
 				return;
 			}
@@ -107,7 +107,7 @@ class Link_Actions_Watcher {
 	 * @return void
 	 */
 	public function add_rewrite_and_republish_block_editor_notice() {
-		if ( ! empty( $_REQUEST['rewriting'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+		if ( ! empty( $_REQUEST['rewriting'] ) ) {
 			$notice = [
 				'text'          => \wp_slash(
 					\__(

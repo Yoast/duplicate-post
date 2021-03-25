@@ -147,4 +147,20 @@
 		<exclude-pattern>/src/ui/link-builder\.php$</exclude-pattern>
 	</rule>
 
+	<!-- Technical debt: nonce verification should be added to cover
+		 all relevant uses of superglobals. This will be addressed
+		 by the team at a future date. -->
+	<rule ref="WordPress.Security.NonceVerification.Missing">
+		<exclude-pattern>/src/handlers/save-post-handler\.php$</exclude-pattern>
+	</rule>
+	<rule ref="WordPress.Security.NonceVerification.Recommended">
+		<exclude-pattern>/compat/gutenberg-functions\.php$</exclude-pattern>
+		<exclude-pattern>/src/post-republisher\.php$</exclude-pattern>
+		<exclude-pattern>/src/admin/options-page\.php$</exclude-pattern>
+		<exclude-pattern>/src/ui/bulk-actions\.php$</exclude-pattern>
+		<exclude-pattern>/src/ui/classic-editor\.php$</exclude-pattern>
+		<exclude-pattern>/src/watchers/(bulk|link)-actions-watcher\.php$</exclude-pattern>
+		<exclude-pattern>/src/watchers/republished-post-watcher\.php$</exclude-pattern>
+	</rule>
+
 </ruleset>

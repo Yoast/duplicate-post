@@ -46,8 +46,8 @@ class Bulk_Actions_Watcher {
 	 * @return void
 	 */
 	public function add_bulk_clone_admin_notice() {
-		if ( ! empty( $_REQUEST['bulk_cloned'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-			$copied_posts = \intval( $_REQUEST['bulk_cloned'] ); // phpcs:ignore WordPress.Security.NonceVerification
+		if ( ! empty( $_REQUEST['bulk_cloned'] ) ) {
+			$copied_posts = \intval( $_REQUEST['bulk_cloned'] );
 			\printf(
 				'<div id="message" class="notice notice-success fade"><p>'
 				. \esc_html(
@@ -70,8 +70,8 @@ class Bulk_Actions_Watcher {
 	 * @return void
 	 */
 	public function add_bulk_rewrite_and_republish_admin_notice() {
-		if ( ! empty( $_REQUEST['bulk_rewriting'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-			$copied_posts = \intval( $_REQUEST['bulk_rewriting'] ); // phpcs:ignore WordPress.Security.NonceVerification
+		if ( ! empty( $_REQUEST['bulk_rewriting'] ) ) {
+			$copied_posts = \intval( $_REQUEST['bulk_rewriting'] );
 			\printf(
 				'<div id="message" class="notice notice-success fade"><p>'
 				. \esc_html(
