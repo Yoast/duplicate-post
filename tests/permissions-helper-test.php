@@ -34,6 +34,8 @@ class Permissions_Helper_Test extends TestCase {
 	 * Tests the get_enabled_post_types function.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::get_enabled_post_types
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
 	 */
 	public function test_get_enabled_post_types() {
 		$post_types = [ 'post', 'page', 'book', 'movie ' ];
@@ -42,6 +44,11 @@ class Permissions_Helper_Test extends TestCase {
 			->with( 'duplicate_post_types_enabled', [ 'post', 'page' ] )
 			->andReturn( $post_types );
 
+		$utils = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
+		$utils->expects( 'is_plugin_active' )
+			->once()
+			->andReturn( false );
+
 		$this->assertSame( $post_types, $this->instance->get_enabled_post_types() );
 	}
 
@@ -49,6 +56,8 @@ class Permissions_Helper_Test extends TestCase {
 	 * Tests the get_enabled_post_types function when the option is not an array
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::get_enabled_post_types
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
 	 */
 	public function test_get_enabled_post_types_not_array() {
 		$post_types = 'post';
@@ -56,6 +65,11 @@ class Permissions_Helper_Test extends TestCase {
 		Monkey\Functions\expect( '\get_option' )
 			->with( 'duplicate_post_types_enabled', [ 'post', 'page' ] )
 			->andReturn( $post_types );
+
+		$utils = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
+		$utils->expects( 'is_plugin_active' )
+			->once()
+			->andReturn( false );
 
 		$this->assertSame( [ $post_types ], $this->instance->get_enabled_post_types() );
 	}
