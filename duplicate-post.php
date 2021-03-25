@@ -98,8 +98,8 @@ function duplicate_post_plugin_actions( $actions ) {
 	return $actions;
 }
 
-require_once DUPLICATE_POST_PATH . 'duplicate-post-common.php';
+require_once DUPLICATE_POST_PATH . 'common-functions.php';
 
 if ( is_admin() ) {
-	include_once DUPLICATE_POST_PATH . 'duplicate-post-admin.php';
+	include_once DUPLICATE_POST_PATH . 'admin-functions.php';
 }

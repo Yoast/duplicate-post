@@ -22,7 +22,7 @@ function duplicate_post_is_post_type_enabled( $post_type ) {
 		$duplicate_post_types_enabled = [ $duplicate_post_types_enabled ];
 	}
 
-	/** This filter is documented in src/class-permissions-helper.php */
+	/** This filter is documented in src/permissions-helper.php */
 	$duplicate_post_types_enabled = apply_filters( 'duplicate_post_enabled_post_types', $duplicate_post_types_enabled );
 	return in_array( $post_type, $duplicate_post_types_enabled, true );
 }

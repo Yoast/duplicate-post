@@ -60,6 +60,9 @@
 
 		<!-- YoastCS recommends no file docblock in namespaced files. -->
 		<exclude name="Squiz.Commenting.FileComment.Missing"/>
+
+		<!-- YoastCS has different file name rules. -->
+		<exclude name="WordPress.Files.FileName.InvalidClassFileName"/>
 	</rule>
 
 	<config name="testVersion" value="5.5-"/>
