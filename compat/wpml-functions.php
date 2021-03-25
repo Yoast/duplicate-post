@@ -22,7 +22,9 @@ function duplicate_post_wpml_init() {
 }
 
 global $duplicated_posts;
-$duplicated_posts = []; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals
+
+// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals -- Reason: Renaming a global variable is a BC break.
+$duplicated_posts = [];
 
 /**
  * Copy post translations.
@@ -66,7 +68,9 @@ function duplicate_post_wpml_copy_translations( $post_id, $post, $status = '' ) 
 				}
 			}
 		}
-		$duplicated_posts[ $post->ID ] = $post_id; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals
+
+		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals -- Reason: see above.
+		$duplicated_posts[ $post->ID ] = $post_id;
 	}
 }
 
@@ -75,13 +79,16 @@ function duplicate_post_wpml_copy_translations( $post_id, $post, $status = '' ) 
  *
  * @global array() $duplicated_posts Array of duplicated posts.
  */
-function duplicate_wpml_string_packages() { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals
+function duplicate_wpml_string_packages() { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals -- Reason: renaming the function would be a BC-break.
 	global $duplicated_posts;
 
 	foreach ( $duplicated_posts as $original_post_id => $duplicate_post_id ) {
+		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals -- Reason: using WPML native filter.
+		$original_string_packages = apply_filters( 'wpml_st_get_post_string_packages', false, $original_post_id );
 
-		$original_string_packages = apply_filters( 'wpml_st_get_post_string_packages', false, $original_post_id ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals
-		$new_string_packages      = apply_filters( 'wpml_st_get_post_string_packages', false, $duplicate_post_id ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals
+		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals -- Reason: using WPML native filter.
+		$new_string_packages = apply_filters( 'wpml_st_get_post_string_packages', false, $duplicate_post_id );
+
 		if ( is_array( $original_string_packages ) ) {
 			foreach ( $original_string_packages as $original_string_package ) {
 				$translated_original_strings = $original_string_package->get_translated_strings( [] );
@@ -96,7 +103,8 @@ function duplicate_wpml_string_packages() { // phpcs:ignore WordPress.NamingConv
 							foreach ( $translated_original_strings[ $new_string->name ] as $language => $translated_string ) {
 
 								do_action(
-									'wpml_add_string_translation', // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals
+									// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals -- Reason: using WPML native filter.
+									'wpml_add_string_translation',
 									$new_string->id,
 									$language,
 									$translated_string['value'],

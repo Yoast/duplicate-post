@@ -142,16 +142,16 @@ class Check_Changes_Handler {
 						$post_array = \get_post( $this->post, \ARRAY_A );
 
 						/** This filter is documented in wp-admin/includes/revision.php */
-						// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Reason: we want to use a WP filter from the revision feature.
+						// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Reason: using WP core hook.
 						$fields = \apply_filters( '_wp_post_revision_fields', $fields, $post_array );
 
 						foreach ( $fields as $field => $name ) {
 							/** This filter is documented in wp-admin/includes/revision.php */
-							// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Reason: we want to use a WP filter from the revision feature.
+							// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Reason: using WP core hook.
 							$content_from = \apply_filters( "_wp_post_revision_field_{$field}", $this->original->$field, $field, $this->original, 'from' );
 
 							/** This filter is documented in wp-admin/includes/revision.php */
-							// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Reason: we want to use a WP filter from the revision feature.
+							// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Reason: using WP core hook.
 							$content_to = \apply_filters( "_wp_post_revision_field_{$field}", $this->post->$field, $field, $this->post, 'to' );
 
 							$diff = \wp_text_diff( $content_from, $content_to, $args );

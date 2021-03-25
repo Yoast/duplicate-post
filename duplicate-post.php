@@ -59,7 +59,11 @@ if ( is_readable( $duplicate_post_autoload_file ) ) {
 /**
  * Loads the Duplicate Post main class.
  *
- * @phpcs:disable PHPCompatibility.FunctionNameRestrictions.ReservedFunctionNames.FunctionDoubleUnderscore,WordPress.NamingConventions.ValidFunctionName.FunctionDoubleUnderscore,WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedFunctionFound -- Function name change would be BC-break.
+ * {@internal Function name change would be BC-break.}
+ *
+ * @phpcs:disable PHPCompatibility.FunctionNameRestrictions.ReservedFunctionNames.FunctionDoubleUnderscore
+ * @phpcs:disable WordPress.NamingConventions.ValidFunctionName.FunctionDoubleUnderscore
+ * @phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedFunctionFound
  */
 function __duplicate_post_main() {
 	new Duplicate_Post();
