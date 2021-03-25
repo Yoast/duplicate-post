@@ -10,10 +10,10 @@ if ( ! is_admin() ) {
 	return;
 }
 
-require_once DUPLICATE_POST_PATH . 'duplicate-post-options.php';
+require_once DUPLICATE_POST_PATH . 'options.php';
 
-require_once DUPLICATE_POST_PATH . 'compat/duplicate-post-wpml.php';
-require_once DUPLICATE_POST_PATH . 'compat/duplicate-post-jetpack.php';
+require_once DUPLICATE_POST_PATH . 'compat/wpml-functions.php';
+require_once DUPLICATE_POST_PATH . 'compat/jetpack-functions.php';
 
 /**
  * Wrapper for the option 'duplicate_post_version'.
