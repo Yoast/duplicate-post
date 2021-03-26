@@ -5,7 +5,6 @@
  * @package Yoast\WP\Duplicate_Post\Tests
  */
 
-// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals -- Reason: CS configuration is not complete yet.
 define( 'ABSPATH', true );
 
 define( 'MINUTE_IN_SECONDS', 60 );
@@ -21,13 +20,10 @@ define( 'ARRAY_N', 'ARRAY_N' );
 
 define( 'DUPLICATE_POST_FILE', '/var/www/html/wp-content/plugins/duplicate-post/duplicate-post.php' );
 define( 'DUPLICATE_POST_CURRENT_VERSION', '4.0' );
-// phpcs:enable
 
-// phpcs:disable PHPCompatibility.FunctionUse.NewFunctions -- Reason: Properly wrapped within a check.
 if ( function_exists( 'opcache_reset' ) ) {
 	opcache_reset();
 }
-// phpcs:enable
 
 if ( file_exists( dirname( __DIR__ ) . '/vendor/autoload.php' ) === false ) {
 	echo PHP_EOL, 'ERROR: Run `composer install` to generate the autoload files before running the unit tests.', PHP_EOL;

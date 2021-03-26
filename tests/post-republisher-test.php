@@ -107,7 +107,6 @@ class Post_Republisher_Test extends TestCase {
 	 * @runInSeparateProcess
 	 */
 	public function test_is_classic_editor_post_request_when_rest_request() {
-		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound -- WordPress constant used in a test.
 		\define( 'REST_REQUEST', true );
 		$this->assertFalse( $this->instance->is_classic_editor_post_request() );
 	}
@@ -124,7 +123,7 @@ class Post_Republisher_Test extends TestCase {
 			->andReturnFalse();
 
 		$this->assertFalse( $this->instance->is_classic_editor_post_request() );
-		unset( $_GET['meta-box-loader'] ); // phpcs:ignore WordPress.Security.NonceVerification
+		unset( $_GET['meta-box-loader'] );
 	}
 
 	/**

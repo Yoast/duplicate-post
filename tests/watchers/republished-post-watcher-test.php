@@ -97,7 +97,7 @@ class Republished_Post_Watcher_Test extends TestCase {
 		$this->instance->add_admin_notice();
 
 		$this->expectOutputString( '<div id="message" class="notice notice-success is-dismissible"><p>notice</p></div>' );
-		unset( $_REQUEST['dprepublished'] ); // phpcs:ignore WordPress.Security.NonceVerification
+		unset( $_REQUEST['dprepublished'] );
 	}
 
 	/**
@@ -145,7 +145,7 @@ class Republished_Post_Watcher_Test extends TestCase {
 		$_REQUEST['dprepublished'] = '1';
 
 		$this->instance->add_block_editor_notice();
-		unset( $_REQUEST['dprepublished'] ); // phpcs:ignore WordPress.Security.NonceVerification
+		unset( $_REQUEST['dprepublished'] );
 	}
 
 	/**

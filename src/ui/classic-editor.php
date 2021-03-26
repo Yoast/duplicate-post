@@ -81,8 +81,8 @@ class Classic_Editor {
 	 * @return void
 	 */
 	public function enqueue_classic_editor_scripts() {
-		if ( $this->permissions_helper->is_classic_editor() && isset( $_GET['post'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-			$id   = \intval( \wp_unslash( $_GET['post'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
+		if ( $this->permissions_helper->is_classic_editor() && isset( $_GET['post'] ) ) {
+			$id   = \intval( \wp_unslash( $_GET['post'] ) );
 			$post = \get_post( $id );
 
 			if ( ! \is_null( $post ) && $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
@@ -98,8 +98,8 @@ class Classic_Editor {
 	 */
 	public function enqueue_classic_editor_styles() {
 		if ( $this->permissions_helper->is_classic_editor()
-			&& isset( $_GET['post'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-			$id   = \intval( \wp_unslash( $_GET['post'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
+			&& isset( $_GET['post'] ) ) {
+			$id   = \intval( \wp_unslash( $_GET['post'] ) );
 			$post = \get_post( $id );
 
 			if ( ! \is_null( $post ) && $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
@@ -117,8 +117,8 @@ class Classic_Editor {
 	 */
 	public function add_new_draft_post_button( $post = null ) {
 		if ( \is_null( $post ) ) {
-			if ( isset( $_GET['post'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-				$id   = \intval( \wp_unslash( $_GET['post'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
+			if ( isset( $_GET['post'] ) ) {
+				$id   = \intval( \wp_unslash( $_GET['post'] ) );
 				$post = \get_post( $id );
 			}
 		}
@@ -143,8 +143,8 @@ class Classic_Editor {
 	 */
 	public function add_rewrite_and_republish_post_button( $post = null ) {
 		if ( \is_null( $post ) ) {
-			if ( isset( $_GET['post'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-				$id   = \intval( \wp_unslash( $_GET['post'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
+			if ( isset( $_GET['post'] ) ) {
+				$id   = \intval( \wp_unslash( $_GET['post'] ) );
 				$post = \get_post( $id );
 			}
 		}
@@ -172,8 +172,8 @@ class Classic_Editor {
 	 */
 	public function add_check_changes_link( $post = null ) {
 		if ( \is_null( $post ) ) {
-			if ( isset( $_GET['post'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
-				$id   = \intval( \wp_unslash( $_GET['post'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
+			if ( isset( $_GET['post'] ) ) {
+				$id   = \intval( \wp_unslash( $_GET['post'] ) );
 				$post = \get_post( $id );
 			}
 		}

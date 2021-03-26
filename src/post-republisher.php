@@ -235,7 +235,7 @@ class Post_Republisher {
 			return false;
 		}
 
-		return isset( $_GET['meta-box-loader'] ) === false; // phpcs:ignore WordPress.Security.NonceVerification
+		return isset( $_GET['meta-box-loader'] ) === false;
 	}
 
 	/**

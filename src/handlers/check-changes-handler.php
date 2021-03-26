@@ -62,17 +62,17 @@ class Check_Changes_Handler {
 	public function check_changes_action_handler() {
 		global $wp_version;
 
-		if ( ! ( isset( $_GET['post'] ) || isset( $_POST['post'] ) // Input var okay.
-			|| ( isset( $_REQUEST['action'] ) && $_REQUEST['action'] === 'duplicate_post_check_changes' ) ) ) { // Input var okay.
+		if ( ! ( isset( $_GET['post'] ) || isset( $_POST['post'] )
+			|| ( isset( $_REQUEST['action'] ) && $_REQUEST['action'] === 'duplicate_post_check_changes' ) ) ) {
 			\wp_die(
 				\esc_html__( 'No post has been supplied!', 'duplicate-post' )
 			);
 			return;
 		}
 
-		$id = ( isset( $_GET['post'] ) ? \intval( \wp_unslash( $_GET['post'] ) ) : \intval( \wp_unslash( $_POST['post'] ) ) ); // Input var okay.
+		$id = ( isset( $_GET['post'] ) ? \intval( \wp_unslash( $_GET['post'] ) ) : \intval( \wp_unslash( $_POST['post'] ) ) );
 
-		\check_admin_referer( 'duplicate_post_check_changes_' . $id ); // Input var okay.
+		\check_admin_referer( 'duplicate_post_check_changes_' . $id );
 
 		$this->post = \get_post( $id );
 
@@ -142,16 +142,16 @@ class Check_Changes_Handler {
 						$post_array = \get_post( $this->post, \ARRAY_A );
 
 						/** This filter is documented in wp-admin/includes/revision.php */
-						// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Reason: we want to use a WP filter from the revision feature.
+						// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Reason: using WP core hook.
 						$fields = \apply_filters( '_wp_post_revision_fields', $fields, $post_array );
 
 						foreach ( $fields as $field => $name ) {
 							/** This filter is documented in wp-admin/includes/revision.php */
-							// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Reason: we want to use a WP filter from the revision feature.
+							// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Reason: using WP core hook.
 							$content_from = \apply_filters( "_wp_post_revision_field_{$field}", $this->original->$field, $field, $this->original, 'from' );
 
 							/** This filter is documented in wp-admin/includes/revision.php */
-							// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Reason: we want to use a WP filter from the revision feature.
+							// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Reason: using WP core hook.
 							$content_to = \apply_filters( "_wp_post_revision_field_{$field}", $this->post->$field, $field, $this->post, 'to' );
 
 							$diff = \wp_text_diff( $content_from, $content_to, $args );

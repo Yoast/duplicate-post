@@ -158,7 +158,7 @@ class Options_Page {
 	 * @return bool Whether or not the settings have been updated.
 	 */
 	protected function settings_updated() {
-		return isset( $_GET['settings-updated'] ) && $_GET['settings-updated'] === 'true'; // phpcs:ignore WordPress.Security.NonceVerification
+		return isset( $_GET['settings-updated'] ) && $_GET['settings-updated'] === 'true';
 	}
 
 	/**

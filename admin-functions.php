@@ -253,8 +253,8 @@ function duplicate_post_show_update_notice() {
 
 	echo '<div id="duplicate-post-notice" class="' . esc_attr( $class ) . '" style="display: flex; align-items: center;">
 			<img src="' . esc_url( $img_path ) . '" alt=""/>
-			<div style="margin: 0.5em">' . $sanitized_message . // phpcs:ignore WordPress.Security.EscapeOutput
-			'</div></div>';
+			<div style="margin: 0.5em">' . $sanitized_message // phpcs:ignore WordPress.Security.EscapeOutput -- Reason: escaped properly above.
+			. '</div></div>';
 
 	echo "<script>
 			function duplicate_post_dismiss_notice(){

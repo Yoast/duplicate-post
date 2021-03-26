@@ -78,7 +78,7 @@ class Republished_Post_Watcher {
 			return;
 		}
 
-		if ( ! empty( $_REQUEST['dprepublished'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+		if ( ! empty( $_REQUEST['dprepublished'] ) ) {
 			echo '<div id="message" class="notice notice-success is-dismissible"><p>'
 				. \esc_html( $this->get_notice_text() )
 				. '</p></div>';
@@ -91,7 +91,7 @@ class Republished_Post_Watcher {
 	 * @return void
 	 */
 	public function add_block_editor_notice() {
-		if ( ! empty( $_REQUEST['dprepublished'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+		if ( ! empty( $_REQUEST['dprepublished'] ) ) {
 			$notice = [
 				'text'          => \wp_slash( $this->get_notice_text() ),
 				'status'        => 'success',
