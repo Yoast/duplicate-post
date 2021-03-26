@@ -151,6 +151,9 @@ class Admin_Bar_Test extends TestCase {
 			->times( 3 );
 
 		$this->instance->admin_bar_render();
+
+		// Clean up after the test.
+		unset( $GLOBALS['wp_admin_bar'] );
 	}
 
 	/**
@@ -199,6 +202,9 @@ class Admin_Bar_Test extends TestCase {
 			->once();
 
 		$this->instance->admin_bar_render();
+
+		// Clean up after the test.
+		unset( $GLOBALS['wp_admin_bar'] );
 	}
 
 	/**
@@ -235,6 +241,9 @@ class Admin_Bar_Test extends TestCase {
 			->never();
 
 		$this->instance->admin_bar_render();
+
+		// Clean up after the test.
+		unset( $GLOBALS['wp_admin_bar'] );
 	}
 
 	/**
@@ -270,6 +279,9 @@ class Admin_Bar_Test extends TestCase {
 			->never();
 
 		$this->instance->admin_bar_render();
+
+		// Clean up after the test.
+		unset( $GLOBALS['wp_admin_bar'] );
 	}
 
 	/**
@@ -370,6 +382,9 @@ class Admin_Bar_Test extends TestCase {
 			->andReturnTrue();
 
 		$this->assertSame( $post, $this->instance->get_current_post() );
+
+		// Clean up after the test.
+		unset( $GLOBALS['wp_the_query'] );
 	}
 
 	/**
@@ -408,6 +423,9 @@ class Admin_Bar_Test extends TestCase {
 			->andReturnTrue();
 
 		$this->assertSame( $post, $this->instance->get_current_post() );
+
+		// Clean up after the test.
+		unset( $GLOBALS['wp_the_query'] );
 	}
 
 	/**
@@ -445,6 +463,9 @@ class Admin_Bar_Test extends TestCase {
 
 		$this->assertFalse( $this->instance->get_current_post() );
 		$this->assertTrue( Monkey\Filters\applied( 'duplicate_post_show_link' ) === 0 );
+
+		// Clean up after the test.
+		unset( $GLOBALS['wp_the_query'] );
 	}
 
 	/**
@@ -484,6 +505,9 @@ class Admin_Bar_Test extends TestCase {
 
 		$this->assertFalse( $this->instance->get_current_post() );
 		$this->assertTrue( Monkey\Filters\applied( 'duplicate_post_show_link' ) === 0 );
+
+		// Clean up after the test.
+		unset( $GLOBALS['wp_the_query'] );
 	}
 
 	/**
@@ -528,5 +552,8 @@ class Admin_Bar_Test extends TestCase {
 			->andReturnFalse();
 
 		$this->assertSame( false, $this->instance->get_current_post() );
+
+		// Clean up after the test.
+		unset( $GLOBALS['wp_the_query'] );
 	}
 }

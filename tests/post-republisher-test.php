@@ -123,6 +123,8 @@ class Post_Republisher_Test extends TestCase {
 			->andReturnFalse();
 
 		$this->assertFalse( $this->instance->is_classic_editor_post_request() );
+
+		// Clean up after the test.
 		unset( $_GET['meta-box-loader'] );
 	}
 
