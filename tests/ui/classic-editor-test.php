@@ -491,7 +491,7 @@ class Classic_Editor_Test extends TestCase {
 			->once()
 			->andReturnTrue();
 
-		$this->assertEquals( $this->instance->change_republish_strings_classic_editor( '', $text ), 'Republish on: %s' );
+		$this->assertEquals( 'Republish on: %s', $this->instance->change_republish_strings_classic_editor( '', $text ) );
 	}
 
 	/**
@@ -514,7 +514,7 @@ class Classic_Editor_Test extends TestCase {
 			->once()
 			->andReturnTrue();
 
-		$this->assertEquals( $this->instance->change_republish_strings_classic_editor( '', $text ), 'Republish' );
+		$this->assertEquals( 'Republish', $this->instance->change_republish_strings_classic_editor( '', $text ) );
 	}
 
 	/**
@@ -538,7 +538,7 @@ class Classic_Editor_Test extends TestCase {
 			->once()
 			->andReturnFalse();
 
-		$this->assertEquals( $this->instance->change_republish_strings_classic_editor( $translation, $text ), 'Publish' );
+		$this->assertEquals( 'Publish', $this->instance->change_republish_strings_classic_editor( $translation, $text ) );
 	}
 
 	/**
@@ -563,7 +563,7 @@ class Classic_Editor_Test extends TestCase {
 			->once()
 			->andReturnTrue();
 
-		$this->assertEquals( $this->instance->change_republish_strings_classic_editor( $translation, $text ), 'Test' );
+		$this->assertEquals( 'Test', $this->instance->change_republish_strings_classic_editor( $translation, $text ) );
 	}
 
 	/**
@@ -586,7 +586,7 @@ class Classic_Editor_Test extends TestCase {
 			->once()
 			->andReturnTrue();
 
-		$this->assertEquals( $this->instance->change_schedule_strings_classic_editor( '', $text ), 'Schedule republish' );
+		$this->assertEquals( 'Schedule republish', $this->instance->change_schedule_strings_classic_editor( '', $text ) );
 	}
 
 	/**
@@ -610,7 +610,7 @@ class Classic_Editor_Test extends TestCase {
 			->once()
 			->andReturnFalse();
 
-		$this->assertEquals( $this->instance->change_schedule_strings_classic_editor( $translation, $text ), 'Schedule' );
+		$this->assertEquals( 'Schedule', $this->instance->change_schedule_strings_classic_editor( $translation, $text ) );
 	}
 
 	/**
@@ -635,7 +635,7 @@ class Classic_Editor_Test extends TestCase {
 			->once()
 			->andReturnTrue();
 
-		$this->assertEquals( $this->instance->change_schedule_strings_classic_editor( $translation, $text ), 'Test' );
+		$this->assertEquals( 'Test', $this->instance->change_schedule_strings_classic_editor( $translation, $text ) );
 	}
 
 	/**
@@ -747,7 +747,7 @@ class Classic_Editor_Test extends TestCase {
 			->with( $time_format, $post )
 			->andReturn( $scheduled_time );
 
-		$this->assertEquals( $this->instance->change_scheduled_notice_classic_editor( $messages ), $result );
+		$this->assertEquals( $result, $this->instance->change_scheduled_notice_classic_editor( $messages ) );
 	}
 
 	/**
@@ -859,7 +859,7 @@ class Classic_Editor_Test extends TestCase {
 			->with( $time_format, $post )
 			->andReturn( $scheduled_time );
 
-		$this->assertEquals( $this->instance->change_scheduled_notice_classic_editor( $messages ), $result );
+		$this->assertEquals( $result, $this->instance->change_scheduled_notice_classic_editor( $messages ) );
 	}
 
 	/**
