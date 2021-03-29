@@ -187,7 +187,7 @@ class Post_Republisher_Test extends TestCase {
 			->andReturn( $input['is_copy'] );
 
 		$returned_post_data = $this->instance->change_post_copy_status( (array) $post, $postarr );
-		$this->assertEquals( $expected['post_status'], $returned_post_data['post_status'] );
+		$this->assertSame( $expected['post_status'], $returned_post_data['post_status'] );
 	}
 
 	/**

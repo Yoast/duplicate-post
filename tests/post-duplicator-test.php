@@ -82,7 +82,7 @@ class Post_Duplicator_Test extends TestCase {
 			->twice()
 			->andReturnFirstArg();
 
-		$this->assertEquals( $expected, $this->instance->generate_copy_title( $post, $original ) );
+		$this->assertSame( $expected, $this->instance->generate_copy_title( $post, $original ) );
 	}
 
 	/**
@@ -183,7 +183,7 @@ class Post_Duplicator_Test extends TestCase {
 			->with( 'publish_pages' )
 			->andReturn( $original['capability'] );
 
-		$this->assertEquals( $expected, $this->instance->generate_copy_status( $post, $options ) );
+		$this->assertSame( $expected, $this->instance->generate_copy_status( $post, $options ) );
 	}
 
 	/**
@@ -287,7 +287,7 @@ class Post_Duplicator_Test extends TestCase {
 			->with( 'edit_others_posts' )
 			->andReturn( $original['capability'] );
 
-		$this->assertEquals( $expected, $this->instance->generate_copy_author( $post, $options ) );
+		$this->assertSame( $expected, $this->instance->generate_copy_author( $post, $options ) );
 	}
 
 	/**

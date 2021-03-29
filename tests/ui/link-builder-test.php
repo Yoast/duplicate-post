@@ -137,7 +137,7 @@ class Link_Builder_Test extends TestCase {
 		Monkey\Functions\expect( '\wp_nonce_url' )
 			->andReturnFirstArg();
 
-		$this->assertEquals(
+		$this->assertSame(
 			'http://basic.wordpress.test/wp-admin/admin.php?action=duplicate_post_clone&amp;post=123',
 			$this->instance->build_link( $post, $context, $action_name )
 		);
@@ -168,7 +168,7 @@ class Link_Builder_Test extends TestCase {
 		Monkey\Functions\expect( '\wp_nonce_url' )
 			->andReturnFirstArg();
 
-		$this->assertEquals(
+		$this->assertSame(
 			'http://basic.wordpress.test/wp-admin/admin.php?action=duplicate_post_clone&post=123',
 			$this->instance->build_link( $post, $context, $action_name )
 		);
@@ -194,7 +194,7 @@ class Link_Builder_Test extends TestCase {
 		Monkey\Functions\expect( '\wp_nonce_url' )
 			->never();
 
-		$this->assertEquals(
+		$this->assertSame(
 			'',
 			$this->instance->build_link( $post, $context, $action_name )
 		);

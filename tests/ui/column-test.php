@@ -101,7 +101,7 @@ class Column_Test extends TestCase {
 			'date'       => 'Date',
 		];
 
-		$this->assertEquals(
+		$this->assertSame(
 			[
 				'cb'                           => '<input type="checkbox" />',
 				'title'                        => 'Title',

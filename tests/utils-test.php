@@ -19,7 +19,7 @@ class Utils_Test extends TestCase {
 	 * @param string $expected Expected output.
 	 */
 	public function test_flatten_version( $original, $expected ) {
-		$this->assertEquals( $expected, Utils::flatten_version( $original ) );
+		$this->assertSame( $expected, Utils::flatten_version( $original ) );
 	}
 
 	/**
@@ -48,7 +48,7 @@ class Utils_Test extends TestCase {
 	 * @param mixed $expected Expected output.
 	 */
 	public function test_addslashes_to_strings_only( $original, $expected ) {
-		$this->assertEquals( $expected, Utils::addslashes_to_strings_only( $original ) );
+		$this->assertSame( $expected, Utils::addslashes_to_strings_only( $original ) );
 	}
 
 	/**
