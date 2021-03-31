@@ -354,7 +354,7 @@ class Options_Form_Generator_Test extends TestCase {
 			);
 
 		$this->assertSame(
-			'<input type="checkbox" name="duplicate_post_roles[]" id="duplicate-post-editor" value="editor" checked="checked" /><label for="duplicate-post-editor">Editor</label><br /><input type="checkbox" name="duplicate_post_roles[]" id="duplicate-post-administrator" value="administrator" checked="checked" /><label for="duplicate-post-administrator">Administrator</label><br />',
+			'<input type="checkbox" name="duplicate_post_roles[]" id="duplicate-post-editor" value="editor" checked="checked" /><label for="duplicate-post-editor">Editor</label><br /><input type="checkbox" name="duplicate_post_roles[]" id="duplicate-post-administrator" value="administrator"  /><label for="duplicate-post-administrator">Administrator</label><br />',
 			$this->instance->generate_roles_permission_list()
 		);
 	}

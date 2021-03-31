@@ -27,7 +27,7 @@ abstract class TestCase extends BaseTestCase {
 		Monkey\setUp();
 
 		// Mock roles to use across several tests.
-		$role1               = Mockery::mock( 'WP_Role' )->makePartial();
+		$role1               = Mockery::mock( 'WP_Role' );
 		$role1->name         = 'Editor';
 		$role1->capabilities = [
 			'read'       => 'read',
@@ -36,18 +36,13 @@ abstract class TestCase extends BaseTestCase {
 		];
 		$role1->allows(
 			[
-				'has_cap' => static function ( $cap ) {
-					return true;
-				},
-				'add_cap' => static function ( $cap ) {
-					return true;
-				},
-				'remove_cap' => static function ( $cap ) {
-				},
+				'has_cap'    => true,
+				'add_cap'    => null,
+				'remove_cap' => null,
 			]
 		);
 
-		$role2               = Mockery::mock( 'WP_Role' )->makePartial();
+		$role2               = Mockery::mock( 'WP_Role' );
 		$role2->name         = 'Administrator';
 		$role2->capabilities = [
 			'read'       => 'read',
@@ -56,30 +51,20 @@ abstract class TestCase extends BaseTestCase {
 		];
 		$role2->allows(
 			[
-				'has_cap' => static function ( $cap ) {
-					return false;
-				},
-				'add_cap' => static function ( $cap ) {
-					return true;
-				},
-				'remove_cap' => static function ( $cap ) {
-				},
+				'has_cap'    => false,
+				'add_cap'    => null,
+				'remove_cap' => null,
 			]
 		);
 
-		$role3               = Mockery::mock( 'WP_Role' )->makePartial();
+		$role3               = Mockery::mock( 'WP_Role' );
 		$role3->name         = 'Subscriber';
 		$role3->capabilities = [];
 		$role3->allows(
 			[
-				'has_cap' => static function ( $cap ) {
-					return false;
-				},
-				'add_cap' => static function ( $cap ) {
-					return true;
-				},
-				'remove_cap' => static function ( $cap ) {
-				},
+				'has_cap'    => false,
+				'add_cap'    => null,
+				'remove_cap' => null,
 			]
 		);
 
