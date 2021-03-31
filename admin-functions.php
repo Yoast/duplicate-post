@@ -432,7 +432,7 @@ function duplicate_post_addslashes_deep( $value ) {
  * @return string|mixed
  */
 function duplicate_post_addslashes_to_strings_only( $value ) {
-	return is_string( $value ) ? addslashes( $value ) : $value;
+	return Yoast\WP\Duplicate_Post\Utils::addslashes_to_strings_only( $value );
 }
 
 /**
