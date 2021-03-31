@@ -103,15 +103,25 @@ class Options_Form_Generator {
 	}
 
 	/**
-	 * Sorts taxonomy objects based on being public, followed by being private.
+	 * Sorts taxonomy objects based on being public, followed by being private
+	 * and when the visibility is equal, on the taxonomy public name (case-sensitive).
 	 *
 	 * @param WP_Taxonomy $taxonomy1 First taxonomy object.
 	 * @param WP_Taxonomy $taxonomy2 Second taxonomy object.
 	 *
-	 * @return bool True when the first taxonomy is public.
+	 * @return int An integer less than, equal to, or greater than zero indicating respectively
+	 *             the first taxonomy should be sorted before, at the same level or after the second taxonomy.
 	 */
 	public function sort_taxonomy_objects( $taxonomy1, $taxonomy2 ) {
-		return ( $taxonomy1->public < $taxonomy2->public );
+		if ( $taxonomy1->public === true && $taxonomy2->public === false ) {
+			return -1;
+		}
+		elseif ( $taxonomy1->public === false && $taxonomy2->public === true ) {
+			return 1;
+		}
+
+		// Same visibility, sort by name.
+		return \strnatcmp( $taxonomy1->labels->name, $taxonomy2->labels->name );
 	}
 
 	/**

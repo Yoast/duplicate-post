@@ -279,22 +279,43 @@ class Options_Form_Generator_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Admin\Options_Form_Generator::generate_taxonomy_exclusion_list
 	 */
 	public function test_generate_taxonomy_exclusion_list() {
-		$labels       = new stdClass();
-		$labels->name = 'Custom Taxonomy';
+		$labels1       = new stdClass();
+		$labels1->name = 'A Foo';
+
+		$labels2       = new stdClass();
+		$labels2->name = 'Baz';
+
+		$labels3       = new stdClass();
+		$labels3->name = 'a foo';
+
+		$labels4       = new stdClass();
+		$labels4->name = 'Bar';
 
 		$taxonomy1         = Mockery::mock( 'WP_Taxonomy' );
-		$taxonomy1->name   = 'custom_taxonomy';
+		$taxonomy1->name   = 'custom_taxonomy_public_1';
 		$taxonomy1->public = true;
-		$taxonomy1->labels = $labels;
+		$taxonomy1->labels = $labels1;
 
 		$taxonomy2         = Mockery::mock( 'WP_Taxonomy' );
-		$taxonomy2->name   = 'custom_taxonomy_2';
+		$taxonomy2->name   = 'custom_taxonomy_private_2';
 		$taxonomy2->public = false;
-		$taxonomy2->labels = $labels;
+		$taxonomy2->labels = $labels2;
+
+		$taxonomy3         = Mockery::mock( 'WP_Taxonomy' );
+		$taxonomy3->name   = 'custom_taxonomy_public_2';
+		$taxonomy3->public = true;
+		$taxonomy3->labels = $labels3;
+
+		$taxonomy4         = Mockery::mock( 'WP_Taxonomy' );
+		$taxonomy4->name   = 'custom_taxonomy_private_1';
+		$taxonomy4->public = false;
+		$taxonomy4->labels = $labels4;
 
 		$taxonomies = [
 			$taxonomy1,
 			$taxonomy2,
+			$taxonomy3,
+			$taxonomy4,
 		];
 
 		Monkey\Functions\expect( '\get_taxonomies' )
@@ -304,10 +325,10 @@ class Options_Form_Generator_Test extends TestCase {
 		Monkey\Functions\expect( '\get_option' )
 			->with( 'duplicate_post_taxonomies_blacklist' )
 			->once()
-			->andReturn( [ 'custom_taxonomy_2' ] );
+			->andReturn( [ 'custom_taxonomy_private_1', 'custom_taxonomy_private_2' ] );
 
 		$this->assertSame(
-			'<div class="taxonomy_public"><input type="checkbox" name="duplicate_post_taxonomies_blacklist[]" id="duplicate-post-custom-taxonomy" value="custom_taxonomy"  /><label for="duplicate-post-custom-taxonomy">Custom Taxonomy [custom_taxonomy]</label><br /></div><div class="taxonomy_private"><input type="checkbox" name="duplicate_post_taxonomies_blacklist[]" id="duplicate-post-custom-taxonomy-2" value="custom_taxonomy_2" checked="checked" /><label for="duplicate-post-custom-taxonomy-2">Custom Taxonomy [custom_taxonomy_2]</label><br /></div>',
+			'<div class="taxonomy_public"><input type="checkbox" name="duplicate_post_taxonomies_blacklist[]" id="duplicate-post-custom-taxonomy-public-1" value="custom_taxonomy_public_1"  /><label for="duplicate-post-custom-taxonomy-public-1">A Foo [custom_taxonomy_public_1]</label><br /></div><div class="taxonomy_public"><input type="checkbox" name="duplicate_post_taxonomies_blacklist[]" id="duplicate-post-custom-taxonomy-public-2" value="custom_taxonomy_public_2"  /><label for="duplicate-post-custom-taxonomy-public-2">a foo [custom_taxonomy_public_2]</label><br /></div><div class="taxonomy_private"><input type="checkbox" name="duplicate_post_taxonomies_blacklist[]" id="duplicate-post-custom-taxonomy-private-1" value="custom_taxonomy_private_1" checked="checked" /><label for="duplicate-post-custom-taxonomy-private-1">Bar [custom_taxonomy_private_1]</label><br /></div><div class="taxonomy_private"><input type="checkbox" name="duplicate_post_taxonomies_blacklist[]" id="duplicate-post-custom-taxonomy-private-2" value="custom_taxonomy_private_2" checked="checked" /><label for="duplicate-post-custom-taxonomy-private-2">Baz [custom_taxonomy_private_2]</label><br /></div>',
 			$this->instance->generate_taxonomy_exclusion_list()
 		);
 	}
