@@ -2,6 +2,7 @@
 
 namespace Yoast\WP\Duplicate_Post\Tests\Admin;
 
+use Brain\Monkey\Functions;
 use Mockery;
 use Yoast\WP\Duplicate_Post\Admin\Options_Inputs;
 use Yoast\WP\Duplicate_Post\Tests\TestCase;
@@ -33,13 +34,21 @@ class Options_Inputs_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Admin\Options_Inputs::checkbox
 	 */
 	public function test_checkbox() {
+		Functions\expect( 'checked' )
+			->twice()
+			->andReturnUsing(
+				static function( $checked, $current = true ) {
+					return ( (string) $checked === (string) $current ) ? " checked='checked'" : '';
+				}
+			);
+
 		$this->assertSame(
 			'<input type="checkbox" name="test_checkbox" id="test-checkbox-id" value="1"  />',
 			$this->instance->checkbox( 'test_checkbox', 1, 'test-checkbox-id', false )
 		);
 
 		$this->assertSame(
-			'<input type="checkbox" name="test_checkbox2" id="test-checkbox-id2" value="1" checked="checked" />',
+			'<input type="checkbox" name="test_checkbox2" id="test-checkbox-id2" value="1"  checked=\'checked\' />',
 			$this->instance->checkbox( 'test_checkbox2', 1, 'test-checkbox-id2', true )
 		);
 	}
