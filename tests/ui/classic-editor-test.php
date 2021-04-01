@@ -264,7 +264,6 @@ class Classic_Editor_Test extends TestCase {
 			->expects( 'build_new_draft_link' )
 			->never();
 
-		$this->setOutputCallback( static function () {} );
 		$this->instance->add_new_draft_post_button();
 		$this->assertTrue( Monkey\Filters\applied( 'duplicate_post_show_link' ) === 0 );
 	}
@@ -295,7 +294,6 @@ class Classic_Editor_Test extends TestCase {
 			->expects( 'build_new_draft_link' )
 			->never();
 
-		$this->setOutputCallback( static function () {} );
 		$this->instance->add_new_draft_post_button( $post );
 	}
 
@@ -400,7 +398,6 @@ class Classic_Editor_Test extends TestCase {
 			->expects( 'build_rewrite_and_republish_link' )
 			->never();
 
-		$this->setOutputCallback( static function () {} );
 		$this->instance->add_rewrite_and_republish_post_button();
 		$this->assertTrue( Monkey\Filters\applied( 'duplicate_post_show_link' ) === 0 );
 	}
@@ -437,7 +434,6 @@ class Classic_Editor_Test extends TestCase {
 			->expects( 'build_rewrite_and_republish_link' )
 			->never();
 
-		$this->setOutputCallback( static function () {} );
 		$this->instance->add_rewrite_and_republish_post_button( $post );
 	}
 
@@ -466,7 +462,6 @@ class Classic_Editor_Test extends TestCase {
 			->expects( 'build_rewrite_and_republish_link' )
 			->never();
 
-		$this->setOutputCallback( static function () {} );
 		$this->instance->add_rewrite_and_republish_post_button();
 		$this->assertTrue( Monkey\Filters\applied( 'duplicate_post_show_link' ) === 0 );
 	}
