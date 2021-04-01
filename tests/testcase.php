@@ -115,6 +115,8 @@ abstract class TestCase extends BaseTestCase {
 				},
 			]
 		);
+
+		Monkey\Functions\when( 'esc_html_e' )->echoArg();
 	}
 
 	/**

@@ -117,7 +117,7 @@ class Check_Changes_Handler_Test extends TestCase {
 			'		<div class="wrap">
 			<h1 class="long-header">
 			Compare changes of duplicated post with the original (&#8220;<a href="https://yoa.st/wp-admin/post.php?id=100">Unchanged Title</a>&#8221;)				</h1>
-			<a href="https://yoa.st/wp-admin/post.php?id=123"></a>
+			<a href="https://yoa.st/wp-admin/post.php?id=123">&larr; Return to editor</a>
 			<div class="revisions">
 				<div class="revisions-control-frame">
 					<div class="revisions-controls"></div>
