@@ -239,6 +239,14 @@ class Options_Form_Generator_Test extends TestCase {
 
 		$this->instance->expects( 'is_checked' )->once();
 
+		Monkey\Functions\expect( 'checked' )
+			->once()
+			->andReturnUsing(
+				static function( $checked, $current = true ) {
+					return ( (string) $checked === (string) $current ) ? " checked='checked'" : '';
+				}
+			);
+
 		$this->assertSame(
 			'<input type="checkbox" name="option_1[sub_option_1]" id="option-1-sub-option-1" value="1"  /><label for="option-1-sub-option-1">Suboption 1</label><br />',
 			$this->instance->generate_options_input( $options )
@@ -327,8 +335,16 @@ class Options_Form_Generator_Test extends TestCase {
 			->once()
 			->andReturn( [ 'custom_taxonomy_private_1', 'custom_taxonomy_private_2' ] );
 
+		Monkey\Functions\expect( 'checked' )
+			->times( 4 )
+			->andReturnUsing(
+				static function( $checked, $current = true ) {
+					return ( (string) $checked === (string) $current ) ? " checked='checked'" : '';
+				}
+			);
+
 		$this->assertSame(
-			'<div class="taxonomy_public"><input type="checkbox" name="duplicate_post_taxonomies_blacklist[]" id="duplicate-post-custom-taxonomy-public-1" value="custom_taxonomy_public_1"  /><label for="duplicate-post-custom-taxonomy-public-1">A Foo [custom_taxonomy_public_1]</label><br /></div><div class="taxonomy_public"><input type="checkbox" name="duplicate_post_taxonomies_blacklist[]" id="duplicate-post-custom-taxonomy-public-2" value="custom_taxonomy_public_2"  /><label for="duplicate-post-custom-taxonomy-public-2">a foo [custom_taxonomy_public_2]</label><br /></div><div class="taxonomy_private"><input type="checkbox" name="duplicate_post_taxonomies_blacklist[]" id="duplicate-post-custom-taxonomy-private-1" value="custom_taxonomy_private_1" checked="checked" /><label for="duplicate-post-custom-taxonomy-private-1">Bar [custom_taxonomy_private_1]</label><br /></div><div class="taxonomy_private"><input type="checkbox" name="duplicate_post_taxonomies_blacklist[]" id="duplicate-post-custom-taxonomy-private-2" value="custom_taxonomy_private_2" checked="checked" /><label for="duplicate-post-custom-taxonomy-private-2">Baz [custom_taxonomy_private_2]</label><br /></div>',
+			'<div class="taxonomy_public"><input type="checkbox" name="duplicate_post_taxonomies_blacklist[]" id="duplicate-post-custom-taxonomy-public-1" value="custom_taxonomy_public_1"  /><label for="duplicate-post-custom-taxonomy-public-1">A Foo [custom_taxonomy_public_1]</label><br /></div><div class="taxonomy_public"><input type="checkbox" name="duplicate_post_taxonomies_blacklist[]" id="duplicate-post-custom-taxonomy-public-2" value="custom_taxonomy_public_2"  /><label for="duplicate-post-custom-taxonomy-public-2">a foo [custom_taxonomy_public_2]</label><br /></div><div class="taxonomy_private"><input type="checkbox" name="duplicate_post_taxonomies_blacklist[]" id="duplicate-post-custom-taxonomy-private-1" value="custom_taxonomy_private_1"  checked=\'checked\' /><label for="duplicate-post-custom-taxonomy-private-1">Bar [custom_taxonomy_private_1]</label><br /></div><div class="taxonomy_private"><input type="checkbox" name="duplicate_post_taxonomies_blacklist[]" id="duplicate-post-custom-taxonomy-private-2" value="custom_taxonomy_private_2"  checked=\'checked\' /><label for="duplicate-post-custom-taxonomy-private-2">Baz [custom_taxonomy_private_2]</label><br /></div>',
 			$this->instance->generate_taxonomy_exclusion_list()
 		);
 	}
@@ -353,8 +369,16 @@ class Options_Form_Generator_Test extends TestCase {
 				]
 			);
 
+		Monkey\Functions\expect( 'checked' )
+			->twice()
+			->andReturnUsing(
+				static function( $checked, $current = true ) {
+					return ( (string) $checked === (string) $current ) ? " checked='checked'" : '';
+				}
+			);
+
 		$this->assertSame(
-			'<input type="checkbox" name="duplicate_post_roles[]" id="duplicate-post-editor" value="editor" checked="checked" /><label for="duplicate-post-editor">Editor</label><br /><input type="checkbox" name="duplicate_post_roles[]" id="duplicate-post-administrator" value="administrator"  /><label for="duplicate-post-administrator">Administrator</label><br />',
+			'<input type="checkbox" name="duplicate_post_roles[]" id="duplicate-post-editor" value="editor"  checked=\'checked\' /><label for="duplicate-post-editor">Editor</label><br /><input type="checkbox" name="duplicate_post_roles[]" id="duplicate-post-administrator" value="administrator"  /><label for="duplicate-post-administrator">Administrator</label><br />',
 			$this->instance->generate_roles_permission_list()
 		);
 	}
@@ -385,8 +409,16 @@ class Options_Form_Generator_Test extends TestCase {
 			->with( 'Movies' )
 			->andReturnFalse();
 
+		Monkey\Functions\expect( 'checked' )
+			->twice()
+			->andReturnUsing(
+				static function( $checked, $current = true ) {
+					return ( (string) $checked === (string) $current ) ? " checked='checked'" : '';
+				}
+			);
+
 		$this->assertSame(
-			'<input type="checkbox" name="duplicate_post_types_enabled[]" id="duplicate-post-Books" value="Books" checked="checked" /><label for="duplicate-post-Books">Custom Type</label><br /><input type="checkbox" name="duplicate_post_types_enabled[]" id="duplicate-post-Movies" value="Movies"  /><label for="duplicate-post-Movies">Custom Type</label><br />',
+			'<input type="checkbox" name="duplicate_post_types_enabled[]" id="duplicate-post-Books" value="Books"  checked=\'checked\' /><label for="duplicate-post-Books">Custom Type</label><br /><input type="checkbox" name="duplicate_post_types_enabled[]" id="duplicate-post-Movies" value="Movies"  /><label for="duplicate-post-Movies">Custom Type</label><br />',
 			$this->instance->generate_post_types_list()
 		);
 	}
