@@ -203,7 +203,10 @@ class Classic_Editor_Test extends TestCase {
 			->with( $post )
 			->andReturn( $url );
 
-		$this->setOutputCallback( static function () {} );
+		$this->expectOutputRegex(
+			'`\s*<div id="duplicate-action">\s+<a class="submitduplicate duplication"\s+href="[^"]+">Copy to a new draft\s+</a>\s+</div>`'
+		);
+
 		$this->instance->add_new_draft_post_button( $post );
 	}
 
@@ -236,7 +239,10 @@ class Classic_Editor_Test extends TestCase {
 			->with( $post )
 			->andReturn( $url );
 
-		$this->setOutputCallback( static function () {} );
+		$this->expectOutputRegex(
+			'`\s*<div id="duplicate-action">\s+<a class="submitduplicate duplication"\s+href="[^"]+">Copy to a new draft\s+</a>\s+</div>`'
+		);
+
 		$this->instance->add_new_draft_post_button();
 
 		// Clean up after the test.
@@ -264,7 +270,6 @@ class Classic_Editor_Test extends TestCase {
 			->expects( 'build_new_draft_link' )
 			->never();
 
-		$this->setOutputCallback( static function () {} );
 		$this->instance->add_new_draft_post_button();
 		$this->assertTrue( Monkey\Filters\applied( 'duplicate_post_show_link' ) === 0 );
 	}
@@ -295,7 +300,6 @@ class Classic_Editor_Test extends TestCase {
 			->expects( 'build_new_draft_link' )
 			->never();
 
-		$this->setOutputCallback( static function () {} );
 		$this->instance->add_new_draft_post_button( $post );
 	}
 
@@ -333,7 +337,10 @@ class Classic_Editor_Test extends TestCase {
 			->with( $post )
 			->andReturn( $url );
 
-		$this->setOutputCallback( static function () {} );
+		$this->expectOutputRegex(
+			'`\s*<div id="rewrite-republish-action">\s+<a class="submitduplicate duplication" href="[^"]+">Rewrite & Republish\s+</a>\s+</div>`'
+		);
+
 		$this->instance->add_rewrite_and_republish_post_button( $post );
 	}
 
@@ -372,7 +379,10 @@ class Classic_Editor_Test extends TestCase {
 			->with( $post )
 			->andReturn( $url );
 
-		$this->setOutputCallback( static function () {} );
+		$this->expectOutputRegex(
+			'`\s*<div id="rewrite-republish-action">\s+<a class="submitduplicate duplication" href="[^"]+">Rewrite & Republish\s+</a>\s+</div>`'
+		);
+
 		$this->instance->add_rewrite_and_republish_post_button();
 
 		// Clean up after the test.
@@ -400,7 +410,6 @@ class Classic_Editor_Test extends TestCase {
 			->expects( 'build_rewrite_and_republish_link' )
 			->never();
 
-		$this->setOutputCallback( static function () {} );
 		$this->instance->add_rewrite_and_republish_post_button();
 		$this->assertTrue( Monkey\Filters\applied( 'duplicate_post_show_link' ) === 0 );
 	}
@@ -437,7 +446,6 @@ class Classic_Editor_Test extends TestCase {
 			->expects( 'build_rewrite_and_republish_link' )
 			->never();
 
-		$this->setOutputCallback( static function () {} );
 		$this->instance->add_rewrite_and_republish_post_button( $post );
 	}
 
@@ -466,7 +474,6 @@ class Classic_Editor_Test extends TestCase {
 			->expects( 'build_rewrite_and_republish_link' )
 			->never();
 
-		$this->setOutputCallback( static function () {} );
 		$this->instance->add_rewrite_and_republish_post_button();
 		$this->assertTrue( Monkey\Filters\applied( 'duplicate_post_show_link' ) === 0 );
 	}
