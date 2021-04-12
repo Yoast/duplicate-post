@@ -31,8 +31,10 @@ class Options_Form_Generator_Test extends TestCase {
 	/**
 	 * Sets the instance.
 	 */
-	public function setUp() {
-		parent::setUp();
+	protected function set_up() {
+		parent::set_up();
+
+		$this->stubEscapeFunctions();
 
 		$this->options_inputs = Mockery::mock( Options_Inputs::class )->makePartial();
 		$this->instance       = Mockery::mock( Options_Form_Generator::class, [ $this->options_inputs ] )->makePartial();
@@ -76,7 +78,10 @@ class Options_Form_Generator_Test extends TestCase {
 	public function test_constructor() {
 		$this->instance->__construct( $this->options_inputs );
 
-		$this->assertAttributeInstanceOf( Options_Inputs::class, 'options_inputs', $this->instance );
+		$this->assertInstanceOf(
+			Options_Inputs::class,
+			$this->getPropertyValue( $this->instance, 'options_inputs' )
+		);
 	}
 
 	/**
@@ -357,6 +362,8 @@ class Options_Form_Generator_Test extends TestCase {
 	 * @preserveGlobalState disabled
 	 */
 	public function test_generate_roles_permission_list() {
+		$this->stub_wp_roles();
+
 		$utils = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
 		$utils
 			->expects( 'get_roles' )

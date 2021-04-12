@@ -38,8 +38,8 @@ class Post_Republisher_Test extends TestCase {
 	/**
 	 * Sets the instance.
 	 */
-	public function setUp() {
-		parent::setUp();
+	protected function set_up() {
+		parent::set_up();
 
 		$this->post_duplicator    = Mockery::mock( Post_Duplicator::class );
 		$this->permissions_helper = Mockery::mock( Permissions_Helper::class );
@@ -56,8 +56,15 @@ class Post_Republisher_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Post_Republisher::__construct
 	 */
 	public function test_constructor() {
-		$this->assertAttributeInstanceOf( Post_Duplicator::class, 'post_duplicator', $this->instance );
-		$this->assertAttributeInstanceOf( Permissions_Helper::class, 'permissions_helper', $this->instance );
+		$this->assertInstanceOf(
+			Post_Duplicator::class,
+			$this->getPropertyValue( $this->instance, 'post_duplicator' )
+		);
+
+		$this->assertInstanceOf(
+			Permissions_Helper::class,
+			$this->getPropertyValue( $this->instance, 'permissions_helper' )
+		);
 	}
 
 	/**
@@ -146,6 +153,8 @@ class Post_Republisher_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Post_Republisher::register_post_statuses
 	 */
 	public function test_register_post_statuses() {
+		$this->stubTranslationFunctions();
+
 		$options = [
 			'label'                     => 'Republish',
 			'public'                    => true,

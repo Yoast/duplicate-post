@@ -30,8 +30,8 @@ class Link_Actions_Watcher_Test extends TestCase {
 	/**
 	 * Sets the instance.
 	 */
-	public function setUp() {
-		parent::setUp();
+	protected function set_up() {
+		parent::set_up();
 
 		$this->permissions_helper = Mockery::mock( Permissions_Helper::class );
 
@@ -47,7 +47,10 @@ class Link_Actions_Watcher_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Link_Actions_Watcher::__construct
 	 */
 	public function test_constructor() {
-		$this->assertAttributeInstanceOf( Permissions_Helper::class, 'permissions_helper', $this->instance );
+		$this->assertInstanceOf(
+			Permissions_Helper::class,
+			$this->getPropertyValue( $this->instance, 'permissions_helper' )
+		);
 	}
 
 	/**
@@ -140,6 +143,9 @@ class Link_Actions_Watcher_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Link_Actions_Watcher::add_clone_admin_notice
 	 */
 	public function test_add_clone_admin_notice_classic() {
+		$this->stubEscapeFunctions();
+		$this->stubTranslationFunctions();
+
 		$_REQUEST['cloned'] = '1';
 
 		$this->permissions_helper
@@ -180,6 +186,8 @@ class Link_Actions_Watcher_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Link_Actions_Watcher::add_rewrite_and_republish_admin_notice
 	 */
 	public function test_add_rewrite_and_republish_admin_notice_classic() {
+		$this->stubTranslationFunctions();
+
 		$_REQUEST['rewriting'] = '1';
 
 		$this->permissions_helper
@@ -220,6 +228,8 @@ class Link_Actions_Watcher_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Link_Actions_Watcher::add_rewrite_and_republish_block_editor_notice
 	 */
 	public function test_add_rewrite_and_republish_block_editor_notice() {
+		$this->stubTranslationFunctions();
+
 		$_REQUEST['rewriting'] = '1';
 
 		$notice = [

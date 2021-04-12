@@ -50,8 +50,8 @@ class Admin_Bar_Test extends TestCase {
 	/**
 	 * Sets the instance.
 	 */
-	public function setUp() {
-		parent::setUp();
+	protected function set_up() {
+		parent::set_up();
 
 		$this->link_builder       = Mockery::mock( Link_Builder::class );
 		$this->permissions_helper = Mockery::mock( Permissions_Helper::class );
@@ -73,9 +73,20 @@ class Admin_Bar_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Admin_Bar::__construct
 	 */
 	public function test_constructor() {
-		$this->assertAttributeInstanceOf( Link_Builder::class, 'link_builder', $this->instance );
-		$this->assertAttributeInstanceOf( Permissions_Helper::class, 'permissions_helper', $this->instance );
-		$this->assertAttributeInstanceOf( Asset_Manager::class, 'asset_manager', $this->instance );
+		$this->assertInstanceOf(
+			Link_Builder::class,
+			$this->getPropertyValue( $this->instance, 'link_builder' )
+		);
+
+		$this->assertInstanceOf(
+			Permissions_Helper::class,
+			$this->getPropertyValue( $this->instance, 'permissions_helper' )
+		);
+
+		$this->assertInstanceOf(
+			Asset_Manager::class,
+			$this->getPropertyValue( $this->instance, 'asset_manager' )
+		);
 	}
 
 	/**
@@ -108,6 +119,8 @@ class Admin_Bar_Test extends TestCase {
 	 * @preserveGlobalState disabled
 	 */
 	public function test_admin_bar_render_successful_both() {
+		$this->stubTranslationFunctions();
+
 		global $wp_admin_bar;
 		$wp_admin_bar      = Mockery::mock( WP_Admin_Bar::class );
 		$post              = Mockery::mock( WP_Post::class );
@@ -164,6 +177,8 @@ class Admin_Bar_Test extends TestCase {
 	 * @preserveGlobalState disabled
 	 */
 	public function test_admin_bar_render_successful_one() {
+		$this->stubTranslationFunctions();
+
 		global $wp_admin_bar;
 		$wp_admin_bar      = Mockery::mock( WP_Admin_Bar::class );
 		$post              = Mockery::mock( WP_Post::class );

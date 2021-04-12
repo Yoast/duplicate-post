@@ -31,8 +31,8 @@ class Copied_Post_Watcher_Test extends TestCase {
 	/**
 	 * Sets the instance.
 	 */
-	public function setUp() {
-		parent::setUp();
+	protected function set_up() {
+		parent::set_up();
 
 		$this->permissions_helper = Mockery::mock( Permissions_Helper::class );
 
@@ -48,7 +48,10 @@ class Copied_Post_Watcher_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Copied_Post_Watcher::__construct
 	 */
 	public function test_constructor() {
-		$this->assertAttributeInstanceOf( Permissions_Helper::class, 'permissions_helper', $this->instance );
+		$this->assertInstanceOf(
+			Permissions_Helper::class,
+			$this->getPropertyValue( $this->instance, 'permissions_helper' )
+		);
 	}
 
 	/**
@@ -69,6 +72,8 @@ class Copied_Post_Watcher_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Copied_Post_Watcher::get_notice_text
 	 */
 	public function test_get_notice_text_not_scheduled() {
+		$this->stubTranslationFunctions();
+
 		$post = Mockery::mock( WP_Post::class );
 
 		$this->permissions_helper
@@ -93,6 +98,8 @@ class Copied_Post_Watcher_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Copied_Post_Watcher::get_notice_text
 	 */
 	public function test_get_notice_text_scheduled() {
+		$this->stubTranslationFunctions();
+
 		$post = Mockery::mock( WP_Post::class );
 		$copy = Mockery::mock( WP_Post::class );
 
@@ -126,6 +133,8 @@ class Copied_Post_Watcher_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Copied_Post_Watcher::get_notice_text
 	 */
 	public function test_get_notice_text_copy_in_the_trash() {
+		$this->stubTranslationFunctions();
+
 		$post = Mockery::mock( WP_Post::class );
 
 		$this->permissions_helper
@@ -149,6 +158,8 @@ class Copied_Post_Watcher_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Copied_Post_Watcher::add_admin_notice
 	 */
 	public function test_add_admin_notice_classic() {
+		$this->stubEscapeFunctions();
+
 		$post = Mockery::mock( WP_Post::class );
 
 		$this->permissions_helper

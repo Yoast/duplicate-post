@@ -30,8 +30,8 @@ class Bulk_Actions_Test extends TestCase {
 	/**
 	 * Sets the instance.
 	 */
-	public function setUp() {
-		parent::setUp();
+	protected function set_up() {
+		parent::set_up();
 
 		$this->permissions_helper = Mockery::mock( Permissions_Helper::class );
 		$this->instance           = Mockery::mock( Bulk_Actions::class, [ $this->permissions_helper ] )->makePartial();
@@ -43,7 +43,10 @@ class Bulk_Actions_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Bulk_Actions::__construct
 	 */
 	public function test_constructor() {
-		$this->assertAttributeInstanceOf( Permissions_Helper::class, 'permissions_helper', $this->instance );
+		$this->assertInstanceOf(
+			Permissions_Helper::class,
+			$this->getPropertyValue( $this->instance, 'permissions_helper' )
+		);
 	}
 
 	/**
@@ -139,6 +142,8 @@ class Bulk_Actions_Test extends TestCase {
 	 * @preserveGlobalState disabled
 	 */
 	public function test_register_bulk_action() {
+		$this->stubTranslationFunctions();
+
 		$utils = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
 
 		$utils->expects( 'get_option' )

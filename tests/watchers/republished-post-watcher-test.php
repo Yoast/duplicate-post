@@ -30,8 +30,8 @@ class Republished_Post_Watcher_Test extends TestCase {
 	/**
 	 * Sets the instance.
 	 */
-	public function setUp() {
-		parent::setUp();
+	protected function set_up() {
+		parent::set_up();
 
 		$this->permissions_helper = Mockery::mock( Permissions_Helper::class );
 
@@ -47,7 +47,10 @@ class Republished_Post_Watcher_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Republished_Post_Watcher::__construct
 	 */
 	public function test_constructor() {
-		$this->assertAttributeInstanceOf( Permissions_Helper::class, 'permissions_helper', $this->instance );
+		$this->assertInstanceOf(
+			Permissions_Helper::class,
+			$this->getPropertyValue( $this->instance, 'permissions_helper' )
+		);
 
 		$this->instance->expects( 'register_hooks' )->once();
 		$this->instance->__construct( $this->permissions_helper );
@@ -72,6 +75,8 @@ class Republished_Post_Watcher_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Republished_Post_Watcher::get_notice_text
 	 */
 	public function test_get_notice_text() {
+		$this->stubTranslationFunctions();
+
 		$this->assertSame(
 			'Your original post has been replaced with the rewritten post. You are now viewing the (rewritten) original post.',
 			$this->instance->get_notice_text()
@@ -84,6 +89,8 @@ class Republished_Post_Watcher_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Republished_Post_Watcher::add_admin_notice
 	 */
 	public function test_add_admin_notice_classic() {
+		$this->stubEscapeFunctions();
+
 		$this->permissions_helper
 			->expects( 'is_classic_editor' )
 			->andReturnTrue();

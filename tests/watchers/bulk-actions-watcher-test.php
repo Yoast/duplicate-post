@@ -21,8 +21,8 @@ class Bulk_Actions_Watcher_Test extends TestCase {
 	/**
 	 * Sets the instance.
 	 */
-	public function setUp() {
-		parent::setUp();
+	protected function set_up() {
+		parent::set_up();
 
 		$this->instance = Mockery::mock( Bulk_Actions_Watcher::class )->makePartial();
 	}
@@ -126,6 +126,9 @@ class Bulk_Actions_Watcher_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Bulk_Actions_Watcher::add_bulk_clone_admin_notice
 	 */
 	public function test_add_bulk_clone_admin_notice_1() {
+		$this->stubEscapeFunctions();
+		$this->stubTranslationFunctions();
+
 		$_REQUEST['bulk_cloned'] = '1';
 
 		$this->instance->add_bulk_clone_admin_notice();
@@ -142,6 +145,9 @@ class Bulk_Actions_Watcher_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Bulk_Actions_Watcher::add_bulk_clone_admin_notice
 	 */
 	public function test_add_bulk_clone_admin_notice_2() {
+		$this->stubEscapeFunctions();
+		$this->stubTranslationFunctions();
+
 		$_REQUEST['bulk_cloned'] = '2';
 
 		$this->instance->add_bulk_clone_admin_notice();
@@ -158,6 +164,9 @@ class Bulk_Actions_Watcher_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Bulk_Actions_Watcher::add_bulk_rewrite_and_republish_admin_notice
 	 */
 	public function test_add_bulk_rewrite_and_republish_admin_notice_1() {
+		$this->stubEscapeFunctions();
+		$this->stubTranslationFunctions();
+
 		$_REQUEST['bulk_rewriting'] = '1';
 
 		$this->instance->add_bulk_rewrite_and_republish_admin_notice();
@@ -174,6 +183,9 @@ class Bulk_Actions_Watcher_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Bulk_Actions_Watcher::add_bulk_rewrite_and_republish_admin_notice
 	 */
 	public function test_add_bulk_rewrite_and_republish_admin_notice_2() {
+		$this->stubEscapeFunctions();
+		$this->stubTranslationFunctions();
+
 		$_REQUEST['bulk_rewriting'] = '2';
 
 		$this->instance->add_bulk_rewrite_and_republish_admin_notice();

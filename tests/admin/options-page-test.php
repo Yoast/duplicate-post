@@ -46,8 +46,8 @@ class Options_Page_Test extends TestCase {
 	/**
 	 * Sets the instance.
 	 */
-	public function setUp() {
-		parent::setUp();
+	protected function set_up() {
+		parent::set_up();
 
 		$this->options        = Mockery::mock( Options::class )->makePartial();
 		$this->form_generator = Mockery::mock( Options_Form_Generator::class )->makePartial();
@@ -67,8 +67,15 @@ class Options_Page_Test extends TestCase {
 	public function test_constructor() {
 		$this->instance->__construct( $this->options, $this->form_generator, $this->asset_manager );
 
-		$this->assertAttributeInstanceOf( Options::class, 'options', $this->instance );
-		$this->assertAttributeInstanceOf( Options_Form_Generator::class, 'generator', $this->instance );
+		$this->assertInstanceOf(
+			Options::class,
+			$this->getPropertyValue( $this->instance, 'options' )
+		);
+
+		$this->assertInstanceOf(
+			Options_Form_Generator::class,
+			$this->getPropertyValue( $this->instance, 'generator' )
+		);
 	}
 
 	/**
@@ -128,6 +135,8 @@ class Options_Page_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Admin\Options_Page::register_menu
 	 */
 	public function test_register_menu() {
+		$this->stubTranslationFunctions();
+
 		Monkey\Functions\expect( '\add_options_page' )
 			->with(
 				[
@@ -156,6 +165,8 @@ class Options_Page_Test extends TestCase {
 	 * @preserveGlobalState disabled
 	 */
 	public function test_register_roles() {
+		$this->stub_wp_roles();
+
 		$utils = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
 
 		Monkey\Functions\expect( '\current_user_can' )

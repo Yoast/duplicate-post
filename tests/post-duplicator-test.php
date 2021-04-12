@@ -23,8 +23,8 @@ class Post_Duplicator_Test extends TestCase {
 	/**
 	 * Sets the instance.
 	 */
-	public function setUp() {
-		parent::setUp();
+	protected function set_up() {
+		parent::set_up();
 
 		$this->instance = new Post_Duplicator();
 	}
@@ -76,11 +76,6 @@ class Post_Duplicator_Test extends TestCase {
 	public function test_generate_copy_title( $original, $expected ) {
 		$post             = Mockery::mock( WP_Post::class );
 		$post->post_title = 'Title';
-
-		Monkey\Functions\expect( '\sanitize_text_field' )
-			->withAnyArgs()
-			->twice()
-			->andReturnFirstArg();
 
 		$this->assertSame( $expected, $this->instance->generate_copy_title( $post, $original ) );
 	}

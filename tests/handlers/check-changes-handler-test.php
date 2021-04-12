@@ -31,8 +31,11 @@ class Check_Changes_Handler_Test extends TestCase {
 	/**
 	 * Sets the instance.
 	 */
-	public function setUp() {
-		parent::setUp();
+	protected function set_up() {
+		parent::set_up();
+
+		$this->stubEscapeFunctions();
+		$this->stubTranslationFunctions();
 
 		$this->permissions_helper = Mockery::mock( Permissions_Helper::class );
 
@@ -45,7 +48,10 @@ class Check_Changes_Handler_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Handlers\Check_Changes_Handler::__construct
 	 */
 	public function test_constructor() {
-		$this->assertAttributeInstanceOf( Permissions_Helper::class, 'permissions_helper', $this->instance );
+		$this->assertInstanceOf(
+			Permissions_Helper::class,
+			$this->getPropertyValue( $this->instance, 'permissions_helper' )
+		);
 	}
 
 	/**

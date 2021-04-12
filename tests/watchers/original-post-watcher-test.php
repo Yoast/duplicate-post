@@ -31,8 +31,8 @@ class Original_Post_Watcher_Test extends TestCase {
 	/**
 	 * Sets the instance.
 	 */
-	public function setUp() {
-		parent::setUp();
+	protected function set_up() {
+		parent::set_up();
 
 		$this->permissions_helper = Mockery::mock( Permissions_Helper::class );
 
@@ -48,7 +48,10 @@ class Original_Post_Watcher_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Original_Post_Watcher::__construct
 	 */
 	public function test_constructor() {
-		$this->assertAttributeInstanceOf( Permissions_Helper::class, 'permissions_helper', $this->instance );
+		$this->assertInstanceOf(
+			Permissions_Helper::class,
+			$this->getPropertyValue( $this->instance, 'permissions_helper' )
+		);
 	}
 
 	/**
@@ -69,6 +72,8 @@ class Original_Post_Watcher_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Original_Post_Watcher::get_notice_text
 	 */
 	public function test_get_notice_text() {
+		$this->stubTranslationFunctions();
+
 		$this->assertSame(
 			'The original post has been edited in the meantime. If you click "Republish", this rewritten post will replace the original post.',
 			$this->instance->get_notice_text()
@@ -81,6 +86,8 @@ class Original_Post_Watcher_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Original_Post_Watcher::add_admin_notice
 	 */
 	public function test_add_admin_notice_classic() {
+		$this->stubEscapeFunctions();
+
 		$post = Mockery::mock( WP_Post::class );
 
 		$this->permissions_helper

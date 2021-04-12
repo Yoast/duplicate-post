@@ -34,9 +34,9 @@ jobs:
     - php: '7.4'
       env: SNIFF=1 PHPUNIT=1
     - php: '8.0'
-      env: LINT=1
+      env: LINT=1 PHPUNIT=1
     - php: "nightly"
-      env: LINT=1
+      env: LINT=1 PHPUNIT=1
 
   allow_failures:
     - php: "nightly"

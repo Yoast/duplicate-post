@@ -31,8 +31,8 @@ class Post_States_Test extends TestCase {
 	/**
 	 * Sets the instance.
 	 */
-	public function setUp() {
-		parent::setUp();
+	protected function set_up() {
+		parent::set_up();
 
 		$this->permissions_helper = Mockery::mock( Permissions_Helper::class );
 
@@ -45,7 +45,10 @@ class Post_States_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Post_States::__construct
 	 */
 	public function test_constructor() {
-		$this->assertAttributeInstanceOf( Permissions_Helper::class, 'permissions_helper', $this->instance );
+		$this->assertInstanceOf(
+			Permissions_Helper::class,
+			$this->getPropertyValue( $this->instance, 'permissions_helper' )
+		);
 	}
 
 	/**
@@ -67,6 +70,8 @@ class Post_States_Test extends TestCase {
 	 * @preserveGlobalState disabled
 	 */
 	public function test_show_original_in_post_states_successful() {
+		$this->stubTranslationFunctions();
+
 		$utils       = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
 		$post        = Mockery::mock( WP_Post::class );
 		$original    = Mockery::mock( WP_Post::class );
@@ -145,6 +150,8 @@ class Post_States_Test extends TestCase {
 	 * @preserveGlobalState disabled
 	 */
 	public function test_show_original_in_rewrite_republish_post_successful() {
+		$this->stubTranslationFunctions();
+
 		$utils       = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
 		$post        = Mockery::mock( WP_Post::class );
 		$original    = Mockery::mock( WP_Post::class );

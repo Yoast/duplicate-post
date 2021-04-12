@@ -47,8 +47,8 @@ class Block_Editor_Test extends TestCase {
 	/**
 	 * Sets the instance.
 	 */
-	public function setUp() {
-		parent::setUp();
+	protected function set_up() {
+		parent::set_up();
 
 		$this->link_builder       = Mockery::mock( Link_Builder::class );
 		$this->permissions_helper = Mockery::mock( Permissions_Helper::class );
@@ -70,8 +70,15 @@ class Block_Editor_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Block_Editor::__construct
 	 */
 	public function test_constructor() {
-		$this->assertAttributeInstanceOf( Link_Builder::class, 'link_builder', $this->instance );
-		$this->assertAttributeInstanceOf( Permissions_Helper::class, 'permissions_helper', $this->instance );
+		$this->assertInstanceOf(
+			Link_Builder::class,
+			$this->getPropertyValue( $this->instance, 'link_builder' )
+		);
+
+		$this->assertInstanceOf(
+			Permissions_Helper::class,
+			$this->getPropertyValue( $this->instance, 'permissions_helper' )
+		);
 	}
 
 	/**
