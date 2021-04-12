@@ -7,12 +7,11 @@ use Mockery;
 use WP_Post;
 use WP_User;
 use Yoast\WP\Duplicate_Post\Post_Duplicator;
-use Yoast\WPTestUtils\BrainMonkey\TestCase as BMTestCase;
 
 /**
  * Test the Post_Duplicator class.
  */
-class Post_Duplicator_Test extends BMTestCase {
+class Post_Duplicator_Test extends TestCase {
 
 	/**
 	 * The instance.
@@ -77,11 +76,6 @@ class Post_Duplicator_Test extends BMTestCase {
 	public function test_generate_copy_title( $original, $expected ) {
 		$post             = Mockery::mock( WP_Post::class );
 		$post->post_title = 'Title';
-
-		Monkey\Functions\expect( '\sanitize_text_field' )
-			->withAnyArgs()
-			->twice()
-			->andReturnFirstArg();
 
 		$this->assertSame( $expected, $this->instance->generate_copy_title( $post, $original ) );
 	}
