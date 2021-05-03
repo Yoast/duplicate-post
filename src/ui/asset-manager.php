@@ -99,11 +99,11 @@ class Asset_Manager {
 	/**
 	 * Enqueues the script for the Block editor and passes object via localization.
 	 *
-	 * @param array $object The object to pass to the script.
+	 * @param array $data_object The object to pass to the script.
 	 *
 	 * @return void
 	 */
-	public function enqueue_edit_script( $object = [] ) {
+	public function enqueue_edit_script( $data_object = [] ) {
 		$handle = 'duplicate_post_edit_script';
 		\wp_enqueue_script( $handle );
 		\wp_add_inline_script(
@@ -114,24 +114,24 @@ class Asset_Manager {
 		\wp_localize_script(
 			$handle,
 			'duplicatePost',
-			$object
+			$data_object
 		);
 	}
 
 	/**
 	 * Enqueues the script for the Javascript strings and passes object via localization.
 	 *
-	 * @param array $object The object to pass to the script.
+	 * @param array $data_object The object to pass to the script.
 	 *
 	 * @return void
 	 */
-	public function enqueue_strings_script( $object = [] ) {
+	public function enqueue_strings_script( $data_object = [] ) {
 		$handle = 'duplicate_post_strings';
 		\wp_enqueue_script( $handle );
 		\wp_localize_script(
 			$handle,
 			'duplicatePostStrings',
-			$object
+			$data_object
 		);
 	}
 
@@ -156,11 +156,11 @@ class Asset_Manager {
 	/**
 	 * Enqueues the script for the Elementor plugin.
 	 *
-	 * @param array $object The object to pass to the script.
+	 * @param array $data_object The object to pass to the script.
 	 *
 	 * @return void
 	 */
-	public function enqueue_elementor_script( $object = [] ) {
+	public function enqueue_elementor_script( $data_object = [] ) {
 		$flattened_version = Utils::flatten_version( \DUPLICATE_POST_CURRENT_VERSION );
 		$handle            = 'duplicate_post_elementor_script';
 
@@ -175,7 +175,7 @@ class Asset_Manager {
 		\wp_localize_script(
 			$handle,
 			'duplicatePost',
-			$object
+			$data_object
 		);
 	}
 }

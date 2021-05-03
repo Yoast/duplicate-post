@@ -129,8 +129,8 @@ class Link_Builder_Test extends TestCase {
 
 		Monkey\Functions\expect( '\admin_url' )
 			->andReturnUsing(
-				static function ( $string ) {
-					return 'http://basic.wordpress.test/wp-admin/' . $string;
+				static function ( $query_string ) {
+					return 'http://basic.wordpress.test/wp-admin/' . $query_string;
 				}
 			);
 
@@ -160,8 +160,8 @@ class Link_Builder_Test extends TestCase {
 
 		Monkey\Functions\expect( '\admin_url' )
 			->andReturnUsing(
-				static function ( $string ) {
-					return 'http://basic.wordpress.test/wp-admin/' . $string;
+				static function ( $query_string ) {
+					return 'http://basic.wordpress.test/wp-admin/' . $query_string;
 				}
 			);
 

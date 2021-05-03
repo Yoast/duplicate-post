@@ -312,7 +312,7 @@ class Classic_Editor {
 	/**
 	 * Removes the sample permalink slug editor in the Classic Editor when the post is a Rewrite & Republish copy.
 	 *
-	 * @param string  $return    Sample permalink HTML markup.
+	 * @param string  $html      Sample permalink HTML markup.
 	 * @param int     $post_id   Post ID.
 	 * @param string  $new_title New sample permalink title.
 	 * @param string  $new_slug  New sample permalink slug.
@@ -320,15 +320,15 @@ class Classic_Editor {
 	 *
 	 * @return string The filtered HTML of the sample permalink slug editor.
 	 */
-	public function remove_sample_permalink_slug_editor( $return, $post_id, $new_title, $new_slug, $post ) {
+	public function remove_sample_permalink_slug_editor( $html, $post_id, $new_title, $new_slug, $post ) {
 		if ( ! $post instanceof WP_Post ) {
-			return $return;
+			return $html;
 		}
 
 		if ( $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
 			return '';
 		}
 
-		return $return;
+		return $html;
 	}
 }
