@@ -158,13 +158,13 @@ class Options_Page_Test extends TestCase {
 	}
 
 	/**
-	 * Tests the registering of the roles.
+	 * Tests the registering of the capabilities.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Admin\Options_Page::register_capabilities
 	 * @runInSeparateProcess
 	 * @preserveGlobalState disabled
 	 */
-	public function test_register_roles() {
+	public function test_register_capabilities() {
 		$this->stub_wp_roles();
 
 		$utils = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
