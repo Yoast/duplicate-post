@@ -144,7 +144,7 @@ class Options_Page_Test extends TestCase {
 					\__( 'Duplicate Post', 'duplicate-post' ),
 					'manage_options',
 					'duplicatepost',
-					[ $this, 'generate_page' ],
+					[ $this->instance, 'generate_page' ],
 				]
 			)
 			->once()
