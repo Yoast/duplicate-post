@@ -720,8 +720,8 @@ class Block_Editor_Test extends TestCase {
 
 		Monkey\Functions\expect( '\admin_url' )
 			->andReturnUsing(
-				static function ( $string ) {
-					return 'http://basic.wordpress.test/wp-admin/' . $string;
+				static function ( $query_string ) {
+					return 'http://basic.wordpress.test/wp-admin/' . $query_string;
 				}
 			);
 
@@ -731,12 +731,12 @@ class Block_Editor_Test extends TestCase {
 
 		Monkey\Functions\expect( '\add_query_arg' )
 			->andReturnUsing(
-				static function ( $array, $string ) {
-					foreach ( $array as $key => $value ) {
-						$string .= '&' . $key . '=' . $value;
+				static function ( $arguments, $query_string ) {
+					foreach ( $arguments as $key => $value ) {
+						$query_string .= '&' . $key . '=' . $value;
 					}
 
-					return $string;
+					return $query_string;
 				}
 			);
 
