@@ -10,6 +10,7 @@ branches:
     - /^feature\/*/
     # Also build tags like 1.1.1 or 1.1 for deployment.
     - /^\d+\.\d+(\.\d+)?(-\S*)?$/
+    # for testing deploy
     - push-to-dist
 
 cache:
@@ -52,7 +53,7 @@ jobs:
             grunt update-version
           fi
         - grunt artifact
-      if: ( tag IS present OR branch =~ /^feature\// OR branch =~ /^release\// OR branch =~ /^hotfix\// OR branch = trunk ) AND type != pull_request
+      if: ( tag IS present OR branch =~ /^feature\// OR branch =~ /^release\// OR branch =~ /^hotfix\// OR branch = trunk OR branch = push-to-dist ) AND type != pull_request
       before_install:
         - nvm install lts/*
         - curl -o- -L https://yarnpkg.com/install.sh | bash
