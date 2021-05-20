@@ -1,13 +1,13 @@
 {
     "name": "yoast/duplicate-post",
     "description": "The go-to tool for cloning posts and pages, including the powerful Rewrite & Republish feature.",
-    "homepage": "https://wordpress.org/plugins/duplicate-post/",
     "keywords": [
         "wordpress",
         "post",
         "copy",
         "clone"
     ],
+    "homepage": "https://wordpress.org/plugins/duplicate-post/",
     "license": "GPL-2.0-or-later",
     "authors": [
         {
