@@ -1,17 +1,17 @@
 {
     "name": "yoast/duplicate-post",
-    "description": "This plugin allows users to clone posts of any type, or copy them to new drafts for further editing.",
+    "description": "The go-to tool for cloning posts and pages, including the powerful Rewrite & Republish feature.",
     "keywords": [
-        "wordpress",
-        "post",
-        "copy",
-        "clone"
+      "wordpress",
+      "post",
+      "copy",
+      "clone"
     ],
-    "homepage": "https://yoast.com",
+    "homepage": "https://wordpress.org/plugins/duplicate-post/",
     "license": "GPL-2.0-or-later",
     "authors": [
         {
-            "name": "Team Yoast",
+            "name": "Enrico Battocchi & Team Yoast",
             "email": "support@yoast.com",
             "homepage": "https://yoast.com"
         }
