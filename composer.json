@@ -19,7 +19,7 @@
     "type": "wordpress-plugin",
     "support": {
         "issues": "https://github.com/Yoast/duplicate-post/issues",
-        "forum": "https://wordpress.org/plugins/duplicate-post/",
+        "forum": "https://wordpress.org/support/plugin/duplicate-post",
         "source": "https://github.com/Yoast/duplicate-post"
     },
     "require": {
