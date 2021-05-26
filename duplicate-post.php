@@ -51,7 +51,9 @@ $duplicate_post_autoload_file = DUPLICATE_POST_PATH . 'vendor/autoload.php';
 
 if ( is_readable( $duplicate_post_autoload_file ) ) {
 	require $duplicate_post_autoload_file;
+}
 
+if ( class_exists( Duplicate_Post::class ) ) {
 	// Initialize the main autoloaded class.
 	add_action( 'plugins_loaded', '__duplicate_post_main' );
 }
