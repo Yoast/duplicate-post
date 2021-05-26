@@ -48,7 +48,9 @@ $duplicate_post_autoload_file = __DIR__ . '/vendor/autoload.php';
 
 if ( is_readable( $duplicate_post_autoload_file ) ) {
 	require $duplicate_post_autoload_file;
+}
 
+if ( class_exists( Duplicate_Post::class ) ) {
 	// Initialize the main autoloaded class.
 	add_action( 'plugins_loaded', '__duplicate_post_main' );
 }
