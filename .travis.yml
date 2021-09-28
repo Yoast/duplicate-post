@@ -36,8 +36,6 @@ jobs:
       env: SNIFF=1 PHPUNIT=1
     - php: '8.0'
       env: LINT=1 PHPUNIT=1
-    - php: "nightly"
-      env: LINT=1 PHPUNIT=1
     - stage: 🚀 deployment
       name: "Deploy to Yoast-dist"
       php: 7.2
@@ -70,9 +68,6 @@ jobs:
         on:
           repo: $TRAVIS_REPO_SLUG
           all_branches: true
-
-  allow_failures:
-    - php: "nightly"
 
 before_install:
   - if [[ "$COVERAGE" != "1" ]]; then phpenv config-rm xdebug.ini || echo 'No xdebug config.'; fi
