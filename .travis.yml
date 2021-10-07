@@ -14,7 +14,6 @@ branches:
 
 cache:
   directories:
-    - .cache
     - $HOME/.composer/cache
 
 php:
@@ -29,11 +28,10 @@ env:
 jobs:
   fast_finish: true
   include:
-    # Arbitrary PHP version to run the sniffs against.
     - php: '5.6'
       env: LINT=1 PHPUNIT=1
     - php: '7.4'
-      env: SNIFF=1 PHPUNIT=1
+      env: PHPUNIT=1
     - php: '8.0'
       env: LINT=1 PHPUNIT=1
     - stage: 🚀 deployment
@@ -80,7 +78,6 @@ before_script:
 
 script:
   - if [[ "$LINT" == "1" ]]; then composer lint; fi
-  - if [[ "$SNIFF" == "1" ]]; then composer check-cs; fi
   # PHP Unit Tests
   - |
     if [[ "$PHPUNIT" == "1" ]]; then
@@ -88,6 +85,3 @@ script:
       composer test
       travis_time_finish && travis_fold end "PHP.tests"
     fi
-  # Validate the composer.json file.
-  # @link https://getcomposer.org/doc/03-cli.md#validate
-  - if [[ $TRAVIS_PHP_VERSION == "5.6" ]]; then composer validate --no-check-all; fi
