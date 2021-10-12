@@ -12,28 +12,9 @@ branches:
     # Also build tags like 1.1.1 or 1.1 for deployment.
     - /^\d+\.\d+(\.\d+)?(-\S*)?$/
 
-cache:
-  directories:
-    - $HOME/.composer/cache
-
-php:
-    - '7.0'
-    - '7.1'
-    - '7.2'
-    - '7.3'
-
-env:
-  - PHPUNIT=1
-
 jobs:
   fast_finish: true
   include:
-    - php: '5.6'
-      env: PHPUNIT=1
-    - php: '7.4'
-      env: PHPUNIT=1
-    - php: '8.0'
-      env: PHPUNIT=1
     - stage: 🚀 deployment
       name: "Deploy to Yoast-dist"
       php: 7.2
@@ -66,21 +47,3 @@ jobs:
         on:
           repo: $TRAVIS_REPO_SLUG
           all_branches: true
-
-before_install:
-  - if [[ "$COVERAGE" != "1" ]]; then phpenv config-rm xdebug.ini || echo 'No xdebug config.'; fi
-  - travis_retry composer install
-
-before_script:
-- export -f travis_fold
-- export -f travis_time_start
-- export -f travis_time_finish
-
-script:
-  # PHP Unit Tests
-  - |
-    if [[ "$PHPUNIT" == "1" ]]; then
-      travis_fold start "PHP.tests" && travis_time_start
-      composer test
-      travis_time_finish && travis_fold end "PHP.tests"
-    fi
