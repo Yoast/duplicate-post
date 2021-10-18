@@ -213,7 +213,7 @@ function duplicate_post_show_update_notice() {
 	$current_screen = get_current_screen();
 	if ( empty( $current_screen )
 		|| empty( $current_screen->base )
-		|| ( $current_screen->base !== 'dashboard' && $current_screen->base !== 'plugins' )
+		||  ( ! in_array( $current_screen->base, array( 'dashboard', 'dashboard-network', 'plugins', 'plugins-network' ) ) )
 	) {
 		return;
 	}
