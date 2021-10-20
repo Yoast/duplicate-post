@@ -10,6 +10,8 @@ if ( ! is_admin() ) {
 	return;
 }
 
+use Yoast\WP\Duplicate_Post\UI\Newsletter;
+
 require_once DUPLICATE_POST_PATH . 'options.php';
 
 require_once DUPLICATE_POST_PATH . 'compat/wpml-functions.php';
@@ -247,7 +249,7 @@ function duplicate_post_show_update_notice() {
 	];
 
 	$sanitized_message = wp_kses( $message, $allowed_tags );
-	$sanitized_message = str_replace( '%%SIGNUP_FORM%%', duplicate_post_newsletter_signup_form(), $sanitized_message );
+	$sanitized_message = str_replace( '%%SIGNUP_FORM%%', Newsletter::newsletter_signup_form(), $sanitized_message );
 
 	$img_path = plugins_url( '/duplicate_post_yoast_icon-125x125.png', __FILE__ );
 
@@ -777,46 +779,4 @@ function duplicate_post_add_plugin_links( $links, $file ) {
 		$links[] = '<a href="https://yoast.com/wordpress/plugins/duplicate-post">' . esc_html__( 'Documentation', 'duplicate-post' ) . '</a>';
 	}
 	return $links;
-}
-
-/**
- * Renders the newsletter signup form.
- *
- * @return string The HTML of the newsletter signup form (escaped).
- */
-function duplicate_post_newsletter_signup_form() {
-	$copy = sprintf(
-		/* translators: 1: Yoast */
-		esc_html__(
-			'If you want to stay up to date about all the exciting developments around Duplicate Post, subscribe to the %1$s newsletter!',
-			'duplicate-post'
-		),
-		'Yoast'
-	);
-
-	$email_label = esc_html__( 'Email Address', 'duplicate-post' );
-
-	$html = '
-<!-- Begin Mailchimp Signup Form -->
-<div id="mc_embed_signup">
-<form action="https://yoast.us1.list-manage.com/subscribe/post?u=ffa93edfe21752c921f860358&amp;id=972f1c9122" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
-	<div id="mc_embed_signup_scroll">
-	' . $copy . '
-<div class="mc-field-group" style="margin-top: 8px;">
-	<label for="mce-EMAIL">' . $email_label . '</label>
-	<input type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
-	<input type="submit" value="' . esc_attr__( 'Subscribe', 'duplicate-post' ) . '" name="subscribe" id="mc-embedded-subscribe" class="button">
-</div>
-	<div id="mce-responses" class="clear">
-		<div class="response" id="mce-error-response" style="display:none"></div>
-		<div class="response" id="mce-success-response" style="display:none"></div>
-	</div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
-	<div class="screen-reader-text" aria-hidden="true"><input type="text" name="b_ffa93edfe21752c921f860358_972f1c9122" tabindex="-1" value=""></div>
-	</div>
-</form>
-</div>
-<!--End mc_embed_signup-->
-';
-
-	return $html;
 }
