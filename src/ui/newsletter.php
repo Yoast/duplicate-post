@@ -2,10 +2,16 @@
 
 namespace Yoast\WP\Duplicate_Post\UI;
 
+/**
+ * Newsletter class.
+ */
 class Newsletter {
-	public function register_hooks()
-	{
-		add_action('admin_init', [$this, 'newsletter_signup_form']);
+
+	/**
+	 * Register hooks.
+	 */
+	public function register_hooks() {
+		add_action( 'admin_init', [ $this, 'newsletter_signup_form' ] );
 	}
 
 	/**
@@ -30,8 +36,8 @@ class Newsletter {
 		$email_label = esc_html__( 'Email Address', 'duplicate-post' );
 
 		$response_html = '';
-		if(is_array($newsletter_form_response)) {
-			$response_status = $newsletter_form_response['status'];
+		if ( is_array( $newsletter_form_response ) ) {
+			$response_status  = $newsletter_form_response['status'];
 			$response_message = $newsletter_form_response['message'];
 
 			$response_html = '<div class="newsletter-response-' . $response_status . ' clear" id="newsletter-response" style="margin-top: 6px;">' . $response_message . '</div>';
@@ -40,6 +46,7 @@ class Newsletter {
 		$html = '
 		<!-- Begin Newsletter Signup Form -->
 		<form method="post" id="newsletter-subscribe-form" name="newsletter-subscribe-form" novalidate>
+		' . wp_nonce_field( 'newsletter', 'newsletter_nonce' ) . '
 		<p>' . $copy . '</p>
 		<div class="newsletter-field-group" style="display: flex; align-items: center;">
 			<label for="newsletter-email" style="margin-right: 4px;"><strong>' . $email_label . '</strong></label>
@@ -57,31 +64,44 @@ class Newsletter {
 	/**
 	 * Handles and validates Newsletter form.
 	 *
-	 * @return null|array
+	 * @return null|array.
 	 */
 	private static function newsletter_handle_form() {
-		if (! isset($_POST['EMAIL']) || $_POST['EMAIL'] === '') {
-			return null;
-		}
 
-		if (! is_email($_POST['EMAIL'])) {
+		if ( ! isset( $_POST['newsletter_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['newsletter_nonce'] ) ), 'newsletter' ) ) {
 			return [
-				'status'	=> 'error',
-				'message'	=> esc_html__('Please enter valid e-mail address.', 'duplicate-post'),
+				'status'    => 'error',
+				'message'   => esc_html__( 'Something went wrong. Please try again later.', 'duplicate-post' ),
 			];
 		}
 
-		return self::newsletter_subscribe_to_mailblue($_POST['EMAIL']);
+		$email = '';
+		if ( isset( $_POST['EMAIL'] ) ) {
+			$email = sanitize_email( wp_unslash( $_POST['EMAIL'] ) );
+		}
+
+		if ( $email === '' ) {
+			return null;
+		}
+
+		if ( ! is_email( $email ) ) {
+			return [
+				'status'    => 'error',
+				'message'   => esc_html__( 'Please enter valid e-mail address.', 'duplicate-post' ),
+			];
+		}
+
+		return self::newsletter_subscribe_to_mailblue( $email );
 	}
 
 	/**
 	 * Handles subscription request and provides feedback response.
 	 *
-	 * @param $email Subscriber email.
+	 * @param string $email Subscriber email.
 	 *
 	 * @return array Feedback response.
 	 */
-	private static function newsletter_subscribe_to_mailblue($email) {
+	private static function newsletter_subscribe_to_mailblue( $email ) {
 		$response = wp_remote_post(
 			'https://my.yoast.com/api/Mailing-list/subscribe',
 			[
@@ -90,23 +110,23 @@ class Newsletter {
 					'customerDetails' => [
 						'email' => $email,
 					],
-					'list'			 => 'Yoast newsletter',
+					'list'            => 'Yoast newsletter',
 				],
 			]
 		);
 
-		$wp_remote_retrieve_response_code = wp_remote_retrieve_response_code($response);
+		$wp_remote_retrieve_response_code = wp_remote_retrieve_response_code( $response );
 
-		if($wp_remote_retrieve_response_code < 201 || $wp_remote_retrieve_response_code >= 300) {
+		if ( $wp_remote_retrieve_response_code < 201 || $wp_remote_retrieve_response_code >= 300 ) {
 			return [
-				'status'	=> 'error',
-				'message'	=> esc_html__('Something went wrong. Please try again later.', 'duplicate-post'),
+				'status'    => 'error',
+				'message'   => esc_html__( 'Something went wrong. Please try again later.', 'duplicate-post' ),
 			];
 		}
 
 		return [
-			'status'	=> 'success',
-			'message'	=> esc_html__('You have successfully subscribed to the newsletter. Please check your inbox.', 'duplicate-post'),
+			'status'    => 'success',
+			'message'   => esc_html__( 'You have successfully subscribed to the newsletter. Please check your inbox.', 'duplicate-post' ),
 		];
 	}
 }
