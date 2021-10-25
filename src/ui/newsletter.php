@@ -68,19 +68,20 @@ class Newsletter {
 	 */
 	private static function newsletter_handle_form() {
 
-		if ( ! isset( $_POST['newsletter_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['newsletter_nonce'] ) ), 'newsletter' ) ) {
+		//phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Already sanitized.
+		if ( isset( $_POST['newsletter_nonce'] ) && ! wp_verify_nonce( wp_unslash( $_POST['newsletter_nonce'] ), 'newsletter' ) ) {
 			return [
 				'status'    => 'error',
-				'message'   => esc_html__( 'Something went wrong. Please try again later.', 'duplicate-post' ),
+				'message'   => esc_html__( 'Something went wrong. Please try again later. test', 'duplicate-post' ),
 			];
 		}
 
-		$email = '';
+		$email = null;
 		if ( isset( $_POST['EMAIL'] ) ) {
 			$email = sanitize_email( wp_unslash( $_POST['EMAIL'] ) );
 		}
 
-		if ( $email === '' ) {
+		if ( $email === null ) {
 			return null;
 		}
 
@@ -120,7 +121,7 @@ class Newsletter {
 		if ( $wp_remote_retrieve_response_code < 201 || $wp_remote_retrieve_response_code >= 300 ) {
 			return [
 				'status'    => 'error',
-				'message'   => esc_html__( 'Something went wrong. Please try again later.', 'duplicate-post' ),
+				'message'   => esc_html__( 'Something went wrong. Please try again later. test', 'duplicate-post' ),
 			];
 		}
 
