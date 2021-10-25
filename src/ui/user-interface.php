@@ -109,7 +109,7 @@ class User_Interface {
 		$this->bulk_actions   = new Bulk_Actions( $this->permissions_helper );
 		$this->column         = new Column( $this->permissions_helper, $this->asset_manager );
 		$this->metabox        = new Metabox( $this->permissions_helper );
-		$this->newsletter	  = new Newsletter();
+		$this->newsletter     = new Newsletter();
 		$this->post_states    = new Post_States( $this->permissions_helper );
 		$this->classic_editor = new Classic_Editor( $this->link_builder, $this->permissions_helper, $this->asset_manager );
 		$this->row_actions    = new Row_Actions( $this->link_builder, $this->permissions_helper );
