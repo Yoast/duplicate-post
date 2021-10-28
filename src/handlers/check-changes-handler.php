@@ -123,9 +123,9 @@ class Check_Changes_Handler {
 						<div class="diff">
 						<?php
 						$fields = [
-							\__( 'Title', 'duplicate-post' )   => 'post_title',
-							\__( 'Content', 'duplicate-post' ) => 'post_content',
-							\__( 'Excerpt', 'duplicate-post' ) => 'post_excerpt',
+							'post_title'   => \__( 'Title', 'duplicate-post' ),
+							'post_content' => \__( 'Content', 'duplicate-post' ),
+							'post_excerpt' => \__( 'Excerpt', 'duplicate-post' ),
 						];
 
 						$args = [
