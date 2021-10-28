@@ -293,9 +293,13 @@ class Post_Duplicator {
 
 		foreach ( $meta_keys as $meta_key ) {
 			$meta_values = \get_post_custom_values( $meta_key, $post->ID );
+
+			// Clear existing meta data so that add_post_meta() works properly with non-unique keys.
+			\delete_post_meta( $new_id, $meta_key );
+
 			foreach ( $meta_values as $meta_value ) {
 				$meta_value = \maybe_unserialize( $meta_value );
-				\update_post_meta( $new_id, $meta_key, Utils::recursively_slash_strings( $meta_value ) );
+				\add_post_meta( $new_id, $meta_key, Utils::recursively_slash_strings( $meta_value ) );
 			}
 		}
 	}
