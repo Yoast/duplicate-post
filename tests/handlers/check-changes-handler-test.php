@@ -88,6 +88,7 @@ class Check_Changes_Handler_Test extends TestCase {
 		$original->post_excerpt = 'Original excerpt';
 		$post_link              = 'https://yoa.st/wp-admin/post.php?id=123';
 		$original_link          = '<a href="https://yoa.st/wp-admin/post.php?id=100">Unchanged Title</a>';
+		$GLOBALS['wp_version']  = '5.6';
 
 		Monkey\Functions\expect( '\check_admin_referer' )
 			->with( 'duplicate_post_check_changes_123' );
@@ -145,7 +146,7 @@ class Check_Changes_Handler_Test extends TestCase {
 		$this->instance->check_changes_action_handler();
 
 		// Clean up after the test.
-		unset( $_GET['post'], $_REQUEST['action'] );
+		unset( $_GET['post'], $_REQUEST['action'], $GLOBALS['wp_version'] );
 	}
 
 	/**
