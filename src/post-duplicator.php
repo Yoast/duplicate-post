@@ -346,10 +346,8 @@ class Post_Duplicator {
 						$new_post_status = 'pending';
 					}
 				}
-				else {
-					if ( ! \current_user_can( 'publish_posts' ) ) {
-						$new_post_status = 'pending';
-					}
+				elseif ( ! \current_user_can( 'publish_posts' ) ) {
+					$new_post_status = 'pending';
 				}
 			}
 		}
@@ -375,10 +373,8 @@ class Post_Duplicator {
 					$new_post_author_id = $post->post_author;
 				}
 			}
-			else {
-				if ( \current_user_can( 'edit_others_posts' ) ) {
-					$new_post_author_id = $post->post_author;
-				}
+			elseif ( \current_user_can( 'edit_others_posts' ) ) {
+				$new_post_author_id = $post->post_author;
 			}
 		}
 

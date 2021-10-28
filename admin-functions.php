@@ -658,19 +658,15 @@ function duplicate_post_create_duplicate( $post, $status = '', $parent_id = '' )
 		if ( intval( get_option( 'duplicate_post_copystatus' ) ) === 0 ) {
 			$new_post_status = 'draft';
 		}
-		else {
-			if ( $new_post_status === 'publish' || $new_post_status === 'future' ) {
-				// Check if the user has the right capability.
-				if ( is_post_type_hierarchical( $post->post_type ) ) {
-					if ( ! current_user_can( 'publish_pages' ) ) {
-						$new_post_status = 'pending';
-					}
+		elseif ( $new_post_status === 'publish' || $new_post_status === 'future' ) {
+			// Check if the user has the right capability.
+			if ( is_post_type_hierarchical( $post->post_type ) ) {
+				if ( ! current_user_can( 'publish_pages' ) ) {
+					$new_post_status = 'pending';
 				}
-				else {
-					if ( ! current_user_can( 'publish_posts' ) ) {
-						$new_post_status = 'pending';
-					}
-				}
+			}
+			elseif ( ! current_user_can( 'publish_posts' ) ) {
+				$new_post_status = 'pending';
 			}
 		}
 	}
@@ -684,10 +680,8 @@ function duplicate_post_create_duplicate( $post, $status = '', $parent_id = '' )
 				$new_post_author_id = $post->post_author;
 			}
 		}
-		else {
-			if ( current_user_can( 'edit_others_posts' ) ) {
-				$new_post_author_id = $post->post_author;
-			}
+		elseif ( current_user_can( 'edit_others_posts' ) ) {
+			$new_post_author_id = $post->post_author;
 		}
 	}
 
