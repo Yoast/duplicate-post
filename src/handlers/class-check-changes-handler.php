@@ -98,7 +98,7 @@ class Check_Changes_Handler {
 				);
 			?>
 				</h1>
-			<a href="<?php echo \esc_url( $post_edit_link ); ?>"><?php \esc_html_e( '&larr; Return to editor', 'default' ); ?></a>
+			<a href="<?php echo \esc_url( $post_edit_link ); ?>"><?php \esc_html_e( '&larr; Return to editor', 'duplicate-post' ); ?></a>
 			<div class="revisions">
 				<div class="revisions-control-frame">
 					<div class="revisions-controls"></div>
@@ -108,9 +108,9 @@ class Check_Changes_Handler {
 						<div class="diff">
 						<?php
 						$fields = [
-							\__( 'Title', 'default' )   => 'post_title',
-							\__( 'Content', 'default' ) => 'post_content',
-							\__( 'Excerpt', 'default' ) => 'post_excerpt',
+							\__( 'Title', 'duplicate-post' )   => 'post_title',
+							\__( 'Content', 'duplicate-post' ) => 'post_content',
+							\__( 'Excerpt', 'duplicate-post' ) => 'post_excerpt',
 						];
 
 						foreach ( $fields as $name => $field ) {
