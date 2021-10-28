@@ -113,7 +113,7 @@ class Check_Changes_Handler {
 				);
 			?>
 				</h1>
-			<a href="<?php echo \esc_url( $post_edit_link ); ?>"><?php \esc_html_e( '&larr; Return to editor', 'default' ); ?></a>
+			<a href="<?php echo \esc_url( $post_edit_link ); ?>"><?php \esc_html_e( '&larr; Return to editor', 'duplicate-post' ); ?></a>
 			<div class="revisions">
 				<div class="revisions-control-frame">
 					<div class="revisions-controls"></div>
@@ -123,15 +123,15 @@ class Check_Changes_Handler {
 						<div class="diff">
 						<?php
 						$fields = [
-							'post_title'   => \__( 'Title', 'default' ),
-							'post_content' => \__( 'Content', 'default' ),
-							'post_excerpt' => \__( 'Excerpt', 'default' ),
+							'post_title'   => \__( 'Title', 'duplicate-post' ),
+							'post_content' => \__( 'Content', 'duplicate-post' ),
+							'post_excerpt' => \__( 'Excerpt', 'duplicate-post' ),
 						];
 
 						$args = [
 							'show_split_view' => true,
-							'title_left'      => \__( 'Removed', 'default' ),
-							'title_right'     => \__( 'Added', 'default' ),
+							'title_left'      => \__( 'Removed', 'duplicate-post' ),
+							'title_right'     => \__( 'Added', 'duplicate-post' ),
 						];
 
 						if ( \version_compare( $wp_version, '5.7' ) < 0 ) {

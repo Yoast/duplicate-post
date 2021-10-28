@@ -96,7 +96,7 @@ function duplicate_post_plugin_actions( $actions ) {
 			'<a href="%1$s" %2$s>%3$s</a>',
 			menu_page_url( 'duplicatepost', false ),
 			'aria-label="' . __( 'Settings for Duplicate Post', 'duplicate-post' ) . '"',
-			esc_html__( 'Settings', 'default' )
+			esc_html__( 'Settings', 'duplicate-post' )
 		),
 	];
 

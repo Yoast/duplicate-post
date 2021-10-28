@@ -119,7 +119,7 @@ class Utils {
 				'<a href="%s" aria-label="%s">%s</a>',
 				\esc_url( \get_edit_post_link( $post->ID ) ),
 				/* translators: %s: post title */
-				\esc_attr( \sprintf( \__( 'Edit &#8220;%s&#8221;', 'default' ), $title ) ),
+				\esc_attr( \sprintf( \__( 'Edit &#8220;%s&#8221;', 'duplicate-post' ), $title ) ),
 				$title
 			);
 		}
@@ -131,7 +131,7 @@ class Utils {
 						'<a href="%s" rel="bookmark" aria-label="%s">%s</a>',
 						\esc_url( $preview_link ),
 						/* translators: %s: post title */
-						\esc_attr( \sprintf( \__( 'Preview &#8220;%s&#8221;', 'default' ), $title ) ),
+						\esc_attr( \sprintf( \__( 'Preview &#8220;%s&#8221;', 'duplicate-post' ), $title ) ),
 						$title
 					);
 				}
@@ -141,7 +141,7 @@ class Utils {
 					'<a href="%s" rel="bookmark" aria-label="%s">%s</a>',
 					\esc_url( \get_permalink( $post->ID ) ),
 					/* translators: %s: post title */
-					\esc_attr( \sprintf( \__( 'View &#8220;%s&#8221;', 'default' ), $title ) ),
+					\esc_attr( \sprintf( \__( 'View &#8220;%s&#8221;', 'duplicate-post' ), $title ) ),
 					$title
 				);
 			}
