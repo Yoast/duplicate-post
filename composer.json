@@ -1,37 +1,63 @@
 {
-    "require-dev": {
-        "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
-        "wp-coding-standards/wpcs": "^2.1",
-        "phpcompatibility/phpcompatibility-wp": "^2.1.0",
-        "automattic/vipwpcs": "^2.0",
-        "phpunit/phpunit": "^5.7",
-        "brain/monkey": "^2.5"
+    "name": "yoast/duplicate-post",
+    "description": "The go-to tool for cloning posts and pages, including the powerful Rewrite & Republish feature.",
+    "keywords": [
+        "wordpress",
+        "post",
+        "copy",
+        "clone"
+    ],
+    "homepage": "https://wordpress.org/plugins/duplicate-post/",
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "Enrico Battocchi & Team Yoast",
+            "email": "support@yoast.com",
+            "homepage": "https://yoast.com"
+        }
+    ],
+    "type": "wordpress-plugin",
+    "support": {
+        "issues": "https://github.com/Yoast/duplicate-post/issues",
+        "forum": "https://wordpress.org/support/plugin/duplicate-post",
+        "source": "https://github.com/Yoast/duplicate-post"
     },
-	"autoload": {
-		"classmap": [
-			"src/"
-		]
-	},
+    "require": {
+        "php": ">=5.6",
+        "composer/installers": "^1.9.0"
+    },
+    "require-dev": {
+        "yoast/yoastcs": "^2.2.0",
+        "yoast/wp-test-utils": "^1.0.0"
+    },
+    "autoload": {
+        "classmap": [
+            "src/"
+        ]
+    },
     "autoload-dev": {
         "classmap": [
             "tests/"
         ]
     },
     "scripts": {
-        "check-cs": [
-            "@php ./vendor/squizlabs/php_codesniffer/bin/phpcs --runtime-set ignore_warnings_on_exit 1"
+        "lint": [
+            "@php ./vendor/php-parallel-lint/php-parallel-lint/parallel-lint . -e php --exclude vendor --exclude node_modules --exclude .git"
         ],
-        "check-vip": [
-            "@php ./vendor/squizlabs/php_codesniffer/bin/phpcs -psl . ./compat/ ./src/ ./js/src/ --standard=WordPress-VIP-Go --runtime-set ignore_warnings_on_exit 1"
+        "check-cs": [
+            "@php ./vendor/squizlabs/php_codesniffer/bin/phpcs"
         ],
         "fix-cs": [
             "@php ./vendor/squizlabs/php_codesniffer/bin/phpcbf"
         ],
         "test": [
+            "@php ./vendor/phpunit/phpunit/phpunit --no-coverage"
+        ],
+        "coverage": [
             "@php ./vendor/phpunit/phpunit/phpunit"
         ]
     },
     "config": {
-      "classmap-authoritative": true
+        "classmap-authoritative": true
     }
 }

@@ -37,6 +37,7 @@ tests/cli/vendor
 ############
 ## Composer
 ############
+composer.lock
 /vendor/
 
 /js/dist/
@@ -47,3 +48,5 @@ tests/cli/vendor
 .phpcs.xml
 phpcs.xml
 .cache/phpcs.cache
+phpunit.xml
+.phpunit.result.cache
