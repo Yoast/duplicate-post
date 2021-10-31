@@ -67,6 +67,8 @@ class Post_Republisher {
 		\add_action( 'before_delete_post', [ $this, 'clean_up_when_copy_manually_deleted' ] );
 		// Ensure scheduled Rewrite and Republish posts are properly handled.
 		\add_action( 'future_to_publish', [ $this, 'republish_scheduled_post' ] );
+		// Prevent Rewrite and Republish posts to be shared by JetPack Publicize.
+		\add_filter( 'publicize_should_publicize_published_post', [ $this, 'prevent_publicize' ], 10, 2 );
 	}
 
 	/**
@@ -298,6 +300,23 @@ class Post_Republisher {
 			// Delete the meta that marks the original post has having a copy.
 			\delete_post_meta( $post_id, '_dp_has_rewrite_republish_copy' );
 		}
+	}
+
+	/**
+	 * Prevents a Rewrite & Republish copy to be shared with JetPack Publicize.
+	 *
+	 * Hooks into the `publicize_should_publicize_published_post` filter.
+	 *
+	 * @param bool    $should_publicize The value coming from the filter.
+	 * @param WP_Post $post             The post object.
+	 *
+	 * @return bool Whether the post should be publicized.
+	 */
+	public function prevent_publicize( $should_publicize, $post ) {
+		if ( $post instanceof WP_Post && $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
+			$should_publicize = false;
+		}
+		return $should_publicize;
 	}
 
 	/**

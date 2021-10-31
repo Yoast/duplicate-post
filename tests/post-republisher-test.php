@@ -320,4 +320,38 @@ class Post_Republisher_Test extends TestCase {
 
 		$this->instance->republish_scheduled_post( $copy );
 	}
+
+	/**
+	 * Tests the prevent_publicize function when the post is a Rewrite & Republish copy.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Post_Republisher::prevent_publicize
+	 */
+	public function test_prevent_publicize_rewrite_and_republish_copy() {
+		$post = Mockery::mock( WP_Post::class );
+
+		$this->permissions_helper
+			->expects( 'is_rewrite_and_republish_copy' )
+			->with( $post )
+			->andReturnTrue();
+
+		$this->assertFalse( $this->instance->prevent_publicize( true, $post ) );
+	}
+
+	/**
+	 * Tests the prevent_publicize function when the post is not a Rewrite & Republish copy.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Post_Republisher::prevent_publicize
+	 */
+	public function test_prevent_publicize_not_rewrite_and_republish_copy() {
+		$post = Mockery::mock( WP_Post::class );
+
+		$this->permissions_helper
+			->expects( 'is_rewrite_and_republish_copy' )
+			->with( $post )
+			->twice()
+			->andReturnFalse();
+
+		$this->assertTrue( $this->instance->prevent_publicize( true, $post ) );
+		$this->assertFalse( $this->instance->prevent_publicize( false, $post ) );
+	}
 }
