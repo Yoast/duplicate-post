@@ -119,7 +119,6 @@ class User_Interface {
 		$this->bulk_actions->register_hooks();
 		$this->column->register_hooks();
 		$this->metabox->register_hooks();
-		$this->newsletter->register_hooks();
 		$this->post_states->register_hooks();
 		$this->classic_editor->register_hooks();
 		$this->row_actions->register_hooks();

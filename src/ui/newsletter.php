@@ -8,13 +8,6 @@ namespace Yoast\WP\Duplicate_Post\UI;
 class Newsletter {
 
 	/**
-	 * Register hooks.
-	 */
-	public function register_hooks() {
-		add_action( 'admin_init', [ $this, 'newsletter_signup_form' ] );
-	}
-
-	/**
 	 * Renders the newsletter signup form.
 	 *
 	 * @return string The HTML of the newsletter signup form (escaped).
@@ -72,7 +65,7 @@ class Newsletter {
 		if ( isset( $_POST['newsletter_nonce'] ) && ! wp_verify_nonce( wp_unslash( $_POST['newsletter_nonce'] ), 'newsletter' ) ) {
 			return [
 				'status'    => 'error',
-				'message'   => esc_html__( 'Something went wrong. Please try again later. test', 'duplicate-post' ),
+				'message'   => esc_html__( 'Something went wrong. Please try again later.', 'duplicate-post' ),
 			];
 		}
 
@@ -110,6 +103,7 @@ class Newsletter {
 				'body'        => [
 					'customerDetails' => [
 						'email' => $email,
+						'firstName' => '',
 					],
 					'list'            => 'Yoast newsletter',
 				],
@@ -121,7 +115,7 @@ class Newsletter {
 		if ( $wp_remote_retrieve_response_code < 201 || $wp_remote_retrieve_response_code >= 300 ) {
 			return [
 				'status'    => 'error',
-				'message'   => esc_html__( 'Something went wrong. Please try again later. test', 'duplicate-post' ),
+				'message'   => esc_html__( 'Something went wrong. Please try again later.', 'duplicate-post' ),
 			];
 		}
 
