@@ -102,7 +102,7 @@ class Newsletter {
 				'method'      => 'POST',
 				'body'        => [
 					'customerDetails' => [
-						'email' => $email,
+						'email'     => $email,
 						'firstName' => '',
 					],
 					'list'            => 'Yoast newsletter',
