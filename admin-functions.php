@@ -254,7 +254,7 @@ function duplicate_post_show_update_notice() {
 	$img_path = plugins_url( '/duplicate_post_yoast_icon-125x125.png', __FILE__ );
 
 	echo '<div id="duplicate-post-notice" class="' . esc_attr( $class ) . '" style="display: flex; align-items: flex-start;">
-			<img src="' . esc_url( $img_path ) . '" alt="" style="margin: 1.5em 0.5em 0 0;"/>
+			<img src="' . esc_url( $img_path ) . '" alt="" style="margin: 1.5em 0.5em 1.5em 0;"/>
 			<div style="margin: 0.5em">' . $sanitized_message // phpcs:ignore WordPress.Security.EscapeOutput -- Reason: escaped properly above.
 			. '</div></div>';
 
