@@ -14,14 +14,6 @@
 
 	<file>.</file>
 
-	<!-- Always exclude all files in version management related directories. -->
-	<exclude-pattern>*/.git/*</exclude-pattern>
-	<exclude-pattern>*/.wordpress-svn/*</exclude-pattern>
-
-	<!-- Exclude the build tool and dependency related directories. -->
-	<exclude-pattern>/vendor/*</exclude-pattern>
-	<exclude-pattern>/node_modules/*</exclude-pattern>
-
 	<!-- Only check PHP files. -->
 	<arg name="extensions" value="php"/>
 
@@ -40,25 +32,29 @@
 
 	<!--
 	#############################################################################
-	USE THE WordPress + PHPCompatibilityWP RULESETS
+	USE THE YoastCS RULESET
 	#############################################################################
 	-->
 
-	<!-- Include the WordPress standard. -->
-	<rule ref="WordPress">
-		<!-- No need for this sniff as every Yoast travis script includes linting all files. -->
-		<exclude name="Generic.PHP.Syntax"/>
+	<rule ref="Yoast">
+		<properties>
+			<!-- Set the custom test class list for all sniffs which use it in one go.
+				 Ref: https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards/wiki/Customizable-sniff-properties#custom-unit-test-classes
+			-->
+			<property name="custom_test_class_whitelist" type="array">
+				<element value="Yoast\WP\Duplicate_Post\Tests\TestCase"/>
+			</property>
 
-        <!-- WPCS demands long arrays. YoastCS demands short arrays. -->
-        <exclude name="Generic.Arrays.DisallowShortArraySyntax"/>
+			<!-- Provide the plugin specific prefixes for all naming related sniffs. -->
+			<property name="prefixes" type="array">
+				<element value="Yoast\WP\Duplicate_Post"/>
+				<element value="duplicate_post"/>
+				<element value="dp_"/>
+			</property>
+		</properties>
 
-		<!-- Demanding Yoda conditions is stupid. -->
-		<exclude name="WordPress.PHP.YodaConditions"/>
-	</rule>
-
-	<config name="testVersion" value="5.5-"/>
-	<rule ref="PHPCompatibilityWP">
-		<include-pattern>*\.php$</include-pattern>
+		<!-- This plugin is not dependent on YoastSEO, so the replacement function will not be available. -->
+		<exclude name="Yoast.Yoast.AlternativeFunctions.json_encode_wp_json_encode"/>
 	</rule>
 
 
@@ -68,8 +64,7 @@
 	#############################################################################
 	-->
 
-	<config name="minimum_supported_wp_version" value="3.6"/>
-
+	<!-- Verify that all gettext calls use the correct text domain. -->
 	<rule ref="WordPress.WP.I18n">
 		<properties>
 			<property name="text_domain" type="array">
@@ -79,26 +74,93 @@
 		</properties>
 	</rule>
 
-	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
+	<rule ref="Yoast.NamingConventions.NamespaceName">
 		<properties>
-			<property name="prefixes" type="array">
-				<element value="Yoast\WP\Duplicate_Post"/>
-				<element value="duplicate_post"/>
-				<element value="dp_"/>
+			<!-- Indicate which directories should be treated as project root directories for
+				 path-to-namespace translations. -->
+			<property name="src_directory" type="array">
+				<element value="src"/>
 			</property>
 		</properties>
 	</rule>
 
-	<rule ref="WordPress.Arrays.MultipleStatementAlignment">
-		<type>error</type>
+	<rule ref="Yoast.Files.FileName">
 		<properties>
-			<!-- No need to adjust alignment of large arrays when the item with the largest key is removed. -->
-			<property name="exact" value="false"/>
-			<!-- Don't align multi-line items if ALL items in the array are multi-line. -->
-			<property name="alignMultilineItems" value="!=100"/>
-			<!-- Array Assignment operator should always be on the same line as the array key. -->
-			<property name="ignoreNewlines" value="false"/>
+			<!-- Don't trigger on the main file as renaming it would deactivate the plugin. -->
+			<property name="excluded_files_strict_check" type="array">
+				<element value="duplicate-post.php"/>
+			</property>
+
+			<!-- Remove the following prefixes from the names of object structures. -->
+			<property name="oo_prefixes" type="array">
+				<element value="duplicate_post"/>
+			</property>
 		</properties>
+	</rule>
+
+
+	<!--
+	#############################################################################
+	SELECTIVE EXCLUSIONS
+	Exclude specific files for specific sniffs and/or exclude sub-groups in sniffs.
+	#############################################################################
+	-->
+
+	<!-- TEST CODE -->
+
+	<!-- Valid usage: For testing purposes, some non-prefixed globals are being created, which is fine. -->
+	<rule ref="WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound">
+		<exclude-pattern>/tests/*\.php$</exclude-pattern>
+	</rule>
+
+	<!-- Test code does not go into production, so security is not an issue. -->
+	<rule ref="WordPress.Security">
+		<exclude-pattern>/tests/*</exclude-pattern>
+	</rule>
+
+	<!-- These tests are not run within the context of a WP install, so overwritting globals is fine. -->
+	<rule ref="WordPress.WP.GlobalVariablesOverride">
+		<exclude-pattern>/tests/*</exclude-pattern>
+	</rule>
+
+
+	<!--
+	#############################################################################
+	TEMPORARY ADJUSTMENTS
+	Adjustments which should be removed once the associated issue has been resolved.
+	#############################################################################
+	-->
+
+	<!-- Temporary exclude due to a bug in YoastCS.
+		 The bug has already been fixed and this exclude can be removed once YoastCS 2.2.0
+		 has been released. -->
+	<rule ref="Yoast.Files.FileName.InvalidClassFileName">
+		<exclude-pattern>/src/duplicate-post\.php$</exclude-pattern>
+	</rule>
+
+	<!-- The renaming of the hooks to use the namespace-like prefix is
+		 a breaking change and will be planned in to be actioned
+		 at a future date. -->
+	<rule ref="Yoast.NamingConventions.ValidHookName.WrongPrefix">
+		<exclude-pattern>/(admin|common)-functions\.php$</exclude-pattern>
+		<exclude-pattern>/src/(permissions-helper|post-(duplicator|republisher))\.php$</exclude-pattern>
+		<exclude-pattern>/src/ui/link-builder\.php$</exclude-pattern>
+	</rule>
+
+	<!-- Technical debt: nonce verification should be added to cover
+		 all relevant uses of superglobals. This will be addressed
+		 by the team at a future date. -->
+	<rule ref="WordPress.Security.NonceVerification.Missing">
+		<exclude-pattern>/src/handlers/save-post-handler\.php$</exclude-pattern>
+	</rule>
+	<rule ref="WordPress.Security.NonceVerification.Recommended">
+		<exclude-pattern>/compat/gutenberg-functions\.php$</exclude-pattern>
+		<exclude-pattern>/src/post-republisher\.php$</exclude-pattern>
+		<exclude-pattern>/src/admin/options-page\.php$</exclude-pattern>
+		<exclude-pattern>/src/ui/bulk-actions\.php$</exclude-pattern>
+		<exclude-pattern>/src/ui/classic-editor\.php$</exclude-pattern>
+		<exclude-pattern>/src/watchers/(bulk|link)-actions-watcher\.php$</exclude-pattern>
+		<exclude-pattern>/src/watchers/republished-post-watcher\.php$</exclude-pattern>
 	</rule>
 
 </ruleset>

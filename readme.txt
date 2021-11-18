@@ -3,7 +3,7 @@ Contributors: 		yoast, lopo
 Donate link: 		https://yoast.com/wordpress/plugins/duplicate-post/
 Tags: 				duplicate post, copy, clone
 Requires at least: 	5.6
-Tested up to: 		5.7
+Tested up to: 		5.8
 Stable tag: 		4.1.2
 Requires PHP:		5.6.20
 License: 			GPLv2 or later
@@ -150,6 +150,21 @@ Some users have experienced a fatal error when upgrading to v1.1: this may fix i
 New features and customization, WP 3.0 compatibility: you should upgrade if you want to copy Custom Posts with Custom Taxonomies.
 
 == Changelog ==
+
+= 4.2 (2021-11-18) =
+
+Bugfixes:
+
+* Fixes a bug where some strings where not translated.
+* Fixes a bug where meta data went missing for duplicate posts created by the Rewrite & Republish feature. Props to [ocean90](https://github.com/ocean90).
+* Fixes a bug where the plugin would not initialize if installed via composer.
+
+Other:
+
+* Replaces Mailchimp with MailBlue newsletter integration.
+* Improved compatibility for PHP 8.0.
+* Improved sort order of the taxonomies list on the options page.
+* Most plugin files have been renamed. If you extend this plugin of include any of the files from the plugin from within your own plugin, you may need to adjust the file name used in the `include`/`require` statement.
 
 = 4.1.2 (2021-03-23) =
 

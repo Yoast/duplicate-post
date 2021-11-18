@@ -1,15 +1,13 @@
 <?php
-/**
- * Duplicate Post plugin file.
- *
- * @package Yoast\WP\Duplicate_Post\Admin\Views
- */
 
-if ( ! defined( 'DUPLICATE_POST_CURRENT_VERSION' ) ) {
-	header( 'Status: 403 Forbidden' );
-	header( 'HTTP/1.1 403 Forbidden' );
+namespace Yoast\WP\Duplicate_Post\Admin\Views;
+
+if ( ! \defined( 'DUPLICATE_POST_CURRENT_VERSION' ) ) {
+	\header( 'Status: 403 Forbidden' );
+	\header( 'HTTP/1.1 403 Forbidden' );
 	exit();
 }
+
 ?>
 <div class="wrap">
 	<h1>
@@ -214,7 +212,7 @@ if ( ! defined( 'DUPLICATE_POST_CURRENT_VERSION' ) ) {
 							<br/>
 							<?php
 							\printf(
-							/* translators: 1: Code start tag, 2: Code closing tag, 3: Link start tag to the template tag documentation, 4: Link closing tag. */
+								/* translators: 1: Code start tag, 2: Code closing tag, 3: Link start tag to the template tag documentation, 4: Link closing tag. */
 								\esc_html__( 'You can also use the template tag %1$sduplicate_post_clone_post_link( $link, $before, $after, $id )%2$s. %3$sMore info on the template tag%4$s.', 'duplicate-post' ),
 								'<code>',
 								'</code>',
