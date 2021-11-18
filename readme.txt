@@ -151,12 +151,12 @@ New features and customization, WP 3.0 compatibility: you should upgrade if you 
 
 == Changelog ==
 
-= 4.2 (2021-11) =
+= 4.2 (2021-11-18) =
 
 Bugfixes:
 
 * Fixes a bug where some strings where not translated.
-* Fixes a bug where meta data went missing for duplicate posts created by the Rewrite & Republish feature. Props to @ocean90.
+* Fixes a bug where meta data went missing for duplicate posts created by the Rewrite & Republish feature. Props to [ocean90](https://github.com/ocean90).
 * Fixes a bug where the plugin would not initialize if installed via composer.
 
 Other:
