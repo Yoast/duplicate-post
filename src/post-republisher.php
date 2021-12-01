@@ -258,7 +258,7 @@ class Post_Republisher {
 	 */
 	public function republish( WP_Post $post, WP_Post $original_post ) {
 		
-		do_action('dp_republish_start', $post, $original_post);
+		\do_action( 'dp_republish_start', $post, $original_post);
 		
 		// Remove WordPress default filter so a new revision is not created on republish.
 		\remove_action( 'post_updated', 'wp_save_post_revision', 10 );
@@ -276,7 +276,7 @@ class Post_Republisher {
 		// Re-enable the creation of a new revision.
 		\add_action( 'post_updated', 'wp_save_post_revision', 10, 1 );
 		
-		do_action('dp_republish_done', $post, $original_post);
+		\do_action( 'dp_republish_done', $post, $original_post);
 	}
 
 	/**
