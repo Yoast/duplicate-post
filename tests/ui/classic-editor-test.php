@@ -263,7 +263,7 @@ class Classic_Editor_Test extends TestCase {
 	}
 
 	/**
-	 * Tests the add_new_draft_post_button function when no post could be retrieved
+	 * Tests the add_new_draft_post_button function when no post could be retrieved.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::add_new_draft_post_button
 	 */
