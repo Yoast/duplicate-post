@@ -151,6 +151,12 @@ New features and customization, WP 3.0 compatibility: you should upgrade if you 
 
 == Changelog ==
 
+= 4.3 (2021-12-14) =
+
+Bugfixes:
+
+* Fixes a bug where Rewrite & Republish copies could be displayed and queried in the front end.
+
 = 4.2 (2021-11-18) =
 
 Bugfixes:

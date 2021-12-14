@@ -17,7 +17,7 @@ class Post_Republisher_Test extends TestCase {
 	/**
 	 * The instance.
 	 *
-	 * @var Post_Republisher
+	 * @var Post_Republisher|\Mockery\Mock
 	 */
 	protected $instance;
 
@@ -31,7 +31,7 @@ class Post_Republisher_Test extends TestCase {
 	/**
 	 * Holds the permissions helper.
 	 *
-	 * @var Permissions_Helper
+	 * @var Permissions_Helper|\Mockery\Mock
 	 */
 	protected $permissions_helper;
 
@@ -157,7 +157,6 @@ class Post_Republisher_Test extends TestCase {
 
 		$options = [
 			'label'                     => 'Republish',
-			'public'                    => true,
 			'exclude_from_search'       => false,
 			'show_in_admin_all_list'    => false,
 			'show_in_admin_status_list' => false,

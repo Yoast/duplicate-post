@@ -81,7 +81,6 @@ class Post_Republisher {
 	public function register_post_statuses() {
 		$options = [
 			'label'                     => \__( 'Republish', 'duplicate-post' ),
-			'public'                    => true,
 			'exclude_from_search'       => false,
 			'show_in_admin_all_list'    => false,
 			'show_in_admin_status_list' => false,
