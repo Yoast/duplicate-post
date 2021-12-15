@@ -255,6 +255,9 @@ class Post_Republisher_Test extends TestCase {
 			->once()
 			->andReturn( $original );
 
+		Monkey\Functions\expect( 'kses_remove_filters' );
+		Monkey\Functions\expect( 'kses_init_filters' );
+
 		$this->instance->expects( 'republish' )->with( $copy, $original )->once();
 		$this->instance->expects( 'delete_copy' )->with( $copy->ID, $original->ID )->once();
 

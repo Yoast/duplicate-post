@@ -199,7 +199,9 @@ class Post_Republisher {
 			return;
 		}
 
+		\kses_remove_filters();
 		$this->republish( $copy, $original_post );
+		\kses_init_filters();
 		$this->delete_copy( $copy->ID, $original_post->ID );
 	}
 
