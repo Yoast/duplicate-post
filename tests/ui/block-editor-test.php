@@ -19,28 +19,28 @@ class Block_Editor_Test extends TestCase {
 	/**
 	 * Holds the object to create the action link to duplicate.
 	 *
-	 * @var Link_Builder
+	 * @var Link_Builder|Mockery\MockInterface
 	 */
 	protected $link_builder;
 
 	/**
 	 * Holds the permissions helper.
 	 *
-	 * @var Permissions_Helper
+	 * @var Permissions_Helper|Mockery\MockInterface
 	 */
 	protected $permissions_helper;
 
 	/**
 	 * Holds the asset manager.
 	 *
-	 * @var Asset_Manager
+	 * @var Asset_Manager|Mockery\MockInterface
 	 */
 	protected $asset_manager;
 
 	/**
 	 * The instance.
 	 *
-	 * @var Block_Editor
+	 * @var Block_Editor|Mockery\MockInterface
 	 */
 	protected $instance;
 
@@ -275,6 +275,14 @@ class Block_Editor_Test extends TestCase {
 			'bulkactions' => '1',
 		];
 
+		$this->permissions_helper
+			->expects( 'is_edit_post_screen' )
+			->andReturnFalse();
+
+		$this->permissions_helper
+			->expects( 'is_new_post_screen' )
+			->andReturnTrue();
+
 		Monkey\Functions\expect( '\get_post' )
 			->andReturn( $post );
 
@@ -332,7 +340,7 @@ class Block_Editor_Test extends TestCase {
 	 * @runInSeparateProcess
 	 * @preserveGlobalState disabled
 	 */
-	public function test_get_new_draft_permalink_rewrite_and_republish() {
+	public function test_get_enqueue_block_editor_scripts_rewrite_and_republish() {
 		$utils                      = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
 		$post                       = Mockery::mock( WP_Post::class );
 		$new_draft_link             = 'http://fakeu.rl/new_draft';
@@ -353,6 +361,10 @@ class Block_Editor_Test extends TestCase {
 			'submitbox'   => '1',
 			'bulkactions' => '1',
 		];
+
+		$this->permissions_helper
+			->expects( 'is_edit_post_screen' )
+			->andReturnTrue();
 
 		Monkey\Functions\expect( '\get_post' )
 			->andReturn( $post );
@@ -416,25 +428,13 @@ class Block_Editor_Test extends TestCase {
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Block_Editor::enqueue_block_editor_scripts
 	 */
-	public function test_get_new_draft_permalink_no_post() {
+	public function test_enqueue_block_editor_scripts_no_post() {
+		$this->permissions_helper
+			->expects( 'is_edit_post_screen' )
+			->andReturnTrue();
+
 		Monkey\Functions\expect( '\get_post' )
 			->andReturnNull();
-
-		$this->permissions_helper
-			->expects( 'is_rewrite_and_republish_copy' )
-			->never();
-
-		$this->instance
-			->expects( 'get_new_draft_permalink' )
-			->never();
-
-		$this->instance
-			->expects( 'get_rewrite_republish_permalink' )
-			->never();
-
-		$this->instance
-			->expects( 'get_original_post_edit_url' )
-			->never();
 
 		$this->asset_manager
 			->expects( 'enqueue_edit_script' )
@@ -444,8 +444,29 @@ class Block_Editor_Test extends TestCase {
 			->expects( 'enqueue_strings_script' )
 			->never();
 
-		$this->instance
-			->expects( 'get_check_permalink' )
+		$this->instance->enqueue_block_editor_scripts();
+	}
+
+	/**
+	 * Tests the enqueueing of the scripts when no post is displayed.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Block_Editor::enqueue_block_editor_scripts
+	 */
+	public function test_enqueue_block_editor_scripts_not_editor() {
+		$this->permissions_helper
+			->expects( 'is_edit_post_screen' )
+			->andReturnFalse();
+
+		$this->permissions_helper
+			->expects( 'is_new_post_screen' )
+			->andReturnFalse();
+
+		$this->asset_manager
+			->expects( 'enqueue_edit_script' )
+			->never();
+
+		$this->asset_manager
+			->expects( 'enqueue_strings_script' )
 			->never();
 
 		$this->instance->enqueue_block_editor_scripts();

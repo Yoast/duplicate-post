@@ -119,6 +119,10 @@ class Block_Editor {
 	 * @return void
 	 */
 	public function enqueue_block_editor_scripts() {
+		if ( ! $this->permissions_helper->is_edit_post_screen() && ! $this->permissions_helper->is_new_post_screen() ) {
+			return;
+		}
+
 		$post = \get_post();
 
 		if ( ! $post instanceof WP_Post ) {
