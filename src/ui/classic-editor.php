@@ -68,7 +68,12 @@ class Classic_Editor {
 		\add_filter( 'post_updated_messages', [ $this, 'change_scheduled_notice_classic_editor' ], 10, 1 );
 
 		\add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_classic_editor_scripts' ] );
-		\add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_classic_editor_styles' ] );
+		if ( \intval( Utils::get_option( 'duplicate_post_show_link_in', 'submitbox' ) ) === 1 ) {
+			if ( \intval( Utils::get_option( 'duplicate_post_show_link', 'new_draft' ) ) === 1
+				|| \intval( Utils::get_option( 'duplicate_post_show_link', 'rewrite_republish' ) ) === 1 ) {
+				\add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_classic_editor_styles' ] );
+			}
+		}
 
 		// Remove slug editing from Classic Editor.
 		\add_action( 'add_meta_boxes', [ $this, 'remove_slug_meta_box' ], 10, 2 );
@@ -102,7 +107,7 @@ class Classic_Editor {
 			$id   = \intval( \wp_unslash( $_GET['post'] ) );
 			$post = \get_post( $id );
 
-			if ( ! \is_null( $post ) && $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
+			if ( ! \is_null( $post ) && $this->permissions_helper->should_links_be_displayed( $post ) ) {
 				$this->asset_manager->enqueue_styles();
 			}
 		}
