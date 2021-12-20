@@ -26,7 +26,17 @@ class Newsletter {
 			'Yoast'
 		);
 
-		$email_label = \esc_html__( 'Email Address', 'duplicate-post' );
+		$email_label = \esc_html__( 'Email address', 'duplicate-post' );
+
+		$copy_privacy_policy = sprintf(
+		// translators: %1$s and %2$s are replaced by opening and closing anchor tags.
+			\esc_html__(
+				'Yoast respects your privacy. Read %1$sour privacy policy%2$s on how we handle your personal information.',
+				'duplicate-post'
+			),
+			'<a href=https://yoa.st/4jf">',
+			'</a>'
+		);
 
 		$response_html = '';
 		if ( \is_array( $newsletter_form_response ) ) {
@@ -41,10 +51,13 @@ class Newsletter {
 		<form method="post" id="newsletter-subscribe-form" name="newsletter-subscribe-form" novalidate>
 		' . \wp_nonce_field( 'newsletter', 'newsletter_nonce' ) . '
 		<p>' . $copy . '</p>
-		<div class="newsletter-field-group" style="display: flex; align-items: center;">
-			<label for="newsletter-email" style="margin-right: 4px;"><strong>' . $email_label . '</strong></label>
-			<input type="email" value="" name="EMAIL" class="required email" id="newsletter-email" style="margin-right: 4px;">
-			<input type="submit" value="' . \esc_attr__( 'Subscribe', 'duplicate-post' ) . '" name="subscribe" id="newsletter-subscribe" class="button">
+		<div class="newsletter-field-group" style="display: flex; flex-direction: column">
+			<label for="newsletter-email" style="margin: 0 0 4px 0;"><strong>' . $email_label . '</strong></label>
+			<div>
+				<input type="email" value="" name="EMAIL" class="required email" id="newsletter-email" style="margin-right: 4px;">
+				<input type="submit" value="' . \esc_attr__( 'Subscribe', 'duplicate-post' ) . '" name="subscribe" id="newsletter-subscribe" class="button">
+			</div>
+			<p style="font-size: 10px;">' . $copy_privacy_policy . '</p>
 		</div>
 		' . $response_html . '
 		</form>
