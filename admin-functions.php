@@ -163,10 +163,6 @@ function duplicate_post_plugin_upgrade() {
 	}
 	update_option( 'duplicate_post_blacklist', implode( ',', $meta_blacklist ) );
 
-	delete_option( 'duplicate_post_show_notice' );
-	if ( version_compare( $installed_version, '4.2.0' ) < 0 ) {
-		update_site_option( 'duplicate_post_show_notice', 1 );
-	}
 
 	if ( version_compare( $installed_version, '4.0.0' ) < 0 ) {
 		// Migrate the 'Show links in' options to the new array-based structure.
