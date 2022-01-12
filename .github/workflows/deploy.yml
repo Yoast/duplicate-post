@@ -162,6 +162,7 @@ jobs:
           ref: ${{ env.DIST_DEFAULT_BRANCH }}
           # Personal Access Token for (push) access to the dist version of the repo.
           token: ${{ secrets.YOASTBOT_CI_PAT_DIST }}
+          fetch-depth: 0
 
       - name: "Create branch/Switch to branch"
         if: ${{ steps.set_vars.outputs.BRANCH != env.DIST_DEFAULT_BRANCH }}
