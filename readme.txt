@@ -151,6 +151,18 @@ New features and customization, WP 3.0 compatibility: you should upgrade if you 
 
 == Changelog ==
 
+= 4.4 (2022-01-25) =
+
+Enhancements:
+
+* Converts the upgrade notice into a welcome notice for first-time users.
+
+Bugfixes:
+
+* Fixes a bug where HTML tags in a Custom HTML block would be removed when republishing a scheduled Rewrite & Republish copy.
+* Fixes a bug where the button style would be broken in the Classic Editor.
+* Fixes a bug where a fatal error would be triggered in the Widgets page.
+
 = 4.3 (2021-12-14) =
 
 Bugfixes:
