@@ -34,7 +34,7 @@ class Newsletter {
 				'Yoast respects your privacy. Read %1$sour privacy policy%2$s on how we handle your personal information.',
 				'duplicate-post'
 			),
-			'<a href=https://yoa.st/4jf">',
+			'<a href="https://yoa.st/4jf" target="_blank">',
 			'</a>'
 		);
 
