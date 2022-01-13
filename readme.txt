@@ -163,6 +163,9 @@ Bugfixes:
 * Fixes a bug where the button style would be broken in the Classic Editor.
 * Fixes a bug where a fatal error would be triggered in the Widgets page in combination with some themes or plugins.
 
+Other:
+* Sets the WordPress tested up to version to 5.9.
+
 = 4.3 (2021-12-14) =
 
 Bugfixes:
