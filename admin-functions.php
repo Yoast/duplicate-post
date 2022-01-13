@@ -199,7 +199,7 @@ function duplicate_post_migrate_show_links_in_options( $defaults ) {
 }
 
 /**
- * Shows the update notice.
+ * Shows the welcome notice.
  *
  * @global string $wp_version The WordPress version string.
  */

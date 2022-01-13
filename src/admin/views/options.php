@@ -233,7 +233,7 @@ if ( ! \defined( 'DUPLICATE_POST_CURRENT_VERSION' ) ) {
 					</td>
 				</tr>
 				<tr>
-					<th scope="row"><?php \esc_html_e( 'Update notice', 'duplicate-post' ); ?></th>
+					<th scope="row"><?php \esc_html_e( 'Welcome notice', 'duplicate-post' ); ?></th>
 					<td>
 						<?php
 						// phpcs:ignore WordPress.Security.EscapeOutput -- Already escapes correctly.

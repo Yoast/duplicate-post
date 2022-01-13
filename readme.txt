@@ -3,7 +3,7 @@ Contributors: 		yoast, lopo
 Donate link: 		https://yoast.com/wordpress/plugins/duplicate-post/
 Tags: 				duplicate post, copy, clone
 Requires at least: 	5.6
-Tested up to: 		5.8
+Tested up to: 		5.9
 Stable tag: 		4.3
 Requires PHP:		5.6.20
 License: 			GPLv2 or later
@@ -161,7 +161,7 @@ Bugfixes:
 
 * Fixes a bug where HTML tags in a Custom HTML block would be removed when republishing a scheduled Rewrite & Republish copy.
 * Fixes a bug where the button style would be broken in the Classic Editor.
-* Fixes a bug where a fatal error would be triggered in the Widgets page.
+* Fixes a bug where a fatal error would be triggered in the Widgets page in combination with some themes or plugins.
 
 = 4.3 (2021-12-14) =
 
