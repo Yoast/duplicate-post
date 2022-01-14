@@ -98,6 +98,10 @@ function duplicate_post_plugin_upgrade() {
 				$role->add_cap( 'copy_posts' );
 			}
 		}
+		add_option( 'duplicate_post_show_notice', 1 );
+	}
+	else {
+		update_option( 'duplicate_post_show_notice', 0 );
 	}
 
 	$show_links_in_defaults = [
@@ -137,7 +141,6 @@ function duplicate_post_plugin_upgrade() {
 		]
 	);
 	add_option( 'duplicate_post_show_link_in', $show_links_in_defaults );
-	add_option( 'duplicate_post_show_notice', 1 );
 
 	$taxonomies_blacklist = get_option( 'duplicate_post_taxonomies_blacklist' );
 	if ( $taxonomies_blacklist === '' ) {
