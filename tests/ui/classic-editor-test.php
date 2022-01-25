@@ -19,28 +19,28 @@ class Classic_Editor_Test extends TestCase {
 	/**
 	 * Holds the object to create the action link to duplicate.
 	 *
-	 * @var Link_Builder
+	 * @var Link_Builder|\Mockery\MockInterface
 	 */
 	protected $link_builder;
 
 	/**
 	 * Holds the permissions helper.
 	 *
-	 * @var Permissions_Helper
+	 * @var Permissions_Helper|\Mockery\MockInterface
 	 */
 	protected $permissions_helper;
 
 	/**
 	 * Holds the asset manager.
 	 *
-	 * @var Asset_Manager
+	 * @var Asset_Manager|\Mockery\MockInterface
 	 */
 	protected $asset_manager;
 
 	/**
 	 * The instance.
 	 *
-	 * @var Classic_Editor
+	 * @var Classic_Editor&\Mockery\MockInterface
 	 */
 	protected $instance;
 
@@ -93,12 +93,12 @@ class Classic_Editor_Test extends TestCase {
 
 		$utils->expects( 'get_option' )
 			->with( 'duplicate_post_show_link_in', 'submitbox' )
-			->once()
+			->twice()
 			->andReturn( '1' );
 
 		$utils->expects( 'get_option' )
 			->with( 'duplicate_post_show_link', 'new_draft' )
-			->once()
+			->twice()
 			->andReturn( '1' );
 
 		$utils->expects( 'get_option' )
@@ -154,7 +154,7 @@ class Classic_Editor_Test extends TestCase {
 	}
 
 	/**
-	 * Tests the successful enqueue_classic_editor_scripts function.
+	 * Tests the successful enqueue_classic_editor_styles function.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::enqueue_classic_editor_styles
 	 */
@@ -169,7 +169,7 @@ class Classic_Editor_Test extends TestCase {
 			->with( 123 )
 			->andReturn( $post );
 
-		$this->permissions_helper->expects( 'is_rewrite_and_republish_copy' )
+		$this->permissions_helper->expects( 'should_links_be_displayed' )
 			->with( $post )
 			->andReturnTrue();
 
@@ -263,7 +263,7 @@ class Classic_Editor_Test extends TestCase {
 	}
 
 	/**
-	 * Tests the add_new_draft_post_button function when no post could be retrieved
+	 * Tests the add_new_draft_post_button function when no post could be retrieved.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::add_new_draft_post_button
 	 */

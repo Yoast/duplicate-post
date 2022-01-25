@@ -98,6 +98,10 @@ function duplicate_post_plugin_upgrade() {
 				$role->add_cap( 'copy_posts' );
 			}
 		}
+		add_option( 'duplicate_post_show_notice', 1 );
+	}
+	else {
+		update_option( 'duplicate_post_show_notice', 0 );
 	}
 
 	$show_links_in_defaults = [
@@ -163,11 +167,6 @@ function duplicate_post_plugin_upgrade() {
 	}
 	update_option( 'duplicate_post_blacklist', implode( ',', $meta_blacklist ) );
 
-	delete_option( 'duplicate_post_show_notice' );
-	if ( version_compare( $installed_version, '4.2.0' ) < 0 ) {
-		update_site_option( 'duplicate_post_show_notice', 1 );
-	}
-
 	if ( version_compare( $installed_version, '4.0.0' ) < 0 ) {
 		// Migrate the 'Show links in' options to the new array-based structure.
 		duplicate_post_migrate_show_links_in_options( $show_links_in_defaults );
@@ -203,7 +202,7 @@ function duplicate_post_migrate_show_links_in_options( $defaults ) {
 }
 
 /**
- * Shows the update notice.
+ * Shows the welcome notice.
  *
  * @global string $wp_version The WordPress version string.
  */
@@ -220,43 +219,21 @@ function duplicate_post_show_update_notice() {
 		return;
 	}
 
-	$class   = 'notice is-dismissible';
-	$message = '<p><strong>' . sprintf(
-		/* translators: %s: Yoast Duplicate Post version. */
-		__( "What's new in Yoast Duplicate Post version %s:", 'duplicate-post' ),
-		DUPLICATE_POST_CURRENT_VERSION
-	) . '</strong> ';
-	$message .= __( 'improved compatibility with PHP 8.0 and fixes for some bugs regarding translations and the Rewrite & Republish feature.', 'duplicate-post' )
-		. ' ';
-
-	$message .= '<a href="https://wordpress.org/plugins/duplicate-post/#developers">'
-				. sprintf(
-					/* translators: %s: Yoast Duplicate Post version. */
-					__( 'Read the changelog', 'duplicate-post' ),
-					DUPLICATE_POST_CURRENT_VERSION
-				)
-				. '</a></p>';
-
-	$message .= '<p>%%SIGNUP_FORM%%</p>';
-
-	$allowed_tags = [
-		'a'      => [
-			'href'  => [],
-		],
-		'br'     => [],
-		'p'      => [],
-		'strong' => [],
-	];
-
-	$sanitized_message = wp_kses( $message, $allowed_tags );
-	$sanitized_message = str_replace( '%%SIGNUP_FORM%%', Newsletter::newsletter_signup_form(), $sanitized_message );
+	$title = sprintf(
+		/* translators: %s: Yoast Duplicate Post. */
+		esc_html__( 'You\'ve successfully installed %s!', 'duplicate-post' ),
+		'Yoast Duplicate Post'
+	);
 
 	$img_path = plugins_url( '/duplicate_post_yoast_icon-125x125.png', __FILE__ );
 
-	echo '<div id="duplicate-post-notice" class="' . esc_attr( $class ) . '" style="display: flex; align-items: flex-start;">
-			<img src="' . esc_url( $img_path ) . '" alt="" style="margin: 1.5em 0.5em 1.5em 0;"/>
-			<div style="margin: 0.5em">' . $sanitized_message // phpcs:ignore WordPress.Security.EscapeOutput -- Reason: escaped properly above.
-			. '</div></div>';
+	echo '<div id="duplicate-post-notice" class="notice is-dismissible" style="display: flex; align-items: flex-start;">
+			<img src="' . esc_url( $img_path ) . '" alt="" style="margin: 1em 1em 1em 0; width: 130px; align-self: center;"/>
+			<div stle="margin: 0.5em">
+				<h1 style="font-size: 14px; color: #a4286a; font-weight: 600; margin-top: 8px;">' . $title . '</h1>' // phpcs:ignore WordPress.Security.EscapeOutput -- Reason: escaped properly above.
+				. Newsletter::newsletter_signup_form() // phpcs:ignore WordPress.Security.EscapeOutput -- Reason: escaped in newsletter.php.
+			. '</div>
+		</div>';
 
 	echo "<script>
 			function duplicate_post_dismiss_notice(){

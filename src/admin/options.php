@@ -259,7 +259,7 @@ class Options {
 			'duplicate_post_show_notice'                  => [
 				'tab'   => 'display',
 				'type'  => 'checkbox',
-				'label' => \__( 'Show update notice', 'duplicate-post' ),
+				'label' => \__( 'Show welcome notice', 'duplicate-post' ),
 				'value' => 1,
 			],
 			'duplicate_post_show_link'                    => [

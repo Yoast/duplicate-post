@@ -199,7 +199,9 @@ class Post_Republisher {
 			return;
 		}
 
+		\kses_remove_filters();
 		$this->republish( $copy, $original_post );
+		\kses_init_filters();
 		$this->delete_copy( $copy->ID, $original_post->ID );
 	}
 
@@ -324,7 +326,7 @@ class Post_Republisher {
 		$_POST['ID'] = $original_post->ID;
 
 		// Republish the original post.
-		$rewritten_post_id = \wp_update_post( \wp_slash( $post_to_be_rewritten ) );
+		$rewritten_post_id = \wp_update_post( $post_to_be_rewritten );
 
 		if ( $rewritten_post_id === 0 ) {
 			\wp_die( \esc_html__( 'An error occurred while republishing the post.', 'duplicate-post' ) );

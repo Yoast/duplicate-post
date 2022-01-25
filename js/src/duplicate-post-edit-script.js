@@ -126,6 +126,11 @@ class DuplicatePost {
 	 * @returns {JSX.Element} The rendered links.
 	 */
 	render() {
+		// Don't try to render anything if there is no store.
+		if ( ! select( 'core/editor' ) || ! ( wp.editPost && wp.editPost.PluginPostStatusInfo ) ) {
+			return null;
+		}
+
 		const currentPostStatus = select( 'core/editor' ).getEditedPostAttribute( 'status' );
 
 		return (
