@@ -14,7 +14,7 @@
  * Author URI:  https://yoast.com
  * Text Domain: duplicate-post
  *
- * Copyright 2020 Yoast BV (email : info@yoast.com)
+ * Copyright 2020-2022 Yoast BV (email : info@yoast.com)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
