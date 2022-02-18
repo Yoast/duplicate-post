@@ -114,6 +114,11 @@ final class Asset_Manager_Test extends TestCase {
 				\DUPLICATE_POST_CURRENT_VERSION,
 				true
 			);
+		Monkey\Functions\expect( '\wp_set_script_translations' )
+			->with(
+				'duplicate_post_edit_script',
+				'duplicate-post'
+			);
 
 		Monkey\Functions\expect( '\wp_register_script' )
 			->with(
@@ -126,6 +131,11 @@ final class Asset_Manager_Test extends TestCase {
 				],
 				\DUPLICATE_POST_CURRENT_VERSION,
 				true
+			);
+		Monkey\Functions\expect( '\wp_set_script_translations' )
+			->with(
+				'duplicate_post_strings',
+				'duplicate-post'
 			);
 
 		Monkey\Functions\expect( '\wp_register_script' )
