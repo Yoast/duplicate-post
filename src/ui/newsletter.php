@@ -28,8 +28,8 @@ class Newsletter {
 
 		$email_label = \esc_html__( 'Email address', 'duplicate-post' );
 
-		$copy_privacy_policy = sprintf(
-		// translators: %1$s and %2$s are replaced by opening and closing anchor tags.
+		$copy_privacy_policy = \sprintf(
+			/* translators: %1$s and %2$s are replaced by opening and closing anchor tags. */
 			\esc_html__(
 				'Yoast respects your privacy. Read %1$sour privacy policy%2$s on how we handle your personal information.',
 				'duplicate-post'
