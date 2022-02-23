@@ -19,28 +19,28 @@ class Classic_Editor_Test extends TestCase {
 	/**
 	 * Holds the object to create the action link to duplicate.
 	 *
-	 * @var Link_Builder|\Mockery\MockInterface
+	 * @var Link_Builder|Mockery\MockInterface
 	 */
 	protected $link_builder;
 
 	/**
 	 * Holds the permissions helper.
 	 *
-	 * @var Permissions_Helper|\Mockery\MockInterface
+	 * @var Permissions_Helper|Mockery\MockInterface
 	 */
 	protected $permissions_helper;
 
 	/**
 	 * Holds the asset manager.
 	 *
-	 * @var Asset_Manager|\Mockery\MockInterface
+	 * @var Asset_Manager|Mockery\MockInterface
 	 */
 	protected $asset_manager;
 
 	/**
 	 * The instance.
 	 *
-	 * @var Classic_Editor&\Mockery\MockInterface
+	 * @var Classic_Editor&Mockery\MockInterface
 	 */
 	protected $instance;
 
