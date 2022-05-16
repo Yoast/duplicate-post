@@ -29,7 +29,7 @@
   "devDependencies": {
     "@wordpress/data": "^4.25.0",
     "@wordpress/dependency-extraction-webpack-plugin": "^2.8.0",
-    "@yoast/grunt-plugin-tasks": "^1.7.2",
+    "@yoast/grunt-plugin-tasks": "^2.3",
     "babel-core": "^6.26.3",
     "babel-eslint": "^10.1.0",
     "babel-loader": "7",
