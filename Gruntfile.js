@@ -59,6 +59,7 @@ module.exports = function( grunt ) {
 			staticMappings: {
 				"set-version": "@yoast/grunt-plugin-tasks",
 				"update-version": "@yoast/grunt-plugin-tasks",
+				"update-changelog-to-latest": "@yoast/grunt-plugin-tasks",
 			},
 			customTasksDir: 'config/grunt/custom-tasks',
 		}
