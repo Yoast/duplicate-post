@@ -1,3 +1,4 @@
+const { debug } = require("webpack");
 const wordpressApi = require( "../lib/wordpress-api" );
 
 module.exports = function( grunt ) {
@@ -47,13 +48,13 @@ module.exports = function( grunt ) {
 				);
 			}
 
-			const currentVersion = getVersion( targetFile, /(\n?)(Stable tag: )(\d+(\.\d+){0,3})(\n)/, 3 );
+			const currentVersion = getVersion( targetFile, /(\n?)(Stable tag:\W+)(\d+(\.\d+){0,3})(\n)/, 3 );
 			// Only change the file if the version does not match.
 			if ( currentVersion !== stableVersion ) {
 				grunt.verbose.writeln( "Stable tag version in readme.txt: " + currentVersion + "\n" +
 					"Retrieved version from wordpress.org: " + stableVersion + "\n" +
 					"Will set the version in readme.txt to the retrieved wordpress.org value now." );
-				setVersion( targetFile, /(\n?)(Stable tag: )(\d+(\.\d+){0,3})(\n)/, "$1$2" + stableVersion + "\n" );
+				setVersion( targetFile, /(\n?)(Stable tag:\W+)(\d+(\.\d+){0,3})(\n)/, "$1$2" + stableVersion + "\n" );
 			}
 
 			return done();

@@ -25,7 +25,7 @@ module.exports = function( grunt ) {
 			// Get the first 10 lines of the readme.txt file.
 			contents = contents.split( "\n" ).slice( 0, 9 ).join( "\n" );
 			grunt.verbose.writeln( "First 10 lines of readme.txt file: \n" + contents );
-			const regex = new RegExp( "\nStable tag: " + stableVersion + "\n" );
+			const regex = new RegExp( "\nStable tag:\\W+" + stableVersion + "\n" );
 			const versionMatch = contents.search( regex ) !== -1;
 			if ( ! versionMatch ) {
 				grunt.fail.fatal(
