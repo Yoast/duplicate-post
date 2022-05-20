@@ -57,6 +57,14 @@ module.exports = function( grunt ) {
 		data: project,
 		jitGrunt: {
 			staticMappings: {
+				gittag: "grunt-git",
+				gitfetch: "grunt-git",
+				gitadd: "grunt-git",
+				gitstatus: "grunt-git",
+				gitcommit: "grunt-git",
+				gitcheckout: "grunt-git",
+				gitpull: "grunt-git",
+				gitpush: "grunt-git",
 				"set-version": "@yoast/grunt-plugin-tasks",
 				"update-version": "@yoast/grunt-plugin-tasks",
 				"update-changelog-to-latest": "@yoast/grunt-plugin-tasks",
