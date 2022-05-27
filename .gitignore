@@ -42,6 +42,10 @@ composer.lock
 
 /js/dist/
 
+/artifact/
+/artifact.zip
+
+
 ############
 ## Dev tool config overrides.
 ############
