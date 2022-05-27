@@ -44,7 +44,7 @@ composer.lock
 
 /artifact/
 /artifact.zip
-
+/.wordpress-svn
 
 ############
 ## Dev tool config overrides.
