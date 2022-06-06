@@ -63,9 +63,8 @@ class Classic_Editor {
 			}
 		}
 
-		\add_filter( 'gettext', [ $this, 'change_republish_strings_classic_editor' ], 10, 2 );
-		\add_filter( 'gettext_with_context', [ $this, 'change_schedule_strings_classic_editor' ], 10, 3 );
-		\add_filter( 'post_updated_messages', [ $this, 'change_scheduled_notice_classic_editor' ], 10, 1 );
+		\add_action( 'load-post.php', [ $this, 'hook_translations' ] );
+		\add_filter( 'post_updated_messages', [ $this, 'change_scheduled_notice_classic_editor' ] );
 
 		\add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_classic_editor_scripts' ] );
 		if ( \intval( Utils::get_option( 'duplicate_post_show_link_in', 'submitbox' ) ) === 1 ) {
@@ -78,6 +77,16 @@ class Classic_Editor {
 		// Remove slug editing from Classic Editor.
 		\add_action( 'add_meta_boxes', [ $this, 'remove_slug_meta_box' ], 10, 2 );
 		\add_filter( 'get_sample_permalink_html', [ $this, 'remove_sample_permalink_slug_editor' ], 10, 5 );
+	}
+
+	/**
+	 * Hooks the functions to change the translations.
+	 *
+	 * @return void
+	 */
+	public function hook_translations() {
+			\add_filter( 'gettext', [ $this, 'change_republish_strings_classic_editor' ], 10, 3 );
+			\add_filter( 'gettext_with_context', [ $this, 'change_schedule_strings_classic_editor' ], 10, 4 );
 	}
 
 	/**
@@ -201,19 +210,23 @@ class Classic_Editor {
 	 *
 	 * @param string $translation The translated text.
 	 * @param string $text        The text to translate.
+	 * @param string $domain      The translation domain.
 	 *
 	 * @return string The to-be-used copy of the text.
 	 */
-	public function change_republish_strings_classic_editor( $translation, $text ) {
-		if ( $this->should_change_rewrite_republish_copy( \get_post() ) ) {
-			if ( $text === 'Publish' ) {
-				return \__( 'Republish', 'duplicate-post' );
-			}
+	public function change_republish_strings_classic_editor( $translation, $text, $domain ) {
+		if ( $domain !== 'default' ) {
+			return $translation;
+		}
 
-			if ( $text === 'Publish on: %s' ) {
-				/* translators: %s: Date on which the post is to be republished. */
-				return \__( 'Republish on: %s', 'duplicate-post' );
-			}
+		if ( $text === 'Publish'
+			&& $this->should_change_rewrite_republish_copy( \get_post() ) ) {
+				return \__( 'Republish', 'duplicate-post' );
+		}
+		elseif ( $text === 'Publish on: %s'
+			&& $this->should_change_rewrite_republish_copy( \get_post() ) ) {
+			/* translators: %s: Date on which the post is to be republished. */
+			return \__( 'Republish on: %s', 'duplicate-post' );
 		}
 
 		return $translation;
@@ -224,11 +237,18 @@ class Classic_Editor {
 	 *
 	 * @param string $translation The translated text.
 	 * @param string $text        The text to translate.
+	 * @param string $context     The translation context.
+	 * @param string $domain      The translation domain.
 	 *
 	 * @return string The to-be-used copy of the text.
 	 */
-	public function change_schedule_strings_classic_editor( $translation, $text ) {
-		if ( $this->should_change_rewrite_republish_copy( \get_post() ) && $text === 'Schedule' ) {
+	public function change_schedule_strings_classic_editor( $translation, $text, $context, $domain ) {
+		if ( $domain !== 'default' || $context !== 'post action/button label' ) {
+			return $translation;
+		}
+
+		if ( $text === 'Schedule'
+			&& $this->should_change_rewrite_republish_copy( \get_post() ) ) {
 			return \__( 'Schedule republish', 'duplicate-post' );
 		}
 
