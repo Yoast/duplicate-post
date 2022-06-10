@@ -106,6 +106,14 @@ class Classic_Editor_Test extends TestCase {
 			->once()
 			->andReturn( '1' );
 
+		Monkey\Functions\expect( '\is_admin' )
+			->andReturn( true );
+
+		Monkey\Functions\expect( '\current_user_can' )
+			->with( 'edit_posts' )
+			->once()
+			->andReturnTrue();
+
 		$this->instance->register_hooks();
 
 		$this->assertNotFalse( \has_action( 'post_submitbox_start', [ $this->instance, 'add_new_draft_post_button' ] ), 'Does not have expected post_submitbox_start action' );

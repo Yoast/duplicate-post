@@ -63,9 +63,11 @@ class Classic_Editor {
 			}
 		}
 
-		\add_filter( 'gettext', [ $this, 'change_republish_strings_classic_editor' ], 10, 2 );
-		\add_filter( 'gettext_with_context', [ $this, 'change_schedule_strings_classic_editor' ], 10, 3 );
-		\add_filter( 'post_updated_messages', [ $this, 'change_scheduled_notice_classic_editor' ], 10, 1 );
+		if ( \is_admin() && \current_user_can( 'edit_posts' ) ) {
+			\add_filter( 'gettext', [ $this, 'change_republish_strings_classic_editor' ], 10, 2 );
+			\add_filter( 'gettext_with_context', [ $this, 'change_schedule_strings_classic_editor' ], 10, 3 );
+			\add_filter( 'post_updated_messages', [ $this, 'change_scheduled_notice_classic_editor' ], 10, 1 );
+		}
 
 		\add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_classic_editor_scripts' ] );
 		if ( \intval( Utils::get_option( 'duplicate_post_show_link_in', 'submitbox' ) ) === 1 ) {
@@ -205,6 +207,10 @@ class Classic_Editor {
 	 * @return string The to-be-used copy of the text.
 	 */
 	public function change_republish_strings_classic_editor( $translation, $text ) {
+		if ( ! \in_array( $text, [ 'Publish', 'Publish on: %s' ], true ) ) {
+			return $translation;
+		}
+
 		if ( $this->should_change_rewrite_republish_copy( \get_post() ) ) {
 			if ( $text === 'Publish' ) {
 				return \__( 'Republish', 'duplicate-post' );
@@ -228,7 +234,7 @@ class Classic_Editor {
 	 * @return string The to-be-used copy of the text.
 	 */
 	public function change_schedule_strings_classic_editor( $translation, $text ) {
-		if ( $this->should_change_rewrite_republish_copy( \get_post() ) && $text === 'Schedule' ) {
+		if ( $text === 'Schedule' && $this->should_change_rewrite_republish_copy( \get_post() ) ) {
 			return \__( 'Schedule republish', 'duplicate-post' );
 		}
 
