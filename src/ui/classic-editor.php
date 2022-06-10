@@ -185,7 +185,7 @@ class Classic_Editor {
 
 		if ( $post instanceof WP_Post && $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
 			?>
-				<div id="check-changes-action">
+				<div id="check-changes-action" class="misc-pub-section">
 					<?php \esc_html_e( 'Do you want to compare your changes with the original version before merging? Please save any changes first.', 'duplicate-post' ); ?>
 					<br><br>
 					<a class='button' href=<?php echo \esc_url( $this->link_builder->build_check_link( $post ) ); ?>>
