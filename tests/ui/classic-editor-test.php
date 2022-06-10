@@ -123,6 +123,18 @@ class Classic_Editor_Test extends TestCase {
 	}
 
 	/**
+	 * Tests the registration of the translation hooks.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::hook_translations
+	 */
+	public function test_hook_translations() {
+		$this->instance->hook_translations();
+
+		$this->assertNotFalse( \has_filter( 'gettext', [ $this->instance, 'change_republish_strings_classic_editor' ] ), 'Does not have expected gettext filter' );
+		$this->assertNotFalse( \has_filter( 'gettext_with_context', [ $this->instance, 'change_schedule_strings_classic_editor' ] ), 'Does not have expected gettext_with_context filter' );
+	}
+
+	/**
 	 * Tests the successful enqueue_classic_editor_scripts function.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::enqueue_classic_editor_scripts
