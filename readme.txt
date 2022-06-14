@@ -71,6 +71,22 @@ If Duplicate Post is still in English, or if there are some untranslated strings
 
 == Changelog ==
 
+= 4.5 =
+Release Date: June 28th, 2022
+
+
+Enhancements:
+
+* Reduces the impact of the plugin on the performance of the site by avoding useless calls on the `gettext` filter.
+
+Bugfixes:
+
+* Fixes a bug where a section in the Classic Editor's submitbox would be displayed with incorrect margins.
+
+Other:
+
+* Sets the WordPress tested up to version to 6.0.
+
 = 4.4 =
 Release Date: January 25th, 2022
 
@@ -87,13 +103,6 @@ Bugfixes:
 Other:
 
 * Sets the WordPress tested up to version to 5.9.
-
-= 4.3 =
-Release Date: December 14th, 2021
-
-Bugfixes:
-
-* Fixes a bug where Rewrite & Republish copies could be displayed and queried in the front end.
 
 = Earlier versions =
 For the changelog of earlier versions, please refer to [the changelog on yoast.com](https://yoa.st/duplicate-post-changelog).
