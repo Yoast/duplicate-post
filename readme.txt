@@ -74,10 +74,9 @@ If Duplicate Post is still in English, or if there are some untranslated strings
 = 4.5 =
 Release Date: June 28th, 2022
 
-
 Enhancements:
 
-* Reduces the impact of the plugin on the performance of the site by avoding useless calls on the `gettext` filter.
+* Improves the impact of the plugin on the performance of the site by avoiding useless calls on the `gettext` filter.
 
 Bugfixes:
 
