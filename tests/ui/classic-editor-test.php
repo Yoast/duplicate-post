@@ -19,28 +19,28 @@ class Classic_Editor_Test extends TestCase {
 	/**
 	 * Holds the object to create the action link to duplicate.
 	 *
-	 * @var Link_Builder|\Mockery\MockInterface
+	 * @var Link_Builder|Mockery\MockInterface
 	 */
 	protected $link_builder;
 
 	/**
 	 * Holds the permissions helper.
 	 *
-	 * @var Permissions_Helper|\Mockery\MockInterface
+	 * @var Permissions_Helper|Mockery\MockInterface
 	 */
 	protected $permissions_helper;
 
 	/**
 	 * Holds the asset manager.
 	 *
-	 * @var Asset_Manager|\Mockery\MockInterface
+	 * @var Asset_Manager|Mockery\MockInterface
 	 */
 	protected $asset_manager;
 
 	/**
 	 * The instance.
 	 *
-	 * @var Classic_Editor&\Mockery\MockInterface
+	 * @var Classic_Editor&Mockery\MockInterface
 	 */
 	protected $instance;
 
@@ -112,8 +112,7 @@ class Classic_Editor_Test extends TestCase {
 		$this->assertNotFalse( \has_action( 'post_submitbox_start', [ $this->instance, 'add_rewrite_and_republish_post_button' ] ), 'Does not have expected post_submitbox_start action' );
 		$this->assertNotFalse( \has_action( 'post_submitbox_misc_actions', [ $this->instance, 'add_check_changes_link' ] ), 'Does not have expected post_submitbox_misc_actions action' );
 
-		$this->assertNotFalse( \has_filter( 'gettext', [ $this->instance, 'change_republish_strings_classic_editor' ] ), 'Does not have expected gettext filter' );
-		$this->assertNotFalse( \has_filter( 'gettext_with_context', [ $this->instance, 'change_schedule_strings_classic_editor' ] ), 'Does not have expected gettext_with_context filter' );
+		$this->assertNotFalse( \has_action( 'load-post.php', [ $this->instance, 'hook_translations' ] ), 'Does not have expected load-post.php action' );
 		$this->assertNotFalse( \has_filter( 'post_updated_messages', [ $this->instance, 'change_scheduled_notice_classic_editor' ] ), 'Does not have expected post_updated_messages filter' );
 
 		$this->assertNotFalse( \has_action( 'admin_enqueue_scripts', [ $this->instance, 'enqueue_classic_editor_scripts' ] ), 'Does not have expected admin_enqueue_scripts action (scripts)' );
@@ -121,6 +120,18 @@ class Classic_Editor_Test extends TestCase {
 
 		$this->assertNotFalse( \has_action( 'add_meta_boxes', [ $this->instance, 'remove_slug_meta_box' ] ), 'Does not have expected add_meta_boxes action' );
 		$this->assertNotFalse( \has_filter( 'get_sample_permalink_html', [ $this->instance, 'remove_sample_permalink_slug_editor' ] ), 'Does not have expected get_sample_permalink_html filter' );
+	}
+
+	/**
+	 * Tests the registration of the translation hooks.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::hook_translations
+	 */
+	public function test_hook_translations() {
+		$this->instance->hook_translations();
+
+		$this->assertNotFalse( \has_filter( 'gettext', [ $this->instance, 'change_republish_strings_classic_editor' ] ), 'Does not have expected gettext filter' );
+		$this->assertNotFalse( \has_filter( 'gettext_with_context', [ $this->instance, 'change_schedule_strings_classic_editor' ] ), 'Does not have expected gettext_with_context filter' );
 	}
 
 	/**
@@ -505,7 +516,8 @@ class Classic_Editor_Test extends TestCase {
 	public function test_should_change_republish_strings_date_label() {
 		$this->stubTranslationFunctions();
 
-		$text = 'Publish on: %s';
+		$text   = 'Publish on: %s';
+		$domain = 'default';
 
 		$post            = Mockery::mock( WP_Post::class );
 		$post->post_type = 'post';
@@ -519,7 +531,7 @@ class Classic_Editor_Test extends TestCase {
 			->once()
 			->andReturnTrue();
 
-		$this->assertSame( 'Republish on: %s', $this->instance->change_republish_strings_classic_editor( '', $text ) );
+		$this->assertSame( 'Republish on: %s', $this->instance->change_republish_strings_classic_editor( '', $text, $domain ) );
 	}
 
 	/**
@@ -530,7 +542,8 @@ class Classic_Editor_Test extends TestCase {
 	public function test_should_change_republish_strings() {
 		$this->stubTranslationFunctions();
 
-		$text = 'Publish';
+		$text   = 'Publish';
+		$domain = 'default';
 
 		$post            = Mockery::mock( WP_Post::class );
 		$post->post_type = 'post';
@@ -544,7 +557,7 @@ class Classic_Editor_Test extends TestCase {
 			->once()
 			->andReturnTrue();
 
-		$this->assertSame( 'Republish', $this->instance->change_republish_strings_classic_editor( '', $text ) );
+		$this->assertSame( 'Republish', $this->instance->change_republish_strings_classic_editor( '', $text, $domain ) );
 	}
 
 	/**
@@ -555,6 +568,7 @@ class Classic_Editor_Test extends TestCase {
 	public function test_should_not_change_republish_strings() {
 		$text        = 'Publish';
 		$translation = 'Publish';
+		$domain      = 'default';
 
 		$post            = Mockery::mock( WP_Post::class );
 		$post->post_type = 'post';
@@ -568,7 +582,7 @@ class Classic_Editor_Test extends TestCase {
 			->once()
 			->andReturnFalse();
 
-		$this->assertSame( 'Publish', $this->instance->change_republish_strings_classic_editor( $translation, $text ) );
+		$this->assertSame( 'Publish', $this->instance->change_republish_strings_classic_editor( $translation, $text, $domain ) );
 	}
 
 	/**
@@ -580,20 +594,43 @@ class Classic_Editor_Test extends TestCase {
 	public function test_should_not_change_republish_strings_other_text() {
 		$text        = 'Test';
 		$translation = 'Test';
+		$domain      = 'default';
 
 		$post            = Mockery::mock( WP_Post::class );
 		$post->post_type = 'post';
 
 		Monkey\Functions\expect( '\get_post' )
-			->once()
-			->andReturn( $post );
+			->never();
 
 		$this->instance->expects( 'should_change_rewrite_republish_copy' )
 			->with( $post )
-			->once()
-			->andReturnTrue();
+			->never();
 
-		$this->assertSame( 'Test', $this->instance->change_republish_strings_classic_editor( $translation, $text ) );
+		$this->assertSame( 'Test', $this->instance->change_republish_strings_classic_editor( $translation, $text, $domain ) );
+	}
+
+	/**
+	 * Tests the change_republish_strings_classic_editor function when the copy should not be changed,
+	 * because the domain is not 'default'.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::change_republish_strings_classic_editor
+	 */
+	public function test_should_not_change_republish_strings_other_domain() {
+		$text        = 'Publish';
+		$translation = 'Publish';
+		$domain      = 'other';
+
+		$post            = Mockery::mock( WP_Post::class );
+		$post->post_type = 'post';
+
+		Monkey\Functions\expect( '\get_post' )
+			->never();
+
+		$this->instance->expects( 'should_change_rewrite_republish_copy' )
+			->with( $post )
+			->never();
+
+		$this->assertSame( 'Publish', $this->instance->change_republish_strings_classic_editor( $translation, $text, $domain ) );
 	}
 
 	/**
@@ -604,7 +641,9 @@ class Classic_Editor_Test extends TestCase {
 	public function test_should_change_schedule_strings() {
 		$this->stubTranslationFunctions();
 
-		$text = 'Schedule';
+		$text    = 'Schedule';
+		$context = 'post action/button label';
+		$domain  = 'default';
 
 		$post            = Mockery::mock( WP_Post::class );
 		$post->post_type = 'post';
@@ -618,7 +657,7 @@ class Classic_Editor_Test extends TestCase {
 			->once()
 			->andReturnTrue();
 
-		$this->assertSame( 'Schedule republish', $this->instance->change_schedule_strings_classic_editor( '', $text ) );
+		$this->assertSame( 'Schedule republish', $this->instance->change_schedule_strings_classic_editor( '', $text, $context, $domain ) );
 	}
 
 	/**
@@ -629,6 +668,8 @@ class Classic_Editor_Test extends TestCase {
 	public function test_should_not_change_schedule_strings() {
 		$text        = 'Schedule';
 		$translation = 'Schedule';
+		$context     = 'post action/button label';
+		$domain      = 'default';
 
 		$post            = Mockery::mock( WP_Post::class );
 		$post->post_type = 'post';
@@ -642,7 +683,7 @@ class Classic_Editor_Test extends TestCase {
 			->once()
 			->andReturnFalse();
 
-		$this->assertSame( 'Schedule', $this->instance->change_schedule_strings_classic_editor( $translation, $text ) );
+		$this->assertSame( 'Schedule', $this->instance->change_schedule_strings_classic_editor( $translation, $text, $context, $domain ) );
 	}
 
 	/**
@@ -654,20 +695,70 @@ class Classic_Editor_Test extends TestCase {
 	public function test_should_not_change_schedule_strings_other_text() {
 		$text        = 'Test';
 		$translation = 'Test';
+		$context     = 'post action/button label';
+		$domain      = 'default';
 
 		$post            = Mockery::mock( WP_Post::class );
 		$post->post_type = 'post';
 
 		Monkey\Functions\expect( '\get_post' )
-			->once()
-			->andReturn( $post );
+			->never();
 
 		$this->instance->expects( 'should_change_rewrite_republish_copy' )
 			->with( $post )
-			->once()
-			->andReturnTrue();
+			->never();
 
-		$this->assertSame( 'Test', $this->instance->change_schedule_strings_classic_editor( $translation, $text ) );
+		$this->assertSame( 'Test', $this->instance->change_schedule_strings_classic_editor( $translation, $text, $context, $domain ) );
+	}
+
+	/**
+	 * Tests the change_republish_strings_classic_editor function when the copy should not be changed,
+	 * because the domain is not 'default'.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::change_schedule_strings_classic_editor
+	 */
+	public function test_should_not_change_schedule_strings_other_domain() {
+		$text        = 'Schedule';
+		$translation = 'Schedule';
+		$context     = 'post action/button label';
+		$domain      = 'other';
+
+		$post            = Mockery::mock( WP_Post::class );
+		$post->post_type = 'post';
+
+		Monkey\Functions\expect( '\get_post' )
+			->never();
+
+		$this->instance->expects( 'should_change_rewrite_republish_copy' )
+			->with( $post )
+			->never();
+
+		$this->assertSame( 'Schedule', $this->instance->change_schedule_strings_classic_editor( $translation, $text, $context, $domain ) );
+	}
+
+	/**
+	 * Tests the change_republish_strings_classic_editor function when the copy should not be changed,
+	 * because the context is not 'default'.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::change_schedule_strings_classic_editor
+	 */
+	public function test_should_not_change_schedule_strings_other_context() {
+		$text        = 'Schedule';
+		$translation = 'Schedule';
+		$context     = 'other context';
+		$domain      = 'default';
+
+		$post            = Mockery::mock( WP_Post::class );
+		$post->post_type = 'post';
+
+		Monkey\Functions\expect( '\get_post' )
+			->never();
+
+		$this->instance->expects( 'should_change_rewrite_republish_copy' )
+			->with( $post )
+			->never();
+
+		$this->assertSame( 'Schedule', $this->instance->change_schedule_strings_classic_editor( $translation, $text, $context, $domain ) );
 	}
 
 	/**
