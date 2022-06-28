@@ -9,7 +9,7 @@
  * Plugin Name: Yoast Duplicate Post
  * Plugin URI:  https://yoast.com/wordpress/plugins/duplicate-post/
  * Description: The go-to tool for cloning posts and pages, including the powerful Rewrite & Republish feature.
- * Version:     4.5-RC1
+ * Version:     4.5
  * Author:      Enrico Battocchi & Team Yoast
  * Author URI:  https://yoast.com
  * Text Domain: duplicate-post
@@ -45,7 +45,7 @@ if ( ! defined( 'DUPLICATE_POST_PATH' ) ) {
 	define( 'DUPLICATE_POST_PATH', plugin_dir_path( __FILE__ ) );
 }
 
-define( 'DUPLICATE_POST_CURRENT_VERSION', '4.5-RC1' );
+define( 'DUPLICATE_POST_CURRENT_VERSION', '4.5' );
 
 $duplicate_post_autoload_file = DUPLICATE_POST_PATH . 'vendor/autoload.php';
 
