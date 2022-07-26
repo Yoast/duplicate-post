@@ -244,7 +244,7 @@ if ( ! \defined( 'DUPLICATE_POST_CURRENT_VERSION' ) ) {
 			</table>
 		</section>
 		<p class="submit">
-			<input type="submit" class="button button-primary" value="<?php \esc_html_e( 'Save changes', 'duplicate-post' ); ?>"/>
+			<input type="submit" class="button button-primary" value="<?php \esc_attr_e( 'Save changes', 'duplicate-post' ); ?>"/>
 		</p>
 	</form>
 </div>
