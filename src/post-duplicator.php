@@ -157,7 +157,7 @@ class Post_Duplicator {
 			'copy_excerpt'    => true,
 			'copy_author'     => true,
 			'copy_menu_order' => true,
-			'use_filters'     => false,
+			'use_filters'     => true,
 		];
 		$defaults = $this->get_default_options();
 		$options  = \wp_parse_args( $options, $defaults );
