@@ -3,7 +3,7 @@ Contributors: 		yoast, lopo
 Donate link: 		https://yoast.com/wordpress/plugins/duplicate-post/
 Tags: 				duplicate post, copy, clone
 Requires at least: 	5.9
-Tested up to: 		6.0
+Tested up to: 		6.1
 Stable tag: 		4.5
 Requires PHP:		5.6.20
 License: 			GPLv2 or later
