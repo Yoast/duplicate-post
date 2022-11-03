@@ -71,7 +71,8 @@ If Duplicate Post is still in English, or if there are some untranslated strings
 
 == Changelog ==
 
-= 4.5 =
+## 4.5 
+
 Release Date: June 28th, 2022
 
 Enhancements:
@@ -86,7 +87,8 @@ Other:
 
 * Sets the WordPress tested up to version to 6.0.
 
-= 4.4 =
+## 4.4 
+
 Release Date: January 25th, 2022
 
 Enhancements:
