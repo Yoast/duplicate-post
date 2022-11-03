@@ -5,7 +5,8 @@ module.exports = {
 	"duplicate-post": {
 		options: {
 			// header:
-			// = 15.7 =
+			// ## 15.7 
+			//
 			// Release Date: January 26th, 2021
 			//
 			// Enhancements:
