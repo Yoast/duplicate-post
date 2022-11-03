@@ -75,15 +75,15 @@ If Duplicate Post is still in English, or if there are some untranslated strings
 
 Release Date: June 28th, 2022
 
-Enhancements:
+#### Enhancements
 
 * Improves the impact of the plugin on the performance of the site by avoiding useless calls on the `gettext` filter.
 
-Bugfixes:
+#### Bugfixes
 
 * Fixes a bug where a section in the Classic Editor's submitbox would be displayed with incorrect margins.
 
-Other:
+#### Other
 
 * Sets the WordPress tested up to version to 6.0.
 
@@ -91,17 +91,17 @@ Other:
 
 Release Date: January 25th, 2022
 
-Enhancements:
+#### Enhancements
 
 * Converts the upgrade notice into a welcome notice for first-time users.
 
-Bugfixes:
+#### Bugfixes
 
 * Fixes a bug where HTML tags in a Custom HTML block would be removed when republishing a scheduled Rewrite & Republish copy.
 * Fixes a bug where the button style would be broken in the Classic Editor.
 * Fixes a bug where a fatal error would be triggered in the Widgets page in combination with some themes or plugins.
 
-Other:
+#### Other
 
 * Sets the WordPress tested up to version to 5.9.
 
