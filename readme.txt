@@ -73,7 +73,7 @@ If Duplicate Post is still in English, or if there are some untranslated strings
 
 ## 4.5
 
-Release Date: June 28th, 2022
+Release date: June 28th, 2022
 
 #### Enhancements
 
@@ -89,7 +89,7 @@ Release Date: June 28th, 2022
 
 ## 4.4
 
-Release Date: January 25th, 2022
+Release date: January 25th, 2022
 
 #### Enhancements
 
