@@ -73,7 +73,7 @@ If Duplicate Post is still in English, or if there are some untranslated strings
 
 ## 4.6
 
-Release Date: November 15th, 2022
+Release date: November 15th, 2022
 
 #### Bugfixes
 
