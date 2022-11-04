@@ -86,7 +86,7 @@ Release Date: November 15th, 2022
 
 ## 4.5
 
-Release Date: June 28th, 2022
+Release date: June 28th, 2022
 
 #### Enhancements
 
