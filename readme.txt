@@ -2,8 +2,8 @@
 Contributors: 		yoast, lopo
 Donate link: 		https://yoast.com/wordpress/plugins/duplicate-post/
 Tags: 				duplicate post, copy, clone
-Requires at least: 	5.8
-Tested up to: 		6.0
+Requires at least: 	5.9
+Tested up to: 		6.1
 Stable tag: 		4.5
 Requires PHP:		5.6.20
 License: 			GPLv2 or later
@@ -71,37 +71,34 @@ If Duplicate Post is still in English, or if there are some untranslated strings
 
 == Changelog ==
 
-= 4.5 =
-Release Date: June 28th, 2022
+## 4.6
 
-Enhancements:
+Release date: November 15th, 2022
+
+#### Bugfixes
+
+* Minor security improvement
+* this line Should be removed on next RC test run ;-)
+
+#### Other
+
+* Sets the minimum supported WordPress version to 5.9.
+
+## 4.5
+
+Release date: June 28th, 2022
+
+#### Enhancements
 
 * Improves the impact of the plugin on the performance of the site by avoiding useless calls on the `gettext` filter.
 
-Bugfixes:
+#### Bugfixes
 
 * Fixes a bug where a section in the Classic Editor's submitbox would be displayed with incorrect margins.
 
-Other:
+#### Other
 
 * Sets the WordPress tested up to version to 6.0.
-
-= 4.4 =
-Release Date: January 25th, 2022
-
-Enhancements:
-
-* Converts the upgrade notice into a welcome notice for first-time users.
-
-Bugfixes:
-
-* Fixes a bug where HTML tags in a Custom HTML block would be removed when republishing a scheduled Rewrite & Republish copy.
-* Fixes a bug where the button style would be broken in the Classic Editor.
-* Fixes a bug where a fatal error would be triggered in the Widgets page in combination with some themes or plugins.
-
-Other:
-
-* Sets the WordPress tested up to version to 5.9.
 
 = Earlier versions =
 For the changelog of earlier versions, please refer to [the changelog on yoast.com](https://yoa.st/duplicate-post-changelog).
