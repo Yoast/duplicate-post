@@ -80,9 +80,9 @@ This PR affects the following parts of the plugin, which may require extra testi
 * [ ] I have tested this code to the best of my abilities
 * [ ] I have added unittests to verify the code works as intended
 
-## WBSO
+## Innovation
 
-* [ ] No WBSO project is applicable for this PR.
-* [ ] This PR falls under a WBSO project. I have attached the `innovation` label and noted the work hours.
+* [ ] No innovation project is applicable for this PR.
+* [ ] This PR falls under an innovation project. I have attached the `innovation` label and noted the work hours.
 
 Fixes #
