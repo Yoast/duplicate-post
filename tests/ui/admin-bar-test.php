@@ -490,8 +490,13 @@ class Admin_Bar_Test extends TestCase {
 	 */
 	public function test_get_current_post_unsuccessful_frontend() {
 		global $wp_the_query;
-		$wp_the_query    = Mockery::mock( WP_Query::class );
-		$post            = Mockery::mock( WP_Term::class );
+		$wp_the_query = Mockery::mock( WP_Query::class );
+		$post         = Mockery::mock( WP_Term::class );
+
+		/*
+		 * Take note that the property being set is not a property declared on WP_Term,
+		 * it just needs to be set to test a specific edge-case.
+		 */
 		$post->post_type = 'post';
 
 		Monkey\Functions\expect( '\is_admin' )
@@ -511,6 +516,9 @@ class Admin_Bar_Test extends TestCase {
 
 		$this->permissions_helper
 			->expects( 'is_edit_post_screen' )
+			->never();
+
+		Monkey\Functions\expect( '\is_singular' )
 			->never();
 
 		$this->permissions_helper

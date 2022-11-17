@@ -5,6 +5,8 @@ namespace Yoast\WP\Duplicate_Post\Tests\Admin;
 use Brain\Monkey;
 use Mockery;
 use stdClass;
+use WP_Post_Type;
+use WP_Taxonomy;
 use Yoast\WP\Duplicate_Post\Admin\Options_Form_Generator;
 use Yoast\WP\Duplicate_Post\Admin\Options_Inputs;
 use Yoast\WP\Duplicate_Post\Tests\TestCase;
@@ -48,13 +50,13 @@ class Options_Form_Generator_Test extends TestCase {
 			'edit_posts' => 'edit_posts',
 		];
 
-		$post_type1          = Mockery::mock( 'WP_Post_Type' );
+		$post_type1          = Mockery::mock( WP_Post_Type::class );
 		$post_type1->name    = 'Books';
 		$post_type1->show_ui = true;
 		$post_type1->labels  = $labels;
 		$post_type1->cap     = (object) $caps;
 
-		$post_type2          = Mockery::mock( 'WP_Post_Type' );
+		$post_type2          = Mockery::mock( WP_Post_Type::class );
 		$post_type2->name    = 'Movies';
 		$post_type2->show_ui = true;
 		$post_type2->labels  = $labels;
@@ -304,22 +306,22 @@ class Options_Form_Generator_Test extends TestCase {
 		$labels4       = new stdClass();
 		$labels4->name = 'Bar';
 
-		$taxonomy1         = Mockery::mock( 'WP_Taxonomy' );
+		$taxonomy1         = Mockery::mock( WP_Taxonomy::class );
 		$taxonomy1->name   = 'custom_taxonomy_public_1';
 		$taxonomy1->public = true;
 		$taxonomy1->labels = $labels1;
 
-		$taxonomy2         = Mockery::mock( 'WP_Taxonomy' );
+		$taxonomy2         = Mockery::mock( WP_Taxonomy::class );
 		$taxonomy2->name   = 'custom_taxonomy_private_2';
 		$taxonomy2->public = false;
 		$taxonomy2->labels = $labels2;
 
-		$taxonomy3         = Mockery::mock( 'WP_Taxonomy' );
+		$taxonomy3         = Mockery::mock( WP_Taxonomy::class );
 		$taxonomy3->name   = 'custom_taxonomy_public_2';
 		$taxonomy3->public = true;
 		$taxonomy3->labels = $labels3;
 
-		$taxonomy4         = Mockery::mock( 'WP_Taxonomy' );
+		$taxonomy4         = Mockery::mock( WP_Taxonomy::class );
 		$taxonomy4->name   = 'custom_taxonomy_private_1';
 		$taxonomy4->public = false;
 		$taxonomy4->labels = $labels4;

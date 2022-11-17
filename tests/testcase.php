@@ -4,6 +4,7 @@ namespace Yoast\WP\Duplicate_Post\Tests;
 
 use Brain\Monkey\Functions;
 use Mockery;
+use WP_Role;
 use Yoast\WPTestUtils\BrainMonkey\YoastTestCase;
 
 /**
@@ -19,7 +20,7 @@ abstract class TestCase extends YoastTestCase {
 	protected function stub_wp_roles() {
 
 		// Mock roles to use across several tests.
-		$role1               = Mockery::mock( 'WP_Role' );
+		$role1               = Mockery::mock( WP_Role::class );
 		$role1->name         = 'Editor';
 		$role1->capabilities = [
 			'read'       => 'read',
@@ -34,7 +35,7 @@ abstract class TestCase extends YoastTestCase {
 			]
 		);
 
-		$role2               = Mockery::mock( 'WP_Role' );
+		$role2               = Mockery::mock( WP_Role::class );
 		$role2->name         = 'Administrator';
 		$role2->capabilities = [
 			'read'       => 'read',
@@ -49,7 +50,7 @@ abstract class TestCase extends YoastTestCase {
 			]
 		);
 
-		$role3               = Mockery::mock( 'WP_Role' );
+		$role3               = Mockery::mock( WP_Role::class );
 		$role3->name         = 'Subscriber';
 		$role3->capabilities = [];
 		$role3->allows(
