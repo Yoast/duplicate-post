@@ -19,3 +19,16 @@ if ( file_exists( dirname( __DIR__ ) . '/vendor/autoload.php' ) === false ) {
 
 require_once __DIR__ . '/../vendor/yoast/wp-test-utils/src/BrainMonkey/bootstrap.php';
 require_once __DIR__ . '/../vendor/autoload.php';
+
+// Create the necessary test doubles for WP native classes on which properties are being set.
+Yoast\WPTestUtils\BrainMonkey\makeDoublesForUnavailableClasses(
+	[
+		'WP_Post',
+		'WP_Post_Type',
+		'WP_Role',
+		'WP_Screen',
+		'WP_Taxonomy',
+		'WP_Term',
+		'WP_User',
+	]
+);
