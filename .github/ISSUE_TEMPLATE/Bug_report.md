@@ -48,6 +48,7 @@ If possible, please provide a screenshot, a screen recording or a code snippet w
 #### Used versions
 * Device you are using:
 * Operating system:
+* PHP version:
 * WordPress version: 
 * WordPress Theme:
 * Yoast Duplicate Post version: 
