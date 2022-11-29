@@ -71,6 +71,19 @@ If Duplicate Post is still in English, or if there are some untranslated strings
 
 == Changelog ==
 
+= 4.6 =
+
+Release date: December 13th, 2022
+
+#### Bugfixes
+
+* Minor security improvement
+
+#### Other
+
+* Sets the minimum supported WordPress version to 5.9.
+* Verified PHP 8.2 compatibility
+
 = 4.5 =
 
 Release date: June 28th, 2022
@@ -86,24 +99,6 @@ Release date: June 28th, 2022
 #### Other
 
 * Sets the WordPress tested up to version to 6.0.
-
-= 4.4 =
-
-Release date: January 25th, 2022
-
-#### Enhancements
-
-* Converts the upgrade notice into a welcome notice for first-time users.
-
-#### Bugfixes
-
-* Fixes a bug where HTML tags in a Custom HTML block would be removed when republishing a scheduled Rewrite & Republish copy.
-* Fixes a bug where the button style would be broken in the Classic Editor.
-* Fixes a bug where a fatal error would be triggered in the Widgets page in combination with some themes or plugins.
-
-#### Other
-
-* Sets the WordPress tested up to version to 5.9.
 
 = Earlier versions =
 For the changelog of earlier versions, please refer to [the changelog on yoast.com](https://yoa.st/duplicate-post-changelog).
