@@ -73,7 +73,7 @@ If Duplicate Post is still in English, or if there are some untranslated strings
 
 = 4.5 =
 
-Release date: June 28th, 2022
+Release date: 2022-06-28
 
 #### Enhancements
 
@@ -89,7 +89,7 @@ Release date: June 28th, 2022
 
 = 4.4 =
 
-Release date: January 25th, 2022
+Release date: 2022-01-25
 
 #### Enhancements
 
