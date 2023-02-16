@@ -293,7 +293,7 @@ function duplicate_post_copy_post_taxonomies( $new_id, $post ) {
 			$post_taxonomies[] = 'post_format';
 		}
 
-		$taxonomies_blacklist = get_option( 'duplicate_post_taxonomies_blacklist' );
+		$taxonomies_blacklist = get_option( 'duplicate_post_taxonomies_blacklist', [] );
 		if ( empty( $taxonomies_blacklist ) ) {
 			$taxonomies_blacklist = [];
 		}
