@@ -229,7 +229,7 @@ function duplicate_post_show_update_notice() {
 
 	echo '<div id="duplicate-post-notice" class="notice is-dismissible" style="display: flex; align-items: flex-start;">
 			<img src="' . esc_url( $img_path ) . '" alt="" style="margin: 1em 1em 1em 0; width: 130px; align-self: center;"/>
-			<div stle="margin: 0.5em">
+			<div style="margin: 0.5em">
 				<h1 style="font-size: 14px; color: #a4286a; font-weight: 600; margin-top: 8px;">' . $title . '</h1>' // phpcs:ignore WordPress.Security.EscapeOutput -- Reason: escaped properly above.
 				. Newsletter::newsletter_signup_form() // phpcs:ignore WordPress.Security.EscapeOutput -- Reason: escaped in newsletter.php.
 			. '</div>
