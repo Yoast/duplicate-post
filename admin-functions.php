@@ -151,8 +151,8 @@ function duplicate_post_plugin_upgrade() {
 	);
 	add_option( 'duplicate_post_show_link_in', $show_links_in_defaults );
 
-	$taxonomies_blacklist = get_option( 'duplicate_post_taxonomies_blacklist' );
-	if ( $taxonomies_blacklist === '' ) {
+	$taxonomies_blacklist = get_option( 'duplicate_post_taxonomies_blacklist', [] );
+	if ( empty( $taxonomies_blacklist ) ) {
 		$taxonomies_blacklist = [];
 	}
 	if ( in_array( 'post_format', $taxonomies_blacklist, true ) ) {
