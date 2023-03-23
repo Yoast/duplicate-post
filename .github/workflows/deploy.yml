@@ -60,7 +60,7 @@ jobs:
       - name: Install PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 5.6
+          php-version: 7.2
           coverage: none
 
       # This action also handles the caching of the Yarn dependencies.
