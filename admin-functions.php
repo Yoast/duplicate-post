@@ -275,7 +275,7 @@ function duplicate_post_copy_post_taxonomies( $new_id, $post ) {
 	global $wpdb;
 	if ( isset( $wpdb->terms ) ) {
 		// Clear default category (added by wp_insert_post).
-		wp_set_object_terms( $new_id, null, 'category' );
+		wp_set_object_terms( $new_id, [], 'category' );
 
 		$post_taxonomies = get_object_taxonomies( $post->post_type );
 		// Several plugins just add support to post-formats but don't register post_format taxonomy.
