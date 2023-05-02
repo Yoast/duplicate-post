@@ -13,6 +13,7 @@
 [![Lint](https://github.com/Yoast/duplicate-post/actions/workflows/lint.yml/badge.svg)](https://github.com/Yoast/duplicate-post/actions/workflows/lint.yml)
 [![Test](https://github.com/Yoast/duplicate-post/actions/workflows/test.yml/badge.svg)](https://github.com/Yoast/duplicate-post/actions/workflows/test.yml)
 [![Deployment](https://github.com/Yoast/duplicate-post/actions/workflows/deploy.yml/badge.svg)](https://github.com/Yoast/duplicate-post/actions/workflows/deploy.yml)
+[![Coverage Status](https://coveralls.io/repos/github/Yoast/duplicate-post/badge.svg?branch=trunk)](https://coveralls.io/github/Yoast/duplicate-post?branch=trunk)
 
 > Duplicate Post plugin for WordPress https://yoast.com/wordpress/plugins/duplicate-post/
 

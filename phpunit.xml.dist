@@ -26,7 +26,18 @@
 
 	<filter>
 		<whitelist addUncoveredFilesFromWhitelist="true" processUncoveredFilesFromWhitelist="false">
+			<file>./admin-functions.php</file>
+			<file>./common-functions.php</file>
+			<file>./duplicate-post.php</file>
+			<file>./options.php</file>
+			<directory>./compat</directory>
 			<directory>./src</directory>
 		</whitelist>
 	</filter>
+
+	<logging>
+		<log type="coverage-text" target="php://stdout" showOnlySummary="true"/>
+		<log type="coverage-clover" target="build/logs/clover.xml"/>
+	</logging>
+
 </phpunit>
