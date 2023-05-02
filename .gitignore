@@ -33,6 +33,7 @@ tests/cli/vendor
 /tests/bin/tmp
 /tests/e2e-tests/config/local-*.json
 /tests/e2e-tests/config/local.json
+build/
 
 ############
 ## Composer
@@ -54,6 +55,7 @@ phpcs.xml
 .cache/phpcs.cache
 phpunit.xml
 .phpunit.result.cache
+
 ############
 # Temp files
 ############
