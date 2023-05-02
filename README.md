@@ -8,7 +8,11 @@
 [![WordPress Plugin Downloads](https://img.shields.io/wordpress/plugin/dt/duplicate-post.svg)](https://wordpress.org/plugins/duplicate-post/advanced/)
 [![WordPress Plugin Rating](https://img.shields.io/wordpress/plugin/stars/duplicate-post.svg)](https://wordpress.org/support/plugin/duplicate-post/reviews/)
 [![GitHub](https://img.shields.io/github/license/Yoast/duplicate-post.svg)](https://github.com/Yoast/duplicate-post/blob/future/LICENSE)
-[![Build Status](https://travis-ci.org/Yoast/duplicate-post.svg?branch=develop)](https://travis-ci.org/Yoast/duplicate-post)
+
+[![CS](https://github.com/Yoast/duplicate-post/actions/workflows/cs.yml/badge.svg)](https://github.com/Yoast/duplicate-post/actions/workflows/cs.yml)
+[![Lint](https://github.com/Yoast/duplicate-post/actions/workflows/lint.yml/badge.svg)](https://github.com/Yoast/duplicate-post/actions/workflows/lint.yml)
+[![Test](https://github.com/Yoast/duplicate-post/actions/workflows/test.yml/badge.svg)](https://github.com/Yoast/duplicate-post/actions/workflows/test.yml)
+[![Deployment](https://github.com/Yoast/duplicate-post/actions/workflows/deploy.yml/badge.svg)](https://github.com/Yoast/duplicate-post/actions/workflows/deploy.yml)
 
 > Duplicate Post plugin for WordPress https://yoast.com/wordpress/plugins/duplicate-post/
 
