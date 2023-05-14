@@ -1,11 +1,55 @@
 name: CS
 
 on:
-  # Run on all pushes (except to main) and on all pull requests.
+  # Run on all relevant pushes (except to main) and on all relevant pull requests.
   push:
     branches-ignore:
       - 'main'
+    paths-ignore:
+      - '**.css'
+      - '**.js'
+      - '**.md'
+      - '**.png'
+      - '**.txt'
+      - '.babelrc'
+      - '.editorconfig'
+      - '.gitattributes'
+      - '.gitignore'
+      - 'CHANGELOG'
+      - 'LICENSE'
+      - 'package.json'
+      - 'phpunit.xml.dist'
+      - 'yarn.lock'
+      - '.github/dependabot.yml'
+      - '.github/workflows/deploy.yml'
+      - '.github/workflows/lint.yml'
+      - '.github/workflows/test.yml'
+      - 'config/**'
+      - 'css/**'
+      - 'js/**'
   pull_request:
+    paths-ignore:
+      - '**.css'
+      - '**.js'
+      - '**.md'
+      - '**.png'
+      - '**.txt'
+      - '.babelrc'
+      - '.editorconfig'
+      - '.gitattributes'
+      - '.gitignore'
+      - 'CHANGELOG'
+      - 'LICENSE'
+      - 'package.json'
+      - 'phpunit.xml.dist'
+      - 'yarn.lock'
+      - '.github/dependabot.yml'
+      - '.github/workflows/deploy.yml'
+      - '.github/workflows/lint.yml'
+      - '.github/workflows/test.yml'
+      - 'config/**'
+      - 'css/**'
+      - 'js/**'
   # Allow manually triggering the workflow.
   workflow_dispatch:
 
