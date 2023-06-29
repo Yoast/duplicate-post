@@ -1,11 +1,11 @@
 <?php
 
-namespace Yoast\WP\Duplicate_Post\Tests\Watchers;
+namespace Yoast\WP\Duplicate_Post\Tests\Unit\Watchers;
 
 use Brain\Monkey;
 use Mockery;
 use Yoast\WP\Duplicate_Post\Permissions_Helper;
-use Yoast\WP\Duplicate_Post\Tests\TestCase;
+use Yoast\WP\Duplicate_Post\Tests\Unit\TestCase;
 use Yoast\WP\Duplicate_Post\Watchers\Republished_Post_Watcher;
 
 /**

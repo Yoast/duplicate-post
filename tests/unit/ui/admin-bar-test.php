@@ -1,6 +1,6 @@
 <?php
 
-namespace Yoast\WP\Duplicate_Post\Tests\UI;
+namespace Yoast\WP\Duplicate_Post\Tests\Unit\UI;
 
 use Brain\Monkey;
 use Mockery;
@@ -9,7 +9,7 @@ use WP_Post;
 use WP_Query;
 use WP_Term;
 use Yoast\WP\Duplicate_Post\Permissions_Helper;
-use Yoast\WP\Duplicate_Post\Tests\TestCase;
+use Yoast\WP\Duplicate_Post\Tests\Unit\TestCase;
 use Yoast\WP\Duplicate_Post\UI\Admin_Bar;
 use Yoast\WP\Duplicate_Post\UI\Asset_Manager;
 use Yoast\WP\Duplicate_Post\UI\Link_Builder;

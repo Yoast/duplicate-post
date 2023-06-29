@@ -1,11 +1,11 @@
 <?php
 
-namespace Yoast\WP\Duplicate_Post\Tests\Admin;
+namespace Yoast\WP\Duplicate_Post\Tests\Unit\Admin;
 
 use Brain\Monkey;
 use Mockery;
 use Yoast\WP\Duplicate_Post\Admin\Options;
-use Yoast\WP\Duplicate_Post\Tests\TestCase;
+use Yoast\WP\Duplicate_Post\Tests\Unit\TestCase;
 
 /**
  * Test the Options class.

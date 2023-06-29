@@ -1,9 +1,9 @@
 <?php
 
-namespace Yoast\WP\Duplicate_Post\Tests\Watchers;
+namespace Yoast\WP\Duplicate_Post\Tests\Unit\Watchers;
 
 use Mockery;
-use Yoast\WP\Duplicate_Post\Tests\TestCase;
+use Yoast\WP\Duplicate_Post\Tests\Unit\TestCase;
 use Yoast\WP\Duplicate_Post\Watchers\Bulk_Actions_Watcher;
 
 /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace Yoast\WP\Duplicate_Post\Tests;
+namespace Yoast\WP\Duplicate_Post\Tests\Unit;
 
 use Brain\Monkey;
 use Mockery;

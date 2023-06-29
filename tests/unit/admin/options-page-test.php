@@ -1,13 +1,13 @@
 <?php
 
-namespace Yoast\WP\Duplicate_Post\Tests\Admin;
+namespace Yoast\WP\Duplicate_Post\Tests\Unit\Admin;
 
 use Brain\Monkey;
 use Mockery;
 use Yoast\WP\Duplicate_Post\Admin\Options;
 use Yoast\WP\Duplicate_Post\Admin\Options_Form_Generator;
 use Yoast\WP\Duplicate_Post\Admin\Options_Page;
-use Yoast\WP\Duplicate_Post\Tests\TestCase;
+use Yoast\WP\Duplicate_Post\Tests\Unit\TestCase;
 use Yoast\WP\Duplicate_Post\UI\Asset_Manager;
 
 /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace Yoast\WP\Duplicate_Post\Tests\Admin;
+namespace Yoast\WP\Duplicate_Post\Tests\Unit\Admin;
 
 use Brain\Monkey;
 use Mockery;
@@ -9,7 +9,7 @@ use WP_Post_Type;
 use WP_Taxonomy;
 use Yoast\WP\Duplicate_Post\Admin\Options_Form_Generator;
 use Yoast\WP\Duplicate_Post\Admin\Options_Inputs;
-use Yoast\WP\Duplicate_Post\Tests\TestCase;
+use Yoast\WP\Duplicate_Post\Tests\Unit\TestCase;
 
 /**
  * Test the Options_Form_Generator class.

@@ -1,13 +1,13 @@
 <?php
 
-namespace Yoast\WP\Duplicate_Post\Tests\Handlers;
+namespace Yoast\WP\Duplicate_Post\Tests\Unit\Handlers;
 
 use Brain\Monkey;
 use Mockery;
 use WP_Post;
 use Yoast\WP\Duplicate_Post\Handlers\Check_Changes_Handler;
 use Yoast\WP\Duplicate_Post\Permissions_Helper;
-use Yoast\WP\Duplicate_Post\Tests\TestCase;
+use Yoast\WP\Duplicate_Post\Tests\Unit\TestCase;
 
 /**
  * Test the Check_Changes_Handler class.

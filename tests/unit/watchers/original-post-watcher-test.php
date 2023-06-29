@@ -1,18 +1,18 @@
 <?php
 
-namespace Yoast\WP\Duplicate_Post\Tests\Watchers;
+namespace Yoast\WP\Duplicate_Post\Tests\Unit\Watchers;
 
 use Brain\Monkey;
 use Mockery;
 use WP_Post;
 use Yoast\WP\Duplicate_Post\Permissions_Helper;
-use Yoast\WP\Duplicate_Post\Tests\TestCase;
-use Yoast\WP\Duplicate_Post\Watchers\Copied_Post_Watcher;
+use Yoast\WP\Duplicate_Post\Tests\Unit\TestCase;
+use Yoast\WP\Duplicate_Post\Watchers\Original_Post_Watcher;
 
 /**
- * Test the Copied_Post_Watcher class.
+ * Test the Original_Post_Watcher class.
  */
-class Copied_Post_Watcher_Test extends TestCase {
+class Original_Post_Watcher_Test extends TestCase {
 
 	/**
 	 * Holds the permissions helper.
@@ -24,7 +24,7 @@ class Copied_Post_Watcher_Test extends TestCase {
 	/**
 	 * The instance.
 	 *
-	 * @var Copied_Post_Watcher
+	 * @var Original_Post_Watcher
 	 */
 	protected $instance;
 
@@ -37,7 +37,7 @@ class Copied_Post_Watcher_Test extends TestCase {
 		$this->permissions_helper = Mockery::mock( Permissions_Helper::class );
 
 		$this->instance = Mockery::mock(
-			Copied_Post_Watcher::class
+			Original_Post_Watcher::class
 		)->makePartial();
 		$this->instance->__construct( $this->permissions_helper );
 	}
@@ -45,7 +45,7 @@ class Copied_Post_Watcher_Test extends TestCase {
 	/**
 	 * Tests the constructor.
 	 *
-	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Copied_Post_Watcher::__construct
+	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Original_Post_Watcher::__construct
 	 */
 	public function test_constructor() {
 		$this->assertInstanceOf(
@@ -57,7 +57,7 @@ class Copied_Post_Watcher_Test extends TestCase {
 	/**
 	 * Tests the registration of the hooks.
 	 *
-	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Copied_Post_Watcher::register_hooks
+	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Original_Post_Watcher::register_hooks
 	 */
 	public function test_register_hooks() {
 		$this->instance->register_hooks();
@@ -67,95 +67,23 @@ class Copied_Post_Watcher_Test extends TestCase {
 	}
 
 	/**
-	 * Tests the get_notice_text function when the copy is not scheduled.
+	 * Tests the get_notice_text function.
 	 *
-	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Copied_Post_Watcher::get_notice_text
+	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Original_Post_Watcher::get_notice_text
 	 */
-	public function test_get_notice_text_not_scheduled() {
+	public function test_get_notice_text() {
 		$this->stubTranslationFunctions();
 
-		$post = Mockery::mock( WP_Post::class );
-
-		$this->permissions_helper
-			->expects( 'has_scheduled_rewrite_and_republish_copy' )
-			->with( $post )
-			->andReturnFalse();
-
-		$this->permissions_helper
-			->expects( 'has_trashed_rewrite_and_republish_copy' )
-			->with( $post )
-			->andReturnFalse();
-
 		$this->assertSame(
-			'A duplicate of this post was made. Please note that any changes you make to this post will be replaced when the duplicated version is republished.',
-			$this->instance->get_notice_text( $post )
-		);
-	}
-
-	/**
-	 * Tests the get_notice_text function when the copy is scheduled.
-	 *
-	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Copied_Post_Watcher::get_notice_text
-	 */
-	public function test_get_notice_text_scheduled() {
-		$this->stubTranslationFunctions();
-
-		$post = Mockery::mock( WP_Post::class );
-		$copy = Mockery::mock( WP_Post::class );
-
-		$this->permissions_helper
-			->expects( 'has_scheduled_rewrite_and_republish_copy' )
-			->with( $post )
-			->andReturn( $copy );
-
-		$this->permissions_helper
-			->expects( 'has_trashed_rewrite_and_republish_copy' )
-			->with( $post )
-			->andReturnFalse();
-
-		Monkey\Functions\expect( '\get_option' )
-			->twice()
-			->andReturnValues( [ 'Y/m/d', 'g:i a' ] );
-
-		Monkey\Functions\expect( '\get_the_time' )
-			->twice()
-			->andReturnValues( [ '2020/12/02', '10:30 am' ] );
-
-		$this->assertSame(
-			'A duplicate of this post was made, which is scheduled to replace this post on 2020/12/02 at 10:30 am.',
-			$this->instance->get_notice_text( $post )
-		);
-	}
-
-	/**
-	 * Tests the get_notice_text function when the copy is in the trash.
-	 *
-	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Copied_Post_Watcher::get_notice_text
-	 */
-	public function test_get_notice_text_copy_in_the_trash() {
-		$this->stubTranslationFunctions();
-
-		$post = Mockery::mock( WP_Post::class );
-
-		$this->permissions_helper
-			->expects( 'has_scheduled_rewrite_and_republish_copy' )
-			->never();
-
-		$this->permissions_helper
-			->expects( 'has_trashed_rewrite_and_republish_copy' )
-			->with( $post )
-			->andReturnTrue();
-
-		$this->assertSame(
-			'You can only make one Rewrite & Republish duplicate at a time, and a duplicate of this post already exists in the trash. Permanently delete it if you want to make a new duplicate.',
-			$this->instance->get_notice_text( $post )
+			'The original post has been edited in the meantime. If you click "Republish", this rewritten post will replace the original post.',
+			$this->instance->get_notice_text()
 		);
 	}
 
 	/**
 	 * Tests the add_admin_notice function on the Classic Editor.
 	 *
-	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Copied_Post_Watcher::add_admin_notice
+	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Original_Post_Watcher::add_admin_notice
 	 */
 	public function test_add_admin_notice_classic() {
 		$this->stubEscapeFunctions();
@@ -170,7 +98,7 @@ class Copied_Post_Watcher_Test extends TestCase {
 			->andReturn( $post );
 
 		$this->permissions_helper
-			->expects( 'has_rewrite_and_republish_copy' )
+			->expects( 'has_original_changed' )
 			->with( $post )
 			->andReturnTrue();
 
@@ -186,7 +114,7 @@ class Copied_Post_Watcher_Test extends TestCase {
 	/**
 	 * Tests the add_admin_notice function when not on the Classic editor.
 	 *
-	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Copied_Post_Watcher::add_admin_notice
+	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Original_Post_Watcher::add_admin_notice
 	 */
 	public function test_add_admin_notice_not_classic() {
 		$this->permissions_helper
@@ -199,11 +127,11 @@ class Copied_Post_Watcher_Test extends TestCase {
 	}
 
 	/**
-	 * Tests the add_admin_notice function when the post does not have a copy intended for Rewrite & Republish.
+	 * Tests the add_admin_notice function when the original has not changed.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Copied_Post_Watcher::add_admin_notice
 	 */
-	public function test_add_admin_notice_not_rewrite_and_republish() {
+	public function test_add_admin_notice_original_not_changed() {
 		$post = Mockery::mock( WP_Post::class );
 
 		$this->permissions_helper
@@ -214,7 +142,7 @@ class Copied_Post_Watcher_Test extends TestCase {
 			->andReturn( $post );
 
 		$this->permissions_helper
-			->expects( 'has_rewrite_and_republish_copy' )
+			->expects( 'has_original_changed' )
 			->with( $post )
 			->andReturnFalse();
 
@@ -235,13 +163,12 @@ class Copied_Post_Watcher_Test extends TestCase {
 			->andReturn( $post );
 
 		$this->permissions_helper
-			->expects( 'has_rewrite_and_republish_copy' )
+			->expects( 'has_original_changed' )
 			->with( $post )
 			->andReturnTrue();
 
 		$this->instance
 			->expects( 'get_notice_text' )
-			->with( $post )
 			->andReturn( 'notice' );
 
 		$notice = [
@@ -257,7 +184,7 @@ class Copied_Post_Watcher_Test extends TestCase {
 		Monkey\Functions\expect( '\wp_add_inline_script' )
 			->with(
 				'duplicate_post_edit_script',
-				"duplicatePostNotices.has_rewrite_and_republish_notice = '{\"text\":\"notice\",\"status\":\"warning\",\"isDismissible\":true}';",
+				"duplicatePostNotices.has_original_changed_notice = '{\"text\":\"notice\",\"status\":\"warning\",\"isDismissible\":true}';",
 				'before'
 			);
 
@@ -265,18 +192,18 @@ class Copied_Post_Watcher_Test extends TestCase {
 	}
 
 	/**
-	 * Tests the add_block_editor_notice function when the post does not have a copy intended for Rewrite & Republish.
+	 * Tests the add_block_editor_notice function when the original has not changed.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Copied_Post_Watcher::add_block_editor_notice
 	 */
-	public function test_add_block_editor_notice_not_rewrite_and_republish() {
+	public function test_add_block_editor_notice_original_not_changed() {
 		$post = Mockery::mock( WP_Post::class );
 
 		Monkey\Functions\expect( '\get_post' )
 			->andReturn( $post );
 
 		$this->permissions_helper
-			->expects( 'has_rewrite_and_republish_copy' )
+			->expects( 'has_original_changed' )
 			->with( $post )
 			->andReturnFalse();
 
