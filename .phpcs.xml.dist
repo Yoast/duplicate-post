@@ -89,6 +89,9 @@
 			<!-- Don't trigger on the main file as renaming it would deactivate the plugin. -->
 			<property name="excluded_files_strict_check" type="array">
 				<element value="duplicate-post.php"/>
+				<!-- Don't trigger on test bootstrap files. -->
+				<element value="tests/integration/bootstrap.php"/>
+				<element value="tests/unit/bootstrap.php"/>
 			</property>
 
 			<!-- Remove the following prefixes from the names of object structures. -->
@@ -109,6 +112,11 @@
 	<!-- TEST CODE -->
 
 	<!-- Valid usage: For testing purposes, some non-prefixed globals are being created, which is fine. -->
+	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
+		<exclude-pattern>/tests/*/bootstrap\.php$</exclude-pattern>
+	</rule>
+
+	<!-- Valid usage: For testing purposes, some non-prefixed global constants are being created, which is fine. -->
 	<rule ref="WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound">
 		<exclude-pattern>/tests/*\.php$</exclude-pattern>
 	</rule>

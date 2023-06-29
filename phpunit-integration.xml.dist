@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/7.5/phpunit.xsd"
+	backupGlobals="false"
+	backupStaticAttributes="false"
+	bootstrap="tests/integration/bootstrap.php"
+	colors="true"
+	convertDeprecationsToExceptions="true"
+	convertErrorsToExceptions="true"
+	convertNoticesToExceptions="true"
+	convertWarningsToExceptions="true"
+	forceCoversAnnotation="true"
+	processIsolation="false"
+	stopOnError="false"
+	stopOnFailure="false"
+	stopOnIncomplete="false"
+	stopOnSkipped="false"
+	verbose="true"
+	>
+	<testsuites>
+		<testsuite name="duplicatepost">
+			<directory suffix="-test.php">./tests/integration</directory>
+		</testsuite>
+	</testsuites>
+
+	<filter>
+		<whitelist addUncoveredFilesFromWhitelist="true" processUncoveredFilesFromWhitelist="false">
+			<file>./admin-functions.php</file>
+			<file>./common-functions.php</file>
+			<file>./duplicate-post.php</file>
+			<file>./options.php</file>
+			<directory>./compat</directory>
+			<directory>./src</directory>
+		</whitelist>
+	</filter>
+
+	<logging>
+		<log type="coverage-text" target="php://stdout" showOnlySummary="true"/>
+		<log type="coverage-clover" target="build/logs/clover-integration.xml"/>
+	</logging>
+
+</phpunit>
