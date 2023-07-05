@@ -15,25 +15,6 @@ if ( function_exists( 'xdebug_disable' ) ) {
 echo 'Welcome to the Duplicate Post Test Suite' . PHP_EOL;
 echo 'Version: 1.0' . PHP_EOL . PHP_EOL;
 
-/*
- * Set up info needed for checking the status of a GitHub issue.
- */
-$GLOBALS['github_repo'] = [
-	'name'         => 'Yoast Duplicate Post',
-	'organisation' => 'Yoast',
-	'repo_slug'    => 'duplicate-post',
-	'api_key'      => false,
-	'private'      => true,
-];
-
-if ( getenv( 'GITHUB_API_KEY' ) !== false ) {
-	$GLOBALS['github_repo']['api_key'] = getenv( 'GITHUB_API_KEY' );
-}
-
-if ( ! defined( 'WP_TESTS_FORCE_KNOWN_BUGS' ) ) {
-	define( 'WP_TESTS_FORCE_KNOWN_BUGS', ( getenv( 'WP_TESTS_FORCE_KNOWN_BUGS' ) === '1' ) );
-}
-
 if ( ! defined( 'YOAST_DUPLICATE_POST_TEST_ROOT_DIR' ) ) {
 	define( 'YOAST_DUPLICATE_POST_TEST_ROOT_DIR', __DIR__ . '/' ); // Includes trailing slash.
 }
