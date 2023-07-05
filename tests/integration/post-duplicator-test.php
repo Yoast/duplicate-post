@@ -2,12 +2,6 @@
 
 namespace Yoast\WP\Duplicate_Post\Tests\Integration;
 
-/**
- * Yoast Duplicate Post plugin test file.
- *
- * @package Yoast\WP\Duplicate_Post\Tests
- */
-
 use Yoast\WPTestUtils\WPIntegration\TestCase;
 use Yoast\WP\Duplicate_Post\Post_Duplicator;
 
@@ -42,12 +36,13 @@ class Post_Duplicator_Test extends TestCase {
 	 * @covers ::generate_copy_title
 	 * @covers ::generate_copy_status
 	 * @covers ::generate_copy_author
+	 * @covers ::set_modified
 	 */
 	public function test_create_duplicate() {
 
 		$post = $this->factory->post->create_and_get();
 
-		$id = $this->instance->create_duplicate( $post );
+		$id = $this->instance->create_duplicate( $post, [ 'copy_date' => true ] );
 
 		$this->assertTrue( \is_int( $id ) );
 	}
