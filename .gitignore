@@ -54,6 +54,7 @@ composer.lock
 phpcs.xml
 .cache/phpcs.cache
 phpunit.xml
+phpunit-integration.xml
 .phpunit.result.cache
 
 ############
