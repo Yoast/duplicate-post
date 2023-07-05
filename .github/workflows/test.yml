@@ -136,17 +136,38 @@ jobs:
 
     strategy:
       matrix:
-        php_version: [ '7.3', '7.4', '8.0', '8.1' ]
-        coverage: [ false ]
-
-        # Run code coverage only on high/low PHP.
         include:
-          - php_version: 7.2
-            coverage: true
-          - php_version: 8.2
+          - php_version: "7.2"
+            wp_version: "6.1"
+            multisite: true
             coverage: true
 
-    name: "Integration Test: PHP ${{ matrix.php_version }}"
+          - php_version: "7.3"
+            wp_version: "trunk"
+            multisite: true
+            coverage: false
+
+          - php_version: "7.4"
+            wp_version: "latest"
+            multisite: false
+            coverage: false
+
+          - php_version: "8.0"
+            wp_version: "6.1"
+            multisite: false
+            coverage: false
+
+          - php_version: "8.1"
+            wp_version: "latest"
+            multisite: true
+            coverage: false
+
+          - php_version: "8.2"
+            wp_version: "6.2"
+            multisite: true
+            coverage: true
+
+    name: "Integration Test: PHP ${{ matrix.php_version }} | WP ${{ matrix.wp_version }}${{ matrix.multisite == true && ' (+ ms)' || '' }}"
 
     # Allow builds to fail on as-of-yet unreleased WordPress versions.
     continue-on-error: ${{ matrix.wp_version == 'trunk' }}
