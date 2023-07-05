@@ -12,7 +12,7 @@ define( 'ARRAY_N', 'ARRAY_N' );
 define( 'DUPLICATE_POST_FILE', '/var/www/html/wp-content/plugins/duplicate-post/duplicate-post.php' );
 define( 'DUPLICATE_POST_CURRENT_VERSION', '4.0' );
 
-if ( file_exists( dirname( dirname( __DIR__ ) ) . '/vendor/autoload.php' ) === false ) {
+if ( file_exists( dirname( __DIR__, 2 ) . '/vendor/autoload.php' ) === false ) {
 	echo PHP_EOL, 'ERROR: Run `composer install` to generate the autoload files before running the unit tests.', PHP_EOL;
 	exit( 1 );
 }

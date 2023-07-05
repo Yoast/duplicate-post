@@ -41,7 +41,7 @@ if ( ! defined( 'YOAST_DUPLICATE_POST_TEST_ROOT_DIR' ) ) {
 /*
  * Load the plugin(s).
  */
-require_once dirname( dirname( __DIR__ ) ) . '/vendor/yoast/wp-test-utils/src/WPIntegration/bootstrap-functions.php';
+require_once dirname( __DIR__, 2 ) . '/vendor/yoast/wp-test-utils/src/WPIntegration/bootstrap-functions.php';
 
 $GLOBALS['wp_tests_options'] = [
 	'active_plugins' => [
