@@ -90,8 +90,6 @@
 			<property name="excluded_files_strict_check" type="array">
 				<element value="duplicate-post.php"/>
 				<!-- Don't trigger on test bootstrap files. -->
-				<element value="tests/integration/bootstrap.php"/>
-				<element value="tests/unit/bootstrap.php"/>
 			</property>
 
 			<!-- Remove the following prefixes from the names of object structures. -->
@@ -116,6 +114,11 @@
 		<exclude-pattern>/tests/*/bootstrap\.php$</exclude-pattern>
 	</rule>
 
+	<!-- Valid usage: We declare a function to load the plugin for the integration tests. -->
+	<rule ref="Yoast.Files.FileName.InvalidFunctionsFileName">
+		<exclude-pattern>/tests/integration/bootstrap\.php$</exclude-pattern>
+	</rule>
+
 	<!-- Valid usage: For testing purposes, some non-prefixed global constants are being created, which is fine. -->
 	<rule ref="WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound">
 		<exclude-pattern>/tests/*\.php$</exclude-pattern>
@@ -126,7 +129,7 @@
 		<exclude-pattern>/tests/*</exclude-pattern>
 	</rule>
 
-	<!-- These tests are not run within the context of a WP install, so overwritting globals is fine. -->
+	<!-- These tests are not run within the context of a WP install, so overwriting globals is fine. -->
 	<rule ref="WordPress.WP.GlobalVariablesOverride">
 		<exclude-pattern>/tests/*</exclude-pattern>
 	</rule>
