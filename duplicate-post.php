@@ -13,7 +13,7 @@
  * Author:      Enrico Battocchi & Team Yoast
  * Author URI:  https://yoa.st/team-yoast-duplicate
  * Text Domain: duplicate-post
- * Requires at least: 6.1
+ * Requires at least: 6.2
  * Requires PHP: 7.2.5
  *
  * Copyright 2020-2022 Yoast BV (email : info@yoast.com)
