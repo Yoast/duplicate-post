@@ -39,7 +39,7 @@ class Options_Inputs_Test extends TestCase {
 		Functions\expect( 'checked' )
 			->twice()
 			->andReturnUsing(
-				static function( $checked, $current = true ) {
+				static function ( $checked, $current = true ) {
 					return ( (string) $checked === (string) $current ) ? " checked='checked'" : '';
 				}
 			);
