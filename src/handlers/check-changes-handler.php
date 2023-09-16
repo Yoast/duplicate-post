@@ -106,7 +106,7 @@ class Check_Changes_Handler {
 		<div class="wrap">
 			<h1 class="long-header">
 			<?php
-				echo \sprintf(
+				\printf(
 					/* translators: %s: original item link (to view or edit) or title. */
 					\esc_html__( 'Compare changes of duplicated post with the original (&#8220;%s&#8221;)', 'duplicate-post' ),
 					Utils::get_edit_or_view_link( $this->original ) // phpcs:ignore WordPress.Security.EscapeOutput
