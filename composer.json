@@ -76,5 +76,16 @@
 		"integration-coverage": [
 			"@coverage-wp"
 		]
+	},
+	"scripts-descriptions": {
+		"lint": "Check the PHP files for parse errors.",
+		"check-cs": "Check the PHP files for code style violations and best practices.",
+		"fix-cs": "Auto-fix code style violations in the PHP files.",
+		"test": "Run the unit tests without code coverage.",
+		"coverage": "Run the unit tests with code coverage.",
+		"test-wp": "Run the WP unit tests without code coverage.",
+		"coverage-wp": "Run the WP unit tests with code coverage.",
+		"integration-test": "Deprecated. Alias for the \"test-wp\" script.",
+		"integration-coverage": "Deprecated. Alias for the \"coverage-wp\" script."
 	}
 }
