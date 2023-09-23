@@ -22,6 +22,8 @@ final class Post_Duplicator_Test extends TestCase {
 
 	/**
 	 * Sets the instance.
+	 *
+	 * @return void
 	 */
 	protected function set_up() {
 		parent::set_up();
@@ -33,6 +35,8 @@ final class Post_Duplicator_Test extends TestCase {
 	 * Tests the get_default_options function.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Post_Duplicator::get_default_options
+	 *
+	 * @return void
 	 */
 	public function test_get_default_options() {
 		$this->assertSame(
@@ -72,6 +76,8 @@ final class Post_Duplicator_Test extends TestCase {
 	 *
 	 * @param array<string, string|bool> $original Input value.
 	 * @param string                     $expected Expected output.
+	 *
+	 * @return void
 	 */
 	public function test_generate_copy_title( $original, $expected ) {
 		$post             = Mockery::mock( WP_Post::class );
@@ -153,6 +159,8 @@ final class Post_Duplicator_Test extends TestCase {
 	 *
 	 * @param array<string, string|bool> $original Input value.
 	 * @param string                     $expected Expected output.
+	 *
+	 * @return void
 	 */
 	public function test_generate_copy_status( $original, $expected ) {
 		$post              = Mockery::mock( WP_Post::class );
@@ -250,6 +258,8 @@ final class Post_Duplicator_Test extends TestCase {
 	 *
 	 * @param array<string, string|bool> $original Input value.
 	 * @param int                        $expected Expected output.
+	 *
+	 * @return void
 	 */
 	public function test_generate_copy_author( $original, $expected ) {
 		$post              = Mockery::mock( WP_Post::class );

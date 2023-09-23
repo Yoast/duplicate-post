@@ -38,6 +38,8 @@ final class Row_Actions_Test extends TestCase {
 
 	/**
 	 * Sets the instance.
+	 *
+	 * @return void
 	 */
 	protected function set_up() {
 		parent::set_up();
@@ -53,6 +55,8 @@ final class Row_Actions_Test extends TestCase {
 	 * Tests if the needed attributes are set correctly.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Row_Actions::__construct
+	 *
+	 * @return void
 	 */
 	public function test_constructor() {
 		$this->assertInstanceOf(
@@ -72,6 +76,8 @@ final class Row_Actions_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Row_Actions::register_hooks
 	 * @runInSeparateProcess
 	 * @preserveGlobalState disabled
+	 *
+	 * @return void
 	 */
 	public function test_register_hooks() {
 		$utils = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
@@ -110,6 +116,8 @@ final class Row_Actions_Test extends TestCase {
 	 * Tests the add_clone_action_link function when the links is displayed.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Row_Actions::add_clone_action_link
+	 *
+	 * @return void
 	 */
 	public function test_add_clone_action_link_successful() {
 		$this->stubEscapeFunctions();
@@ -161,6 +169,8 @@ final class Row_Actions_Test extends TestCase {
 	 * Tests the add_clone_action_link function when the link should not be displayed.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Row_Actions::add_clone_action_link
+	 *
+	 * @return void
 	 */
 	public function test_add_clone_action_link_unsuccessful() {
 		$actions = [
@@ -198,6 +208,8 @@ final class Row_Actions_Test extends TestCase {
 	 * Tests the add_new_draft_action_link function when the links is displayed.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Row_Actions::add_new_draft_action_link
+	 *
+	 * @return void
 	 */
 	public function test_add_new_draft_action_link_successful() {
 		$this->stubEscapeFunctions();
@@ -249,6 +261,8 @@ final class Row_Actions_Test extends TestCase {
 	 * Tests the add_new_draft_action_link function when the link should not be displayed.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Row_Actions::add_new_draft_action_link
+	 *
+	 * @return void
 	 */
 	public function test_add_new_draft_action_link_unsuccessful() {
 		$actions = [
@@ -286,6 +300,8 @@ final class Row_Actions_Test extends TestCase {
 	 * Tests the add_rewrite_and_republish_action_link function when the links is displayed.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Row_Actions::add_rewrite_and_republish_action_link
+	 *
+	 * @return void
 	 */
 	public function test_add_rewrite_and_republish_action_link_successful() {
 		$this->stubEscapeFunctions();
@@ -343,6 +359,8 @@ final class Row_Actions_Test extends TestCase {
 	 * Tests the add_rewrite_and_republish_action_link function when the link should not be displayed.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Row_Actions::add_rewrite_and_republish_action_link
+	 *
+	 * @return void
 	 */
 	public function test_add_rewrite_and_republish_action_link_unsuccessful_should_not_be_displayed() {
 		$actions           = [
@@ -386,6 +404,8 @@ final class Row_Actions_Test extends TestCase {
 	 * Tests the add_rewrite_and_republish_action_link function when the post is not published.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Row_Actions::add_rewrite_and_republish_action_link
+	 *
+	 * @return void
 	 */
 	public function test_add_rewrite_and_republish_action_link_unsuccessful_not_published() {
 		$actions           = [

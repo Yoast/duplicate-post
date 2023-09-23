@@ -40,6 +40,8 @@ add_action( 'admin_init', 'duplicate_post_admin_init' );
 
 /**
  * Adds handlers depending on the options.
+ *
+ * @return void
  */
 function duplicate_post_admin_init() {
 	duplicate_post_plugin_upgrade();
@@ -80,6 +82,8 @@ function duplicate_post_admin_init() {
 
 /**
  * Plugin upgrade.
+ *
+ * @return void
  */
 function duplicate_post_plugin_upgrade() {
 	$installed_version = duplicate_post_get_installed_version();
@@ -207,6 +211,8 @@ function duplicate_post_migrate_show_links_in_options( $defaults ) {
  * Shows the welcome notice.
  *
  * @global string $wp_version The WordPress version string.
+ *
+ * @return void
  */
 function duplicate_post_show_update_notice() {
 	if ( ! current_user_can( 'manage_options' ) ) {
@@ -272,6 +278,8 @@ function duplicate_post_dismiss_notice() {
  *
  * @param int     $new_id New post ID.
  * @param WP_Post $post   The original post object.
+ *
+ * @return void
  */
 function duplicate_post_copy_post_taxonomies( $new_id, $post ) {
 	global $wpdb;
@@ -320,6 +328,8 @@ function duplicate_post_copy_post_taxonomies( $new_id, $post ) {
  *
  * @param int     $new_id The new post ID.
  * @param WP_Post $post   The original post object.
+ *
+ * @return void
  */
 function duplicate_post_copy_post_meta_info( $new_id, $post ) {
 	$post_meta_keys = get_post_custom_keys( $post->ID );
@@ -429,6 +439,8 @@ function duplicate_post_wp_slash( $value ) {
  *
  * @param int     $new_id The new post ID.
  * @param WP_Post $post   The original post object.
+ *
+ * @return void
  */
 function duplicate_post_copy_attachments( $new_id, $post ) {
 	// Get thumbnail ID.
@@ -493,6 +505,8 @@ function duplicate_post_copy_attachments( $new_id, $post ) {
  * @param int     $new_id The new post ID.
  * @param WP_Post $post   The original post object.
  * @param string  $status Optional. The destination status.
+ *
+ * @return void
  */
 function duplicate_post_copy_children( $new_id, $post, $status = '' ) {
 	// Get children.
@@ -518,6 +532,8 @@ function duplicate_post_copy_children( $new_id, $post, $status = '' ) {
  *
  * @param int     $new_id The new post ID.
  * @param WP_Post $post   The original post object.
+ *
+ * @return void
  */
 function duplicate_post_copy_comments( $new_id, $post ) {
 	$comments = get_comments(

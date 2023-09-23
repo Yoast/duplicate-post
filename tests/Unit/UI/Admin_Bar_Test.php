@@ -49,6 +49,8 @@ final class Admin_Bar_Test extends TestCase {
 
 	/**
 	 * Sets the instance.
+	 *
+	 * @return void
 	 */
 	protected function set_up() {
 		parent::set_up();
@@ -71,6 +73,8 @@ final class Admin_Bar_Test extends TestCase {
 	 * Tests if the needed attributes are set correctly.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Admin_Bar::__construct
+	 *
+	 * @return void
 	 */
 	public function test_constructor() {
 		$this->assertInstanceOf(
@@ -95,6 +99,8 @@ final class Admin_Bar_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Admin_Bar::register_hooks
 	 * @runInSeparateProcess
 	 * @preserveGlobalState disabled
+	 *
+	 * @return void
 	 */
 	public function test_register_hooks() {
 		$utils = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
@@ -117,6 +123,8 @@ final class Admin_Bar_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Admin_Bar::admin_bar_render
 	 * @runInSeparateProcess
 	 * @preserveGlobalState disabled
+	 *
+	 * @return void
 	 */
 	public function test_admin_bar_render_successful_both() {
 		$this->stubTranslationFunctions();
@@ -175,6 +183,8 @@ final class Admin_Bar_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Admin_Bar::admin_bar_render
 	 * @runInSeparateProcess
 	 * @preserveGlobalState disabled
+	 *
+	 * @return void
 	 */
 	public function test_admin_bar_render_successful_one() {
 		$this->stubTranslationFunctions();
@@ -226,6 +236,8 @@ final class Admin_Bar_Test extends TestCase {
 	 * Tests the admin_bar_render function when the admin bar is not showing.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Admin_Bar::admin_bar_render
+	 *
+	 * @return void
 	 */
 	public function test_admin_bar_render_unsuccessful_no_admin_bar() {
 		global $wp_admin_bar;
@@ -265,6 +277,8 @@ final class Admin_Bar_Test extends TestCase {
 	 * Tests the admin_bar_render function when no post is not showing.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Admin_Bar::admin_bar_render
+	 *
+	 * @return void
 	 */
 	public function test_admin_bar_render_unsuccessful_no_post() {
 		global $wp_admin_bar;
@@ -303,6 +317,8 @@ final class Admin_Bar_Test extends TestCase {
 	 * Tests the enqueue_styles function when the style is enqueued.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Admin_Bar::enqueue_styles
+	 *
+	 * @return void
 	 */
 	public function test_enqueue_styles_successful() {
 		$post              = Mockery::mock( WP_Post::class );
@@ -323,6 +339,8 @@ final class Admin_Bar_Test extends TestCase {
 	 * Tests the enqueue_styles function when the admin bar is not showing.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Admin_Bar::enqueue_styles
+	 *
+	 * @return void
 	 */
 	public function test_enqueue_styles_unsuccessful_no_admin_bar() {
 		$post              = Mockery::mock( WP_Post::class );
@@ -345,6 +363,8 @@ final class Admin_Bar_Test extends TestCase {
 	 * Tests the enqueue_styles function when no post is not showing.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Admin_Bar::enqueue_styles
+	 *
+	 * @return void
 	 */
 	public function test_enqueue_styles_unsuccessful_no_post() {
 		$post              = Mockery::mock( WP_Post::class );
@@ -366,6 +386,8 @@ final class Admin_Bar_Test extends TestCase {
 	 * Tests the get_current_post function when a post is returned in the backend.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Admin_Bar::get_current_post
+	 *
+	 * @return void
 	 */
 	public function test_get_current_post_successful_backend() {
 		global $wp_the_query;
@@ -406,6 +428,8 @@ final class Admin_Bar_Test extends TestCase {
 	 * Tests the get_current_post function when a post is returned in the frontend.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Admin_Bar::get_current_post
+	 *
+	 * @return void
 	 */
 	public function test_get_current_post_successful_frontend() {
 		global $wp_the_query;
@@ -447,6 +471,8 @@ final class Admin_Bar_Test extends TestCase {
 	 * Tests the get_current_post function when no post is returned in the backend.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Admin_Bar::get_current_post
+	 *
+	 * @return void
 	 */
 	public function test_get_current_post_unsuccessful_backend() {
 		global $wp_the_query;
@@ -487,6 +513,8 @@ final class Admin_Bar_Test extends TestCase {
 	 * Tests the get_current_post function when a non-post is returned in the frontend.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Admin_Bar::get_current_post
+	 *
+	 * @return void
 	 */
 	public function test_get_current_post_unsuccessful_frontend() {
 		global $wp_the_query;
@@ -537,6 +565,8 @@ final class Admin_Bar_Test extends TestCase {
 	 * Tests the get_current_post function when the link should not be displayed.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Admin_Bar::get_current_post
+	 *
+	 * @return void
 	 */
 	public function test_get_current_post_unsuccessful_should_not_be_displayed() {
 		global $wp_the_query;

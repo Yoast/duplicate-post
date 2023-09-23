@@ -23,6 +23,8 @@ final class Permissions_Helper_Test extends TestCase {
 
 	/**
 	 * Sets the instance.
+	 *
+	 * @return void
 	 */
 	protected function set_up() {
 		parent::set_up();
@@ -36,6 +38,8 @@ final class Permissions_Helper_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::get_enabled_post_types
 	 * @runInSeparateProcess
 	 * @preserveGlobalState disabled
+	 *
+	 * @return void
 	 */
 	public function test_get_enabled_post_types() {
 		$post_types = [ 'post', 'page', 'book', 'movie ' ];
@@ -58,6 +62,8 @@ final class Permissions_Helper_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::get_enabled_post_types
 	 * @runInSeparateProcess
 	 * @preserveGlobalState disabled
+	 *
+	 * @return void
 	 */
 	public function test_get_enabled_post_types_not_array() {
 		$post_types = 'post';
@@ -78,6 +84,8 @@ final class Permissions_Helper_Test extends TestCase {
 	 * Tests the is_post_type_enabled function.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::is_post_type_enabled
+	 *
+	 * @return void
 	 */
 	public function test_is_post_type_enabled() {
 		$post_types = [ 'post', 'page', 'book', 'movie ' ];
@@ -95,6 +103,8 @@ final class Permissions_Helper_Test extends TestCase {
 	 * Tests the is_current_user_allowed_to_copy function.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::is_current_user_allowed_to_copy
+	 *
+	 * @return void
 	 */
 	public function test_is_current_user_allowed_to_copy() {
 		Monkey\Functions\expect( '\current_user_can' )
@@ -110,6 +120,8 @@ final class Permissions_Helper_Test extends TestCase {
 	 * Tests the successful is_rewrite_and_republish_copy function.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::is_rewrite_and_republish_copy
+	 *
+	 * @return void
 	 */
 	public function test_is_rewrite_and_republish_copy_successful() {
 		$post     = Mockery::mock( WP_Post::class );
@@ -126,6 +138,8 @@ final class Permissions_Helper_Test extends TestCase {
 	 * Tests the unsuccessful is_rewrite_and_republish_copy function.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::is_rewrite_and_republish_copy
+	 *
+	 * @return void
 	 */
 	public function test_is_rewrite_and_republish_copy_unsuccessful() {
 		$post     = Mockery::mock( WP_Post::class );
@@ -142,6 +156,8 @@ final class Permissions_Helper_Test extends TestCase {
 	 * Tests the successful has_rewrite_and_republish_copy function.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::has_rewrite_and_republish_copy
+	 *
+	 * @return void
 	 */
 	public function test_has_rewrite_and_republish_copy_successful() {
 		$post     = Mockery::mock( WP_Post::class );
@@ -158,6 +174,8 @@ final class Permissions_Helper_Test extends TestCase {
 	 * Tests the unsuccessful has_rewrite_and_republish_copy function.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::has_rewrite_and_republish_copy
+	 *
+	 * @return void
 	 */
 	public function test_has_rewrite_and_republish_copy_unsuccessful() {
 		$post     = Mockery::mock( WP_Post::class );
@@ -174,6 +192,8 @@ final class Permissions_Helper_Test extends TestCase {
 	 * Tests the successful has_scheduled_rewrite_and_republish_copy function.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::has_scheduled_rewrite_and_republish_copy
+	 *
+	 * @return void
 	 */
 	public function test_has_scheduled_rewrite_and_republish_copy_successful() {
 		$post              = Mockery::mock( WP_Post::class );
@@ -200,6 +220,8 @@ final class Permissions_Helper_Test extends TestCase {
 	 * Tests has_scheduled_rewrite_and_republish_copy function when post has no R&R copy.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::has_scheduled_rewrite_and_republish_copy
+	 *
+	 * @return void
 	 */
 	public function test_has_scheduled_rewrite_and_republish_copy_no_copy() {
 		$post     = Mockery::mock( WP_Post::class );
@@ -219,6 +241,8 @@ final class Permissions_Helper_Test extends TestCase {
 	 * Tests has_scheduled_rewrite_and_republish_copy function when the copy is not scheduled.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::has_scheduled_rewrite_and_republish_copy
+	 *
+	 * @return void
 	 */
 	public function test_has_scheduled_rewrite_and_republish_copy_not_scheduled() {
 		$post              = Mockery::mock( WP_Post::class );
@@ -246,6 +270,8 @@ final class Permissions_Helper_Test extends TestCase {
 	 *
 	 * @param array<string, bool|string> $original Input value.
 	 * @param bool                       $expected Expected output.
+	 *
+	 * @return void
 	 */
 	public function test_is_edit_post_screen( $original, $expected ) {
 		$screen         = Mockery::mock( WP_Screen::class );
@@ -319,6 +345,8 @@ final class Permissions_Helper_Test extends TestCase {
 	 *
 	 * @param array<string, bool|string> $original Input value.
 	 * @param bool                       $expected Expected output.
+	 *
+	 * @return void
 	 */
 	public function test_is_new_post_screen( $original, $expected ) {
 		$screen         = Mockery::mock( WP_Screen::class );
@@ -392,6 +420,8 @@ final class Permissions_Helper_Test extends TestCase {
 	 *
 	 * @param array<string, bool> $original Input value.
 	 * @param bool                $expected Expected output.
+	 *
+	 * @return void
 	 */
 	public function test_is_classic_editor( $original, $expected ) {
 		$screen = Mockery::mock( WP_Screen::class );
@@ -467,6 +497,8 @@ final class Permissions_Helper_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::has_original_changed
 	 * @runInSeparateProcess
 	 * @preserveGlobalState disabled
+	 *
+	 * @return void
 	 */
 	public function test_has_original_changed_successful() {
 		$utils                       = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
@@ -498,6 +530,8 @@ final class Permissions_Helper_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::has_original_changed
 	 * @runInSeparateProcess
 	 * @preserveGlobalState disabled
+	 *
+	 * @return void
 	 */
 	public function test_has_original_changed_no() {
 		$utils                       = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
@@ -527,6 +561,8 @@ final class Permissions_Helper_Test extends TestCase {
 	 * Tests the has_original_changed function when the post is not meant for Rewrite & Republish.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::has_original_changed
+	 *
+	 * @return void
 	 */
 	public function test_has_original_changed_not_rewrite_and_republish() {
 		$post = Mockery::mock( WP_Post::class );
@@ -543,6 +579,8 @@ final class Permissions_Helper_Test extends TestCase {
 	 * Tests the should_links_be_displayed function.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::should_links_be_displayed
+	 *
+	 * @return void
 	 */
 	public function test_should_links_be_displayed_successful() {
 		$post            = Mockery::mock( WP_Post::class );
@@ -569,6 +607,8 @@ final class Permissions_Helper_Test extends TestCase {
 	 * Tests the should_links_be_displayed function when the user is not allowed to copy.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::should_links_be_displayed
+	 *
+	 * @return void
 	 */
 	public function test_should_links_be_displayed_unsuccessful_user_not_allowed_to_copy() {
 		$post            = Mockery::mock( WP_Post::class );
@@ -595,6 +635,8 @@ final class Permissions_Helper_Test extends TestCase {
 	 * Tests the should_links_be_displayed function when the post type is not enabled for copy.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::should_links_be_displayed
+	 *
+	 * @return void
 	 */
 	public function test_should_links_be_displayed_unsuccessful_post_type_not_enabled_for_copy() {
 		$post            = Mockery::mock( WP_Post::class );
@@ -621,6 +663,8 @@ final class Permissions_Helper_Test extends TestCase {
 	 * Tests the should_links_be_displayed function when the post is a Rewrite & Republish copy.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::should_links_be_displayed
+	 *
+	 * @return void
 	 */
 	public function test_should_links_be_displayed_unsuccessful_post_is_rewrite_and_republish() {
 		$post            = Mockery::mock( WP_Post::class );
@@ -651,6 +695,8 @@ final class Permissions_Helper_Test extends TestCase {
 	 *
 	 * @param array<string, mixed> $original Input value.
 	 * @param bool                 $expected Expected output.
+	 *
+	 * @return void
 	 */
 	public function test_should_rewrite_and_republish_be_allowed( $original, $expected ) {
 		$post              = Mockery::mock( WP_Post::class );
@@ -730,6 +776,8 @@ final class Permissions_Helper_Test extends TestCase {
 	 *
 	 * @param array<string, bool> $original Input value.
 	 * @param bool                $expected Expected output.
+	 *
+	 * @return void
 	 */
 	public function test_post_type_has_admin_bar( $original, $expected ) {
 		$post_type                           = 'post';
@@ -786,6 +834,8 @@ final class Permissions_Helper_Test extends TestCase {
 	 * Tests the post_type_has_admin_bar function when the post type does not exist.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::post_type_has_admin_bar
+	 *
+	 * @return void
 	 */
 	public function test_post_type_has_admin_bar_type_not_existing() {
 		$post_type        = 'apple';
@@ -806,6 +856,8 @@ final class Permissions_Helper_Test extends TestCase {
 	 *
 	 * @param string $post_status Input value.
 	 * @param bool   $expected    Expected output.
+	 *
+	 * @return void
 	 */
 	public function test_is_copy_allowed_to_be_republished( $post_status, $expected ) {
 		$post              = Mockery::mock( WP_Post::class );
@@ -840,6 +892,8 @@ final class Permissions_Helper_Test extends TestCase {
 	 * Tests the has_trashed_rewrite_and_republish_copy function when the post has a trashed Rewrite & Republisb copy.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::has_trashed_rewrite_and_republish_copy
+	 *
+	 * @return void
 	 */
 	public function test_has_trashed_rewrite_and_republish_copy() {
 		$post              = Mockery::mock( WP_Post::class );
@@ -863,6 +917,8 @@ final class Permissions_Helper_Test extends TestCase {
 	 * Tests the has_trashed_rewrite_and_republish_copy function when the post has a non-trashed Rewrite & Republisb copy.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::has_trashed_rewrite_and_republish_copy
+	 *
+	 * @return void
 	 */
 	public function test_does_not_have_trashed_rewrite_and_republish_copy() {
 		$post              = Mockery::mock( WP_Post::class );

@@ -37,6 +37,8 @@ final class Column_Test extends TestCase {
 
 	/**
 	 * Sets the instance.
+	 *
+	 * @return void
 	 */
 	protected function set_up() {
 		parent::set_up();
@@ -51,6 +53,8 @@ final class Column_Test extends TestCase {
 	 * Tests if the needed attributes are set correctly.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Column::__construct
+	 *
+	 * @return void
 	 */
 	public function test_constructor() {
 		$this->assertInstanceOf(
@@ -68,6 +72,8 @@ final class Column_Test extends TestCase {
 	 * Tests the registration of the hooks.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Column::register_hooks
+	 *
+	 * @return void
 	 */
 	public function test_register_hooks() {
 		$enabled_post_types = [ 'post', 'page' ];
@@ -96,6 +102,8 @@ final class Column_Test extends TestCase {
 	 * Tests the add_original_column function.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Column::add_original_column
+	 *
+	 * @return void
 	 */
 	public function test_add_original_column_action() {
 		$this->stubTranslationFunctions();

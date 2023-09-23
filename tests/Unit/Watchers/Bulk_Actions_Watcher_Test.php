@@ -20,6 +20,8 @@ final class Bulk_Actions_Watcher_Test extends TestCase {
 
 	/**
 	 * Sets the instance.
+	 *
+	 * @return void
 	 */
 	protected function set_up() {
 		parent::set_up();
@@ -31,6 +33,8 @@ final class Bulk_Actions_Watcher_Test extends TestCase {
 	 * Tests the constructor.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Bulk_Actions_Watcher::__construct
+	 *
+	 * @return void
 	 */
 	public function test_constructor() {
 		$this->instance->expects( 'register_hooks' )->once();
@@ -41,6 +45,8 @@ final class Bulk_Actions_Watcher_Test extends TestCase {
 	 * Tests the registration of the hooks.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Bulk_Actions_Watcher::register_hooks
+	 *
+	 * @return void
 	 */
 	public function test_register_hooks() {
 		$this->instance->register_hooks();
@@ -54,6 +60,8 @@ final class Bulk_Actions_Watcher_Test extends TestCase {
 	 * Tests the add_removable_query_args function.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Bulk_Actions_Watcher::add_removable_query_args
+	 *
+	 * @return void
 	 */
 	public function test_add_removable_query_args() {
 		$array = [
@@ -124,6 +132,8 @@ final class Bulk_Actions_Watcher_Test extends TestCase {
 	 * Tests the add_bulk_clone_admin_notice function when 1 post is copied.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Bulk_Actions_Watcher::add_bulk_clone_admin_notice
+	 *
+	 * @return void
 	 */
 	public function test_add_bulk_clone_admin_notice_1() {
 		$this->stubEscapeFunctions();
@@ -143,6 +153,8 @@ final class Bulk_Actions_Watcher_Test extends TestCase {
 	 * Tests the add_bulk_clone_admin_notice function when more than 1 post is copied.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Bulk_Actions_Watcher::add_bulk_clone_admin_notice
+	 *
+	 * @return void
 	 */
 	public function test_add_bulk_clone_admin_notice_2() {
 		$this->stubEscapeFunctions();
@@ -162,6 +174,8 @@ final class Bulk_Actions_Watcher_Test extends TestCase {
 	 * Tests the add_bulk_rewrite_and_republish_admin_notice function when 1 post is copied.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Bulk_Actions_Watcher::add_bulk_rewrite_and_republish_admin_notice
+	 *
+	 * @return void
 	 */
 	public function test_add_bulk_rewrite_and_republish_admin_notice_1() {
 		$this->stubEscapeFunctions();
@@ -181,6 +195,8 @@ final class Bulk_Actions_Watcher_Test extends TestCase {
 	 * Tests the add_bulk_rewrite_and_republish_admin_notice function when more than 1 post is copied.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Bulk_Actions_Watcher::add_bulk_rewrite_and_republish_admin_notice
+	 *
+	 * @return void
 	 */
 	public function test_add_bulk_rewrite_and_republish_admin_notice_2() {
 		$this->stubEscapeFunctions();

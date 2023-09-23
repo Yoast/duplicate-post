@@ -30,6 +30,8 @@ final class Metabox_Test extends TestCase {
 
 	/**
 	 * Sets the instance.
+	 *
+	 * @return void
 	 */
 	protected function set_up() {
 		parent::set_up();
@@ -46,6 +48,8 @@ final class Metabox_Test extends TestCase {
 	 * Tests if the needed attributes are set correctly.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Metabox::__construct
+	 *
+	 * @return void
 	 */
 	public function test_constructor() {
 		$this->assertInstanceOf(
@@ -58,6 +62,8 @@ final class Metabox_Test extends TestCase {
 	 * Tests the registration of the hooks.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Metabox::register_hooks
+	 *
+	 * @return void
 	 */
 	public function test_register_hooks() {
 		Monkey\Functions\expect( '\get_option' )
@@ -75,6 +81,8 @@ final class Metabox_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Metabox::add_custom_metabox
 	 * @runInSeparateProcess
 	 * @preserveGlobalState disabled
+	 *
+	 * @return void
 	 */
 	public function test_add_custom_metabox() {
 		$this->stubTranslationFunctions();
@@ -111,6 +119,8 @@ final class Metabox_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Metabox::add_custom_metabox
 	 * @runInSeparateProcess
 	 * @preserveGlobalState disabled
+	 *
+	 * @return void
 	 */
 	public function test_add_custom_metabox_post_type_not_enabled() {
 		$enabled_post_types = [ 'post' ];
@@ -132,6 +142,8 @@ final class Metabox_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Metabox::add_custom_metabox
 	 * @runInSeparateProcess
 	 * @preserveGlobalState disabled
+	 *
+	 * @return void
 	 */
 	public function test_add_custom_metabox_not_copy() {
 		$utils              = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );

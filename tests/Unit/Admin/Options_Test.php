@@ -28,6 +28,8 @@ final class Options_Test extends TestCase {
 
 	/**
 	 * Sets the instance.
+	 *
+	 * @return void
 	 */
 	protected function set_up() {
 		parent::set_up();
@@ -62,6 +64,8 @@ final class Options_Test extends TestCase {
 	 * Tests the registration of the settings.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Admin\Options::register_settings
+	 *
+	 * @return void
 	 */
 	public function test_register_settings() {
 		foreach ( \array_keys( $this->fake_options ) as $fake_option ) {
@@ -77,6 +81,8 @@ final class Options_Test extends TestCase {
 	 * Tests that only options for the first tab are retrieved.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Admin\Options::get_options_for_tab
+	 *
+	 * @return void
 	 */
 	public function test_get_options_for_first_tab() {
 		$options = $this->instance->get_options_for_tab( 'tab1' );
@@ -105,6 +111,8 @@ final class Options_Test extends TestCase {
 	 * Tests that only options for the first tab and fieldset are retrieved.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Admin\Options::get_options_for_tab
+	 *
+	 * @return void
 	 */
 	public function test_get_options_for_first_tab_and_fieldset() {
 		$options = $this->instance->get_options_for_tab( 'tab1', 'fieldset1' );
@@ -127,6 +135,8 @@ final class Options_Test extends TestCase {
 	 * Tests that no options are retrieved for a non-existent tab.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Admin\Options::get_options_for_tab
+	 *
+	 * @return void
 	 */
 	public function test_get_options_for_non_existing_tab() {
 		$options = $this->instance->get_options_for_tab( 'tab3' );
@@ -138,6 +148,8 @@ final class Options_Test extends TestCase {
 	 * Tests that no options are retrieved for a non-existent fieldset.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Admin\Options::get_options_for_tab
+	 *
+	 * @return void
 	 */
 	public function test_get_options_for_non_existing_fieldset() {
 		$options = $this->instance->get_options_for_tab( 'tab1', 'fieldset2' );
@@ -149,6 +161,8 @@ final class Options_Test extends TestCase {
 	 * Tests that retrieving a single, existing option, returns the option.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Admin\Options::get_option
+	 *
+	 * @return void
 	 */
 	public function test_get_valid_option() {
 		$options = $this->instance->get_option( 'option_1' );
@@ -171,6 +185,8 @@ final class Options_Test extends TestCase {
 	 * Tests that retrieving a single, non-existent option, returns an empty array.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Admin\Options::get_option
+	 *
+	 * @return void
 	 */
 	public function test_get_invalid_option() {
 		$options = $this->instance->get_option( 'option_4' );

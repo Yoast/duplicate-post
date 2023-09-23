@@ -30,6 +30,8 @@ final class Original_Post_Watcher_Test extends TestCase {
 
 	/**
 	 * Sets the instance.
+	 *
+	 * @return void
 	 */
 	protected function set_up() {
 		parent::set_up();
@@ -46,6 +48,8 @@ final class Original_Post_Watcher_Test extends TestCase {
 	 * Tests the constructor.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Original_Post_Watcher::__construct
+	 *
+	 * @return void
 	 */
 	public function test_constructor() {
 		$this->assertInstanceOf(
@@ -58,6 +62,8 @@ final class Original_Post_Watcher_Test extends TestCase {
 	 * Tests the registration of the hooks.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Original_Post_Watcher::register_hooks
+	 *
+	 * @return void
 	 */
 	public function test_register_hooks() {
 		$this->instance->register_hooks();
@@ -70,6 +76,8 @@ final class Original_Post_Watcher_Test extends TestCase {
 	 * Tests the get_notice_text function.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Original_Post_Watcher::get_notice_text
+	 *
+	 * @return void
 	 */
 	public function test_get_notice_text() {
 		$this->stubTranslationFunctions();
@@ -84,6 +92,8 @@ final class Original_Post_Watcher_Test extends TestCase {
 	 * Tests the add_admin_notice function on the Classic Editor.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Original_Post_Watcher::add_admin_notice
+	 *
+	 * @return void
 	 */
 	public function test_add_admin_notice_classic() {
 		$this->stubEscapeFunctions();
@@ -115,6 +125,8 @@ final class Original_Post_Watcher_Test extends TestCase {
 	 * Tests the add_admin_notice function when not on the Classic editor.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Original_Post_Watcher::add_admin_notice
+	 *
+	 * @return void
 	 */
 	public function test_add_admin_notice_not_classic() {
 		$this->permissions_helper
@@ -130,6 +142,8 @@ final class Original_Post_Watcher_Test extends TestCase {
 	 * Tests the add_admin_notice function when the original has not changed.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Copied_Post_Watcher::add_admin_notice
+	 *
+	 * @return void
 	 */
 	public function test_add_admin_notice_original_not_changed() {
 		$post = Mockery::mock( WP_Post::class );
@@ -155,6 +169,8 @@ final class Original_Post_Watcher_Test extends TestCase {
 	 * Tests the add_block_editor_notice function.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Copied_Post_Watcher::add_block_editor_notice
+	 *
+	 * @return void
 	 */
 	public function test_add_block_editor_notice() {
 		$post = Mockery::mock( WP_Post::class );
@@ -195,6 +211,8 @@ final class Original_Post_Watcher_Test extends TestCase {
 	 * Tests the add_block_editor_notice function when the original has not changed.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Copied_Post_Watcher::add_block_editor_notice
+	 *
+	 * @return void
 	 */
 	public function test_add_block_editor_notice_original_not_changed() {
 		$post = Mockery::mock( WP_Post::class );

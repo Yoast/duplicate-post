@@ -10,6 +10,8 @@ add_action( 'admin_init', 'duplicate_post_jetpack_init' );
 
 /**
  * Add handlers for JetPack compatibility.
+ *
+ * @return void
  */
 function duplicate_post_jetpack_init() {
 	add_filter( 'duplicate_post_excludelist_filter', 'duplicate_post_jetpack_add_to_excludelist', 10, 1 );
@@ -39,6 +41,8 @@ function duplicate_post_jetpack_add_to_excludelist( $meta_excludelist ) {
  * Disable Markdown.
  *
  * To be called before copy.
+ *
+ * @return void
  */
 function duplicate_post_jetpack_disable_markdown() {
 	WPCom_Markdown::get_instance()->unload_markdown_for_posts();
@@ -48,6 +52,8 @@ function duplicate_post_jetpack_disable_markdown() {
  * Enaable Markdown.
  *
  * To be called after copy.
+ *
+ * @return void
  */
 function duplicate_post_jetpack_enable_markdown() {
 	WPCom_Markdown::get_instance()->load_markdown_for_posts();

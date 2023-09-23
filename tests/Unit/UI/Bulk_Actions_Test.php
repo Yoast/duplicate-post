@@ -29,6 +29,8 @@ final class Bulk_Actions_Test extends TestCase {
 
 	/**
 	 * Sets the instance.
+	 *
+	 * @return void
 	 */
 	protected function set_up() {
 		parent::set_up();
@@ -41,6 +43,8 @@ final class Bulk_Actions_Test extends TestCase {
 	 * Tests if the needed attributes are set correctly.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Bulk_Actions::__construct
+	 *
+	 * @return void
 	 */
 	public function test_constructor() {
 		$this->assertInstanceOf(
@@ -55,6 +59,8 @@ final class Bulk_Actions_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Bulk_Actions::register_hooks
 	 * @runInSeparateProcess
 	 * @preserveGlobalState disabled
+	 *
+	 * @return void
 	 */
 	public function test_register_hooks() {
 		$utils = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
@@ -73,6 +79,8 @@ final class Bulk_Actions_Test extends TestCase {
 	 * Tests the add_bulk_filters function when a filter is added.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Bulk_Actions::add_bulk_filters
+	 *
+	 * @return void
 	 */
 	public function test_add_bulk_filters_successful() {
 		$duplicate_post_types_enabled = [ 'post', 'page' ];
@@ -92,6 +100,8 @@ final class Bulk_Actions_Test extends TestCase {
 	 * Tests the add_bulk_filters function when the user is not allowed to copy.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Bulk_Actions::add_bulk_filters
+	 *
+	 * @return void
 	 */
 	public function test_add_bulk_filters_unsuccessful_user_not_allowed() {
 		Monkey\Functions\expect( '\get_option' )
@@ -115,6 +125,8 @@ final class Bulk_Actions_Test extends TestCase {
 	 * Tests the add_bulk_filters function when no post types are enabled.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Bulk_Actions::add_bulk_filters
+	 *
+	 * @return void
 	 */
 	public function test_add_bulk_filters_unsuccessful_no_enabled_post_types() {
 		$duplicate_post_types_enabled = [];
@@ -140,6 +152,8 @@ final class Bulk_Actions_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Bulk_Actions::register_bulk_action
 	 * @runInSeparateProcess
 	 * @preserveGlobalState disabled
+	 *
+	 * @return void
 	 */
 	public function test_register_bulk_action() {
 		$this->stubTranslationFunctions();

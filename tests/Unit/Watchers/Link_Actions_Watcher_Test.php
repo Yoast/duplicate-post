@@ -29,6 +29,8 @@ final class Link_Actions_Watcher_Test extends TestCase {
 
 	/**
 	 * Sets the instance.
+	 *
+	 * @return void
 	 */
 	protected function set_up() {
 		parent::set_up();
@@ -45,6 +47,8 @@ final class Link_Actions_Watcher_Test extends TestCase {
 	 * Tests the constructor.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Link_Actions_Watcher::__construct
+	 *
+	 * @return void
 	 */
 	public function test_constructor() {
 		$this->assertInstanceOf(
@@ -57,6 +61,8 @@ final class Link_Actions_Watcher_Test extends TestCase {
 	 * Tests the registration of the hooks.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Link_Actions_Watcher::register_hooks
+	 *
+	 * @return void
 	 */
 	public function test_register_hooks() {
 		$this->instance->register_hooks();
@@ -71,6 +77,8 @@ final class Link_Actions_Watcher_Test extends TestCase {
 	 * Tests the add_removable_query_args function.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Link_Actions_Watcher::add_removable_query_args
+	 *
+	 * @return void
 	 */
 	public function test_add_removable_query_args() {
 		$array = [
@@ -141,6 +149,8 @@ final class Link_Actions_Watcher_Test extends TestCase {
 	 * Tests the add_clone_admin_notice function on the Classic Editor.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Link_Actions_Watcher::add_clone_admin_notice
+	 *
+	 * @return void
 	 */
 	public function test_add_clone_admin_notice_classic() {
 		$this->stubEscapeFunctions();
@@ -164,6 +174,8 @@ final class Link_Actions_Watcher_Test extends TestCase {
 	 * Tests the add_clone_admin_notice function when not on the Classic editor.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Link_Actions_Watcher::add_clone_admin_notice
+	 *
+	 * @return void
 	 */
 	public function test_add_clone_admin_notice_not_classic() {
 		$_REQUEST['cloned'] = '1';
@@ -184,6 +196,8 @@ final class Link_Actions_Watcher_Test extends TestCase {
 	 * Tests the add_rewrite_and_republish_admin_notice function on the Classic editor.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Link_Actions_Watcher::add_rewrite_and_republish_admin_notice
+	 *
+	 * @return void
 	 */
 	public function test_add_rewrite_and_republish_admin_notice_classic() {
 		$this->stubTranslationFunctions();
@@ -206,6 +220,8 @@ final class Link_Actions_Watcher_Test extends TestCase {
 	 * Tests the add_rewrite_and_republish_admin_notice function when not on the Classic editor.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Link_Actions_Watcher::add_rewrite_and_republish_admin_notice
+	 *
+	 * @return void
 	 */
 	public function test_add_rewrite_and_republish_admin_notice_not_classic() {
 		$_REQUEST['rewriting'] = '1';
@@ -226,6 +242,8 @@ final class Link_Actions_Watcher_Test extends TestCase {
 	 * Tests the add_rewrite_and_republish_block_editor_notice function.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Link_Actions_Watcher::add_rewrite_and_republish_block_editor_notice
+	 *
+	 * @return void
 	 */
 	public function test_add_rewrite_and_republish_block_editor_notice() {
 		$this->stubTranslationFunctions();

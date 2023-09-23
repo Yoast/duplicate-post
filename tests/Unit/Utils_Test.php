@@ -17,6 +17,8 @@ final class Utils_Test extends TestCase {
 	 *
 	 * @param string $original Version number.
 	 * @param string $expected Expected output.
+	 *
+	 * @return void
 	 */
 	public function test_flatten_version( $original, $expected ) {
 		$this->assertSame( $expected, Utils::flatten_version( $original ) );
@@ -46,6 +48,8 @@ final class Utils_Test extends TestCase {
 	 *
 	 * @param mixed $original Input value.
 	 * @param mixed $expected Expected output.
+	 *
+	 * @return void
 	 */
 	public function test_addslashes_to_strings_only( $original, $expected ) {
 		$this->assertSame( $expected, Utils::addslashes_to_strings_only( $original ) );
