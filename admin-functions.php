@@ -20,6 +20,8 @@ require_once DUPLICATE_POST_PATH . 'compat/jetpack-functions.php';
 
 /**
  * Wrapper for the option 'duplicate_post_version'.
+ *
+ * @return mixed
  */
 function duplicate_post_get_installed_version() {
 	return get_option( 'duplicate_post_version' );
@@ -27,6 +29,8 @@ function duplicate_post_get_installed_version() {
 
 /**
  * Wrapper for the defined constant DUPLICATE_POST_CURRENT_VERSION.
+ *
+ * @return string
  */
 function duplicate_post_get_current_version() {
 	return DUPLICATE_POST_CURRENT_VERSION;
