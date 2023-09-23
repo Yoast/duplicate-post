@@ -153,9 +153,6 @@ function duplicate_post_plugin_upgrade() {
 	}
 
 	$meta_blacklist = explode( ',', get_option( 'duplicate_post_blacklist' ) );
-	if ( $meta_blacklist === '' ) {
-		$meta_blacklist = [];
-	}
 	$meta_blacklist = array_map( 'trim', $meta_blacklist );
 	if ( in_array( '_wp_page_template', $meta_blacklist, true ) ) {
 		update_option( 'duplicate_post_copytemplate', 0 );
