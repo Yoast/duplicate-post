@@ -49,7 +49,7 @@ class Newsletter {
 		$html = '
 		<!-- Begin Newsletter Signup Form -->
 		<form method="post" id="newsletter-subscribe-form" name="newsletter-subscribe-form" novalidate>
-		' . \wp_nonce_field( 'newsletter', 'newsletter_nonce' ) . '
+		' . \wp_nonce_field( 'newsletter', 'newsletter_nonce', true, false ) . '
 		<p>' . $copy . '</p>
 		<div class="newsletter-field-group" style="display: flex; flex-direction: column">
 			<label for="newsletter-email" style="margin: 0 0 4px 0;"><strong>' . $email_label . '</strong></label>
