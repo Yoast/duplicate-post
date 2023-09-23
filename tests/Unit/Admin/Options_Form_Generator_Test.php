@@ -469,7 +469,7 @@ class Options_Form_Generator_Test extends TestCase {
 	 *
 	 * @return array The data to run the test against.
 	 */
-	public function is_checked_provider() {
+	public static function is_checked_provider() {
 		return [
 			[
 				'test_option',

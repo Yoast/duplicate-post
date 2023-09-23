@@ -27,7 +27,7 @@ class Utils_Test extends TestCase {
 	 *
 	 * @return array
 	 */
-	public function flatten_version_provider() {
+	public static function flatten_version_provider() {
 		return [
 			[ '3.0', '300' ],
 			[ '1.4', '140' ],
@@ -56,7 +56,7 @@ class Utils_Test extends TestCase {
 	 *
 	 * @return array
 	 */
-	public function addslashes_to_strings_only_provider() {
+	public static function addslashes_to_strings_only_provider() {
 		return [
 			[ "O'Reilly", "O\'Reilly" ],
 			[ 'A string with "quotes"', 'A string with \"quotes\"' ],

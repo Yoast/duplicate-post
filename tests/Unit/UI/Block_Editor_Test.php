@@ -187,7 +187,7 @@ class Block_Editor_Test extends TestCase {
 	 *
 	 * @return array The test parameters.
 	 */
-	public function should_previously_used_keyword_assessment_run_provider() {
+	public static function should_previously_used_keyword_assessment_run_provider() {
 		return [
 			[
 				'original' => [
