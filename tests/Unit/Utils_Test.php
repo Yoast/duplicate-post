@@ -25,7 +25,7 @@ final class Utils_Test extends TestCase {
 	/**
 	 * Data provider for test_flatten_version.
 	 *
-	 * @return array
+	 * @return array<array<string>>
 	 */
 	public static function flatten_version_provider() {
 		return [
@@ -54,7 +54,7 @@ final class Utils_Test extends TestCase {
 	/**
 	 * Data provider for test_addslashes_to_strings_only.
 	 *
-	 * @return array
+	 * @return array<array<mixed>>
 	 */
 	public static function addslashes_to_strings_only_provider() {
 		return [

@@ -244,8 +244,8 @@ final class Permissions_Helper_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::is_edit_post_screen
 	 * @dataProvider is_edit_post_screen_provider
 	 *
-	 * @param mixed $original Input value.
-	 * @param mixed $expected Expected output.
+	 * @param array<string, bool|string> $original Input value.
+	 * @param bool                       $expected Expected output.
 	 */
 	public function test_is_edit_post_screen( $original, $expected ) {
 		$screen         = Mockery::mock( WP_Screen::class );
@@ -264,7 +264,7 @@ final class Permissions_Helper_Test extends TestCase {
 	/**
 	 * Data provider for test_is_edit_post_screen.
 	 *
-	 * @return array The test parameters.
+	 * @return array<array<string, bool|array<string, bool|string>>> The test parameters.
 	 */
 	public static function is_edit_post_screen_provider() {
 		return [
@@ -317,8 +317,8 @@ final class Permissions_Helper_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::is_new_post_screen
 	 * @dataProvider is_new_post_screen_provider
 	 *
-	 * @param mixed $original Input value.
-	 * @param mixed $expected Expected output.
+	 * @param array<string, bool|string> $original Input value.
+	 * @param bool                       $expected Expected output.
 	 */
 	public function test_is_new_post_screen( $original, $expected ) {
 		$screen         = Mockery::mock( WP_Screen::class );
@@ -337,7 +337,7 @@ final class Permissions_Helper_Test extends TestCase {
 	/**
 	 * Data provider for test_is_new_post_screen.
 	 *
-	 * @return array The test parameters.
+	 * @return array<array<string, bool|array<string, bool|string>>> The test parameters.
 	 */
 	public static function is_new_post_screen_provider() {
 		return [
@@ -390,8 +390,8 @@ final class Permissions_Helper_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::is_classic_editor
 	 * @dataProvider is_classic_editor_provider
 	 *
-	 * @param mixed $original Input value.
-	 * @param mixed $expected Expected output.
+	 * @param array<string, bool> $original Input value.
+	 * @param bool                $expected Expected output.
 	 */
 	public function test_is_classic_editor( $original, $expected ) {
 		$screen = Mockery::mock( WP_Screen::class );
@@ -414,7 +414,7 @@ final class Permissions_Helper_Test extends TestCase {
 	/**
 	 * Data provider for test_is_new_post_screen.
 	 *
-	 * @return array The test parameters.
+	 * @return array<array<string, bool|array<string, bool>>> The test parameters.
 	 */
 	public static function is_classic_editor_provider() {
 		return [
@@ -649,8 +649,8 @@ final class Permissions_Helper_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::should_rewrite_and_republish_be_allowed
 	 * @dataProvider should_rewrite_and_republish_be_allowed_provider
 	 *
-	 * @param mixed $original Input value.
-	 * @param mixed $expected Expected output.
+	 * @param array<string, mixed> $original Input value.
+	 * @param bool                 $expected Expected output.
 	 */
 	public function test_should_rewrite_and_republish_be_allowed( $original, $expected ) {
 		$post              = Mockery::mock( WP_Post::class );
@@ -675,7 +675,7 @@ final class Permissions_Helper_Test extends TestCase {
 	/**
 	 * Data provider for test_should_rewrite_and_republish_be_allowed.
 	 *
-	 * @return array The test parameters.
+	 * @return array<array<string, bool|array<string, mixed>>> The test parameters.
 	 */
 	public static function should_rewrite_and_republish_be_allowed_provider() {
 		return [
@@ -728,8 +728,8 @@ final class Permissions_Helper_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::post_type_has_admin_bar
 	 * @dataProvider post_type_has_admin_bar_provider
 	 *
-	 * @param mixed $original Input value.
-	 * @param mixed $expected Expected output.
+	 * @param array<string, bool> $original Input value.
+	 * @param bool                $expected Expected output.
 	 */
 	public function test_post_type_has_admin_bar( $original, $expected ) {
 		$post_type                           = 'post';
@@ -747,7 +747,7 @@ final class Permissions_Helper_Test extends TestCase {
 	/**
 	 * Data provider for test_post_type_has_admin_bar.
 	 *
-	 * @return array The test parameters.
+	 * @return array<array<string, bool|array<string, bool>>> The test parameters.
 	 */
 	public static function post_type_has_admin_bar_provider() {
 		return [
@@ -804,8 +804,8 @@ final class Permissions_Helper_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Permissions_Helper::is_copy_allowed_to_be_republished
 	 * @dataProvider is_copy_allowed_to_be_republished_provider
 	 *
-	 * @param mixed $post_status Input value.
-	 * @param mixed $expected    Expected output.
+	 * @param string $post_status Input value.
+	 * @param bool   $expected    Expected output.
 	 */
 	public function test_is_copy_allowed_to_be_republished( $post_status, $expected ) {
 		$post              = Mockery::mock( WP_Post::class );
@@ -817,7 +817,7 @@ final class Permissions_Helper_Test extends TestCase {
 	/**
 	 * Data provider for test_is_copy_allowed_to_be_republished.
 	 *
-	 * @return array The test parameters.
+	 * @return array<array<string, string|bool>> The test parameters.
 	 */
 	public static function is_copy_allowed_to_be_republished_provider() {
 		return [

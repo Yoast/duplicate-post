@@ -70,8 +70,8 @@ final class Post_Duplicator_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Post_Duplicator::generate_copy_title
 	 * @dataProvider generate_copy_title_provider
 	 *
-	 * @param mixed $original Input value.
-	 * @param mixed $expected Expected output.
+	 * @param array<string, string|bool> $original Input value.
+	 * @param string                     $expected Expected output.
 	 */
 	public function test_generate_copy_title( $original, $expected ) {
 		$post             = Mockery::mock( WP_Post::class );
@@ -83,7 +83,7 @@ final class Post_Duplicator_Test extends TestCase {
 	/**
 	 * Data provider for test_generate_copy_title.
 	 *
-	 * @return array
+	 * @return array<array<string|array<string, string|bool>>>
 	 */
 	public static function generate_copy_title_provider() {
 		$data = [];
@@ -151,8 +151,8 @@ final class Post_Duplicator_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Post_Duplicator::generate_copy_status
 	 * @dataProvider generate_copy_status_provider
 	 *
-	 * @param mixed $original Input value.
-	 * @param mixed $expected Expected output.
+	 * @param array<string, string|bool> $original Input value.
+	 * @param string                     $expected Expected output.
 	 */
 	public function test_generate_copy_status( $original, $expected ) {
 		$post              = Mockery::mock( WP_Post::class );
@@ -184,7 +184,7 @@ final class Post_Duplicator_Test extends TestCase {
 	/**
 	 * Data provider for test_generate_copy_status.
 	 *
-	 * @return array
+	 * @return array<array<string|array<string, string|bool>>>
 	 */
 	public static function generate_copy_status_provider() {
 		$data = [];
@@ -248,8 +248,8 @@ final class Post_Duplicator_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Post_Duplicator::generate_copy_author
 	 * @dataProvider generate_copy_author_provider
 	 *
-	 * @param mixed $original Input value.
-	 * @param mixed $expected Expected output.
+	 * @param array<string, string|bool> $original Input value.
+	 * @param int                        $expected Expected output.
 	 */
 	public function test_generate_copy_author( $original, $expected ) {
 		$post              = Mockery::mock( WP_Post::class );
@@ -288,7 +288,7 @@ final class Post_Duplicator_Test extends TestCase {
 	/**
 	 * Data provider for test_generate_copy_author.
 	 *
-	 * @return array
+	 * @return array<array<int|array<string, string|bool>>>
 	 */
 	public static function generate_copy_author_provider() {
 		$data = [];

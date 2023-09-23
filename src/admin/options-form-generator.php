@@ -127,8 +127,8 @@ class Options_Form_Generator {
 	/**
 	 * Extracts and formats the description associated with the input field.
 	 *
-	 * @param string|array $description The description string. Can be an array of strings.
-	 * @param string       $id          The ID of the input field.
+	 * @param string|array<string> $description The description string. Can be an array of strings.
+	 * @param string               $id          The ID of the input field.
 	 *
 	 * @return string The description HTML for the input.
 	 */

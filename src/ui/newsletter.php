@@ -69,7 +69,7 @@ class Newsletter {
 	/**
 	 * Handles and validates Newsletter form.
 	 *
-	 * @return array|null
+	 * @return array<string, string>|null
 	 */
 	private static function newsletter_handle_form() {
 
@@ -105,7 +105,7 @@ class Newsletter {
 	 *
 	 * @param string $email Subscriber email.
 	 *
-	 * @return array Feedback response.
+	 * @return array<string, string> Feedback response.
 	 */
 	private static function newsletter_subscribe_to_mailblue( $email ) {
 		$response = \wp_remote_post(

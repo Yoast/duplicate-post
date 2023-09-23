@@ -22,7 +22,7 @@ final class Options_Test extends TestCase {
 	/**
 	 * The fake options array.
 	 *
-	 * @var array[]
+	 * @var array<string, array<string, string|int>>
 	 */
 	protected $fake_options;
 

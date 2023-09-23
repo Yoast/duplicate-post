@@ -175,8 +175,8 @@ final class Post_Republisher_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Post_Republisher::change_post_copy_status
 	 * @dataProvider change_post_copy_status_provider
 	 *
-	 * @param mixed $input    Input values.
-	 * @param mixed $expected Expected output.
+	 * @param array<string, string|bool> $input    Input values.
+	 * @param array<string, string>      $expected Expected output.
 	 */
 	public function test_change_post_copy_status( $input, $expected ) {
 		$post              = Mockery::mock( WP_Post::class );
@@ -201,7 +201,7 @@ final class Post_Republisher_Test extends TestCase {
 	/**
 	 * Data provider for test_change_post_copy_status.
 	 *
-	 * @return array
+	 * @return array<array<array<string, string|bool>>>
 	 */
 	public static function change_post_copy_status_provider() {
 		return [

@@ -177,7 +177,7 @@ class Utils {
 	/**
 	 * Gets the default meta field names to be filtered out.
 	 *
-	 * @return array The names of the meta fields to filter out by default.
+	 * @return array<string> The names of the meta fields to filter out by default.
 	 */
 	public static function get_default_filtered_meta_names() {
 		return [

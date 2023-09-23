@@ -151,8 +151,8 @@ final class Block_Editor_Test extends TestCase {
 	 * @covers       \Yoast\WP\Duplicate_Post\UI\Block_Editor::should_previously_used_keyword_assessment_run
 	 * @dataProvider should_previously_used_keyword_assessment_run_provider
 	 *
-	 * @param mixed $original Input value.
-	 * @param mixed $expected Expected output.
+	 * @param array<string, bool> $original Input value.
+	 * @param bool                $expected Expected output.
 	 */
 	public function test_should_previously_used_keyword_assessment_run( $original, $expected ) {
 		$post = Mockery::mock( WP_Post::class );
@@ -185,7 +185,7 @@ final class Block_Editor_Test extends TestCase {
 	/**
 	 * Data provider for test_is_edit_post_screen.
 	 *
-	 * @return array The test parameters.
+	 * @return array<array<string, bool|array<string, bool>>> The test parameters.
 	 */
 	public static function should_previously_used_keyword_assessment_run_provider() {
 		return [

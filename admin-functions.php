@@ -737,9 +737,9 @@ function duplicate_post_create_duplicate( $post, $status = '', $parent_id = '' )
 /**
  * Adds some links on the plugin page.
  *
- * @param array  $links The links array.
- * @param string $file  The file name.
- * @return array
+ * @param array<string> $links The links array.
+ * @param string        $file  The file name.
+ * @return array<string>
  */
 function duplicate_post_add_plugin_links( $links, $file ) {
 	if ( plugin_basename( __DIR__ . '/duplicate-post.php' ) === $file ) {
