@@ -14,7 +14,7 @@ use Yoast\WP\Duplicate_Post\Tests\Unit\TestCase;
 /**
  * Test the Options_Form_Generator class.
  */
-class Options_Form_Generator_Test extends TestCase {
+final class Options_Form_Generator_Test extends TestCase {
 
 	/**
 	 * The instance.

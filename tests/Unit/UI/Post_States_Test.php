@@ -12,7 +12,7 @@ use Yoast\WP\Duplicate_Post\UI\Post_States;
 /**
  * Test the Post_States class.
  */
-class Post_States_Test extends TestCase {
+final class Post_States_Test extends TestCase {
 
 	/**
 	 * Holds the permissions helper.

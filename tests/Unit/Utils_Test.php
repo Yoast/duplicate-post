@@ -7,7 +7,7 @@ use Yoast\WP\Duplicate_Post\Utils;
 /**
  * Test the Utils class.
  */
-class Utils_Test extends TestCase {
+final class Utils_Test extends TestCase {
 
 	/**
 	 * Tests the flatten_version function.

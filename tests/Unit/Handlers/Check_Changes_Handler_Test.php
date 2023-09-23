@@ -12,7 +12,7 @@ use Yoast\WP\Duplicate_Post\Tests\Unit\TestCase;
 /**
  * Test the Check_Changes_Handler class.
  */
-class Check_Changes_Handler_Test extends TestCase {
+final class Check_Changes_Handler_Test extends TestCase {
 
 	/**
 	 * Holds the permissions helper.

@@ -12,7 +12,7 @@ use Yoast\WP\Duplicate_Post\UI\Column;
 /**
  * Test the Column class.
  */
-class Column_Test extends TestCase {
+final class Column_Test extends TestCase {
 
 	/**
 	 * Holds the permissions helper.

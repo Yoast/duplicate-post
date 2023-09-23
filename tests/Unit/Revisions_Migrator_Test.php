@@ -10,7 +10,7 @@ use Yoast\WP\Duplicate_Post\Revisions_Migrator;
 /**
  * Test the Revisions_Migrator class.
  */
-class Revisions_Migrator_Test extends TestCase {
+final class Revisions_Migrator_Test extends TestCase {
 
 	/**
 	 * The instance.

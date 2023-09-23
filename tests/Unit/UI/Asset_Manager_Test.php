@@ -10,7 +10,7 @@ use Yoast\WP\Duplicate_Post\UI\Asset_Manager;
 /**
  * Test the Asset_Manager class.
  */
-class Asset_Manager_Test extends TestCase {
+final class Asset_Manager_Test extends TestCase {
 
 	/**
 	 * The instance.

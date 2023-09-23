@@ -9,7 +9,7 @@ use Yoast\WP\Duplicate_Post\Watchers\Bulk_Actions_Watcher;
 /**
  * Test the Link_Actions_Watcher class.
  */
-class Bulk_Actions_Watcher_Test extends TestCase {
+final class Bulk_Actions_Watcher_Test extends TestCase {
 
 	/**
 	 * The instance.

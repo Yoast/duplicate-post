@@ -11,7 +11,7 @@ use Yoast\WP\Duplicate_Post\UI\Bulk_Actions;
 /**
  * Test the Bulk_Actions class.
  */
-class Bulk_Actions_Test extends TestCase {
+final class Bulk_Actions_Test extends TestCase {
 
 	/**
 	 * Holds the permissions helper.
