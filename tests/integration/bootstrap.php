@@ -36,14 +36,14 @@ if ( $_wp_tests_dir === false ) {
 }
 
 
-// Load some helpful functions.
+// Get access to tests_add_filter() function.
 require_once $_wp_tests_dir . 'includes/functions.php';
 
 /**
  * Activates this plugin in WordPress so it can be tested.
  */
 function _manually_load_plugin() {
-	require YOAST_DUPLICATE_POST_TEST_ROOT_DIR . '../../duplicate-post.php';
+	require_once YOAST_DUPLICATE_POST_TEST_ROOT_DIR . '../../duplicate-post.php';
 }
 
 tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );

@@ -44,6 +44,6 @@ class Post_Duplicator_Test extends TestCase {
 
 		$id = $this->instance->create_duplicate( $post, [ 'copy_date' => true ] );
 
-		$this->assertTrue( \is_int( $id ) );
+		$this->assertIsInt( $id );
 	}
 }

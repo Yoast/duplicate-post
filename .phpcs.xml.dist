@@ -89,7 +89,6 @@
 			<!-- Don't trigger on the main file as renaming it would deactivate the plugin. -->
 			<property name="excluded_files_strict_check" type="array">
 				<element value="duplicate-post.php"/>
-				<!-- Don't trigger on test bootstrap files. -->
 			</property>
 
 			<!-- Remove the following prefixes from the names of object structures. -->
