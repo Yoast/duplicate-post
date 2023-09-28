@@ -17,8 +17,12 @@ if ( ! \defined( 'DUPLICATE_POST_CURRENT_VERSION' ) ) {
 	<form id="duplicate_post_settings_form" method="post" action="options.php" style="clear: both">
 		<?php \settings_fields( 'duplicate_post_group' ); ?>
 
-		<header role="tablist" aria-label="<?php \esc_attr_e( 'Settings sections', 'duplicate-post' ); ?>"
-				class="nav-tab-wrapper">
+		<header role="tablist" aria-label="
+		<?php
+			/* translators: Hidden accessibility text. */
+			\esc_attr_e( 'Settings sections', 'duplicate-post' );
+		?>
+		" class="nav-tab-wrapper">
 			<button
 					type="button"
 					role="tab"
