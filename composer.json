@@ -58,10 +58,10 @@
             "@php ./vendor/phpunit/phpunit/phpunit"
         ],
         "integration-test": [
-            "@php ./vendor/phpunit/phpunit/phpunit -c phpunit-integration.xml.dist --no-coverage"
+            "@php ./vendor/phpunit/phpunit/phpunit -c phpunit-wp.xml.dist --no-coverage"
         ],
         "integration-coverage": [
-            "@php ./vendor/phpunit/phpunit/phpunit -c phpunit-integration.xml.dist"
+            "@php ./vendor/phpunit/phpunit/phpunit -c phpunit-wp.xml.dist"
         ]
     },
     "config": {
