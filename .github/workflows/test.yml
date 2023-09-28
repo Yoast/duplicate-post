@@ -206,13 +206,25 @@ jobs:
         shell: bash
         run: config/scripts/install-wp-tests.sh wordpress_test root '' 127.0.0.1:3306 ${{ matrix.wp_version }}
 
-      - name: Run integration tests
+      - name: Run integration tests - single site
         if: ${{ matrix.coverage == false }}
         run: composer integration-test
 
-      - name: Run integration tests with code coverage
+      - name: Run integration tests - multisite
+        if: ${{ matrix.multisite == true && matrix.coverage == false }}
+        run: composer integration-test
+        env:
+          WP_MULTISITE: 1
+
+      - name: Run integration tests with code coverage - single site
         if: ${{ matrix.coverage == true }}
         run: composer integration-coverage
+
+      - name: Run integration tests with code coverage - multisite
+        if: ${{ matrix.multisite == true && matrix.coverage == true }}
+        run: composer integration-coverage -- --coverage-clover build/logs/clover-integration-ms.xml
+        env:
+          WP_MULTISITE: 1
 
       # PHP Coveralls doesn't fully support PHP 8.x yet, so switch the PHP version.
       - name: Switch to PHP 7.4
@@ -232,8 +244,16 @@ jobs:
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_TOKEN }}
           COVERALLS_PARALLEL: true
-          COVERALLS_FLAG_NAME: intgr-php-${{ matrix.php_version }}
+          COVERALLS_FLAG_NAME: intgr-php-${{ matrix.php_version }}-wp-${{ matrix.wp_version }}
         run: php-coveralls -v -x build/logs/clover-integration.xml
+
+      - name: Upload coverage results to Coveralls - multisite
+        if: ${{ success() && matrix.multisite == true && matrix.coverage == true }}
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_TOKEN }}
+          COVERALLS_PARALLEL: true
+          COVERALLS_FLAG_NAME: intgr-php-${{ matrix.php_version }}-wp-${{ matrix.wp_version }}-ms
+        run: php-coveralls -v -x build/logs/clover-integration-ms.xml
 
   coveralls-finish:
     needs: unit
