@@ -30,6 +30,7 @@ on:
       - '.github/workflows/deploy.yml'
       - '.github/workflows/lint.yml'
       - 'config/**'
+      - '!config/scripts/install-wp-tests.sh'
       - 'css/**'
       - 'js/**'
   pull_request:
@@ -54,6 +55,7 @@ on:
       - '.github/workflows/deploy.yml'
       - '.github/workflows/lint.yml'
       - 'config/**'
+      - '!config/scripts/install-wp-tests.sh'
       - 'css/**'
       - 'js/**'
   # Allow manually triggering the workflow.
