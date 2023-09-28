@@ -108,11 +108,6 @@
 
 	<!-- TEST CODE -->
 
-	<!-- Valid usage: For testing purposes, some non-prefixed globals are being created, which is fine. -->
-	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
-		<exclude-pattern>/tests/*/bootstrap\.php$</exclude-pattern>
-	</rule>
-
 	<!-- Valid usage: For testing purposes, some non-prefixed global constants are being created, which is fine. -->
 	<rule ref="WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound">
 		<exclude-pattern>/tests/*\.php$</exclude-pattern>
