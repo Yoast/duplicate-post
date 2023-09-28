@@ -113,11 +113,6 @@
 		<exclude-pattern>/tests/*/bootstrap\.php$</exclude-pattern>
 	</rule>
 
-	<!-- Valid usage: We declare a function to load the plugin for the integration tests. -->
-	<rule ref="Yoast.Files.FileName.InvalidFunctionsFileName">
-		<exclude-pattern>/tests/integration/bootstrap\.php$</exclude-pattern>
-	</rule>
-
 	<!-- Valid usage: For testing purposes, some non-prefixed global constants are being created, which is fine. -->
 	<rule ref="WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound">
 		<exclude-pattern>/tests/*\.php$</exclude-pattern>
