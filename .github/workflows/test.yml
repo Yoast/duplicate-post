@@ -68,7 +68,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  unit:
+  unit-test:
     runs-on: ubuntu-latest
 
     strategy:
@@ -258,7 +258,7 @@ jobs:
         run: php-coveralls -v -x build/logs/clover-integration-ms.xml
 
   coveralls-finish:
-    needs: unit
+    needs: [unit, integration-test]
     runs-on: ubuntu-latest
 
     steps:
