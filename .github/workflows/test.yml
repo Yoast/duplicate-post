@@ -258,7 +258,7 @@ jobs:
         run: php-coveralls -v -x build/logs/clover-integration-ms.xml
 
   coveralls-finish:
-    needs: [unit, integration-test]
+    needs: [unit-test, integration-test]
     runs-on: ubuntu-latest
 
     steps:
