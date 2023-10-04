@@ -5,15 +5,17 @@
  * @package Yoast\WP\Duplicate_Post\Tests
  */
 
-define( 'OBJECT', 'OBJECT' );
-define( 'ARRAY_A', 'ARRAY_A' );
-define( 'ARRAY_N', 'ARRAY_N' );
+namespace Yoast\WP\Duplicate_Post\Tests\Unit;
 
-define( 'DUPLICATE_POST_FILE', '/var/www/html/wp-content/plugins/duplicate-post/duplicate-post.php' );
-define( 'DUPLICATE_POST_CURRENT_VERSION', '4.0' );
+\define( 'OBJECT', 'OBJECT' );
+\define( 'ARRAY_A', 'ARRAY_A' );
+\define( 'ARRAY_N', 'ARRAY_N' );
 
-if ( file_exists( dirname( __DIR__, 2 ) . '/vendor/autoload.php' ) === false ) {
-	echo PHP_EOL, 'ERROR: Run `composer install` to generate the autoload files before running the unit tests.', PHP_EOL;
+\define( 'DUPLICATE_POST_FILE', '/var/www/html/wp-content/plugins/duplicate-post/duplicate-post.php' );
+\define( 'DUPLICATE_POST_CURRENT_VERSION', '4.0' );
+
+if ( \file_exists( \dirname( __DIR__, 2 ) . '/vendor/autoload.php' ) === false ) {
+	echo \PHP_EOL, 'ERROR: Run `composer install` to generate the autoload files before running the unit tests.', \PHP_EOL;
 	exit( 1 );
 }
 
