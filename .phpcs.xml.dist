@@ -108,7 +108,7 @@
 
 	<!-- TEST CODE -->
 
-	<!-- Valid usage: For testing purposes, some non-prefixed globals are being created, which is fine. -->
+	<!-- Valid usage: For testing purposes, some non-prefixed global constants are being created, which is fine. -->
 	<rule ref="WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound">
 		<exclude-pattern>/tests/*\.php$</exclude-pattern>
 	</rule>
@@ -118,7 +118,7 @@
 		<exclude-pattern>/tests/*</exclude-pattern>
 	</rule>
 
-	<!-- These tests are not run within the context of a WP install, so overwritting globals is fine. -->
+	<!-- These tests are not run within the context of a WP install, so overwriting globals is fine. -->
 	<rule ref="WordPress.WP.GlobalVariablesOverride">
 		<exclude-pattern>/tests/*</exclude-pattern>
 	</rule>

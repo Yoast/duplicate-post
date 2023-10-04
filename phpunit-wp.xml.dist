@@ -4,7 +4,7 @@
 	xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/8.5/phpunit.xsd"
 	backupGlobals="false"
 	backupStaticAttributes="false"
-	bootstrap="tests/unit/bootstrap.php"
+	bootstrap="tests/wp/bootstrap.php"
 	colors="true"
 	convertDeprecationsToExceptions="true"
 	convertErrorsToExceptions="true"
@@ -20,7 +20,7 @@
 	>
 	<testsuites>
 		<testsuite name="duplicatepost">
-			<directory suffix="-test.php">./tests/unit</directory>
+			<directory suffix="-test.php">./tests/wp</directory>
 		</testsuite>
 	</testsuites>
 
@@ -37,7 +37,7 @@
 
 	<logging>
 		<log type="coverage-text" target="php://stdout" showOnlySummary="true"/>
-		<log type="coverage-clover" target="build/logs/clover.xml"/>
+		<log type="coverage-clover" target="build/logs/clover-integration.xml"/>
 	</logging>
 
 </phpunit>

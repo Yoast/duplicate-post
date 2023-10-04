@@ -30,6 +30,7 @@ on:
       - '.github/workflows/deploy.yml'
       - '.github/workflows/lint.yml'
       - 'config/**'
+      - '!config/scripts/install-wp-tests.sh'
       - 'css/**'
       - 'js/**'
   pull_request:
@@ -54,6 +55,7 @@ on:
       - '.github/workflows/deploy.yml'
       - '.github/workflows/lint.yml'
       - 'config/**'
+      - '!config/scripts/install-wp-tests.sh'
       - 'css/**'
       - 'js/**'
   # Allow manually triggering the workflow.
@@ -130,6 +132,130 @@ jobs:
           COVERALLS_PARALLEL: true
           COVERALLS_FLAG_NAME: php-${{ matrix.php_version }}
         run: php-coveralls -v -x build/logs/clover.xml
+
+  integration-test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        include:
+          - php_version: "7.2"
+            wp_version: "6.2"
+            multisite: true
+            coverage: true
+
+          - php_version: "7.3"
+            wp_version: "trunk"
+            multisite: true
+            coverage: false
+
+          - php_version: "7.4"
+            wp_version: "latest"
+            multisite: false
+            coverage: false
+
+          - php_version: "8.0"
+            wp_version: "6.2"
+            multisite: false
+            coverage: false
+
+          - php_version: "8.1"
+            wp_version: "latest"
+            multisite: true
+            coverage: false
+
+          - php_version: "8.2"
+            wp_version: "6.3"
+            multisite: true
+            coverage: true
+
+    name: "Integration Test: PHP ${{ matrix.php_version }} | WP ${{ matrix.wp_version }}${{ matrix.multisite == true && ' (+ ms)' || '' }}"
+
+    # Allow builds to fail on as-of-yet unreleased WordPress versions.
+    continue-on-error: ${{ matrix.wp_version == 'trunk' }}
+
+    services:
+      mysql:
+        # Use MySQL 5.6 for PHP 7.2, use MySQL 5.7 for PHP 7.3 < 7.4, otherwise MySQL 8.0.
+        # Also see: https://core.trac.wordpress.org/ticket/52496
+        image: mysql:${{ ( matrix.php_version == '7.2' && '5.6' ) || ( matrix.php_version < '7.4' && '5.7' ) || '8.0' }}
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: false
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=10s --health-retries=10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php_version }}
+          ini-values: zend.assertions=1, error_reporting=-1, display_errors=On
+          coverage: ${{ matrix.coverage == true && 'xdebug' || 'none' }}
+
+      # Install dependencies and handle caching in one go.
+      # @link https://github.com/marketplace/actions/install-composer-dependencies
+      - name: Install Composer dependencies
+        uses: ramsey/composer-install@v2
+        with:
+          # Bust the cache at least once a month - output format: YYYY-MM.
+          custom-cache-suffix: $(date -u "+%Y-%m")
+
+      - name: Install WP
+        shell: bash
+        run: config/scripts/install-wp-tests.sh wordpress_test root '' 127.0.0.1:3306 ${{ matrix.wp_version }}
+
+      - name: Run integration tests - single site
+        if: ${{ matrix.coverage == false }}
+        run: composer integration-test
+
+      - name: Run integration tests - multisite
+        if: ${{ matrix.multisite == true && matrix.coverage == false }}
+        run: composer integration-test
+        env:
+          WP_MULTISITE: 1
+
+      - name: Run integration tests with code coverage - single site
+        if: ${{ matrix.coverage == true }}
+        run: composer integration-coverage
+
+      - name: Run integration tests with code coverage - multisite
+        if: ${{ matrix.multisite == true && matrix.coverage == true }}
+        run: composer integration-coverage -- --coverage-clover build/logs/clover-integration-ms.xml
+        env:
+          WP_MULTISITE: 1
+
+      # PHP Coveralls doesn't fully support PHP 8.x yet, so switch the PHP version.
+      - name: Switch to PHP 7.4
+        if: ${{ success() && matrix.coverage == true && startsWith( matrix.php_version, '8' ) }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 7.4
+          coverage: none
+
+      # Global install is used to prevent a conflict with the local composer.lock in PHP 8.0+.
+      - name: Install Coveralls
+        if: ${{ success() && matrix.coverage == true }}
+        run: composer global require php-coveralls/php-coveralls:"^2.5.3" --no-interaction
+
+      - name: Upload coverage results to Coveralls
+        if: ${{ success() && matrix.coverage == true }}
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_TOKEN }}
+          COVERALLS_PARALLEL: true
+          COVERALLS_FLAG_NAME: intgr-php-${{ matrix.php_version }}-wp-${{ matrix.wp_version }}
+        run: php-coveralls -v -x build/logs/clover-integration.xml
+
+      - name: Upload coverage results to Coveralls - multisite
+        if: ${{ success() && matrix.multisite == true && matrix.coverage == true }}
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_TOKEN }}
+          COVERALLS_PARALLEL: true
+          COVERALLS_FLAG_NAME: intgr-php-${{ matrix.php_version }}-wp-${{ matrix.wp_version }}-ms
+        run: php-coveralls -v -x build/logs/clover-integration-ms.xml
 
   coveralls-finish:
     needs: unit
