@@ -57,11 +57,17 @@
         "coverage": [
             "@php ./vendor/phpunit/phpunit/phpunit"
         ],
-        "integration-test": [
+        "test-wp": [
             "@php ./vendor/phpunit/phpunit/phpunit -c phpunit-wp.xml.dist --no-coverage"
         ],
-        "integration-coverage": [
+        "coverage-wp": [
             "@php ./vendor/phpunit/phpunit/phpunit -c phpunit-wp.xml.dist"
+        ],
+        "integration-test": [
+            "@test-wp"
+        ],
+        "integration-coverage": [
+            "@coverage-wp"
         ]
     },
     "config": {
