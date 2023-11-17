@@ -97,7 +97,7 @@ jobs:
           coverage: ${{ matrix.coverage == true && 'xdebug' || 'none' }}
 
       # Install dependencies and handle caching in one go.
-      # @link https://github.com/marketplace/actions/install-composer-dependencies
+      # @link https://github.com/marketplace/actions/install-php-dependencies-with-composer
       - name: Install Composer dependencies
         uses: ramsey/composer-install@v2
         with:
@@ -203,7 +203,7 @@ jobs:
           coverage: ${{ matrix.coverage == true && 'xdebug' || 'none' }}
 
       # Install dependencies and handle caching in one go.
-      # @link https://github.com/marketplace/actions/install-composer-dependencies
+      # @link https://github.com/marketplace/actions/install-php-dependencies-with-composer
       - name: Install Composer dependencies
         uses: ramsey/composer-install@v2
         with:
