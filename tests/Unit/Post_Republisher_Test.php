@@ -203,7 +203,7 @@ class Post_Republisher_Test extends TestCase {
 	 *
 	 * @return array
 	 */
-	public function change_post_copy_status_provider() {
+	public static function change_post_copy_status_provider() {
 		return [
 			[
 				[

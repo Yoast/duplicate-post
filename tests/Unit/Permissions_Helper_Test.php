@@ -266,7 +266,7 @@ class Permissions_Helper_Test extends TestCase {
 	 *
 	 * @return array The test parameters.
 	 */
-	public function is_edit_post_screen_provider() {
+	public static function is_edit_post_screen_provider() {
 		return [
 			[
 				'original' => [
@@ -339,7 +339,7 @@ class Permissions_Helper_Test extends TestCase {
 	 *
 	 * @return array The test parameters.
 	 */
-	public function is_new_post_screen_provider() {
+	public static function is_new_post_screen_provider() {
 		return [
 			[
 				'original' => [
@@ -416,7 +416,7 @@ class Permissions_Helper_Test extends TestCase {
 	 *
 	 * @return array The test parameters.
 	 */
-	public function is_classic_editor_provider() {
+	public static function is_classic_editor_provider() {
 		return [
 			[
 				'original' => [
@@ -677,7 +677,7 @@ class Permissions_Helper_Test extends TestCase {
 	 *
 	 * @return array The test parameters.
 	 */
-	public function should_rewrite_and_republish_be_allowed_provider() {
+	public static function should_rewrite_and_republish_be_allowed_provider() {
 		return [
 			[
 				'original' => [
@@ -749,7 +749,7 @@ class Permissions_Helper_Test extends TestCase {
 	 *
 	 * @return array The test parameters.
 	 */
-	public function post_type_has_admin_bar_provider() {
+	public static function post_type_has_admin_bar_provider() {
 		return [
 			[
 				'original' => [
@@ -819,7 +819,7 @@ class Permissions_Helper_Test extends TestCase {
 	 *
 	 * @return array The test parameters.
 	 */
-	public function is_copy_allowed_to_be_republished_provider() {
+	public static function is_copy_allowed_to_be_republished_provider() {
 		return [
 			[
 				'post_status' => 'dp-rewrite-republish',

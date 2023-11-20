@@ -85,7 +85,7 @@ class Post_Duplicator_Test extends TestCase {
 	 *
 	 * @return array
 	 */
-	public function generate_copy_title_provider() {
+	public static function generate_copy_title_provider() {
 		$data = [];
 
 		$data[] = [
@@ -186,7 +186,7 @@ class Post_Duplicator_Test extends TestCase {
 	 *
 	 * @return array
 	 */
-	public function generate_copy_status_provider() {
+	public static function generate_copy_status_provider() {
 		$data = [];
 
 		$data[] = [
@@ -290,7 +290,7 @@ class Post_Duplicator_Test extends TestCase {
 	 *
 	 * @return array
 	 */
-	public function generate_copy_author_provider() {
+	public static function generate_copy_author_provider() {
 		$data = [];
 
 		$data[] = [
