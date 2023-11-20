@@ -4,7 +4,7 @@
 	xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/8.5/phpunit.xsd"
 	backupGlobals="false"
 	backupStaticAttributes="false"
-	bootstrap="tests/wp/bootstrap.php"
+	bootstrap="tests/WP/bootstrap.php"
 	colors="true"
 	convertDeprecationsToExceptions="true"
 	convertErrorsToExceptions="true"
@@ -20,7 +20,7 @@
 	>
 	<testsuites>
 		<testsuite name="duplicatepost">
-			<directory suffix="-test.php">./tests/wp</directory>
+			<directory suffix="Test.php">./tests/WP</directory>
 		</testsuite>
 	</testsuites>
 

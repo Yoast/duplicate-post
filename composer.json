@@ -37,9 +37,9 @@
 		]
 	},
 	"autoload-dev": {
-		"classmap": [
-			"tests/"
-		]
+		"psr-4": {
+			"Yoast\\WP\\Duplicate_Post\\Tests\\": "tests/"
+		}
 	},
 	"config": {
 		"allow-plugins": {
