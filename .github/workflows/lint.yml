@@ -32,6 +32,7 @@ on:
       - '.github/workflows/deploy.yml'
       - '.github/workflows/test.yml'
       - 'config/**'
+      - '!config/composer/actions.php'
       - 'css/**'
       - 'js/**'
   pull_request:
@@ -58,6 +59,7 @@ on:
       - '.github/workflows/deploy.yml'
       - '.github/workflows/test.yml'
       - 'config/**'
+      - '!config/composer/actions.php'
       - 'css/**'
       - 'js/**'
   # Allow manually triggering the workflow.
