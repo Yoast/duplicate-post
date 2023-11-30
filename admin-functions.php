@@ -11,6 +11,7 @@ if ( ! is_admin() ) {
 }
 
 use Yoast\WP\Duplicate_Post\UI\Newsletter;
+use Yoast\WP\Duplicate_Post\Utils;
 
 require_once DUPLICATE_POST_PATH . 'options.php';
 
@@ -406,7 +407,7 @@ function duplicate_post_addslashes_deep( $value ) {
  * @return string|mixed
  */
 function duplicate_post_addslashes_to_strings_only( $value ) {
-	return Yoast\WP\Duplicate_Post\Utils::addslashes_to_strings_only( $value );
+	return Utils::addslashes_to_strings_only( $value );
 }
 
 /**
