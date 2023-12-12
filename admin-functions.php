@@ -356,7 +356,7 @@ function duplicate_post_copy_post_meta_info( $new_id, $post ) {
 
 		$meta_keys = [];
 		foreach ( $post_meta_keys as $meta_key ) {
-			if ( ! preg_match( '#^' . $meta_blacklist_string . '$#', $meta_key ) ) {
+			if ( ! preg_match( '#^(' . $meta_blacklist_string . ')$#', $meta_key ) ) {
 				$meta_keys[] = $meta_key;
 			}
 		}
