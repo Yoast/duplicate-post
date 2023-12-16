@@ -30,6 +30,8 @@ final class Post_States_Test extends TestCase {
 
 	/**
 	 * Sets the instance.
+	 *
+	 * @return void
 	 */
 	protected function set_up() {
 		parent::set_up();
@@ -43,6 +45,8 @@ final class Post_States_Test extends TestCase {
 	 * Tests the constructor.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Post_States::__construct
+	 *
+	 * @return void
 	 */
 	public function test_constructor() {
 		$this->assertInstanceOf(
@@ -55,6 +59,8 @@ final class Post_States_Test extends TestCase {
 	 * Tests the registration of the hooks.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Post_States::register_hooks
+	 *
+	 * @return void
 	 */
 	public function test_register_hooks() {
 		$this->instance->register_hooks();
@@ -68,6 +74,8 @@ final class Post_States_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Post_States::show_original_in_post_states
 	 * @runInSeparateProcess
 	 * @preserveGlobalState disabled
+	 *
+	 * @return void
 	 */
 	public function test_show_original_in_post_states_successful() {
 		$this->stubTranslationFunctions();
@@ -111,6 +119,8 @@ final class Post_States_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Post_States::show_original_in_post_states
 	 * @runInSeparateProcess
 	 * @preserveGlobalState disabled
+	 *
+	 * @return void
 	 */
 	public function test_show_original_in_post_states_unsuccessful() {
 		$utils       = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
@@ -148,6 +158,8 @@ final class Post_States_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Post_States::show_original_in_post_states
 	 * @runInSeparateProcess
 	 * @preserveGlobalState disabled
+	 *
+	 * @return void
 	 */
 	public function test_show_original_in_rewrite_republish_post_successful() {
 		$this->stubTranslationFunctions();
@@ -191,6 +203,8 @@ final class Post_States_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Post_States::show_original_in_post_states
 	 * @runInSeparateProcess
 	 * @preserveGlobalState disabled
+	 *
+	 * @return void
 	 */
 	public function test_show_original_in_rewrite_republish_post_unsuccessful() {
 		$utils       = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );

@@ -32,6 +32,8 @@ final class Options_Form_Generator_Test extends TestCase {
 
 	/**
 	 * Sets the instance.
+	 *
+	 * @return void
 	 */
 	protected function set_up() {
 		parent::set_up();
@@ -76,6 +78,8 @@ final class Options_Form_Generator_Test extends TestCase {
 	 * Tests the constructor of the class.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Admin\Options_Form_Generator::__construct
+	 *
+	 * @return void
 	 */
 	public function test_constructor() {
 		$this->instance->__construct( $this->options_inputs );
@@ -90,6 +94,8 @@ final class Options_Form_Generator_Test extends TestCase {
 	 * Tests the generation of options input elements.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Admin\Options_Form_Generator::generate_options_input
+	 *
+	 * @return void
 	 */
 	public function test_generate_options_input_generated_output() {
 		$this->options_inputs->allows(
@@ -134,6 +140,8 @@ final class Options_Form_Generator_Test extends TestCase {
 	 * Tests the calling of the correct methods when generating inputs.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Admin\Options_Form_Generator::generate_options_input
+	 *
+	 * @return void
 	 */
 	public function test_generate_options_input_calls_expected_methods() {
 		$options = [
@@ -178,6 +186,8 @@ final class Options_Form_Generator_Test extends TestCase {
 	 * Tests the skipping of generation of options input elements when the option is empty.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Admin\Options_Form_Generator::generate_options_input
+	 *
+	 * @return void
 	 */
 	public function test_dont_generate_options_input_from_empty_options() {
 		$options = [
@@ -191,6 +201,8 @@ final class Options_Form_Generator_Test extends TestCase {
 	 * Tests the skipping of generation of option input elements when the WordPress version isn't high enough.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Admin\Options_Form_Generator::generate_options_input
+	 *
+	 * @return void
 	 */
 	public function test_dont_generate_options_input_for_invalid_version() {
 		$options = [
@@ -230,6 +242,8 @@ final class Options_Form_Generator_Test extends TestCase {
 	 * Tests the generation of sub option input elements.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Admin\Options_Form_Generator::generate_options_input
+	 *
+	 * @return void
 	 */
 	public function test_generate_options_input_for_suboptions() {
 		$options = [
@@ -264,6 +278,8 @@ final class Options_Form_Generator_Test extends TestCase {
 	 * Tests the extraction of descriptions.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Admin\Options_Form_Generator::extract_description
+	 *
+	 * @return void
 	 */
 	public function test_extract_description() {
 		$this->assertSame(
@@ -292,6 +308,8 @@ final class Options_Form_Generator_Test extends TestCase {
 	 * Tests the generate_taxonomy_exclusion_list callback method.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Admin\Options_Form_Generator::generate_taxonomy_exclusion_list
+	 *
+	 * @return void
 	 */
 	public function test_generate_taxonomy_exclusion_list() {
 		$labels1       = new stdClass();
@@ -362,6 +380,8 @@ final class Options_Form_Generator_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Admin\Options_Form_Generator::generate_roles_permission_list
 	 * @runInSeparateProcess
 	 * @preserveGlobalState disabled
+	 *
+	 * @return void
 	 */
 	public function test_generate_roles_permission_list() {
 		$this->stub_wp_roles();
@@ -396,6 +416,8 @@ final class Options_Form_Generator_Test extends TestCase {
 	 * Tests the generate_post_types_list callback method.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Admin\Options_Form_Generator::generate_post_types_list
+	 *
+	 * @return void
 	 */
 	public function test_generate_post_types_list() {
 		$this->instance
@@ -438,10 +460,12 @@ final class Options_Form_Generator_Test extends TestCase {
 	 * @dataProvider is_checked_provider
 	 * @covers       \Yoast\WP\Duplicate_Post\Admin\Options_Form_Generator::is_checked
 	 *
-	 * @param string $option        The option name.
-	 * @param array  $option_values The option values.
-	 * @param string $parent_option The parent option.
-	 * @param array  $assertion     The assumed assertion values.
+	 * @param string               $option        The option name.
+	 * @param array<string, mixed> $option_values The option values.
+	 * @param string               $parent_option The parent option.
+	 * @param array<string, mixed> $assertion     The assumed assertion values.
+	 *
+	 * @return void
 	 */
 	public function test_is_checked( $option, $option_values, $parent_option, $assertion = [] ) {
 		if ( $assertion['expected'] === false ) {
@@ -467,7 +491,7 @@ final class Options_Form_Generator_Test extends TestCase {
 	/**
 	 * Provides the test_is_checked test with data to use in the tests.
 	 *
-	 * @return array The data to run the test against.
+	 * @return array<array<string|array<string, mixed>>> The data to run the test against.
 	 */
 	public static function is_checked_provider() {
 		return [
@@ -505,6 +529,8 @@ final class Options_Form_Generator_Test extends TestCase {
 	 * Tests the prepare_input_id helper method.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Admin\Options_Form_Generator::prepare_input_id
+	 *
+	 * @return void
 	 */
 	public function test_prepare_input_id() {
 		$this->assertSame( 'my-form-element-id', $this->instance->prepare_input_id( 'my_form_element_id' ) );

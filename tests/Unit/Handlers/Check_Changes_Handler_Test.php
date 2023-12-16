@@ -30,6 +30,8 @@ final class Check_Changes_Handler_Test extends TestCase {
 
 	/**
 	 * Sets the instance.
+	 *
+	 * @return void
 	 */
 	protected function set_up() {
 		parent::set_up();
@@ -46,6 +48,8 @@ final class Check_Changes_Handler_Test extends TestCase {
 	 * Tests the constructor.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Handlers\Check_Changes_Handler::__construct
+	 *
+	 * @return void
 	 */
 	public function test_constructor() {
 		$this->assertInstanceOf(
@@ -58,6 +62,8 @@ final class Check_Changes_Handler_Test extends TestCase {
 	 * Tests the registration of the hooks.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Handlers\Check_Changes_Handler::register_hooks
+	 *
+	 * @return void
 	 */
 	public function test_register_hooks() {
 		$this->instance->register_hooks();
@@ -71,6 +77,8 @@ final class Check_Changes_Handler_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Handlers\Check_Changes_Handler::check_changes_action_handler
 	 * @runInSeparateProcess
 	 * @preserveGlobalState disabled
+	 *
+	 * @return void
 	 */
 	public function test_check_changes_action_handler_successful() {
 		$utils                  = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
@@ -153,6 +161,8 @@ final class Check_Changes_Handler_Test extends TestCase {
 	 * Tests the check_changes_action_handler function when no ID has been passed in the query.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Handlers\Check_Changes_Handler::check_changes_action_handler
+	 *
+	 * @return void
 	 */
 	public function test_check_changes_action_handler_no_id_in_query() {
 		Monkey\Functions\expect( '\wp_die' )
@@ -165,6 +175,8 @@ final class Check_Changes_Handler_Test extends TestCase {
 	 * Tests the check_changes_action_handler function when there is no post.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Handlers\Check_Changes_Handler::check_changes_action_handler
+	 *
+	 * @return void
 	 */
 	public function test_check_changes_action_handler_no_post() {
 		$_GET['post']       = '123';
@@ -192,6 +204,8 @@ final class Check_Changes_Handler_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Handlers\Check_Changes_Handler::check_changes_action_handler
 	 * @runInSeparateProcess
 	 * @preserveGlobalState disabled
+	 *
+	 * @return void
 	 */
 	public function test_check_changes_action_handler_no_original() {
 		$utils              = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );

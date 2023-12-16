@@ -22,6 +22,8 @@ final class Link_Builder_Test extends TestCase {
 
 	/**
 	 * Sets the instance.
+	 *
+	 * @return void
 	 */
 	protected function set_up() {
 		parent::set_up();
@@ -33,6 +35,8 @@ final class Link_Builder_Test extends TestCase {
 	 * Tests the build_rewrite_and_republish_link function.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Link_Builder::build_rewrite_and_republish_link
+	 *
+	 * @return void
 	 */
 	public function test_build_rewrite_and_republish_link() {
 		$post    = Mockery::mock( WP_Post::class );
@@ -54,6 +58,8 @@ final class Link_Builder_Test extends TestCase {
 	 * Tests the build_clone_link function.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Link_Builder::build_clone_link
+	 *
+	 * @return void
 	 */
 	public function test_build_clone_link() {
 		$post    = Mockery::mock( WP_Post::class );
@@ -75,6 +81,8 @@ final class Link_Builder_Test extends TestCase {
 	 * Tests the build_new_draft_link function.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Link_Builder::build_new_draft_link
+	 *
+	 * @return void
 	 */
 	public function test_build_new_draft_link() {
 		$post    = Mockery::mock( WP_Post::class );
@@ -96,6 +104,8 @@ final class Link_Builder_Test extends TestCase {
 	 * Tests the build_check_link function.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Link_Builder::build_check_link
+	 *
+	 * @return void
 	 */
 	public function test_build_check_link() {
 		$post    = Mockery::mock( WP_Post::class );
@@ -117,6 +127,8 @@ final class Link_Builder_Test extends TestCase {
 	 * Tests the build_link function.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Link_Builder::build_link
+	 *
+	 * @return void
 	 */
 	public function test_build_link() {
 		$post        = Mockery::mock( WP_Post::class );
@@ -148,6 +160,8 @@ final class Link_Builder_Test extends TestCase {
 	 * Tests the build_link function when context is not 'display'.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Link_Builder::build_link
+	 *
+	 * @return void
 	 */
 	public function test_build_link_not_display() {
 		$post        = Mockery::mock( WP_Post::class );
@@ -179,6 +193,8 @@ final class Link_Builder_Test extends TestCase {
 	 * Tests the build_link function with no valid post.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Link_Builder::build_link
+	 *
+	 * @return void
 	 */
 	public function test_build_link_no_post() {
 		$post        = null;

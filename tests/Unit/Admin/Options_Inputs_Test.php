@@ -21,6 +21,8 @@ final class Options_Inputs_Test extends TestCase {
 
 	/**
 	 * Sets the instance.
+	 *
+	 * @return void
 	 */
 	protected function set_up() {
 		parent::set_up();
@@ -34,6 +36,8 @@ final class Options_Inputs_Test extends TestCase {
 	 * Tests the creation of a checkbox input.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Admin\Options_Inputs::checkbox
+	 *
+	 * @return void
 	 */
 	public function test_checkbox() {
 		Functions\expect( 'checked' )
@@ -59,6 +63,8 @@ final class Options_Inputs_Test extends TestCase {
 	 * Tests the creation of a checkbox input.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Admin\Options_Inputs::text
+	 *
+	 * @return void
 	 */
 	public function test_text() {
 		$this->assertSame(
@@ -71,6 +77,8 @@ final class Options_Inputs_Test extends TestCase {
 	 * Tests the creation of a checkbox input.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Admin\Options_Inputs::number
+	 *
+	 * @return void
 	 */
 	public function test_number() {
 		$this->assertSame(

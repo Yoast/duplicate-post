@@ -46,6 +46,8 @@ final class Block_Editor_Test extends TestCase {
 
 	/**
 	 * Sets the instance.
+	 *
+	 * @return void
 	 */
 	protected function set_up() {
 		parent::set_up();
@@ -68,6 +70,8 @@ final class Block_Editor_Test extends TestCase {
 	 * Tests if the needed attributes are set correctly.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Block_Editor::__construct
+	 *
+	 * @return void
 	 */
 	public function test_constructor() {
 		$this->assertInstanceOf(
@@ -85,6 +89,8 @@ final class Block_Editor_Test extends TestCase {
 	 * Tests the registration of the hooks.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Block_Editor::register_hooks
+	 *
+	 * @return void
 	 */
 	public function test_register_hooks() {
 		$this->instance->register_hooks();
@@ -151,8 +157,10 @@ final class Block_Editor_Test extends TestCase {
 	 * @covers       \Yoast\WP\Duplicate_Post\UI\Block_Editor::should_previously_used_keyword_assessment_run
 	 * @dataProvider should_previously_used_keyword_assessment_run_provider
 	 *
-	 * @param mixed $original Input value.
-	 * @param mixed $expected Expected output.
+	 * @param array<string, bool> $original Input value.
+	 * @param bool                $expected Expected output.
+	 *
+	 * @return void
 	 */
 	public function test_should_previously_used_keyword_assessment_run( $original, $expected ) {
 		$post = Mockery::mock( WP_Post::class );
@@ -185,7 +193,7 @@ final class Block_Editor_Test extends TestCase {
 	/**
 	 * Data provider for test_is_edit_post_screen.
 	 *
-	 * @return array The test parameters.
+	 * @return array<array<string, bool|array<string, bool>>> The test parameters.
 	 */
 	public static function should_previously_used_keyword_assessment_run_provider() {
 		return [
@@ -253,6 +261,8 @@ final class Block_Editor_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Block_Editor::enqueue_block_editor_scripts
 	 * @runInSeparateProcess
 	 * @preserveGlobalState disabled
+	 *
+	 * @return void
 	 */
 	public function test_enqueue_block_editor_scripts() {
 		$utils                      = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
@@ -339,6 +349,8 @@ final class Block_Editor_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Block_Editor::enqueue_block_editor_scripts
 	 * @runInSeparateProcess
 	 * @preserveGlobalState disabled
+	 *
+	 * @return void
 	 */
 	public function test_get_enqueue_block_editor_scripts_rewrite_and_republish() {
 		$utils                      = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
@@ -427,6 +439,8 @@ final class Block_Editor_Test extends TestCase {
 	 * Tests the enqueueing of the scripts when no post is displayed.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Block_Editor::enqueue_block_editor_scripts
+	 *
+	 * @return void
 	 */
 	public function test_enqueue_block_editor_scripts_no_post() {
 		$this->permissions_helper
@@ -451,6 +465,8 @@ final class Block_Editor_Test extends TestCase {
 	 * Tests the enqueueing of the scripts when no post is displayed.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Block_Editor::enqueue_block_editor_scripts
+	 *
+	 * @return void
 	 */
 	public function test_enqueue_block_editor_scripts_not_editor() {
 		$this->permissions_helper
@@ -476,6 +492,8 @@ final class Block_Editor_Test extends TestCase {
 	 * Tests the get_new_draft_permalink function when a link is returned.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Block_Editor::get_new_draft_permalink
+	 *
+	 * @return void
 	 */
 	public function test_get_new_draft_permalink_successful() {
 		$post = Mockery::mock( WP_Post::class );
@@ -502,6 +520,8 @@ final class Block_Editor_Test extends TestCase {
 	 * displayed.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Block_Editor::get_new_draft_permalink
+	 *
+	 * @return void
 	 */
 	public function test_get_new_draft_permalink_unsuccessful() {
 		$post = Mockery::mock( WP_Post::class );
@@ -527,6 +547,8 @@ final class Block_Editor_Test extends TestCase {
 	 * returned.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Block_Editor::get_rewrite_republish_permalink
+	 *
+	 * @return void
 	 */
 	public function test_get_rewrite_republish_permalink_successful() {
 		$post = Mockery::mock( WP_Post::class );
@@ -562,6 +584,8 @@ final class Block_Editor_Test extends TestCase {
 	 * Tests the get_rewrite_republish_permalink function when the post is a Rewrite & Republish copy.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Block_Editor::get_rewrite_republish_permalink
+	 *
+	 * @return void
 	 */
 	public function test_get_rewrite_republish_permalink_unsuccessful_is_rewrite_and_republish() {
 		$post = Mockery::mock( WP_Post::class );
@@ -597,6 +621,8 @@ final class Block_Editor_Test extends TestCase {
 	 * Tests the get_rewrite_republish_permalink function when the post has a Rewrite & Republish copy.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Block_Editor::get_rewrite_republish_permalink
+	 *
+	 * @return void
 	 */
 	public function test_get_rewrite_republish_permalink_unsuccessful_has_a_rewrite_and_republish() {
 		$post = Mockery::mock( WP_Post::class );
@@ -631,6 +657,8 @@ final class Block_Editor_Test extends TestCase {
 	 * Tests the get_rewrite_republish_permalink function when the links should not be displayed.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Block_Editor::get_rewrite_republish_permalink
+	 *
+	 * @return void
 	 */
 	public function test_get_rewrite_republish_permalink_unsuccessful_links_should_not_be_displayed() {
 		$post              = Mockery::mock( WP_Post::class );
@@ -666,6 +694,8 @@ final class Block_Editor_Test extends TestCase {
 	 * Tests the get_check_permalink function when a link is returned.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Block_Editor::get_check_permalink
+	 *
+	 * @return void
 	 */
 	public function test_get_check_permalink_successful() {
 		$post = Mockery::mock( WP_Post::class );
@@ -692,6 +722,8 @@ final class Block_Editor_Test extends TestCase {
 	 * Rewrite & Republish.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Block_Editor::get_check_permalink
+	 *
+	 * @return void
 	 */
 	public function test_get_check_permalink_not_rewrite_and_republish() {
 		$post = Mockery::mock( WP_Post::class );
@@ -718,6 +750,8 @@ final class Block_Editor_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Block_Editor::get_original_post_edit_url
 	 * @runInSeparateProcess
 	 * @preserveGlobalState disabled
+	 *
+	 * @return void
 	 */
 	public function test_get_original_post_edit_url_successful() {
 		$utils       = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
@@ -773,6 +807,8 @@ final class Block_Editor_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Block_Editor::get_original_post_edit_url
 	 * @runInSeparateProcess
 	 * @preserveGlobalState disabled
+	 *
+	 * @return void
 	 */
 	public function test_get_original_post_edit_url_not_rewrite_and_republish() {
 		$post     = Mockery::mock( WP_Post::class );
@@ -796,6 +832,8 @@ final class Block_Editor_Test extends TestCase {
 	 * Tests the get_original_post_edit_url when there is no post.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Block_Editor::get_original_post_edit_url
+	 *
+	 * @return void
 	 */
 	public function test_get_original_post_edit_url_no_post() {
 		Monkey\Functions\expect( '\get_post' )
@@ -813,6 +851,8 @@ final class Block_Editor_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Block_Editor::get_original_post_edit_url
 	 * @runInSeparateProcess
 	 * @preserveGlobalState disabled
+	 *
+	 * @return void
 	 */
 	public function test_get_original_post_edit_url_no_original() {
 		$utils       = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
@@ -843,6 +883,8 @@ final class Block_Editor_Test extends TestCase {
 	 * Tests the hiding of the Elementor post status field.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Block_Editor::hide_elementor_post_status
+	 *
+	 * @return void
 	 */
 	public function test_hide_elementor_post_status() {
 		$post = Mockery::mock( WP_Post::class );
@@ -869,6 +911,8 @@ final class Block_Editor_Test extends TestCase {
 	 * Tests the hiding of the Elementor post status field doesn't trigger on normal posts.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Block_Editor::hide_elementor_post_status
+	 *
+	 * @return void
 	 */
 	public function test_dont_remove_elementor_post_status() {
 		$post = Mockery::mock( WP_Post::class );

@@ -30,6 +30,8 @@ final class Copied_Post_Watcher_Test extends TestCase {
 
 	/**
 	 * Sets the instance.
+	 *
+	 * @return void
 	 */
 	protected function set_up() {
 		parent::set_up();
@@ -46,6 +48,8 @@ final class Copied_Post_Watcher_Test extends TestCase {
 	 * Tests the constructor.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Copied_Post_Watcher::__construct
+	 *
+	 * @return void
 	 */
 	public function test_constructor() {
 		$this->assertInstanceOf(
@@ -58,6 +62,8 @@ final class Copied_Post_Watcher_Test extends TestCase {
 	 * Tests the registration of the hooks.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Copied_Post_Watcher::register_hooks
+	 *
+	 * @return void
 	 */
 	public function test_register_hooks() {
 		$this->instance->register_hooks();
@@ -70,6 +76,8 @@ final class Copied_Post_Watcher_Test extends TestCase {
 	 * Tests the get_notice_text function when the copy is not scheduled.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Copied_Post_Watcher::get_notice_text
+	 *
+	 * @return void
 	 */
 	public function test_get_notice_text_not_scheduled() {
 		$this->stubTranslationFunctions();
@@ -96,6 +104,8 @@ final class Copied_Post_Watcher_Test extends TestCase {
 	 * Tests the get_notice_text function when the copy is scheduled.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Copied_Post_Watcher::get_notice_text
+	 *
+	 * @return void
 	 */
 	public function test_get_notice_text_scheduled() {
 		$this->stubTranslationFunctions();
@@ -131,6 +141,8 @@ final class Copied_Post_Watcher_Test extends TestCase {
 	 * Tests the get_notice_text function when the copy is in the trash.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Copied_Post_Watcher::get_notice_text
+	 *
+	 * @return void
 	 */
 	public function test_get_notice_text_copy_in_the_trash() {
 		$this->stubTranslationFunctions();
@@ -156,6 +168,8 @@ final class Copied_Post_Watcher_Test extends TestCase {
 	 * Tests the add_admin_notice function on the Classic Editor.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Copied_Post_Watcher::add_admin_notice
+	 *
+	 * @return void
 	 */
 	public function test_add_admin_notice_classic() {
 		$this->stubEscapeFunctions();
@@ -187,6 +201,8 @@ final class Copied_Post_Watcher_Test extends TestCase {
 	 * Tests the add_admin_notice function when not on the Classic editor.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Copied_Post_Watcher::add_admin_notice
+	 *
+	 * @return void
 	 */
 	public function test_add_admin_notice_not_classic() {
 		$this->permissions_helper
@@ -202,6 +218,8 @@ final class Copied_Post_Watcher_Test extends TestCase {
 	 * Tests the add_admin_notice function when the post does not have a copy intended for Rewrite & Republish.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Copied_Post_Watcher::add_admin_notice
+	 *
+	 * @return void
 	 */
 	public function test_add_admin_notice_not_rewrite_and_republish() {
 		$post = Mockery::mock( WP_Post::class );
@@ -227,6 +245,8 @@ final class Copied_Post_Watcher_Test extends TestCase {
 	 * Tests the add_block_editor_notice function.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Copied_Post_Watcher::add_block_editor_notice
+	 *
+	 * @return void
 	 */
 	public function test_add_block_editor_notice() {
 		$post = Mockery::mock( WP_Post::class );
@@ -268,6 +288,8 @@ final class Copied_Post_Watcher_Test extends TestCase {
 	 * Tests the add_block_editor_notice function when the post does not have a copy intended for Rewrite & Republish.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Copied_Post_Watcher::add_block_editor_notice
+	 *
+	 * @return void
 	 */
 	public function test_add_block_editor_notice_not_rewrite_and_republish() {
 		$post = Mockery::mock( WP_Post::class );

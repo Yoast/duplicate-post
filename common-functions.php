@@ -63,6 +63,8 @@ function duplicate_post_get_clone_post_link( $id = 0, $context = 'display', $dra
  * @param string      $before Optional. Display before edit link.
  * @param string      $after  Optional. Display after edit link.
  * @param int         $id     Optional. Post ID.
+ *
+ * @return void
  */
 function duplicate_post_clone_post_link( $link = null, $before = '', $after = '', $id = 0 ) {
 	$post = get_post( $id );

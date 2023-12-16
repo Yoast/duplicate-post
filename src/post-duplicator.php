@@ -15,7 +15,7 @@ class Post_Duplicator {
 	/**
 	 * Returns an array with the default option values.
 	 *
-	 * @return array The default options values.
+	 * @return array<string, bool|int|string|array|null> The default options values.
 	 */
 	public function get_default_options() {
 		return [

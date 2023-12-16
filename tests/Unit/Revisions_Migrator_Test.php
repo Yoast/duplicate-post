@@ -21,6 +21,8 @@ final class Revisions_Migrator_Test extends TestCase {
 
 	/**
 	 * Sets the instance.
+	 *
+	 * @return void
 	 */
 	protected function set_up() {
 		parent::set_up();
@@ -32,6 +34,8 @@ final class Revisions_Migrator_Test extends TestCase {
 	 * Tests the registration of the hooks.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Revisions_Migrator::register_hooks
+	 *
+	 * @return void
 	 */
 	public function test_register_hooks() {
 		Monkey\Actions\expectAdded( 'duplicate_post_after_rewriting' )
@@ -44,6 +48,8 @@ final class Revisions_Migrator_Test extends TestCase {
 	 * Tests the migrate_revisions function with unlimited revisions allowed
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Revisions_Migrator::migrate_revisions
+	 *
+	 * @return void
 	 */
 	public function test_migrate_revisions_unlimited() {
 		$post_id           = 128;
@@ -86,6 +92,8 @@ final class Revisions_Migrator_Test extends TestCase {
 	 * Tests the migrate_revisions function with limited revisions allowed
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Revisions_Migrator::migrate_revisions
+	 *
+	 * @return void
 	 */
 	public function test_migrate_revisions_limited() {
 		$post_id             = 128;
@@ -142,6 +150,8 @@ final class Revisions_Migrator_Test extends TestCase {
 	 * Tests the migrate_revisions function with no revisions allowed
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Revisions_Migrator::migrate_revisions
+	 *
+	 * @return void
 	 */
 	public function test_migrate_revisions_none() {
 		$post_id       = 128;

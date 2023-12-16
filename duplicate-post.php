@@ -68,6 +68,8 @@ if ( class_exists( Duplicate_Post::class ) ) {
  * @phpcs:disable PHPCompatibility.FunctionNameRestrictions.ReservedFunctionNames.FunctionDoubleUnderscore
  * @phpcs:disable WordPress.NamingConventions.ValidFunctionName.FunctionDoubleUnderscore
  * @phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedFunctionFound
+ *
+ * @return void
  */
 function __duplicate_post_main() {
 	new Duplicate_Post();
@@ -76,6 +78,8 @@ function __duplicate_post_main() {
 
 /**
  * Initialises the internationalisation domain.
+ *
+ * @return void
  */
 function duplicate_post_load_plugin_textdomain() {
 	load_plugin_textdomain( 'duplicate-post', false, basename( __DIR__ ) . '/languages/' );

@@ -45,6 +45,8 @@ final class Options_Page_Test extends TestCase {
 
 	/**
 	 * Sets the instance.
+	 *
+	 * @return void
 	 */
 	protected function set_up() {
 		parent::set_up();
@@ -63,6 +65,8 @@ final class Options_Page_Test extends TestCase {
 	 * Tests the constructor of the class.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Admin\Options_Page::__construct
+	 *
+	 * @return void
 	 */
 	public function test_constructor() {
 		$this->instance->__construct( $this->options, $this->form_generator, $this->asset_manager );
@@ -82,6 +86,8 @@ final class Options_Page_Test extends TestCase {
 	 * Tests the registration of the hooks when in the admin.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Admin\Options_Page::register_hooks
+	 *
+	 * @return void
 	 */
 	public function test_register_hooks_when_in_admin() {
 		Monkey\Functions\stubs( [ 'is_admin' => true ] );
@@ -100,6 +106,8 @@ final class Options_Page_Test extends TestCase {
 	 * Tests the registration of the hooks doesn't fire when not in the admin.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Admin\Options_Page::register_hooks
+	 *
+	 * @return void
 	 */
 	public function test_no_register_hooks_when_not_in_admin() {
 		Monkey\Functions\stubs( [ 'is_admin' => false ] );
@@ -118,6 +126,8 @@ final class Options_Page_Test extends TestCase {
 	 * Tests the loading of the assets.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Admin\Options_Page::enqueue_assets
+	 *
+	 * @return void
 	 */
 	public function test_loading_of_assets() {
 		$this->asset_manager
@@ -133,6 +143,8 @@ final class Options_Page_Test extends TestCase {
 	 * Tests the loading of the assets.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Admin\Options_Page::register_menu
+	 *
+	 * @return void
 	 */
 	public function test_register_menu() {
 		$this->stubTranslationFunctions();
@@ -163,6 +175,8 @@ final class Options_Page_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Admin\Options_Page::register_capabilities
 	 * @runInSeparateProcess
 	 * @preserveGlobalState disabled
+	 *
+	 * @return void
 	 */
 	public function test_register_capabilities() {
 		$this->stub_wp_roles();

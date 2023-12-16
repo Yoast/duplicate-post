@@ -21,6 +21,8 @@ final class Post_Duplicator_Test extends TestCase {
 
 	/**
 	 * Setting up the instance of Post_Duplicator.
+	 *
+	 * @return void
 	 */
 	public function set_up() {
 		parent::set_up();
@@ -37,6 +39,8 @@ final class Post_Duplicator_Test extends TestCase {
 	 * @covers ::generate_copy_status
 	 * @covers ::generate_copy_author
 	 * @covers ::set_modified
+	 *
+	 * @return void
 	 */
 	public function test_create_duplicate() {
 

@@ -21,6 +21,8 @@ final class Asset_Manager_Test extends TestCase {
 
 	/**
 	 * Sets the instance.
+	 *
+	 * @return void
 	 */
 	protected function set_up() {
 		parent::set_up();
@@ -32,6 +34,8 @@ final class Asset_Manager_Test extends TestCase {
 	 * Tests the registration of the hooks.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Asset_Manager::register_hooks
+	 *
+	 * @return void
 	 */
 	public function test_register_hooks() {
 		$this->instance->register_hooks();
@@ -44,6 +48,8 @@ final class Asset_Manager_Test extends TestCase {
 	 * Tests the register_styles function.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Asset_Manager::register_styles
+	 *
+	 * @return void
 	 */
 	public function test_register_styles() {
 		$styles_url         = 'http://basic.wordpress.test/wp-content/plugins/duplicate-post/css/duplicate-post.css';
@@ -78,6 +84,8 @@ final class Asset_Manager_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Asset_Manager::register_scripts
 	 * @runInSeparateProcess
 	 * @preserveGlobalState disabled
+	 *
+	 * @return void
 	 */
 	public function test_register_scripts() {
 		$utils                 = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
@@ -145,6 +153,8 @@ final class Asset_Manager_Test extends TestCase {
 	 * Tests the enqueue_styles function.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Asset_Manager::enqueue_styles
+	 *
+	 * @return void
 	 */
 	public function test_enqueue_styles() {
 		Monkey\Functions\expect( '\wp_enqueue_style' )
@@ -157,6 +167,8 @@ final class Asset_Manager_Test extends TestCase {
 	 * Tests the enqueue_edit_script function.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Asset_Manager::enqueue_edit_script
+	 *
+	 * @return void
 	 */
 	public function test_enqueue_edit_script() {
 		Monkey\Functions\expect( '\wp_enqueue_script' )
@@ -175,6 +187,8 @@ final class Asset_Manager_Test extends TestCase {
 	 * Tests the enqueue_strings_script function.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Asset_Manager::enqueue_strings_script
+	 *
+	 * @return void
 	 */
 	public function test_enqueue_strings_script() {
 		Monkey\Functions\expect( '\wp_enqueue_script' )
@@ -190,6 +204,8 @@ final class Asset_Manager_Test extends TestCase {
 	 * Tests the enqueue_quick_edit_script function.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Asset_Manager::enqueue_quick_edit_script
+	 *
+	 * @return void
 	 */
 	public function test_enqueue_quick_edit_script() {
 		Monkey\Functions\expect( '\wp_enqueue_script' )

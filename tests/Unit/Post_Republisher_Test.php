@@ -37,6 +37,8 @@ final class Post_Republisher_Test extends TestCase {
 
 	/**
 	 * Sets the instance.
+	 *
+	 * @return void
 	 */
 	protected function set_up() {
 		parent::set_up();
@@ -54,6 +56,8 @@ final class Post_Republisher_Test extends TestCase {
 	 * Tests the constructor.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Post_Republisher::__construct
+	 *
+	 * @return void
 	 */
 	public function test_constructor() {
 		$this->assertInstanceOf(
@@ -71,6 +75,8 @@ final class Post_Republisher_Test extends TestCase {
 	 * Tests the registration of the hooks.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Post_Republisher::register_hooks
+	 *
+	 * @return void
 	 */
 	public function test_register_hooks() {
 		$enabled_post_types = [ 'post', 'page' ];
@@ -112,6 +118,8 @@ final class Post_Republisher_Test extends TestCase {
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Post_Republisher::is_classic_editor_post_request
 	 * @runInSeparateProcess
+	 *
+	 * @return void
 	 */
 	public function test_is_classic_editor_post_request_when_rest_request() {
 		\define( 'REST_REQUEST', true );
@@ -122,6 +130,8 @@ final class Post_Republisher_Test extends TestCase {
 	 * Tests is_classic_editor_post_request when the request is the Block Editor POST request to save custom meta.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Post_Republisher::is_classic_editor_post_request
+	 *
+	 * @return void
 	 */
 	public function test_is_classic_editor_post_request_when_block_editor_saving_custom_meta_boxes() {
 		$_GET['meta-box-loader'] = '1';
@@ -139,6 +149,8 @@ final class Post_Republisher_Test extends TestCase {
 	 * Tests is_classic_editor_post_request when the request is the Classic Editor POST request.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Post_Republisher::is_classic_editor_post_request
+	 *
+	 * @return void
 	 */
 	public function test_is_classic_editor_post_request() {
 		Monkey\Functions\expect( '\wp_doing_ajax' )
@@ -151,6 +163,8 @@ final class Post_Republisher_Test extends TestCase {
 	 * Tests register_post_statuses is called with expected arguments.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Post_Republisher::register_post_statuses
+	 *
+	 * @return void
 	 */
 	public function test_register_post_statuses() {
 		$this->stubTranslationFunctions();
@@ -175,8 +189,10 @@ final class Post_Republisher_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Post_Republisher::change_post_copy_status
 	 * @dataProvider change_post_copy_status_provider
 	 *
-	 * @param mixed $input    Input values.
-	 * @param mixed $expected Expected output.
+	 * @param array<string, string|bool> $input    Input values.
+	 * @param array<string, string>      $expected Expected output.
+	 *
+	 * @return void
 	 */
 	public function test_change_post_copy_status( $input, $expected ) {
 		$post              = Mockery::mock( WP_Post::class );
@@ -201,7 +217,7 @@ final class Post_Republisher_Test extends TestCase {
 	/**
 	 * Data provider for test_change_post_copy_status.
 	 *
-	 * @return array
+	 * @return array<array<array<string, string|bool>>>
 	 */
 	public static function change_post_copy_status_provider() {
 		return [
@@ -232,6 +248,8 @@ final class Post_Republisher_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Post_Republisher::republish_scheduled_post
 	 * @runInSeparateProcess
 	 * @preserveGlobalState disabled
+	 *
+	 * @return void
 	 */
 	public function test_republish_scheduled_post() {
 		$original              = Mockery::mock( WP_Post::class );
@@ -268,6 +286,8 @@ final class Post_Republisher_Test extends TestCase {
 	 * Tests the republish_scheduled_post function when an invalid copy is passed.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Post_Republisher::republish_scheduled_post
+	 *
+	 * @return void
 	 */
 	public function test_republish_scheduled_post_invalid_copy() {
 		$copy              = Mockery::mock( WP_Post::class );
@@ -292,6 +312,8 @@ final class Post_Republisher_Test extends TestCase {
 	 * @covers \Yoast\WP\Duplicate_Post\Post_Republisher::republish_scheduled_post
 	 * @runInSeparateProcess
 	 * @preserveGlobalState disabled
+	 *
+	 * @return void
 	 */
 	public function test_republish_scheduled_post_original_deleted() {
 		$copy              = Mockery::mock( WP_Post::class );

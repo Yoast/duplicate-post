@@ -223,7 +223,7 @@ class Block_Editor {
 	 *
 	 * @param WP_Post $post The current post object.
 	 *
-	 * @return array The data to pass to JavaScript.
+	 * @return array<string, mixed> The data to pass to JavaScript.
 	 */
 	protected function generate_js_object( WP_Post $post ) {
 		$is_rewrite_and_republish_copy = $this->permissions_helper->is_rewrite_and_republish_copy( $post );
