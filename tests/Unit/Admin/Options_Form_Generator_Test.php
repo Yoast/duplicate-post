@@ -249,7 +249,7 @@ class Options_Form_Generator_Test extends TestCase {
 		Monkey\Functions\expect( 'checked' )
 			->once()
 			->andReturnUsing(
-				static function( $checked, $current = true ) {
+				static function ( $checked, $current = true ) {
 					return ( (string) $checked === (string) $current ) ? " checked='checked'" : '';
 				}
 			);
@@ -345,7 +345,7 @@ class Options_Form_Generator_Test extends TestCase {
 		Monkey\Functions\expect( 'checked' )
 			->times( 4 )
 			->andReturnUsing(
-				static function( $checked, $current = true ) {
+				static function ( $checked, $current = true ) {
 					return ( (string) $checked === (string) $current ) ? " checked='checked'" : '';
 				}
 			);
@@ -381,7 +381,7 @@ class Options_Form_Generator_Test extends TestCase {
 		Monkey\Functions\expect( 'checked' )
 			->twice()
 			->andReturnUsing(
-				static function( $checked, $current = true ) {
+				static function ( $checked, $current = true ) {
 					return ( (string) $checked === (string) $current ) ? " checked='checked'" : '';
 				}
 			);
@@ -421,7 +421,7 @@ class Options_Form_Generator_Test extends TestCase {
 		Monkey\Functions\expect( 'checked' )
 			->twice()
 			->andReturnUsing(
-				static function( $checked, $current = true ) {
+				static function ( $checked, $current = true ) {
 					return ( (string) $checked === (string) $current ) ? " checked='checked'" : '';
 				}
 			);

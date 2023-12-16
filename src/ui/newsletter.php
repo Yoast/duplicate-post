@@ -16,7 +16,6 @@ class Newsletter {
 
 		$newsletter_form_response = self::newsletter_handle_form();
 
-
 		$copy = \sprintf(
 		/* translators: 1: Yoast */
 			\esc_html__(

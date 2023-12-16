@@ -2,8 +2,8 @@
 
 namespace Yoast\WP\Duplicate_Post\Tests\WP;
 
-use Yoast\WPTestUtils\WPIntegration\TestCase;
 use Yoast\WP\Duplicate_Post\Post_Duplicator;
+use Yoast\WPTestUtils\WPIntegration\TestCase;
 
 /**
  * Class Post_Duplicator.
