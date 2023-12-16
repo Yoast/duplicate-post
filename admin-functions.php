@@ -475,7 +475,7 @@ function duplicate_post_copy_attachments( $new_id, $post ) {
 		$new_attachment_id = media_handle_sideload( $file_array, $new_id, $desc );
 
 		if ( is_wp_error( $new_attachment_id ) ) {
-			unlink( $file_array['tmp_name'] );
+			wp_delete_file( $file_array['tmp_name'] );
 			continue;
 		}
 		$new_post_author = wp_get_current_user();
