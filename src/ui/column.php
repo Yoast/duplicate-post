@@ -94,7 +94,7 @@ class Column {
 
 				$column_content = Utils::get_edit_or_view_link( $original_item );
 			}
-			echo \sprintf(
+			\printf(
 				'<span class="duplicate_post_original_link"%s>%s</span>',
 				$data_attr, // phpcs:ignore WordPress.Security.EscapeOutput
 				$column_content // phpcs:ignore WordPress.Security.EscapeOutput
