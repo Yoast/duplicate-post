@@ -12,7 +12,7 @@ use Yoast\WP\Duplicate_Post\Watchers\Copied_Post_Watcher;
 /**
  * Test the Copied_Post_Watcher class.
  */
-class Copied_Post_Watcher_Test extends TestCase {
+final class Copied_Post_Watcher_Test extends TestCase {
 
 	/**
 	 * Holds the permissions helper.

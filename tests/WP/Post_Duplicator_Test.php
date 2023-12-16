@@ -10,7 +10,7 @@ use Yoast\WPTestUtils\WPIntegration\TestCase;
  *
  * @coversDefaultClass \Yoast\WP\Duplicate_Post\Post_Duplicator
  */
-class Post_Duplicator_Test extends TestCase {
+final class Post_Duplicator_Test extends TestCase {
 
 	/**
 	 * Instance of the Post_Duplicator class.

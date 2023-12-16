@@ -12,7 +12,7 @@ use Yoast\WP\Duplicate_Post\UI\Metabox;
 /**
  * Test the Metabox class.
  */
-class Metabox_Test extends TestCase {
+final class Metabox_Test extends TestCase {
 
 	/**
 	 * Holds the permissions helper.

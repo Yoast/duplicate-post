@@ -14,7 +14,7 @@ use Yoast\WP\Duplicate_Post\UI\Link_Builder;
 /**
  * Test the Block_Editor class.
  */
-class Block_Editor_Test extends TestCase {
+final class Block_Editor_Test extends TestCase {
 
 	/**
 	 * Holds the object to create the action link to duplicate.

@@ -11,7 +11,7 @@ use Yoast\WP\Duplicate_Post\Watchers\Republished_Post_Watcher;
 /**
  * Test the Republished_Post_Watcher class.
  */
-class Republished_Post_Watcher_Test extends TestCase {
+final class Republished_Post_Watcher_Test extends TestCase {
 
 	/**
 	 * Holds the permissions helper.

@@ -12,7 +12,7 @@ use Yoast\WP\Duplicate_Post\Permissions_Helper;
 /**
  * Test the Permissions_Helper class.
  */
-class Permissions_Helper_Test extends TestCase {
+final class Permissions_Helper_Test extends TestCase {
 
 	/**
 	 * The instance.

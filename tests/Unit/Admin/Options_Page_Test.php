@@ -13,7 +13,7 @@ use Yoast\WP\Duplicate_Post\UI\Asset_Manager;
 /**
  * Test the Options_Page class.
  */
-class Options_Page_Test extends TestCase {
+final class Options_Page_Test extends TestCase {
 
 	/**
 	 * The instance.

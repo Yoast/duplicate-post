@@ -17,7 +17,7 @@ use Yoast\WP\Duplicate_Post\UI\Link_Builder;
 /**
  * Test the Admin_Bar class.
  */
-class Admin_Bar_Test extends TestCase {
+final class Admin_Bar_Test extends TestCase {
 
 	/**
 	 * Holds the object to create the action link to duplicate.

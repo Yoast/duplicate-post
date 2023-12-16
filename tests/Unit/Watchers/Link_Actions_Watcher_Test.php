@@ -11,7 +11,7 @@ use Yoast\WP\Duplicate_Post\Watchers\Link_Actions_Watcher;
 /**
  * Test the Link_Actions_Watcher class.
  */
-class Link_Actions_Watcher_Test extends TestCase {
+final class Link_Actions_Watcher_Test extends TestCase {
 
 	/**
 	 * Holds the permissions helper.

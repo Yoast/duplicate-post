@@ -12,7 +12,7 @@ use Yoast\WP\Duplicate_Post\Post_Republisher;
 /**
  * Test the Post_Republisher class.
  */
-class Post_Republisher_Test extends TestCase {
+final class Post_Republisher_Test extends TestCase {
 
 	/**
 	 * The instance.

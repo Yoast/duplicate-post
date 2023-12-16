@@ -13,7 +13,7 @@ use Yoast\WP\Duplicate_Post\UI\Row_Actions;
 /**
  * Test the Row_Actions class.
  */
-class Row_Actions_Test extends TestCase {
+final class Row_Actions_Test extends TestCase {
 
 	/**
 	 * Holds the object to create the action link to duplicate.

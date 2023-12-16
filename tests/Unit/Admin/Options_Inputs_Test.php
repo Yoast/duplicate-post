@@ -10,7 +10,7 @@ use Yoast\WP\Duplicate_Post\Tests\Unit\TestCase;
 /**
  * Test the Options_Inputs_Test class.
  */
-class Options_Inputs_Test extends TestCase {
+final class Options_Inputs_Test extends TestCase {
 
 	/**
 	 * The instance.

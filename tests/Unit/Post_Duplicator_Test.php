@@ -11,7 +11,7 @@ use Yoast\WP\Duplicate_Post\Post_Duplicator;
 /**
  * Test the Post_Duplicator class.
  */
-class Post_Duplicator_Test extends TestCase {
+final class Post_Duplicator_Test extends TestCase {
 
 	/**
 	 * The instance.

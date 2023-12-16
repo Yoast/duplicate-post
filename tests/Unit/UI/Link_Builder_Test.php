@@ -11,7 +11,7 @@ use Yoast\WP\Duplicate_Post\UI\Link_Builder;
 /**
  * Test the Link_Builder class.
  */
-class Link_Builder_Test extends TestCase {
+final class Link_Builder_Test extends TestCase {
 
 	/**
 	 * The instance.
