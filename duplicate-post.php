@@ -13,10 +13,10 @@
  * Author:      Enrico Battocchi & Team Yoast
  * Author URI:  https://yoa.st/team-yoast-duplicate
  * Text Domain: duplicate-post
- * Requires at least: 6.2
+ * Requires at least: 6.3
  * Requires PHP: 7.2.5
  *
- * Copyright 2020-2022 Yoast BV (email : info@yoast.com)
+ * Copyright 2020-2024 Yoast BV (email : info@yoast.com)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
