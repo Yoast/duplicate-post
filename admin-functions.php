@@ -294,7 +294,7 @@ function duplicate_post_copy_post_taxonomies( $new_id, $post ) {
 		}
 
 		$taxonomies_blacklist = get_option( 'duplicate_post_taxonomies_blacklist' );
-		if ( $taxonomies_blacklist === '' ) {
+		if ( empty( $taxonomies_blacklist ) ) {
 			$taxonomies_blacklist = [];
 		}
 		if ( intval( get_option( 'duplicate_post_copyformat' ) ) === 0 ) {
