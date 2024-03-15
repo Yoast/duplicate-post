@@ -48,9 +48,7 @@ class Asset_Manager {
 			\DUPLICATE_POST_CURRENT_VERSION,
 			true
 		);
-		if ( function_exists( '\\wp_set_script_translations' ) ) {
-			\wp_set_script_translations( 'duplicate_post_edit_script', 'duplicate-post' );
-		}
+		\wp_set_script_translations( 'duplicate_post_edit_script', 'duplicate-post' );
 
 		\wp_register_script(
 			'duplicate_post_strings',
@@ -63,9 +61,7 @@ class Asset_Manager {
 			\DUPLICATE_POST_CURRENT_VERSION,
 			true
 		);
-		if ( function_exists( '\\wp_set_script_translations' ) ) {
-			\wp_set_script_translations( 'duplicate_post_strings', 'duplicate-post' );
-		}
+		\wp_set_script_translations( 'duplicate_post_strings', 'duplicate-post' );
 
 		\wp_register_script(
 			'duplicate_post_quick_edit_script',
