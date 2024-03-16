@@ -95,14 +95,13 @@ class DuplicatePost {
 			return;
 		}
 
-		for ( const [ key, notice ] of Object.entries( duplicatePostNotices ) ){
-			let noticeObj = JSON.parse( notice );
-			if ( noticeObj.status && noticeObj.text ) {
+		for ( const [ key, notice ] of Object.entries( duplicatePostNotices ) ) {
+			if ( notice.status && notice.text ) {
 				dispatch( 'core/notices' ).createNotice(
-					noticeObj.status,
-					noticeObj.text,
+					notice.status,
+					notice.text,
 					{
-						isDismissible: noticeObj.isDismissible || true,
+						isDismissible: notice.isDismissible || true,
 					}
 				);
 			}

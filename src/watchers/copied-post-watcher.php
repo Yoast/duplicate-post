@@ -110,14 +110,14 @@ class Copied_Post_Watcher {
 		if ( $this->permissions_helper->has_rewrite_and_republish_copy( $post ) ) {
 
 			$notice = [
-				'text'          => \wp_slash( $this->get_notice_text( $post ) ),
+				'text'          => $this->get_notice_text( $post ),
 				'status'        => 'warning',
 				'isDismissible' => true,
 			];
 
 			\wp_add_inline_script(
 				'duplicate_post_edit_script',
-				"duplicatePostNotices.has_rewrite_and_republish_notice = '" . \wp_json_encode( $notice ) . "';",
+				'duplicatePostNotices.has_rewrite_and_republish_notice = ' . \wp_json_encode( $notice ) . ';',
 				'before'
 			);
 		}

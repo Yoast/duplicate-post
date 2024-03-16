@@ -93,14 +93,14 @@ class Republished_Post_Watcher {
 	public function add_block_editor_notice() {
 		if ( ! empty( $_REQUEST['dprepublished'] ) ) {
 			$notice = [
-				'text'          => \wp_slash( $this->get_notice_text() ),
+				'text'          => $this->get_notice_text(),
 				'status'        => 'success',
 				'isDismissible' => true,
 			];
 
 			\wp_add_inline_script(
 				'duplicate_post_edit_script',
-				"duplicatePostNotices.republished_notice = '" . \wp_json_encode( $notice ) . "';",
+				'duplicatePostNotices.republished_notice = ' . \wp_json_encode( $notice ) . ';',
 				'before'
 			);
 		}

@@ -109,19 +109,19 @@ class Link_Actions_Watcher {
 	public function add_rewrite_and_republish_block_editor_notice() {
 		if ( ! empty( $_REQUEST['rewriting'] ) ) {
 			$notice = [
-				'text'          => \wp_slash(
+				'text'          =>
 					\__(
 						'You can now start rewriting your post in this duplicate of the original post. If you click "Republish", this rewritten post will replace the original post.',
 						'duplicate-post'
-					)
-				),
+
+					),
 				'status'        => 'warning',
 				'isDismissible' => true,
 			];
 
 			\wp_add_inline_script(
 				'duplicate_post_edit_script',
-				"duplicatePostNotices.rewriting_notice = '" . \wp_json_encode( $notice ) . "';",
+				'duplicatePostNotices.rewriting_notice = ' . \wp_json_encode( $notice ) . ';',
 				'before'
 			);
 		}
