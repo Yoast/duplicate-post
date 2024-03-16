@@ -277,7 +277,7 @@ final class Copied_Post_Watcher_Test extends TestCase {
 		Monkey\Functions\expect( '\wp_add_inline_script' )
 			->with(
 				'duplicate_post_edit_script',
-				"duplicatePostNotices.has_rewrite_and_republish_notice = '{\"text\":\"notice\",\"status\":\"warning\",\"isDismissible\":true}';",
+				'duplicatePostNotices.has_rewrite_and_republish_notice = {"text":"notice","status":"warning","isDismissible":true};',
 				'before'
 			);
 
