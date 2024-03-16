@@ -345,7 +345,7 @@ class Post_Republisher {
 
 		$copy_taxonomies_options = [
 			'taxonomies_excludelist' => [],
-			'use_filters'            => false,
+			'use_filters'            => apply_filters('republish_post_taxonomies_use_filters', false),
 			'copy_format'            => true,
 		];
 		$this->post_duplicator->copy_post_taxonomies( $original_post_id, $post, $copy_taxonomies_options );
