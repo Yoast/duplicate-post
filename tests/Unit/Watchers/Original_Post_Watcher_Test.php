@@ -200,7 +200,7 @@ final class Original_Post_Watcher_Test extends TestCase {
 		Monkey\Functions\expect( '\wp_add_inline_script' )
 			->with(
 				'duplicate_post_edit_script',
-				"duplicatePostNotices.has_original_changed_notice = '{\"text\":\"notice\",\"status\":\"warning\",\"isDismissible\":true}';",
+				'duplicatePostNotices.has_original_changed_notice = {"text":"notice","status":"warning","isDismissible":true};',
 				'before'
 			);
 

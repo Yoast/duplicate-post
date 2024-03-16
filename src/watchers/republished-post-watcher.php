@@ -43,9 +43,9 @@ class Republished_Post_Watcher {
 	/**
 	 * Adds vars to the removable query args.
 	 *
-	 * @param array $removable_query_args Array of query args keys.
+	 * @param array<string> $removable_query_args Array of query args keys.
 	 *
-	 * @return array The updated array of query args keys.
+	 * @return array<string> The updated array of query args keys.
 	 */
 	public function add_removable_query_args( $removable_query_args ) {
 		if ( \is_array( $removable_query_args ) ) {
@@ -93,14 +93,14 @@ class Republished_Post_Watcher {
 	public function add_block_editor_notice() {
 		if ( ! empty( $_REQUEST['dprepublished'] ) ) {
 			$notice = [
-				'text'          => \wp_slash( $this->get_notice_text() ),
+				'text'          => $this->get_notice_text(),
 				'status'        => 'success',
 				'isDismissible' => true,
 			];
 
 			\wp_add_inline_script(
 				'duplicate_post_edit_script',
-				"duplicatePostNotices.republished_notice = '" . \wp_json_encode( $notice ) . "';",
+				'duplicatePostNotices.republished_notice = ' . \wp_json_encode( $notice ) . ';',
 				'before'
 			);
 		}

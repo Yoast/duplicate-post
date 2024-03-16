@@ -161,7 +161,7 @@ final class Republished_Post_Watcher_Test extends TestCase {
 		Monkey\Functions\expect( '\wp_add_inline_script' )
 			->with(
 				'duplicate_post_edit_script',
-				"duplicatePostNotices.republished_notice = '{\"text\":\"notice\",\"status\":\"success\",\"isDismissible\":true}';",
+				'duplicatePostNotices.republished_notice = {"text":"notice","status":"success","isDismissible":true};',
 				'before'
 			);
 

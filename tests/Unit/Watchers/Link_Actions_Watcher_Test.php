@@ -263,7 +263,7 @@ final class Link_Actions_Watcher_Test extends TestCase {
 		Monkey\Functions\expect( '\wp_add_inline_script' )
 			->with(
 				'duplicate_post_edit_script',
-				"duplicatePostNotices.rewriting_notice = '{\"text\":\"You can now start rewriting your post in this duplicate of the original post. If you click \\\"Republish\\\", this rewritten post will replace the original post.\",\"status\":\"warning\",\"isDismissible\":true}';",
+				'duplicatePostNotices.rewriting_notice = {"text":"You can now start rewriting your post in this duplicate of the original post. If you click \"Republish\", this rewritten post will replace the original post.","status":"warning","isDismissible":true};',
 				'before'
 			);
 
