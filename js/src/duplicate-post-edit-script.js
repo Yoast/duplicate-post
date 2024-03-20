@@ -1,9 +1,10 @@
 /* global duplicatePost, duplicatePostNotices */
 
+import { useState } from 'react';
 import { registerPlugin } from "@wordpress/plugins";
-import { PluginPostStatusInfo } from "@wordpress/edit-post";
+import { PluginDocumentSettingPanel, PluginPostStatusInfo } from "@wordpress/edit-post";
 import { Fragment } from "@wordpress/element";
-import { Button } from '@wordpress/components';
+import { Button, ToggleControl } from '@wordpress/components';
 import { __ } from "@wordpress/i18n";
 import { select, subscribe, dispatch } from "@wordpress/data";
 import { redirectOnSaveCompletion } from "./duplicate-post-functions";
@@ -132,6 +133,8 @@ class DuplicatePost {
 
 		const currentPostStatus = select( 'core/editor' ).getEditedPostAttribute( 'status' );
 
+		const [ willBeDeletedReference, setWillBeDeletedReference ] = useState( false );
+
 		return (
 			( duplicatePost.showLinksIn.submitbox === '1' ) &&
 			<Fragment>
@@ -157,6 +160,24 @@ class DuplicatePost {
 						</Button>
 					</PluginPostStatusInfo>
 				}
+				<PluginDocumentSettingPanel
+				name="duplicate-post-panel"
+				title={ __( "Duplicate Post", "duplicate-post" ) }
+				className="custom-panel"
+				>
+					<ToggleControl
+						label={ __( "Delete reference to original item.", "duplicate-post" ) }
+						help={
+							willBeDeletedReference
+								? __( "The reference will be deleted on update", "duplicate-post" )
+								: __( "The reference will be kept on update", "duplicate-post" )
+						}
+						checked={ willBeDeletedReference }
+						onChange={ (newValue) => {
+							setWillBeDeletedReference( newValue );
+						} }
+					/>
+				</PluginDocumentSettingPanel>
 			</Fragment>
 		);
 	}
