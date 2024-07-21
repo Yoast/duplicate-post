@@ -60,7 +60,7 @@ There is also a **template tag**, so you can put it in your templates and clone 
 
 ## API
 
-For functions, template tags and hooks refer to the [Developer's Guide](https://developer.yoast.com/duplicate-post/) on our developer site.
+For functions, template tags and hooks refer to the [Developer's Guide](https://developer.yoast.com/duplicate-post/overview/) on our developer site.
 
 ##  Maintainer
 
