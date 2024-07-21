@@ -769,7 +769,7 @@ function duplicate_post_create_duplicate( $post, $status = '', $parent_id = '' )
  */
 function duplicate_post_add_plugin_links( $links, $file ) {
 	if ( plugin_basename( __DIR__ . '/duplicate-post.php' ) === $file ) {
-		$links[] = '<a href="https://yoast.com/wordpress/plugins/duplicate-post">' . esc_html__( 'Documentation', 'duplicate-post' ) . '</a>';
+		$links[] = '<a href="https://yoa.st/4jr">' . esc_html__( 'Documentation', 'duplicate-post' ) . '</a>';
 	}
 	return $links;
 }
