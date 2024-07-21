@@ -488,7 +488,7 @@ function duplicate_post_copy_attachments( $new_id, $post ) {
 		$cloned_child    = [
 			'ID'           => $new_attachment_id,
 			'post_title'   => $child->post_title,
-			'post_exceprt' => $child->post_title,
+			'post_excerpt' => $child->post_excerpt,
 			'post_author'  => $new_post_author->ID,
 		];
 		wp_update_post( wp_slash( $cloned_child ) );
