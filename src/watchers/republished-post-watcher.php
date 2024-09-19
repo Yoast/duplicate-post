@@ -57,18 +57,6 @@ class Republished_Post_Watcher {
 	}
 
 	/**
-	 * Generates the translated text for the republished notice.
-	 *
-	 * @return string The translated text for the republished notice.
-	 */
-	public function get_notice_text() {
-		return \__(
-			'Your original post has been replaced with the rewritten post. You are now viewing the (rewritten) original post.',
-			'duplicate-post'
-		);
-	}
-
-	/**
 	 * Shows a notice on the Classic editor.
 	 *
 	 * @return void
@@ -80,7 +68,7 @@ class Republished_Post_Watcher {
 
 		if ( ! empty( $_REQUEST['dprepublished'] ) ) {
 			echo '<div id="message" class="notice notice-success is-dismissible"><p>'
-				. \esc_html( $this->get_notice_text() )
+				. \esc_html( $this->get_notice_copy() )
 				. '</p></div>';
 		}
 	}
@@ -93,7 +81,7 @@ class Republished_Post_Watcher {
 	public function add_block_editor_notice() {
 		if ( ! empty( $_REQUEST['dprepublished'] ) ) {
 			$notice = [
-				'text'          => $this->get_notice_text(),
+				'text'          => $this->get_notice_copy(),
 				'status'        => 'success',
 				'isDismissible' => true,
 			];
@@ -104,5 +92,30 @@ class Republished_Post_Watcher {
 				'before'
 			);
 		}
+	}
+
+	/**
+	 * Generates the translated text for the notice.
+	 *
+	 * @return string The translated text for the notice.
+	 */
+	private function get_notice_copy() {
+		return \__(
+			'Your original post has been replaced with the rewritten post. You are now viewing the (rewritten) original post.',
+			'duplicate-post'
+		);
+	}
+
+	/**
+	 * Generates the translated text for the republished notice.
+	 *
+	 * @deprecated 4.6
+	 * @codeCoverageIgnore
+	 *
+	 * @return string The translated text for the republished notice.
+	 */
+	public function get_notice_text() {
+		\_deprecated_function( __METHOD__, '4.6', self::class . '::get_notice_copy' );
+		return $this->get_notice_copy();
 	}
 }

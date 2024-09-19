@@ -76,44 +76,26 @@ final class Republished_Post_Watcher_Test extends TestCase {
 	}
 
 	/**
-	 * Tests the get_notice_text function.
-	 *
-	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Republished_Post_Watcher::get_notice_text
-	 *
-	 * @return void
-	 */
-	public function test_get_notice_text() {
-		$this->stubTranslationFunctions();
-
-		$this->assertSame(
-			'Your original post has been replaced with the rewritten post. You are now viewing the (rewritten) original post.',
-			$this->instance->get_notice_text()
-		);
-	}
-
-	/**
 	 * Tests the add_admin_notice function on the Classic Editor.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Republished_Post_Watcher::add_admin_notice
+	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Republished_Post_Watcher::get_notice_copy
 	 *
 	 * @return void
 	 */
 	public function test_add_admin_notice_classic() {
 		$this->stubEscapeFunctions();
+		$this->stubTranslationFunctions();
 
 		$this->permissions_helper
 			->expects( 'is_classic_editor' )
 			->andReturnTrue();
 
-		$this->instance
-			->expects( 'get_notice_text' )
-			->andReturn( 'notice' );
-
 		$_REQUEST['dprepublished'] = '1';
 
 		$this->instance->add_admin_notice();
 
-		$this->expectOutputString( '<div id="message" class="notice notice-success is-dismissible"><p>notice</p></div>' );
+		$this->expectOutputString( '<div id="message" class="notice notice-success is-dismissible"><p>Your original post has been replaced with the rewritten post. You are now viewing the (rewritten) original post.</p></div>' );
 
 		// Clean up after the test.
 		unset( $_REQUEST['dprepublished'] );
@@ -140,28 +122,27 @@ final class Republished_Post_Watcher_Test extends TestCase {
 	 * Tests the add_block_editor_notice function.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Republished_Post_Watcher::add_block_editor_notice
+	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Republished_Post_Watcher::get_notice_copy
 	 *
 	 * @return void
 	 */
 	public function test_add_block_editor_notice() {
-		$this->instance
-			->expects( 'get_notice_text' )
-			->andReturn( 'notice' );
+		$this->stubTranslationFunctions();
 
 		$notice = [
-			'text'          => 'notice',
+			'text'          => 'Your original post has been replaced with the rewritten post. You are now viewing the (rewritten) original post.',
 			'status'        => 'success',
 			'isDismissible' => true,
 		];
 
 		Monkey\Functions\expect( '\wp_json_encode' )
 			->with( $notice )
-			->andReturn( '{"text":"notice","status":"success","isDismissible":true}' );
+			->andReturn( '{"text":"Your original post has been replaced with the rewritten post. You are now viewing the (rewritten) original post.","status":"success","isDismissible":true}' );
 
 		Monkey\Functions\expect( '\wp_add_inline_script' )
 			->with(
 				'duplicate_post_edit_script',
-				'duplicatePostNotices.republished_notice = {"text":"notice","status":"success","isDismissible":true};',
+				'duplicatePostNotices.republished_notice = {"text":"Your original post has been replaced with the rewritten post. You are now viewing the (rewritten) original post.","status":"success","isDismissible":true};',
 				'before'
 			);
 

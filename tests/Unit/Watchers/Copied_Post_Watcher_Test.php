@@ -73,16 +73,30 @@ final class Copied_Post_Watcher_Test extends TestCase {
 	}
 
 	/**
-	 * Tests the get_notice_text function when the copy is not scheduled.
+	 * Tests the add_admin_notice function on the Classic Editor.
 	 *
-	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Copied_Post_Watcher::get_notice_text
+	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Copied_Post_Watcher::add_admin_notice
+	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Copied_Post_Watcher::get_notice_copy
 	 *
 	 * @return void
 	 */
-	public function test_get_notice_text_not_scheduled() {
+	public function test_add_admin_notice_classic_not_scheduled() {
+		$this->stubEscapeFunctions();
 		$this->stubTranslationFunctions();
 
 		$post = Mockery::mock( WP_Post::class );
+
+		$this->permissions_helper
+			->expects( 'is_classic_editor' )
+			->andReturnTrue();
+
+		Monkey\Functions\expect( '\get_post' )
+			->andReturn( $post );
+
+		$this->permissions_helper
+			->expects( 'has_rewrite_and_republish_copy' )
+			->with( $post )
+			->andReturnTrue();
 
 		$this->permissions_helper
 			->expects( 'has_scheduled_rewrite_and_republish_copy' )
@@ -94,24 +108,37 @@ final class Copied_Post_Watcher_Test extends TestCase {
 			->with( $post )
 			->andReturnFalse();
 
-		$this->assertSame(
-			'A duplicate of this post was made. Please note that any changes you make to this post will be replaced when the duplicated version is republished.',
-			$this->instance->get_notice_text( $post )
-		);
+		$this->instance->add_admin_notice();
+
+		$this->expectOutputString( '<div id="message" class="notice notice-warning is-dismissible fade"><p>A duplicate of this post was made. Please note that any changes you make to this post will be replaced when the duplicated version is republished.</p></div>' );
 	}
 
 	/**
-	 * Tests the get_notice_text function when the copy is scheduled.
+	 * Tests the add_admin_notice function on the Classic Editor.
 	 *
-	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Copied_Post_Watcher::get_notice_text
+	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Copied_Post_Watcher::add_admin_notice
+	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Copied_Post_Watcher::get_notice_copy
 	 *
 	 * @return void
 	 */
-	public function test_get_notice_text_scheduled() {
+	public function test_add_admin_notice_classic_scheduled() {
+		$this->stubEscapeFunctions();
 		$this->stubTranslationFunctions();
 
 		$post = Mockery::mock( WP_Post::class );
 		$copy = Mockery::mock( WP_Post::class );
+
+		$this->permissions_helper
+			->expects( 'is_classic_editor' )
+			->andReturnTrue();
+
+		Monkey\Functions\expect( '\get_post' )
+			->andReturn( $post );
+
+		$this->permissions_helper
+			->expects( 'has_rewrite_and_republish_copy' )
+			->with( $post )
+			->andReturnTrue();
 
 		$this->permissions_helper
 			->expects( 'has_scheduled_rewrite_and_republish_copy' )
@@ -131,48 +158,22 @@ final class Copied_Post_Watcher_Test extends TestCase {
 			->twice()
 			->andReturnValues( [ '2020/12/02', '10:30 am' ] );
 
-		$this->assertSame(
-			'A duplicate of this post was made, which is scheduled to replace this post on 2020/12/02 at 10:30 am.',
-			$this->instance->get_notice_text( $post )
-		);
-	}
+		$this->instance->add_admin_notice();
 
-	/**
-	 * Tests the get_notice_text function when the copy is in the trash.
-	 *
-	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Copied_Post_Watcher::get_notice_text
-	 *
-	 * @return void
-	 */
-	public function test_get_notice_text_copy_in_the_trash() {
-		$this->stubTranslationFunctions();
-
-		$post = Mockery::mock( WP_Post::class );
-
-		$this->permissions_helper
-			->expects( 'has_scheduled_rewrite_and_republish_copy' )
-			->never();
-
-		$this->permissions_helper
-			->expects( 'has_trashed_rewrite_and_republish_copy' )
-			->with( $post )
-			->andReturnTrue();
-
-		$this->assertSame(
-			'You can only make one Rewrite & Republish duplicate at a time, and a duplicate of this post already exists in the trash. Permanently delete it if you want to make a new duplicate.',
-			$this->instance->get_notice_text( $post )
-		);
+		$this->expectOutputString( '<div id="message" class="notice notice-warning is-dismissible fade"><p>A duplicate of this post was made, which is scheduled to replace this post on 2020/12/02 at 10:30 am.</p></div>' );
 	}
 
 	/**
 	 * Tests the add_admin_notice function on the Classic Editor.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Copied_Post_Watcher::add_admin_notice
+	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Copied_Post_Watcher::get_notice_copy
 	 *
 	 * @return void
 	 */
-	public function test_add_admin_notice_classic() {
+	public function test_add_admin_notice_classic_copy_in_the_trash() {
 		$this->stubEscapeFunctions();
+		$this->stubTranslationFunctions();
 
 		$post = Mockery::mock( WP_Post::class );
 
@@ -188,13 +189,18 @@ final class Copied_Post_Watcher_Test extends TestCase {
 			->with( $post )
 			->andReturnTrue();
 
-		$this->instance
-			->expects( 'get_notice_text' )
-			->andReturn( 'notice' );
+		$this->permissions_helper
+			->expects( 'has_scheduled_rewrite_and_republish_copy' )
+			->never();
+
+		$this->permissions_helper
+			->expects( 'has_trashed_rewrite_and_republish_copy' )
+			->with( $post )
+			->andReturnTrue();
 
 		$this->instance->add_admin_notice();
 
-		$this->expectOutputString( '<div id="message" class="notice notice-warning is-dismissible fade"><p>notice</p></div>' );
+		$this->expectOutputString( '<div id="message" class="notice notice-warning is-dismissible fade"><p>You can only make one Rewrite & Republish duplicate at a time, and a duplicate of this post already exists in the trash. Permanently delete it if you want to make a new duplicate.</p></div>' );
 	}
 
 	/**
@@ -245,10 +251,13 @@ final class Copied_Post_Watcher_Test extends TestCase {
 	 * Tests the add_block_editor_notice function.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Copied_Post_Watcher::add_block_editor_notice
+	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Copied_Post_Watcher::get_notice_copy
 	 *
 	 * @return void
 	 */
 	public function test_add_block_editor_notice() {
+		$this->stubTranslationFunctions();
+
 		$post = Mockery::mock( WP_Post::class );
 
 		Monkey\Functions\expect( '\get_post' )
@@ -259,25 +268,30 @@ final class Copied_Post_Watcher_Test extends TestCase {
 			->with( $post )
 			->andReturnTrue();
 
-		$this->instance
-			->expects( 'get_notice_text' )
+		$this->permissions_helper
+			->expects( 'has_scheduled_rewrite_and_republish_copy' )
 			->with( $post )
-			->andReturn( 'notice' );
+			->andReturnFalse();
+
+		$this->permissions_helper
+			->expects( 'has_trashed_rewrite_and_republish_copy' )
+			->with( $post )
+			->andReturnFalse();
 
 		$notice = [
-			'text'          => 'notice',
+			'text'          => 'A duplicate of this post was made. Please note that any changes you make to this post will be replaced when the duplicated version is republished.',
 			'status'        => 'warning',
 			'isDismissible' => true,
 		];
 
 		Monkey\Functions\expect( '\wp_json_encode' )
 			->with( $notice )
-			->andReturn( '{"text":"notice","status":"warning","isDismissible":true}' );
+			->andReturn( '{"text":"A duplicate of this post was made. Please note that any changes you make to this post will be replaced when the duplicated version is republished.","status":"warning","isDismissible":true}' );
 
 		Monkey\Functions\expect( '\wp_add_inline_script' )
 			->with(
 				'duplicate_post_edit_script',
-				'duplicatePostNotices.has_rewrite_and_republish_notice = {"text":"notice","status":"warning","isDismissible":true};',
+				'duplicatePostNotices.has_rewrite_and_republish_notice = {"text":"A duplicate of this post was made. Please note that any changes you make to this post will be replaced when the duplicated version is republished.","status":"warning","isDismissible":true};',
 				'before'
 			);
 
@@ -301,10 +315,6 @@ final class Copied_Post_Watcher_Test extends TestCase {
 			->expects( 'has_rewrite_and_republish_copy' )
 			->with( $post )
 			->andReturnFalse();
-
-		$this->instance
-			->expects( 'get_notice_text' )
-			->never();
 
 		Monkey\Functions\expect( '\wp_json_encode' )
 			->never();

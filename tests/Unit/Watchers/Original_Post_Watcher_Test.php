@@ -73,30 +73,16 @@ final class Original_Post_Watcher_Test extends TestCase {
 	}
 
 	/**
-	 * Tests the get_notice_text function.
-	 *
-	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Original_Post_Watcher::get_notice_text
-	 *
-	 * @return void
-	 */
-	public function test_get_notice_text() {
-		$this->stubTranslationFunctions();
-
-		$this->assertSame(
-			'The original post has been edited in the meantime. If you click "Republish", this rewritten post will replace the original post.',
-			$this->instance->get_notice_text()
-		);
-	}
-
-	/**
 	 * Tests the add_admin_notice function on the Classic Editor.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Original_Post_Watcher::add_admin_notice
+	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Original_Post_Watcher::get_notice_copy
 	 *
 	 * @return void
 	 */
 	public function test_add_admin_notice_classic() {
 		$this->stubEscapeFunctions();
+		$this->stubTranslationFunctions();
 
 		$post = Mockery::mock( WP_Post::class );
 
@@ -112,13 +98,9 @@ final class Original_Post_Watcher_Test extends TestCase {
 			->with( $post )
 			->andReturnTrue();
 
-		$this->instance
-			->expects( 'get_notice_text' )
-			->andReturn( 'notice' );
-
 		$this->instance->add_admin_notice();
 
-		$this->expectOutputString( '<div id="message" class="notice notice-warning is-dismissible fade"><p>notice</p></div>' );
+		$this->expectOutputString( '<div id="message" class="notice notice-warning is-dismissible fade"><p>The original post has been edited in the meantime. If you click "Republish", this rewritten post will replace the original post.</p></div>' );
 	}
 
 	/**
@@ -169,10 +151,13 @@ final class Original_Post_Watcher_Test extends TestCase {
 	 * Tests the add_block_editor_notice function.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Copied_Post_Watcher::add_block_editor_notice
+	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Copied_Post_Watcher::get_notice_copy
 	 *
 	 * @return void
 	 */
 	public function test_add_block_editor_notice() {
+		$this->stubTranslationFunctions();
+
 		$post = Mockery::mock( WP_Post::class );
 
 		Monkey\Functions\expect( '\get_post' )
@@ -183,24 +168,20 @@ final class Original_Post_Watcher_Test extends TestCase {
 			->with( $post )
 			->andReturnTrue();
 
-		$this->instance
-			->expects( 'get_notice_text' )
-			->andReturn( 'notice' );
-
 		$notice = [
-			'text'          => 'notice',
+			'text'          => 'The original post has been edited in the meantime. If you click "Republish", this rewritten post will replace the original post.',
 			'status'        => 'warning',
 			'isDismissible' => true,
 		];
 
 		Monkey\Functions\expect( '\wp_json_encode' )
 			->with( $notice )
-			->andReturn( '{"text":"notice","status":"warning","isDismissible":true}' );
+			->andReturn( '{"text":"The original post has been edited in the meantime. If you click \"Republish\", this rewritten post will replace the original post.","status":"warning","isDismissible":true}' );
 
 		Monkey\Functions\expect( '\wp_add_inline_script' )
 			->with(
 				'duplicate_post_edit_script',
-				'duplicatePostNotices.has_original_changed_notice = {"text":"notice","status":"warning","isDismissible":true};',
+				'duplicatePostNotices.has_original_changed_notice = {"text":"The original post has been edited in the meantime. If you click \"Republish\", this rewritten post will replace the original post.","status":"warning","isDismissible":true};',
 				'before'
 			);
 
@@ -224,10 +205,6 @@ final class Original_Post_Watcher_Test extends TestCase {
 			->expects( 'has_original_changed' )
 			->with( $post )
 			->andReturnFalse();
-
-		$this->instance
-			->expects( 'get_notice_text' )
-			->never();
 
 		Monkey\Functions\expect( '\wp_json_encode' )
 			->never();

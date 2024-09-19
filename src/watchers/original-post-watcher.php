@@ -43,18 +43,6 @@ class Original_Post_Watcher {
 	}
 
 	/**
-	 * Generates the translated text for the notice.
-	 *
-	 * @return string The translated text for the notice.
-	 */
-	public function get_notice_text() {
-		return \__(
-			'The original post has been edited in the meantime. If you click "Republish", this rewritten post will replace the original post.',
-			'duplicate-post'
-		);
-	}
-
-	/**
 	 * Shows a notice on the Classic editor.
 	 *
 	 * @return void
@@ -72,7 +60,7 @@ class Original_Post_Watcher {
 
 		if ( $this->permissions_helper->has_original_changed( $post ) ) {
 			print '<div id="message" class="notice notice-warning is-dismissible fade"><p>'
-				. \esc_html( $this->get_notice_text() )
+				. \esc_html( $this->get_notice_copy() )
 				. '</p></div>';
 		}
 	}
@@ -92,7 +80,7 @@ class Original_Post_Watcher {
 		if ( $this->permissions_helper->has_original_changed( $post ) ) {
 
 			$notice = [
-				'text'          => $this->get_notice_text(),
+				'text'          => $this->get_notice_copy(),
 				'status'        => 'warning',
 				'isDismissible' => true,
 			];
@@ -103,5 +91,30 @@ class Original_Post_Watcher {
 				'before'
 			);
 		}
+	}
+
+	/**
+	 * Generates the translated text for the notice.
+	 *
+	 * @return string The translated text for the notice.
+	 */
+	private function get_notice_copy() {
+		return \__(
+			'The original post has been edited in the meantime. If you click "Republish", this rewritten post will replace the original post.',
+			'duplicate-post'
+		);
+	}
+
+	/**
+	 * Generates the translated text for the notice.
+	 *
+	 * @deprecated 4.6
+	 * @codeCoverageIgnore
+	 *
+	 * @return string The translated text for the notice.
+	 */
+	public function get_notice_text() {
+		\_deprecated_function( __METHOD__, '4.6', self::class . '::get_notice_copy' );
+		return $this->get_notice_copy();
 	}
 }

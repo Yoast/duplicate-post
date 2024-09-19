@@ -39,13 +39,64 @@ class Copied_Post_Watcher {
 	}
 
 	/**
+	 * Shows a notice on the Classic editor.
+	 *
+	 * @return void
+	 */
+	public function add_admin_notice() {
+		if ( ! $this->permissions_helper->is_classic_editor() ) {
+			return;
+		}
+
+		$post = \get_post();
+
+		if ( ! $post instanceof WP_Post ) {
+			return;
+		}
+
+		if ( $this->permissions_helper->has_rewrite_and_republish_copy( $post ) ) {
+			print '<div id="message" class="notice notice-warning is-dismissible fade"><p>'
+				. \esc_html( $this->get_notice_copy( $post ) )
+				. '</p></div>';
+		}
+	}
+
+	/**
+	 * Shows a notice on the Block editor.
+	 *
+	 * @return void
+	 */
+	public function add_block_editor_notice() {
+		$post = \get_post();
+
+		if ( ! $post instanceof WP_Post ) {
+			return;
+		}
+
+		if ( $this->permissions_helper->has_rewrite_and_republish_copy( $post ) ) {
+
+			$notice = [
+				'text'          => $this->get_notice_copy( $post ),
+				'status'        => 'warning',
+				'isDismissible' => true,
+			];
+
+			\wp_add_inline_script(
+				'duplicate_post_edit_script',
+				'duplicatePostNotices.has_rewrite_and_republish_notice = ' . \wp_json_encode( $notice ) . ';',
+				'before'
+			);
+		}
+	}
+
+	/**
 	 * Generates the translated text for the notice.
 	 *
 	 * @param WP_Post $post The current post object.
 	 *
 	 * @return string The translated text for the notice.
 	 */
-	public function get_notice_text( $post ) {
+	private function get_notice_copy( $post ) {
 		if ( $this->permissions_helper->has_trashed_rewrite_and_republish_copy( $post ) ) {
 			return \__(
 				'You can only make one Rewrite & Republish duplicate at a time, and a duplicate of this post already exists in the trash. Permanently delete it if you want to make a new duplicate.',
@@ -73,53 +124,17 @@ class Copied_Post_Watcher {
 	}
 
 	/**
-	 * Shows a notice on the Classic editor.
+	 * Generates the translated text for the republished notice.
 	 *
-	 * @return void
-	 */
-	public function add_admin_notice() {
-		if ( ! $this->permissions_helper->is_classic_editor() ) {
-			return;
-		}
-
-		$post = \get_post();
-
-		if ( ! $post instanceof WP_Post ) {
-			return;
-		}
-
-		if ( $this->permissions_helper->has_rewrite_and_republish_copy( $post ) ) {
-			print '<div id="message" class="notice notice-warning is-dismissible fade"><p>'
-				. \esc_html( $this->get_notice_text( $post ) )
-				. '</p></div>';
-		}
-	}
-
-	/**
-	 * Shows a notice on the Block editor.
+	 * @deprecated 4.6
+	 * @codeCoverageIgnore
 	 *
-	 * @return void
+	 * @param WP_Post $post The current post object.
+	 *
+	 * @return string The translated text for the republished notice.
 	 */
-	public function add_block_editor_notice() {
-		$post = \get_post();
-
-		if ( ! $post instanceof WP_Post ) {
-			return;
-		}
-
-		if ( $this->permissions_helper->has_rewrite_and_republish_copy( $post ) ) {
-
-			$notice = [
-				'text'          => $this->get_notice_text( $post ),
-				'status'        => 'warning',
-				'isDismissible' => true,
-			];
-
-			\wp_add_inline_script(
-				'duplicate_post_edit_script',
-				'duplicatePostNotices.has_rewrite_and_republish_notice = ' . \wp_json_encode( $notice ) . ';',
-				'before'
-			);
-		}
+	public function get_notice_text( $post ) {
+		\_deprecated_function( __METHOD__, '4.6', self::class . '::get_notice_copy' );
+		return $this->get_notice_copy( $post );
 	}
 }
