@@ -74,6 +74,15 @@ class Duplicate_Post {
 		$this->revisions_migrator = new Revisions_Migrator();
 		$this->watchers           = new Watchers( $this->permissions_helper );
 
+		$this->register_hooks();
+	}
+
+	/**
+	 * Registers the hooks.
+	 *
+	 * @return void
+	 */
+	protected function register_hooks() {
 		$this->post_republisher->register_hooks();
 		$this->revisions_migrator->register_hooks();
 	}
