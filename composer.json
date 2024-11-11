@@ -50,7 +50,8 @@
 			"dealerdirect/phpcodesniffer-composer-installer": true,
 			"composer/installers": true
 		},
-		"classmap-authoritative": true
+		"classmap-authoritative": true,
+		"lock": false
 	},
 	"scripts": {
 		"lint": [
