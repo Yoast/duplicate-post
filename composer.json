@@ -38,17 +38,17 @@
 		]
 	},
 	"autoload-dev": {
-		"classmap": [
-			"config/"
-		],
 		"psr-4": {
 			"Yoast\\WP\\Duplicate_Post\\Tests\\": "tests/"
-		}
+		},
+		"classmap": [
+			"config/"
+		]
 	},
 	"config": {
 		"allow-plugins": {
-			"dealerdirect/phpcodesniffer-composer-installer": true,
-			"composer/installers": true
+			"composer/installers": true,
+			"dealerdirect/phpcodesniffer-composer-installer": true
 		},
 		"classmap-authoritative": true,
 		"lock": false
