@@ -14,7 +14,7 @@
  * Author URI:  https://yoa.st/team-yoast-duplicate
  * Text Domain: duplicate-post
  * Requires at least: 6.6
- * Requires PHP: 7.2.5
+ * Requires PHP: 7.4
  *
  * Copyright 2020-2024 Yoast BV (email : info@yoast.com)
  *
