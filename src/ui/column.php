@@ -59,9 +59,9 @@ class Column {
 	/**
 	 * Adds Original item column to the post list.
 	 *
-	 * @param array $post_columns The post columns array.
+	 * @param array<string, string> $post_columns The post columns array.
 	 *
-	 * @return array The updated array.
+	 * @return array<string, string> The updated array.
 	 */
 	public function add_original_column( $post_columns ) {
 		if ( \is_array( $post_columns ) ) {

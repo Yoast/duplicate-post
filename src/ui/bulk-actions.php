@@ -58,9 +58,9 @@ class Bulk_Actions {
 	/**
 	 * Adds 'Rewrite & Republish' to the bulk action dropdown.
 	 *
-	 * @param array $bulk_actions The bulk actions array.
+	 * @param array<string, string> $bulk_actions The bulk actions array.
 	 *
-	 * @return array The bulk actions array.
+	 * @return array<string, string> The bulk actions array.
 	 */
 	public function register_bulk_action( $bulk_actions ) {
 		$is_draft_or_trash = isset( $_REQUEST['post_status'] ) && \in_array( $_REQUEST['post_status'], [ 'draft', 'trash' ], true );

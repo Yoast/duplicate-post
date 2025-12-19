@@ -258,9 +258,9 @@ class Classic_Editor {
 	/**
 	 * Changes the post-scheduled notice when a post or page intended for republishing is scheduled.
 	 *
-	 * @param array[] $messages Post updated messaged.
+	 * @param array<string, array<int, string>> $messages Post updated messaged.
 	 *
-	 * @return array[] The to-be-used messages.
+	 * @return array<string, array<int, string>> The to-be-used messages.
 	 */
 	public function change_scheduled_notice_classic_editor( $messages ) {
 		$post = \get_post();

@@ -83,8 +83,8 @@ add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'duplicate_pos
  *
  * @see 'plugin_action_links_$plugin_file'
  *
- * @param array $actions An array of plugin action links.
- * @return array
+ * @param array<string, string> $actions An array of plugin action links.
+ * @return array<string, string>
  */
 function duplicate_post_plugin_actions( $actions ) {
 	$settings_action = [
