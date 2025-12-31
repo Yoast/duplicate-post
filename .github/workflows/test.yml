@@ -256,6 +256,8 @@ jobs:
     needs: [unit-test, wp-test]
     runs-on: ubuntu-latest
 
+    name: Coveralls Finish
+
     steps:
       - name: Coveralls Finished
         uses: coverallsapp/github-action@v2
