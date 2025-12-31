@@ -67,13 +67,13 @@ jobs:
         env:
           fail-fast: true
 
-      # This action also handles the caching of the Yarn dependencies.
       # https://github.com/actions/setup-node
       - name: Set up node and enable caching of dependencies
         uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
         with:
           node-version: '14'
-          cache: 'yarn'
+          # Explicitly NOT using the cache functionality to prevent cache poisoning for deployments.
+          cache: ''
 
       - name: "Debug info: show tooling versions"
         run: |
@@ -84,17 +84,9 @@ jobs:
           grunt --version
           git --version
 
-      # Install dependencies and handle caching in one go.
-      # The Grunt artifact creation will run `composer install` multiple times (both no-dev as well as dev),
-      # however, Composer packages downloaded are not cached via Grunt.
-      # Running `composer install` ahead of time will ensure that the cache is warmed up
-      # and available across runs of the same workflow.
-      # @link https://github.com/marketplace/actions/install-php-dependencies-with-composer
-      - name: Install Composer dependencies
-        uses: ramsey/composer-install@3cf229dc2919194e9e36783941438d17239e8520 # 3.1.1
-        with:
-          # Bust the cache at least once a month - output format: YYYY-MM.
-          custom-cache-suffix: $(date -u "+%Y-%m")
+      # The Grunt artifact creation will run `composer install` twice (first: no-dev, then dev).
+      # Explicitly NOT using the cache functionality via the `ramsey/composer-install`
+      # action runner to prevent cache poisoning for deployments.
 
       - name: Yarn install
         run: yarn install
