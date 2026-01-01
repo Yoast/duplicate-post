@@ -73,14 +73,14 @@ jobs:
 
     strategy:
       matrix:
-        php_version: ['7.4', '8.0', '8.1', '8.2', '8.3']
+        php_version: ['7.4', '8.0', '8.1', '8.2', '8.3', '8.4']
         coverage: [false]
 
         # Run code coverage only on high/low PHP.
         include:
         - php_version: 7.4
           coverage: true
-        - php_version: 8.4
+        - php_version: 8.5
           coverage: true
 
     name: "Unit Test: PHP ${{ matrix.php_version }}"
@@ -147,7 +147,7 @@ jobs:
             coverage: false
 
           - php_version: "8.0"
-            wp_version: "6.7"
+            wp_version: "6.8"
             multisite: false
             coverage: false
 
@@ -169,6 +169,12 @@ jobs:
           # WP 6.7 is the earliest version which supports PHP 8.4.
           - php_version: '8.4'
             wp_version: '6.7'
+            multisite: false
+            coverage: false
+
+          # WP 6.9 is the earliest version which supports PHP 8.5.
+          - php_version: '8.5'
+            wp_version: '6.9'
             multisite: true
             coverage: true
 
