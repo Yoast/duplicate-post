@@ -63,7 +63,7 @@ module.exports = ( env = { environment: "production" } ) => {
 
 	const config = {
 		mode,
-		devtool: mode === "development" ? "cheap-module-eval-source-map" : false,
+		devtool: mode === "development" ? "eval-cheap-module-source-map" : false,
 		entry: paths.entry,
 		context: paths.jsSrc,
 		optimization: {
@@ -76,7 +76,7 @@ module.exports = ( env = { environment: "production" } ) => {
 		output: {
 			path: paths.jsDist,
 			filename: getOutputFilename( mode ),
-			jsonpFunction: "duplicatePostWebpackJsonp",
+			chunkLoadingGlobal: "duplicatePostWebpackJsonp",
 		},
 		resolve: {
 			extensions: [ ".js", ".jsx" ],

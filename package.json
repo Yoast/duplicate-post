@@ -47,7 +47,7 @@
     "grunt-shell": "^3.0.1",
     "grunt-webpack": "^4.0.2",
     "load-grunt-config": "^3.0.1",
-    "webpack": "^4.20.2"
+    "webpack": "^5.94.0"
   },
   "dependencies": {
     "@wordpress/edit-post": "^3.25.2",
