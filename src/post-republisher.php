@@ -318,6 +318,9 @@ class Post_Republisher {
 		$post_to_be_rewritten->post_name   = $original_post->post_name;
 		$post_to_be_rewritten->post_status = $this->determine_post_status( $post, $original_post );
 
+		// Preserve the original date
+		$post_to_be_rewritten->post_date   = $original_post->post_date;
+
 		/**
 		 * Yoast SEO and other plugins prevent from accidentally updating another post's
 		 * data (e.g. the Yoast SEO metadata by checking the $_POST data ID with the post object ID.
