@@ -1,4 +1,3 @@
-const CaseSensitivePathsPlugin = require( "case-sensitive-paths-webpack-plugin" );
 
 const {
 	camelCaseDash,
@@ -99,9 +98,7 @@ module.exports = ( env = { environment: "production" } ) => {
 				},
 			],
 		},
-		plugins: [
-			new CaseSensitivePathsPlugin(),
-		],
+		plugins: [],
 	};
 
 	if ( mode === "development" ) {
