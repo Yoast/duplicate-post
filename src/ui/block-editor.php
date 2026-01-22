@@ -227,6 +227,17 @@ class Block_Editor {
 	 */
 	protected function generate_js_object( WP_Post $post ) {
 		$is_rewrite_and_republish_copy = $this->permissions_helper->is_rewrite_and_republish_copy( $post );
+		$original_item                 = Utils::get_original( $post );
+		$original_data                 = null;
+
+		if ( $original_item instanceof WP_Post ) {
+			$original_data = [
+				'editUrl'  => \esc_url( \get_edit_post_link( $original_item->ID ) ),
+				'viewUrl'  => \esc_url( \get_permalink( $original_item->ID ) ),
+				'title'    => \_draft_or_post_title( $original_item ),
+				'canEdit'  => \current_user_can( 'edit_post', $original_item->ID ),
+			];
+		}
 
 		return [
 			'newDraftLink'            => $this->get_new_draft_permalink(),
@@ -235,6 +246,8 @@ class Block_Editor {
 			'showLinksIn'             => Utils::get_option( 'duplicate_post_show_link_in' ),
 			'rewriting'               => ( $is_rewrite_and_republish_copy ) ? 1 : 0,
 			'originalEditURL'         => $this->get_original_post_edit_url(),
+			'showOriginalMetaBox'     => \intval( \get_option( 'duplicate_post_show_original_meta_box' ) ) === 1,
+			'originalItem'            => $original_data,
 		];
 	}
 

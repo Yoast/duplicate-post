@@ -322,6 +322,15 @@ final class Block_Editor_Test extends TestCase {
 			->expects( 'get_original_post_edit_url' )
 			->andReturn( $original_edit_url );
 
+		Monkey\Functions\expect( '\get_option' )
+			->with( 'duplicate_post_show_original_meta_box' )
+			->andReturn( '0' );
+
+		$utils
+			->expects( 'get_original' )
+			->with( $post )
+			->andReturnNull();
+
 		$edit_js_object = [
 			'newDraftLink'            => $new_draft_link,
 			'rewriteAndRepublishLink' => $rewrite_and_republish_link,
@@ -329,6 +338,8 @@ final class Block_Editor_Test extends TestCase {
 			'showLinksIn'             => $show_links_in,
 			'rewriting'               => $rewriting,
 			'originalEditURL'         => $original_edit_url,
+			'showOriginalMetaBox'     => false,
+			'originalItem'            => null,
 		];
 
 		$this->asset_manager
@@ -407,6 +418,15 @@ final class Block_Editor_Test extends TestCase {
 			->expects( 'get_original_post_edit_url' )
 			->andReturn( $original_edit_url );
 
+		Monkey\Functions\expect( '\get_option' )
+			->with( 'duplicate_post_show_original_meta_box' )
+			->andReturn( '0' );
+
+		$utils
+			->expects( 'get_original' )
+			->with( $post )
+			->andReturnNull();
+
 		$edit_js_object = [
 			'newDraftLink'            => $new_draft_link,
 			'rewriteAndRepublishLink' => $rewrite_and_republish_link,
@@ -414,6 +434,8 @@ final class Block_Editor_Test extends TestCase {
 			'showLinksIn'             => $show_links_in,
 			'rewriting'               => $rewriting,
 			'originalEditURL'         => $original_edit_url,
+			'showOriginalMetaBox'     => false,
+			'originalItem'            => null,
 		];
 
 		$this->asset_manager

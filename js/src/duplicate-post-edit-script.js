@@ -1,10 +1,10 @@
 /* global duplicatePost, duplicatePostNotices */
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { registerPlugin } from "@wordpress/plugins";
 import { PluginDocumentSettingPanel, PluginPostStatusInfo } from "@wordpress/editor";
 import { Fragment } from "@wordpress/element";
-import { Button, ToggleControl } from '@wordpress/components';
+import { Button, ToggleControl, ExternalLink } from '@wordpress/components';
 import { __ } from "@wordpress/i18n";
 import { select, subscribe, dispatch } from "@wordpress/data";
 import { redirectOnSaveCompletion } from "./duplicate-post-functions";
@@ -134,50 +134,103 @@ class DuplicatePost {
 		const currentPostStatus = select( 'core/editor' ).getEditedPostAttribute( 'status' );
 
 		const [ willBeDeletedReference, setWillBeDeletedReference ] = useState( false );
+		const [ referenceRemoved, setReferenceRemoved ] = useState( false );
+
+		// Update the meta field when the toggle changes.
+		useEffect( () => {
+			dispatch( 'core/editor' ).editPost( {
+				meta: { _dp_remove_original: willBeDeletedReference }
+			} );
+		}, [ willBeDeletedReference ] );
+
+		// Listen for save completion and hide panel if reference was marked for deletion.
+		useEffect( () => {
+			let wasSaving = false;
+
+			const unsubscribe = subscribe( () => {
+				const isSaving = select( 'core/editor' ).isSavingPost();
+				const isAutosaving = select( 'core/editor' ).isAutosavingPost();
+
+				// Detect when saving completes (was saving, now not saving, and not autosave).
+				if ( wasSaving && ! isSaving && ! isAutosaving && willBeDeletedReference ) {
+					setReferenceRemoved( true );
+				}
+
+				wasSaving = isSaving && ! isAutosaving;
+			} );
+
+			return () => unsubscribe();
+		}, [ willBeDeletedReference ] );
+
+		const originalItem = duplicatePost.originalItem;
+		const isRewriting = parseInt( duplicatePost.rewriting, 10 );
+		const showMetaBox = duplicatePost.showOriginalMetaBox && originalItem && ! referenceRemoved;
 
 		return (
-			( duplicatePost.showLinksIn.submitbox === '1' ) &&
 			<Fragment>
-				{ ( duplicatePost.newDraftLink !== '' && duplicatePost.showLinks.new_draft === '1' ) &&
-					<PluginPostStatusInfo>
-						<Button
-							isTertiary={ true }
-							className="dp-editor-post-copy-to-draft"
-							href={ duplicatePost.newDraftLink }
-						>
-							{ __( 'Copy to a new draft', 'duplicate-post' ) }
-						</Button>
-					</PluginPostStatusInfo>
-				}
-				{ ( currentPostStatus === 'publish' && duplicatePost.rewriteAndRepublishLink !== '' && duplicatePost.showLinks.rewrite_republish === '1' ) &&
-					<PluginPostStatusInfo>
-						<Button
-							isTertiary={ true }
-							className="dp-editor-post-rewrite-republish"
-							href={ duplicatePost.rewriteAndRepublishLink }
-						>
-							{ __( 'Rewrite & Republish', 'duplicate-post' ) }
-						</Button>
-					</PluginPostStatusInfo>
-				}
-				<PluginDocumentSettingPanel
-				name="duplicate-post-panel"
-				title={ __( "Duplicate Post", "duplicate-post" ) }
-				className="custom-panel"
-				>
-					<ToggleControl
-						label={ __( "Delete reference to original item.", "duplicate-post" ) }
-						help={
-							willBeDeletedReference
-								? __( "The reference will be deleted on update", "duplicate-post" )
-								: __( "The reference will be kept on update", "duplicate-post" )
+				{ ( duplicatePost.showLinksIn.submitbox === '1' ) &&
+					<Fragment>
+						{ ( duplicatePost.newDraftLink !== '' && duplicatePost.showLinks.new_draft === '1' ) &&
+							<PluginPostStatusInfo>
+								<Button
+									isTertiary={ true }
+									className="dp-editor-post-copy-to-draft"
+									href={ duplicatePost.newDraftLink }
+								>
+									{ __( 'Copy to a new draft', 'duplicate-post' ) }
+								</Button>
+							</PluginPostStatusInfo>
 						}
-						checked={ willBeDeletedReference }
-						onChange={ (newValue) => {
-							setWillBeDeletedReference( newValue );
-						} }
-					/>
-				</PluginDocumentSettingPanel>
+						{ ( currentPostStatus === 'publish' && duplicatePost.rewriteAndRepublishLink !== '' && duplicatePost.showLinks.rewrite_republish === '1' ) &&
+							<PluginPostStatusInfo>
+								<Button
+									isTertiary={ true }
+									className="dp-editor-post-rewrite-republish"
+									href={ duplicatePost.rewriteAndRepublishLink }
+								>
+									{ __( 'Rewrite & Republish', 'duplicate-post' ) }
+								</Button>
+							</PluginPostStatusInfo>
+						}
+					</Fragment>
+				}
+				{ showMetaBox &&
+					<PluginDocumentSettingPanel
+						name="duplicate-post-panel"
+						title={ __( "Duplicate Post", "duplicate-post" ) }
+						className="duplicate-post-panel"
+					>
+						{ ! isRewriting &&
+							<ToggleControl
+								label={ __( "Delete reference to original item.", "duplicate-post" ) }
+								help={
+									willBeDeletedReference
+										? __( "The reference will be deleted on update.", "duplicate-post" )
+										: __( "The reference will be kept on update.", "duplicate-post" )
+								}
+								checked={ willBeDeletedReference }
+								onChange={ ( newValue ) => {
+									setWillBeDeletedReference( newValue );
+								} }
+							/>
+						}
+						<p className="duplicate-post-original-item">
+							{ __( 'The original item this was copied from is:', 'duplicate-post' ) }
+							{ ' ' }
+							<span className="duplicate_post_original_item_title_span">
+								{ originalItem.canEdit ? (
+									<ExternalLink href={ originalItem.editUrl }>
+										{ originalItem.title }
+									</ExternalLink>
+								) : (
+									<ExternalLink href={ originalItem.viewUrl }>
+										{ originalItem.title }
+									</ExternalLink>
+								) }
+							</span>
+						</p>
+					</PluginDocumentSettingPanel>
+				}
 			</Fragment>
 		);
 	}
