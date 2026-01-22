@@ -1,26 +1,10 @@
 {
-  "presets": [ [ "env" ] ],
-  "plugins": [
-    [
-      "transform-react-jsx",
-      {
-        "pragma": "wp.element.createElement"
-      }
-    ],
-    "dynamic-import-webpack",
-    "transform-object-rest-spread"
+  "presets": [
+    [ "@babel/preset-env" ],
+    [ "@babel/preset-react", { "pragma": "wp.element.createElement", "runtime": "classic" } ]
   ],
-  "env": {
-    "test": {
-      "plugins": [
-        [
-          "transform-react-jsx",
-          {
-            "pragma": "wp.element.createElement"
-          }
-        ]
-      ]
-    }
-  },
+  "plugins": [
+    "@babel/plugin-transform-runtime"
+  ],
   "comments": true
 }

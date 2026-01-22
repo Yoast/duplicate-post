@@ -71,7 +71,7 @@ jobs:
       - name: Set up node and disable caching of dependencies
         uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
         with:
-          node-version: '14'
+          node-version-file: './.nvmrc'
           # Explicitly NOT using the cache functionality to prevent cache poisoning for deployments.
           cache: ''
           package-manager-cache: false
