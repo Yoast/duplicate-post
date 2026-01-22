@@ -1,7 +1,7 @@
 /* global duplicatePost, duplicatePostNotices */
 
 import { registerPlugin } from "@wordpress/plugins";
-import { PluginPostStatusInfo } from "@wordpress/edit-post";
+import { PluginPostStatusInfo } from "@wordpress/editor";
 import { Fragment } from "@wordpress/element";
 import { Button } from '@wordpress/components';
 import { __ } from "@wordpress/i18n";
@@ -115,7 +115,7 @@ class DuplicatePost {
 	 */
 	removeSlugSidebarPanel() {
 		if ( parseInt( duplicatePost.rewriting, 10 ) ) {
-			dispatch( 'core/edit-post' ).removeEditorPanel( 'post-link' );
+			dispatch( 'core/editor' ).removeEditorPanel( 'post-link' );
 		}
 	}
 
@@ -126,7 +126,7 @@ class DuplicatePost {
 	 */
 	render() {
 		// Don't try to render anything if there is no store.
-		if ( ! select( 'core/editor' ) || ! ( wp.editPost && wp.editPost.PluginPostStatusInfo ) ) {
+		if ( ! select( 'core/editor' ) || ! ( wp.editor && wp.editor.PluginPostStatusInfo ) ) {
 			return null;
 		}
 

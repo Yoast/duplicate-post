@@ -1,4 +1,3 @@
-
 const {
 	camelCaseDash,
 } = require( "@wordpress/dependency-extraction-webpack-plugin/lib/util" );
@@ -30,7 +29,7 @@ const wordpressPackages = [
 	"@wordpress/data",
 	"@wordpress/dom",
 	"@wordpress/dom-ready",
-	"@wordpress/edit-post",
+	"@wordpress/editor",
 	"@wordpress/element",
 	"@wordpress/html-entities",
 	"@wordpress/i18n",
