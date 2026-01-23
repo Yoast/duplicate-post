@@ -57,7 +57,7 @@ class Save_Post_Handler {
 					'single'            => true,
 					'type'              => 'boolean',
 					'default'           => false,
-					'auth_callback'     => function ( $allowed, $meta_key, $post_id ) {
+					'auth_callback'     => static function ( $allowed, $meta_key, $post_id ) {
 						return \current_user_can( 'edit_post', $post_id );
 					},
 					'sanitize_callback' => 'rest_sanitize_boolean',
