@@ -89,3 +89,8 @@ fieldset#duplicate_post_quick_edit_fieldset label{
 fieldset#duplicate_post_quick_edit_fieldset a{
 	text-decoration: underline;
 }
+
+/* Block editor sidebar panel. */
+.duplicate-post-panel .duplicate-post-original-item {
+    margin-bottom: 0;
+}
