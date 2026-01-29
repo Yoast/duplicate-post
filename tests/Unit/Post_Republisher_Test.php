@@ -347,4 +347,249 @@ final class Post_Republisher_Test extends TestCase {
 
 		$this->instance->republish_scheduled_post( $copy );
 	}
+
+	/**
+	 * Tests that the republish method calls delete_copy with the correct parameters.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Post_Republisher::republish
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 *
+	 * @return void
+	 */
+	public function test_republish_calls_delete_copy_with_correct_parameters() {
+		$copy              = Mockery::mock( WP_Post::class );
+		$copy->ID          = 123;
+		$copy->post_status = 'dp-rewrite-republish';
+		$copy->post_type   = 'post';
+
+		$original              = Mockery::mock( WP_Post::class );
+		$original->ID          = 1;
+		$original->post_name   = 'original-post';
+		$original->post_status = 'publish';
+
+		// Create a new instance that allows mocking protected methods.
+		$instance = Mockery::mock(
+			Post_Republisher::class,
+			[ $this->post_duplicator, $this->permissions_helper ]
+		)->makePartial()->shouldAllowMockingProtectedMethods();
+
+		$utils = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
+		$utils
+			->expects( 'get_original_post_id' )
+			->with( $copy->ID )
+			->twice()
+			->andReturn( $original->ID );
+
+		$utils
+			->expects( 'get_default_filtered_meta_names' )
+			->once()
+			->andReturn( [] );
+
+		Monkey\Functions\expect( 'remove_action' )
+			->once()
+			->with( 'post_updated', 'wp_save_post_revision', 10 );
+
+		Monkey\Functions\expect( 'add_action' )
+			->once()
+			->with( 'post_updated', 'wp_save_post_revision', 10, 1 );
+
+		Monkey\Functions\expect( 'update_post_meta' )
+			->once()
+			->with( $copy->ID, '_dp_has_been_republished', '1' );
+
+		$this->post_duplicator
+			->expects( 'copy_post_taxonomies' )
+			->once();
+
+		$this->post_duplicator
+			->expects( 'copy_post_meta_info' )
+			->once();
+
+		$instance
+			->shouldReceive( 'republish_post_elements' )
+			->once()
+			->with( $copy, $original );
+
+		$instance
+			->expects( 'delete_copy' )
+			->once()
+			->with( $copy->ID, $original->ID );
+
+		$instance->republish( $copy, $original );
+	}
+
+	/**
+	 * Tests that clean_up_orphaned_copy deletes an orphaned copy in dp-rewrite-republish status.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Post_Republisher::clean_up_orphaned_copy
+	 *
+	 * @return void
+	 */
+	public function test_clean_up_orphaned_copy_deletes_orphaned_copy() {
+		$_GET['post']   = '1';
+		$_GET['action'] = 'edit';
+
+		$original              = Mockery::mock( WP_Post::class );
+		$original->ID          = 1;
+		$original->post_status = 'publish';
+
+		$orphaned_copy              = Mockery::mock( WP_Post::class );
+		$orphaned_copy->ID          = 123;
+		$orphaned_copy->post_status = 'dp-rewrite-republish';
+
+		Monkey\Functions\stubs(
+			[
+				'wp_unslash' => static function ( $value ) {
+					return $value;
+				},
+			]
+		);
+
+		Monkey\Functions\expect( 'get_post' )
+			->once()
+			->with( 1 )
+			->andReturn( $original );
+
+		$this->permissions_helper
+			->expects( 'is_rewrite_and_republish_copy' )
+			->once()
+			->with( $original )
+			->andReturnFalse();
+
+		$this->permissions_helper
+			->expects( 'get_rewrite_and_republish_copy' )
+			->once()
+			->with( $original )
+			->andReturn( $orphaned_copy );
+
+		$this->instance
+			->expects( 'delete_copy' )
+			->once()
+			->with( $orphaned_copy->ID, $original->ID );
+
+		$this->instance->clean_up_orphaned_copy();
+
+		// Clean up after the test.
+		unset( $_GET['post'], $_GET['action'] );
+	}
+
+	/**
+	 * Tests that clean_up_orphaned_copy does not delete a copy that is not in dp-rewrite-republish status.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Post_Republisher::clean_up_orphaned_copy
+	 *
+	 * @return void
+	 */
+	public function test_clean_up_orphaned_copy_does_not_delete_non_orphaned_copy() {
+		$_GET['post']   = '1';
+		$_GET['action'] = 'edit';
+
+		$original              = Mockery::mock( WP_Post::class );
+		$original->ID          = 1;
+		$original->post_status = 'publish';
+
+		$copy              = Mockery::mock( WP_Post::class );
+		$copy->ID          = 123;
+		$copy->post_status = 'draft';
+
+		Monkey\Functions\stubs(
+			[
+				'wp_unslash' => static function ( $value ) {
+					return $value;
+				},
+			]
+		);
+
+		Monkey\Functions\expect( 'get_post' )
+			->once()
+			->with( 1 )
+			->andReturn( $original );
+
+		$this->permissions_helper
+			->expects( 'is_rewrite_and_republish_copy' )
+			->once()
+			->with( $original )
+			->andReturnFalse();
+
+		$this->permissions_helper
+			->expects( 'get_rewrite_and_republish_copy' )
+			->once()
+			->with( $original )
+			->andReturn( $copy );
+
+		$this->instance
+			->expects( 'delete_copy' )
+			->never();
+
+		$this->instance->clean_up_orphaned_copy();
+
+		// Clean up after the test.
+		unset( $_GET['post'], $_GET['action'] );
+	}
+
+	/**
+	 * Tests that clean_up_orphaned_copy returns early when no copy exists.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Post_Republisher::clean_up_orphaned_copy
+	 *
+	 * @return void
+	 */
+	public function test_clean_up_orphaned_copy_returns_early_when_no_copy() {
+		$_GET['post']   = '1';
+		$_GET['action'] = 'edit';
+
+		$original              = Mockery::mock( WP_Post::class );
+		$original->ID          = 1;
+		$original->post_status = 'publish';
+
+		Monkey\Functions\stubs(
+			[
+				'wp_unslash' => static function ( $value ) {
+					return $value;
+				},
+			]
+		);
+
+		Monkey\Functions\expect( 'get_post' )
+			->once()
+			->with( 1 )
+			->andReturn( $original );
+
+		$this->permissions_helper
+			->expects( 'is_rewrite_and_republish_copy' )
+			->once()
+			->with( $original )
+			->andReturnFalse();
+
+		$this->permissions_helper
+			->expects( 'get_rewrite_and_republish_copy' )
+			->once()
+			->with( $original )
+			->andReturnNull();
+
+		$this->instance
+			->expects( 'delete_copy' )
+			->never();
+
+		$this->instance->clean_up_orphaned_copy();
+
+		// Clean up after the test.
+		unset( $_GET['post'], $_GET['action'] );
+	}
+
+	/**
+	 * Tests that clean_up_orphaned_copy returns early when $_GET parameters are missing.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Post_Republisher::clean_up_orphaned_copy
+	 *
+	 * @return void
+	 */
+	public function test_clean_up_orphaned_copy_returns_early_when_get_params_missing() {
+		$this->instance
+			->expects( 'delete_copy' )
+			->never();
+
+		$this->instance->clean_up_orphaned_copy();
+	}
 }
