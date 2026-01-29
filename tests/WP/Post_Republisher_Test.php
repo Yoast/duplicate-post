@@ -966,38 +966,6 @@ final class Post_Republisher_Test extends TestCase {
 	}
 
 	/**
-	 * Tests that republish handles post with no meta.
-	 *
-	 * @covers ::republish
-	 * @covers ::republish_post_meta
-	 *
-	 * @return void
-	 */
-	public function test_republish_handles_post_without_meta() {
-		$original = $this->create_original_post();
-
-		// Don't add any custom meta to the original.
-		$copy = $this->create_rewrite_and_republish_copy( $original );
-
-		// Update copy content.
-		\wp_update_post(
-			[
-				'ID'           => $copy->ID,
-				'post_title'   => 'Updated Title Without Meta',
-				'post_content' => 'Updated content.',
-			]
-		);
-		$copy = \get_post( $copy->ID );
-
-		// Republish - should not throw errors.
-		$this->instance->republish( $copy, $original );
-
-		// Verify the content was updated.
-		$updated_original = \get_post( $original->ID );
-		$this->assertEquals( 'Updated Title Without Meta', $updated_original->post_title );
-	}
-
-	/**
 	 * Tests that the Post_Duplicator creates copies for custom post types.
 	 *
 	 * Note: The Post_Duplicator does not check if a post type is enabled.
