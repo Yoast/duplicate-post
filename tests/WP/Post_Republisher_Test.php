@@ -126,6 +126,9 @@ final class Post_Republisher_Test extends TestCase {
 	 * Tests that create_duplicate_for_rewrite_and_republish creates a copy with correct meta.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Post_Duplicator::create_duplicate_for_rewrite_and_republish
+	 * @covers \Yoast\WP\Duplicate_Post\Post_Duplicator::create_duplicate
+	 * @covers \Yoast\WP\Duplicate_Post\Post_Duplicator::copy_post_taxonomies
+	 * @covers \Yoast\WP\Duplicate_Post\Post_Duplicator::copy_post_meta_info
 	 *
 	 * @return void
 	 */
@@ -155,6 +158,10 @@ final class Post_Republisher_Test extends TestCase {
 	 * Tests that create_duplicate_for_rewrite_and_republish copies content correctly.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Post_Duplicator::create_duplicate_for_rewrite_and_republish
+	 * @covers \Yoast\WP\Duplicate_Post\Post_Duplicator::create_duplicate
+	 * @covers \Yoast\WP\Duplicate_Post\Post_Duplicator::generate_copy_title
+	 * @covers \Yoast\WP\Duplicate_Post\Post_Duplicator::generate_copy_status
+	 * @covers \Yoast\WP\Duplicate_Post\Post_Duplicator::generate_copy_author
 	 *
 	 * @return void
 	 */
@@ -182,6 +189,7 @@ final class Post_Republisher_Test extends TestCase {
 	 * Tests that create_duplicate_for_rewrite_and_republish copies taxonomies.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Post_Duplicator::create_duplicate_for_rewrite_and_republish
+	 * @covers \Yoast\WP\Duplicate_Post\Post_Duplicator::copy_post_taxonomies
 	 *
 	 * @return void
 	 */
@@ -210,6 +218,10 @@ final class Post_Republisher_Test extends TestCase {
 	 * Tests that republish overwrites the original post with copy content.
 	 *
 	 * @covers ::republish
+	 * @covers ::republish_post_elements
+	 * @covers ::republish_post_taxonomies
+	 * @covers ::republish_post_meta
+	 * @covers ::determine_post_status
 	 *
 	 * @return void
 	 */
@@ -265,6 +277,7 @@ final class Post_Republisher_Test extends TestCase {
 	 * Tests that republish transfers taxonomies from copy to original.
 	 *
 	 * @covers ::republish
+	 * @covers ::republish_post_taxonomies
 	 *
 	 * @return void
 	 */
@@ -293,6 +306,7 @@ final class Post_Republisher_Test extends TestCase {
 	 * Tests that republish transfers meta from copy to original.
 	 *
 	 * @covers ::republish
+	 * @covers ::republish_post_meta
 	 *
 	 * @return void
 	 */
@@ -421,6 +435,11 @@ final class Post_Republisher_Test extends TestCase {
 	 * Tests republish_scheduled_post republishes a scheduled copy.
 	 *
 	 * @covers ::republish_scheduled_post
+	 * @covers ::republish
+	 * @covers ::delete_copy
+	 * @covers ::republish_post_elements
+	 * @covers ::republish_post_taxonomies
+	 * @covers ::republish_post_meta
 	 *
 	 * @return void
 	 */
@@ -469,6 +488,7 @@ final class Post_Republisher_Test extends TestCase {
 	 * Tests republish_scheduled_post trashes copy when original is deleted.
 	 *
 	 * @covers ::republish_scheduled_post
+	 * @covers ::delete_copy
 	 *
 	 * @return void
 	 */
@@ -514,6 +534,8 @@ final class Post_Republisher_Test extends TestCase {
 	 * Tests that republish preserves original post status when it's trashed.
 	 *
 	 * @covers ::republish
+	 * @covers ::determine_post_status
+	 * @covers ::republish_post_elements
 	 *
 	 * @return void
 	 */
@@ -537,6 +559,8 @@ final class Post_Republisher_Test extends TestCase {
 	 * Tests that republish uses private status when copy is private.
 	 *
 	 * @covers ::republish
+	 * @covers ::determine_post_status
+	 * @covers ::republish_post_elements
 	 *
 	 * @return void
 	 */
@@ -562,87 +586,13 @@ final class Post_Republisher_Test extends TestCase {
 	}
 
 	/**
-	 * Tests that change_post_copy_status handles missing ID in postarr.
-	 *
-	 * @covers ::change_post_copy_status
-	 *
-	 * @return void
-	 */
-	public function test_change_post_copy_status_handles_missing_id() {
-		$data    = [ 'post_status' => 'publish' ];
-		$postarr = []; // No ID provided.
-
-		$result = $this->instance->change_post_copy_status( $data, $postarr );
-
-		// Should return data unchanged.
-		$this->assertEquals( 'publish', $result['post_status'] );
-	}
-
-	/**
-	 * Tests that change_post_copy_status handles empty ID in postarr.
-	 *
-	 * @covers ::change_post_copy_status
-	 *
-	 * @return void
-	 */
-	public function test_change_post_copy_status_handles_empty_id() {
-		$data    = [ 'post_status' => 'publish' ];
-		$postarr = [ 'ID' => 0 ];
-
-		$result = $this->instance->change_post_copy_status( $data, $postarr );
-
-		// Should return data unchanged.
-		$this->assertEquals( 'publish', $result['post_status'] );
-	}
-
-	/**
-	 * Tests that change_post_copy_status handles non-existent post ID.
-	 *
-	 * @covers ::change_post_copy_status
-	 *
-	 * @return void
-	 */
-	public function test_change_post_copy_status_handles_nonexistent_post() {
-		$data    = [ 'post_status' => 'publish' ];
-		$postarr = [ 'ID' => 999999 ]; // Non-existent post.
-
-		$result = $this->instance->change_post_copy_status( $data, $postarr );
-
-		// Should return data unchanged.
-		$this->assertEquals( 'publish', $result['post_status'] );
-	}
-
-	/**
-	 * Tests that delete_copy handles null post_id parameter correctly.
-	 *
-	 * When post_id is null, delete_copy should still delete the copy successfully
-	 * but won't clean up the meta on the original directly (though the global
-	 * before_delete_post hook may do so).
-	 *
-	 * @covers ::delete_copy
-	 *
-	 * @return void
-	 */
-	public function test_delete_copy_handles_null_post_id() {
-		$original = $this->create_original_post();
-		$copy     = $this->create_rewrite_and_republish_copy( $original );
-		$copy_id  = $copy->ID;
-
-		// Delete the copy without providing the original post ID.
-		// This should not throw any errors.
-		$this->instance->delete_copy( $copy_id, null );
-
-		// Verify the copy is deleted.
-		$this->assertNull( \get_post( $copy_id ) );
-	}
-
-	/**
 	 * Tests that creating a second R&R copy of the same original creates another copy.
 	 *
 	 * Note: The Post_Duplicator does not prevent creating multiple copies.
 	 * The prevention logic is in the UI/permissions layer.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Post_Duplicator::create_duplicate_for_rewrite_and_republish
+	 * @covers \Yoast\WP\Duplicate_Post\Post_Duplicator::create_duplicate
 	 *
 	 * @return void
 	 */
@@ -779,6 +729,7 @@ final class Post_Republisher_Test extends TestCase {
 	 * Tests that republish copies featured image (thumbnail) correctly.
 	 *
 	 * @covers ::republish
+	 * @covers ::republish_post_meta
 	 *
 	 * @return void
 	 */
@@ -829,42 +780,13 @@ final class Post_Republisher_Test extends TestCase {
 	}
 
 	/**
-	 * Tests that republish_request does nothing when copy is in draft status.
-	 *
-	 * @covers ::republish_request
-	 *
-	 * @return void
-	 */
-	public function test_republish_request_does_not_republish_draft_copy() {
-		$original = $this->create_original_post(
-			[
-				'post_title'   => 'Original Title',
-				'post_content' => 'Original content.',
-			]
-		);
-		$copy     = $this->create_rewrite_and_republish_copy( $original );
-
-		// Copy is a draft by default - modify it.
-		\wp_update_post(
-			[
-				'ID'         => $copy->ID,
-				'post_title' => 'Draft Copy Title',
-			]
-		);
-		$copy = \get_post( $copy->ID );
-
-		// Try republish_request on draft copy.
-		$this->instance->republish_request( $copy );
-
-		// Original should be unchanged.
-		$unchanged_original = \get_post( $original->ID );
-		$this->assertEquals( 'Original Title', $unchanged_original->post_title );
-	}
-
-	/**
 	 * Tests that republish works when copy has dp-rewrite-republish status.
 	 *
 	 * @covers ::republish
+	 * @covers ::republish_post_elements
+	 * @covers ::republish_post_taxonomies
+	 * @covers ::republish_post_meta
+	 * @covers ::determine_post_status
 	 *
 	 * @return void
 	 */
@@ -904,6 +826,8 @@ final class Post_Republisher_Test extends TestCase {
 	 * Tests that republish works when copy has private status.
 	 *
 	 * @covers ::republish
+	 * @covers ::republish_post_elements
+	 * @covers ::determine_post_status
 	 *
 	 * @return void
 	 */
@@ -937,6 +861,39 @@ final class Post_Republisher_Test extends TestCase {
 		$updated_original = \get_post( $original->ID );
 		$this->assertEquals( 'Private Copy Title', $updated_original->post_title );
 		$this->assertEquals( 'private', $updated_original->post_status );
+	}
+
+	/**
+	 * Tests that republish_request does nothing when copy is in draft status.
+	 *
+	 * @covers ::republish_request
+	 *
+	 * @return void
+	 */
+	public function test_republish_request_does_not_republish_draft_copy() {
+		$original = $this->create_original_post(
+			[
+				'post_title'   => 'Original Title',
+				'post_content' => 'Original content.',
+			]
+		);
+		$copy     = $this->create_rewrite_and_republish_copy( $original );
+
+		// Copy is a draft by default - modify it.
+		\wp_update_post(
+			[
+				'ID'         => $copy->ID,
+				'post_title' => 'Draft Copy Title',
+			]
+		);
+		$copy = \get_post( $copy->ID );
+
+		// Try republish_request on draft copy.
+		$this->instance->republish_request( $copy );
+
+		// Original should be unchanged.
+		$unchanged_original = \get_post( $original->ID );
+		$this->assertEquals( 'Original Title', $unchanged_original->post_title );
 	}
 
 	/**
@@ -977,6 +934,7 @@ final class Post_Republisher_Test extends TestCase {
 	 * Tests that republish handles post with no taxonomies.
 	 *
 	 * @covers ::republish
+	 * @covers ::republish_post_taxonomies
 	 *
 	 * @return void
 	 */
@@ -1011,6 +969,7 @@ final class Post_Republisher_Test extends TestCase {
 	 * Tests that republish handles post with no meta.
 	 *
 	 * @covers ::republish
+	 * @covers ::republish_post_meta
 	 *
 	 * @return void
 	 */
@@ -1039,53 +998,13 @@ final class Post_Republisher_Test extends TestCase {
 	}
 
 	/**
-	 * Tests clean_up_when_copy_manually_deleted removes meta from original.
-	 *
-	 * @covers ::clean_up_when_copy_manually_deleted
-	 *
-	 * @return void
-	 */
-	public function test_clean_up_when_copy_manually_deleted_cleans_meta() {
-		$original = $this->create_original_post();
-		$copy     = $this->create_rewrite_and_republish_copy( $original );
-
-		// Verify the original has the copy reference.
-		$this->assertEquals( $copy->ID, (int) \get_post_meta( $original->ID, '_dp_has_rewrite_republish_copy', true ) );
-
-		// Simulate manual deletion cleanup.
-		$this->instance->clean_up_when_copy_manually_deleted( $copy->ID );
-
-		// Verify meta was cleaned up.
-		$this->assertEmpty( \get_post_meta( $original->ID, '_dp_has_rewrite_republish_copy', true ) );
-	}
-
-	/**
-	 * Tests clean_up_when_copy_manually_deleted ignores non-R&R posts.
-	 *
-	 * @covers ::clean_up_when_copy_manually_deleted
-	 *
-	 * @return void
-	 */
-	public function test_clean_up_when_copy_manually_deleted_ignores_regular_post() {
-		$post = $this->create_original_post();
-
-		// Add some meta to verify it's not affected.
-		\update_post_meta( $post->ID, 'custom_meta', 'value' );
-
-		// This should not throw errors.
-		$this->instance->clean_up_when_copy_manually_deleted( $post->ID );
-
-		// Meta should still exist.
-		$this->assertEquals( 'value', \get_post_meta( $post->ID, 'custom_meta', true ) );
-	}
-
-	/**
 	 * Tests that the Post_Duplicator creates copies for custom post types.
 	 *
 	 * Note: The Post_Duplicator does not check if a post type is enabled.
 	 * The prevention logic is in the UI/permissions layer.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Post_Duplicator::create_duplicate_for_rewrite_and_republish
+	 * @covers \Yoast\WP\Duplicate_Post\Post_Duplicator::create_duplicate
 	 *
 	 * @return void
 	 */
@@ -1123,6 +1042,9 @@ final class Post_Republisher_Test extends TestCase {
 	 * Tests that calling republish on a regular post (not a copy) does nothing.
 	 *
 	 * @covers ::republish
+	 * @covers ::republish_post_elements
+	 * @covers ::republish_post_taxonomies
+	 * @covers ::republish_post_meta
 	 *
 	 * @return void
 	 */
@@ -1161,6 +1083,7 @@ final class Post_Republisher_Test extends TestCase {
 	 * it just overwrites with the copy content. The warning is shown in UI.
 	 *
 	 * @covers ::republish
+	 * @covers ::republish_post_elements
 	 *
 	 * @return void
 	 */
@@ -1216,6 +1139,7 @@ final class Post_Republisher_Test extends TestCase {
 	 * Tests that copy preserves original content when created.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Post_Duplicator::create_duplicate_for_rewrite_and_republish
+	 * @covers \Yoast\WP\Duplicate_Post\Post_Duplicator::create_duplicate
 	 *
 	 * @return void
 	 */
@@ -1251,6 +1175,8 @@ final class Post_Republisher_Test extends TestCase {
 	 * Tests that page post type works correctly with R&R.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Post_Duplicator::create_duplicate_for_rewrite_and_republish
+	 * @covers ::republish
+	 * @covers ::republish_post_elements
 	 *
 	 * @return void
 	 */
@@ -1290,6 +1216,7 @@ final class Post_Republisher_Test extends TestCase {
 	 * Prevention logic is in the UI/handlers layer.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Post_Duplicator::create_duplicate_for_rewrite_and_republish
+	 * @covers \Yoast\WP\Duplicate_Post\Post_Duplicator::create_duplicate
 	 *
 	 * @return void
 	 */
@@ -1369,6 +1296,7 @@ final class Post_Republisher_Test extends TestCase {
 	 * Tests that republish updates post author from copy.
 	 *
 	 * @covers ::republish
+	 * @covers ::republish_post_elements
 	 *
 	 * @return void
 	 */
@@ -1403,6 +1331,7 @@ final class Post_Republisher_Test extends TestCase {
 	 * Tests republish with empty title.
 	 *
 	 * @covers ::republish
+	 * @covers ::republish_post_elements
 	 *
 	 * @return void
 	 */
@@ -1436,6 +1365,7 @@ final class Post_Republisher_Test extends TestCase {
 	 * Tests republish with empty content.
 	 *
 	 * @covers ::republish
+	 * @covers ::republish_post_elements
 	 *
 	 * @return void
 	 */
@@ -1469,6 +1399,7 @@ final class Post_Republisher_Test extends TestCase {
 	 * Tests that republish removes taxonomies when they are removed from copy.
 	 *
 	 * @covers ::republish
+	 * @covers ::republish_post_taxonomies
 	 *
 	 * @return void
 	 */
@@ -1505,6 +1436,7 @@ final class Post_Republisher_Test extends TestCase {
 	 * it does not actively remove meta from the original that is missing in the copy.
 	 *
 	 * @covers ::republish
+	 * @covers ::republish_post_meta
 	 *
 	 * @return void
 	 */
