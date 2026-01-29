@@ -61,6 +61,8 @@ class Post_Republisher {
 		 */
 		\add_action( 'wp_insert_post', [ $this, 'republish_after_post_request' ], \PHP_INT_MAX, 2 );
 
+		// Clean up orphaned R&R copies when opening a post for editing.
+		\add_action( 'load-post.php', [ $this, 'clean_up_orphaned_copy' ], 5 );
 		// Clean up after the redirect to the original post.
 		\add_action( 'load-post.php', [ $this, 'clean_up_after_redirect' ] );
 		// Clean up the original when the copy is manually deleted from the trash.
@@ -203,6 +205,39 @@ class Post_Republisher {
 		$this->republish( $copy, $original_post );
 		\kses_init_filters();
 		$this->delete_copy( $copy->ID, $original_post->ID );
+	}
+
+	/**
+	 * Cleans up orphaned Rewrite & Republish copies when opening a post for editing.
+	 *
+	 * This ensures that if a copy is stuck in the dp-rewrite-republish status,
+	 * it gets deleted automatically to unblock the R&R functionality.
+	 *
+	 * @return void
+	 */
+	public function clean_up_orphaned_copy() {
+		if ( empty( $_GET['post'] ) || empty( $_GET['action'] ) || $_GET['action'] !== 'edit' ) {
+			return;
+		}
+
+		$post_id = \intval( \wp_unslash( $_GET['post'] ) );
+		$post    = \get_post( $post_id );
+
+		if ( ! $post || $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
+			return;
+		}
+
+		// Check if this post has an orphaned R&R copy.
+		$copy = $this->permissions_helper->get_rewrite_and_republish_copy( $post );
+
+		if ( ! $copy ) {
+			return;
+		}
+
+		// If the copy is in dp-rewrite-republish status, it's orphaned and should be deleted.
+		if ( $copy->post_status === 'dp-rewrite-republish' ) {
+			$this->delete_copy( $copy->ID, $post->ID );
+		}
 	}
 
 	/**
