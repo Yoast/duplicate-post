@@ -514,6 +514,19 @@ final class Post_Republisher_Test extends TestCase {
 	 * @return void
 	 */
 	public function test_clean_up_orphaned_copy_returns_early_when_get_params_missing() {
+		// Ensure no $_GET parameters are set.
+		unset( $_GET['post'], $_GET['action'] );
+
+		// Verify that get_post is never called (early return before any DB operations).
+		Monkey\Functions\expect( 'get_post' )
+			->never();
+
+		// Verify that is_rewrite_and_republish_copy is never called.
+		$this->permissions_helper
+			->expects( 'is_rewrite_and_republish_copy' )
+			->never();
+
+		// Verify that delete_copy is never called.
 		$this->instance
 			->expects( 'delete_copy' )
 			->never();

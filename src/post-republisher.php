@@ -445,7 +445,7 @@ class Post_Republisher {
 					'dprepublished' => 1,
 					'dpnonce'       => \wp_create_nonce( 'dp-republish' ),
 				],
-				\admin_url( 'post.php?action=edit&post=' . $original_post_id )
+				\admin_url( 'post.php?action=edit&post=' . (int) $original_post_id )
 			)
 		);
 		exit();
