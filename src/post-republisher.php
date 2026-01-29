@@ -435,11 +435,10 @@ class Post_Republisher {
 	 * Redirects the user to the original post.
 	 *
 	 * @param int $original_post_id The ID of the original post to redirect to.
-	 * @param int $copy_id          The ID of the copy post.
 	 *
 	 * @return void
 	 */
-	protected function redirect( $original_post_id, $copy_id ) {
+	protected function redirect( $original_post_id ) {
 		\wp_safe_redirect(
 			\add_query_arg(
 				[
