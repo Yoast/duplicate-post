@@ -53,6 +53,17 @@ final class Post_Republisher_Test extends TestCase {
 	}
 
 	/**
+	 * Cleans up after each test.
+	 *
+	 * @return void
+	 */
+	protected function tear_down() {
+		unset( $_GET['post'], $_GET['action'], $_GET['meta-box-loader'] );
+
+		parent::tear_down();
+	}
+
+	/**
 	 * Tests the constructor.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Post_Republisher::__construct
@@ -143,9 +154,6 @@ final class Post_Republisher_Test extends TestCase {
 			->andReturnFalse();
 
 		$this->assertFalse( $this->instance->is_classic_editor_post_request() );
-
-		// Clean up after the test.
-		unset( $_GET['meta-box-loader'] );
 	}
 
 	/**
@@ -357,7 +365,7 @@ final class Post_Republisher_Test extends TestCase {
 	 *
 	 * @return void
 	 */
-	public function test_republish_calls_delete_copy_with_correct_parameters() {
+	public function test_republish_deletes_copy_immediately() {
 		$copy              = Mockery::mock( WP_Post::class );
 		$copy->ID          = 123;
 		$copy->post_status = 'dp-rewrite-republish';
@@ -469,9 +477,6 @@ final class Post_Republisher_Test extends TestCase {
 			->with( $orphaned_copy->ID, $original->ID );
 
 		$this->instance->clean_up_orphaned_copy();
-
-		// Clean up after the test.
-		unset( $_GET['post'], $_GET['action'] );
 	}
 
 	/**
@@ -523,9 +528,6 @@ final class Post_Republisher_Test extends TestCase {
 			->never();
 
 		$this->instance->clean_up_orphaned_copy();
-
-		// Clean up after the test.
-		unset( $_GET['post'], $_GET['action'] );
 	}
 
 	/**
@@ -573,9 +575,6 @@ final class Post_Republisher_Test extends TestCase {
 			->never();
 
 		$this->instance->clean_up_orphaned_copy();
-
-		// Clean up after the test.
-		unset( $_GET['post'], $_GET['action'] );
 	}
 
 	/**
