@@ -897,6 +897,7 @@ final class Post_Republisher_Test extends TestCase {
 		// This is the expected behavior based on how the duplicator works.
 		$this->assertEquals( 'original_value', \get_post_meta( $original->ID, 'custom_meta_to_remove', true ) );
 	}
+
 	/**
 	 * Tests the full Rewrite & Republish workflow from start to finish.
 	 *
@@ -1168,6 +1169,72 @@ final class Post_Republisher_Test extends TestCase {
 		$this->assertTrue( $action_fired );
 		$this->assertEquals( $copy_id, $fired_copy_id );
 		$this->assertEquals( $original->ID, $fired_post_id );
+	}
+
+	/**
+	 * Tests that republish still updates original even if delete_copy fails.
+	 *
+	 * This verifies the behavior when wp_delete_post() fails during republish.
+	 * The original post should still be updated, and the meta cleanup should still happen.
+	 *
+	 * @covers ::republish
+	 * @covers ::delete_copy
+	 * @covers ::republish_post_elements
+	 *
+	 * @return void
+	 */
+	public function test_republish_updates_original_even_if_delete_fails() {
+		$original = $this->create_original_post(
+			[
+				'post_title'   => 'Original Title',
+				'post_content' => 'Original content.',
+			]
+		);
+		$copy     = $this->create_rewrite_and_republish_copy( $original );
+		$copy_id  = $copy->ID;
+
+		// Update copy content.
+		\wp_update_post(
+			[
+				'ID'           => $copy->ID,
+				'post_title'   => 'Updated Title',
+				'post_content' => 'Updated content.',
+			]
+		);
+		$copy = \get_post( $copy->ID );
+
+		// Prevent deletion by filtering pre_delete_post.
+		$prevent_deletion = static function ( $delete, $post ) use ( $copy_id ) {
+			if ( $post->ID === $copy_id ) {
+				return false; // Prevent deletion.
+			}
+			return $delete;
+		};
+		\add_filter( 'pre_delete_post', $prevent_deletion, 10, 2 );
+
+		// Republish - delete will fail but republish should still work.
+		$this->instance->republish( $copy, $original );
+
+		// Remove the filter.
+		\remove_filter( 'pre_delete_post', $prevent_deletion, 10 );
+
+		// Verify the original was still updated despite delete failure.
+		$updated_original = \get_post( $original->ID );
+		$this->assertEquals( 'Updated Title', $updated_original->post_title );
+		$this->assertEquals( 'Updated content.', $updated_original->post_content );
+
+		// Verify the copy still exists (because deletion failed).
+		$still_existing_copy = \get_post( $copy_id );
+		$this->assertNotNull( $still_existing_copy );
+
+		// Verify the meta was still cleaned up from the original.
+		$this->assertEmpty( \get_post_meta( $original->ID, '_dp_has_rewrite_republish_copy', true ) );
+
+		// Verify the copy was marked as republished.
+		$this->assertEquals( '1', \get_post_meta( $copy_id, '_dp_has_been_republished', true ) );
+
+		// Clean up manually.
+		\wp_delete_post( $copy_id, true );
 	}
 
 	/**
