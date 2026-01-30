@@ -249,7 +249,7 @@ class Post_Republisher {
 	 * @return void
 	 */
 	public function clean_up_after_redirect() {
-		if ( ! empty( $_GET['dprepublished'] ) && ! empty( $_GET['post'] ) && ! empty( $_GET['dpnonce'] ) ) {
+		if ( ! empty( $_GET['dprepublished'] ) && ! empty( $_GET['post'] ) && isset( $_GET['dpnonce'] ) ) {
 			\check_admin_referer( 'dp-republish', 'dpnonce' );
 		}
 	}
