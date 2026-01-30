@@ -1134,6 +1134,43 @@ final class Post_Republisher_Test extends TestCase {
 	}
 
 	/**
+	 * Tests that delete_copy fires the duplicate_post_after_rewriting action.
+	 *
+	 * @covers ::delete_copy
+	 *
+	 * @return void
+	 */
+	public function test_delete_copy_fires_action_before_deletion() {
+		$original = $this->create_original_post();
+		$copy     = $this->create_rewrite_and_republish_copy( $original );
+		$copy_id  = $copy->ID;
+
+		$action_fired  = false;
+		$fired_copy_id = null;
+		$fired_post_id = null;
+
+		// Add a listener for the action.
+		\add_action(
+			'duplicate_post_after_rewriting',
+			static function ( $copy_id, $post_id ) use ( &$action_fired, &$fired_copy_id, &$fired_post_id ) {
+				$action_fired  = true;
+				$fired_copy_id = $copy_id;
+				$fired_post_id = $post_id;
+			},
+			10,
+			2
+		);
+
+		// Delete the copy.
+		$this->instance->delete_copy( $copy_id, $original->ID );
+
+		// Verify the action was fired.
+		$this->assertTrue( $action_fired );
+		$this->assertEquals( $copy_id, $fired_copy_id );
+		$this->assertEquals( $original->ID, $fired_post_id );
+	}
+
+	/**
 	 * Tests that duplicate_post_before_republish is fired before duplicate_post_after_republish.
 	 *
 	 * @covers ::republish
