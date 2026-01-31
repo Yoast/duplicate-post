@@ -1034,7 +1034,6 @@ final class Admin_Functions_Test extends TestCase {
 	 * @return void
 	 */
 	public function test_create_duplicate_applies_new_post_filter() {
-
 		$callback = static function ( $new_post ) {
 			$new_post['post_title'] = 'Modified by filter';
 			return $new_post;
