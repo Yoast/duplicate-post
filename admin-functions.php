@@ -56,26 +56,26 @@ function duplicate_post_admin_init() {
 		add_action( 'wp_ajax_duplicate_post_dismiss_notice', 'duplicate_post_dismiss_notice' );
 	}
 
-	add_action( 'dp_duplicate_post', 'duplicate_post_copy_post_meta_info', 10, 2 );
-	add_action( 'dp_duplicate_page', 'duplicate_post_copy_post_meta_info', 10, 2 );
+	add_action( 'duplicate_post_duplicate_post', 'duplicate_post_copy_post_meta_info', 10, 2 );
+	add_action( 'duplicate_post_duplicate_page', 'duplicate_post_copy_post_meta_info', 10, 2 );
 
 	if ( intval( get_option( 'duplicate_post_copychildren' ) ) === 1 ) {
-		add_action( 'dp_duplicate_post', 'duplicate_post_copy_children', 20, 3 );
-		add_action( 'dp_duplicate_page', 'duplicate_post_copy_children', 20, 3 );
+		add_action( 'duplicate_post_duplicate_post', 'duplicate_post_copy_children', 20, 3 );
+		add_action( 'duplicate_post_duplicate_page', 'duplicate_post_copy_children', 20, 3 );
 	}
 
 	if ( intval( get_option( 'duplicate_post_copyattachments' ) ) === 1 ) {
-		add_action( 'dp_duplicate_post', 'duplicate_post_copy_attachments', 30, 2 );
-		add_action( 'dp_duplicate_page', 'duplicate_post_copy_attachments', 30, 2 );
+		add_action( 'duplicate_post_duplicate_post', 'duplicate_post_copy_attachments', 30, 2 );
+		add_action( 'duplicate_post_duplicate_page', 'duplicate_post_copy_attachments', 30, 2 );
 	}
 
 	if ( intval( get_option( 'duplicate_post_copycomments' ) ) === 1 ) {
-		add_action( 'dp_duplicate_post', 'duplicate_post_copy_comments', 40, 2 );
-		add_action( 'dp_duplicate_page', 'duplicate_post_copy_comments', 40, 2 );
+		add_action( 'duplicate_post_duplicate_post', 'duplicate_post_copy_comments', 40, 2 );
+		add_action( 'duplicate_post_duplicate_page', 'duplicate_post_copy_comments', 40, 2 );
 	}
 
-	add_action( 'dp_duplicate_post', 'duplicate_post_copy_post_taxonomies', 50, 2 );
-	add_action( 'dp_duplicate_page', 'duplicate_post_copy_post_taxonomies', 50, 2 );
+	add_action( 'duplicate_post_duplicate_post', 'duplicate_post_copy_post_taxonomies', 50, 2 );
+	add_action( 'duplicate_post_duplicate_page', 'duplicate_post_copy_post_taxonomies', 50, 2 );
 
 	add_filter( 'plugin_row_meta', 'duplicate_post_add_plugin_links', 10, 2 );
 }
@@ -738,10 +738,12 @@ function duplicate_post_create_duplicate( $post, $status = '', $parent_id = '' )
 	if ( $new_post_id !== 0 && ! is_wp_error( $new_post_id ) ) {
 
 		if ( $post->post_type === 'page' || is_post_type_hierarchical( $post->post_type ) ) {
-			do_action( 'dp_duplicate_page', $new_post_id, $post, $status );
+			do_action( 'duplicate_post_duplicate_page', $new_post_id, $post, $status );
+			do_action_deprecated( 'dp_duplicate_page', [ $new_post_id, $post, $status ], '4.6', 'duplicate_post_duplicate_page' );
 		}
 		else {
-			do_action( 'dp_duplicate_post', $new_post_id, $post, $status );
+			do_action( 'duplicate_post_duplicate_post', $new_post_id, $post, $status );
+			do_action_deprecated( 'dp_duplicate_post', [ $new_post_id, $post, $status ], '4.6', 'duplicate_post_duplicate_post' );
 		}
 
 		delete_post_meta( $new_post_id, '_dp_original' );
