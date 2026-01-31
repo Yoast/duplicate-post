@@ -94,3 +94,17 @@ fieldset#duplicate_post_quick_edit_fieldset a{
 .duplicate-post-panel .duplicate-post-original-item {
     margin-bottom: 0;
 }
+
+.duplicate-post-panel .duplicate-post-remove-connection-button {
+    margin-top: 16px;
+    width: 100%;
+    justify-content: center;
+}
+
+.duplicate-post-modal-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 16px;
+}
+

@@ -83,7 +83,7 @@ function DuplicatePostPanel() {
 					variant="secondary"
 					isDestructive
 					onClick={ () => setIsConfirmOpen( true ) }
-					style={ { marginTop: '16px', width: '100%', justifyContent: 'center' } }
+					className="duplicate-post-remove-connection-button"
 				>
 					{ __( "Remove connection", "duplicate-post" ) }
 				</Button>
@@ -96,7 +96,7 @@ function DuplicatePostPanel() {
 					<p>
 						{ __( "Are you sure you want to remove the connection to the original post? This action cannot be undone.", "duplicate-post" ) }
 					</p>
-					<div style={ { display: 'flex', justifyContent: 'flex-end', gap: '8px', marginTop: '16px' } }>
+					<div className="duplicate-post-modal-buttons">
 						<Button
 							variant="tertiary"
 							onClick={ () => setIsConfirmOpen( false ) }
