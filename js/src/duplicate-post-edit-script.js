@@ -41,6 +41,13 @@ function DuplicatePostPanel() {
 		} catch ( error ) {
 			// eslint-disable-next-line no-console
 			console.error( 'Failed to remove original reference:', error );
+			dispatch( 'core/notices' ).createNotice(
+				'error',
+				__( 'Failed to remove the connection to the original post. Please try again.', 'duplicate-post' ),
+				{
+					isDismissible: true,
+				}
+			);
 		} finally {
 			setIsRemoving( false );
 		}
