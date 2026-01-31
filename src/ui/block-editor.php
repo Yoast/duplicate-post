@@ -234,12 +234,13 @@ class Block_Editor {
 			$original_data = [
 				'editUrl'  => \esc_url( \get_edit_post_link( $original_item->ID ) ),
 				'viewUrl'  => \esc_url( \get_permalink( $original_item->ID ) ),
-				'title'    => \_draft_or_post_title( $original_item ),
+				'title'    => \html_entity_decode( \_draft_or_post_title( $original_item ), \ENT_QUOTES, 'UTF-8' ),
 				'canEdit'  => \current_user_can( 'edit_post', $original_item->ID ),
 			];
 		}
 
 		return [
+			'postId'                  => $post->ID,
 			'newDraftLink'            => $this->get_new_draft_permalink(),
 			'rewriteAndRepublishLink' => $this->get_rewrite_republish_permalink(),
 			'showLinks'               => Utils::get_option( 'duplicate_post_show_link' ),

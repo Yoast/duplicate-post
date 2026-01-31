@@ -267,6 +267,7 @@ final class Block_Editor_Test extends TestCase {
 	public function test_enqueue_block_editor_scripts() {
 		$utils                      = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
 		$post                       = Mockery::mock( WP_Post::class );
+		$post->ID                   = 123;
 		$new_draft_link             = 'http://fakeu.rl/new_draft';
 		$rewrite_and_republish_link = 'http://fakeu.rl/rewrite_and_republish';
 		$rewriting                  = 0;
@@ -332,6 +333,7 @@ final class Block_Editor_Test extends TestCase {
 			->andReturnNull();
 
 		$edit_js_object = [
+			'postId'                  => 123,
 			'newDraftLink'            => $new_draft_link,
 			'rewriteAndRepublishLink' => $rewrite_and_republish_link,
 			'showLinks'               => $show_links,
@@ -366,6 +368,7 @@ final class Block_Editor_Test extends TestCase {
 	public function test_get_enqueue_block_editor_scripts_rewrite_and_republish() {
 		$utils                      = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
 		$post                       = Mockery::mock( WP_Post::class );
+		$post->ID                   = 123;
 		$new_draft_link             = 'http://fakeu.rl/new_draft';
 		$rewrite_and_republish_link = 'http://fakeu.rl/rewrite_and_republish';
 		$rewriting                  = 1;
@@ -428,6 +431,7 @@ final class Block_Editor_Test extends TestCase {
 			->andReturnNull();
 
 		$edit_js_object = [
+			'postId'                  => 123,
 			'newDraftLink'            => $new_draft_link,
 			'rewriteAndRepublishLink' => $rewrite_and_republish_link,
 			'showLinks'               => $show_links,

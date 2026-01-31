@@ -1,12 +1,13 @@
 /* global duplicatePost, duplicatePostNotices */
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { registerPlugin } from "@wordpress/plugins";
 import { PluginDocumentSettingPanel, PluginPostStatusInfo } from "@wordpress/editor";
 import { Fragment } from "@wordpress/element";
-import { Button, ToggleControl, ExternalLink } from '@wordpress/components';
+import { Button, ExternalLink, Modal } from '@wordpress/components';
 import { __ } from "@wordpress/i18n";
 import { select, subscribe, dispatch } from "@wordpress/data";
+import apiFetch from "@wordpress/api-fetch";
 import { redirectOnSaveCompletion } from "./duplicate-post-functions";
 
 
@@ -133,34 +134,31 @@ class DuplicatePost {
 
 		const currentPostStatus = select( 'core/editor' ).getEditedPostAttribute( 'status' );
 
-		const [ willBeDeletedReference, setWillBeDeletedReference ] = useState( false );
+		const [ isConfirmOpen, setIsConfirmOpen ] = useState( false );
+		const [ isRemoving, setIsRemoving ] = useState( false );
 		const [ referenceRemoved, setReferenceRemoved ] = useState( false );
 
-		// Update the meta field when the toggle changes.
-		useEffect( () => {
-			dispatch( 'core/editor' ).editPost( {
-				meta: { _dp_remove_original: willBeDeletedReference }
-			} );
-		}, [ willBeDeletedReference ] );
-
-		// Listen for save completion and hide panel if reference was marked for deletion.
-		useEffect( () => {
-			let wasSaving = false;
-
-			const unsubscribe = subscribe( () => {
-				const isSaving = select( 'core/editor' ).isSavingPost();
-				const isAutosaving = select( 'core/editor' ).isAutosavingPost();
-
-				// Detect when saving completes (was saving, now not saving, and not autosave).
-				if ( wasSaving && ! isSaving && ! isAutosaving && willBeDeletedReference ) {
-					setReferenceRemoved( true );
-				}
-
-				wasSaving = isSaving && ! isAutosaving;
-			} );
-
-			return () => unsubscribe();
-		}, [ willBeDeletedReference ] );
+		/**
+		 * Handles the removal of the original reference via REST API.
+		 *
+		 * @returns {void}
+		 */
+		const handleRemoveOriginal = async () => {
+			setIsRemoving( true );
+			try {
+				await apiFetch( {
+					path: `/duplicate-post/v1/original/${ duplicatePost.postId }`,
+					method: 'DELETE',
+				} );
+				setReferenceRemoved( true );
+				setIsConfirmOpen( false );
+			} catch ( error ) {
+				// eslint-disable-next-line no-console
+				console.error( 'Failed to remove original reference:', error );
+			} finally {
+				setIsRemoving( false );
+			}
+		};
 
 		const originalItem = duplicatePost.originalItem;
 		const isRewriting = parseInt( duplicatePost.rewriting, 10 );
@@ -194,43 +192,65 @@ class DuplicatePost {
 						}
 					</Fragment>
 				}
-				{ showMetaBox &&
-					<PluginDocumentSettingPanel
-						name="duplicate-post-panel"
-						title={ __( "Duplicate Post", "duplicate-post" ) }
-						className="duplicate-post-panel"
-					>
-						{ ! isRewriting &&
-							<ToggleControl
-								label={ __( "Delete reference to original item.", "duplicate-post" ) }
-								help={
-									willBeDeletedReference
-										? __( "The reference will be deleted on update.", "duplicate-post" )
-										: __( "The reference will be kept on update.", "duplicate-post" )
-								}
-								checked={ willBeDeletedReference }
-								onChange={ ( newValue ) => {
-									setWillBeDeletedReference( newValue );
-								} }
-							/>
-						}
-						<p className="duplicate-post-original-item">
-							{ __( 'The original item this was copied from is:', 'duplicate-post' ) }
-							{ ' ' }
-							<span className="duplicate_post_original_item_title_span">
-								{ originalItem.canEdit ? (
-									<ExternalLink href={ originalItem.editUrl }>
-										{ originalItem.title }
-									</ExternalLink>
-								) : (
-									<ExternalLink href={ originalItem.viewUrl }>
-										{ originalItem.title }
-									</ExternalLink>
-								) }
-							</span>
-						</p>
-					</PluginDocumentSettingPanel>
-				}
+			{ showMetaBox &&
+				<PluginDocumentSettingPanel
+					name="duplicate-post-panel"
+					title={ __( "Yoast Duplicate Post", "duplicate-post" ) }
+					className="duplicate-post-panel"
+				>
+					<p className="duplicate-post-original-item">
+						{ __( 'The original item this was copied from is:', 'duplicate-post' ) }
+						{ ' ' }
+						<span className="duplicate_post_original_item_title_span">
+							{ originalItem.canEdit ? (
+								<ExternalLink href={ originalItem.editUrl }>
+									{ originalItem.title }
+								</ExternalLink>
+							) : (
+								<ExternalLink href={ originalItem.viewUrl }>
+									{ originalItem.title }
+								</ExternalLink>
+							) }
+						</span>
+					</p>
+					{ ! isRewriting &&
+						<Button
+							variant="secondary"
+							isDestructive
+							onClick={ () => setIsConfirmOpen( true ) }
+							style={ { marginTop: '16px', width: '100%', justifyContent: 'center' } }
+						>
+							{ __( "Remove connection", "duplicate-post" ) }
+						</Button>
+					}
+					{ isConfirmOpen &&
+						<Modal
+							title={ __( "Remove connection", "duplicate-post" ) }
+							onRequestClose={ () => setIsConfirmOpen( false ) }
+						>
+							<p>
+								{ __( "Are you sure you want to remove the connection to the original post? This action cannot be undone.", "duplicate-post" ) }
+							</p>
+							<div style={ { display: 'flex', justifyContent: 'flex-end', gap: '8px', marginTop: '16px' } }>
+								<Button
+									variant="tertiary"
+									onClick={ () => setIsConfirmOpen( false ) }
+								>
+									{ __( "Cancel", "duplicate-post" ) }
+								</Button>
+								<Button
+									variant="primary"
+									isDestructive
+									isBusy={ isRemoving }
+									onClick={ handleRemoveOriginal }
+								>
+									{ __( "Remove", "duplicate-post" ) }
+								</Button>
+							</div>
+						</Modal>
+					}
+				</PluginDocumentSettingPanel>
+			}
 			</Fragment>
 		);
 	}
