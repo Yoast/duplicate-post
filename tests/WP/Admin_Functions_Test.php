@@ -1001,6 +1001,100 @@ final class Admin_Functions_Test extends TestCase {
 	}
 
 	/**
+	 * Tests that duplicate_post_create_duplicate fires the after_duplicated action with page post type.
+	 *
+	 * @covers ::duplicate_post_create_duplicate
+	 *
+	 * @return void
+	 */
+	public function test_create_duplicate_fires_after_duplicated_action_for_page() {
+		$captured_data = [];
+		$callback      = static function ( $new_id, $post, $status, $post_type ) use ( &$captured_data ) {
+			$captured_data = [
+				'new_id'    => $new_id,
+				'post'      => $post,
+				'status'    => $status,
+				'post_type' => $post_type,
+			];
+		};
+
+		\add_action( 'duplicate_post_after_duplicated', $callback, 10, 4 );
+
+		$original = $this->factory->post->create_and_get(
+			[
+				'post_type'    => 'page',
+				'post_title'   => 'Original Page for Hook Test',
+				'post_content' => 'Page content for testing hook.',
+				'post_status'  => 'publish',
+			]
+		);
+
+		$new_id = \duplicate_post_create_duplicate( $original, 'draft' );
+
+		\remove_action( 'duplicate_post_after_duplicated', $callback, 10 );
+
+		$this->assertEquals( $new_id, $captured_data['new_id'] );
+		$this->assertEquals( $original->ID, $captured_data['post']->ID );
+		$this->assertEquals( 'page', $captured_data['post_type'] );
+		$this->assertEquals( 'draft', $captured_data['status'] );
+	}
+
+	/**
+	 * Tests that duplicate_post_create_duplicate fires the after_duplicated action with custom post type.
+	 *
+	 * @covers ::duplicate_post_create_duplicate
+	 *
+	 * @return void
+	 */
+	public function test_create_duplicate_fires_after_duplicated_action_for_custom_post_type() {
+		// Register a custom post type for testing.
+		\register_post_type(
+			'dp_test_cpt',
+			[
+				'public'   => true,
+				'label'    => 'Test CPT',
+				'supports' => [ 'title', 'editor', 'excerpt' ],
+			]
+		);
+
+		// Enable the custom post type for duplication.
+		\update_option( 'duplicate_post_types_enabled', [ 'post', 'page', 'dp_test_cpt' ] );
+
+		$captured_data = [];
+		$callback      = static function ( $new_id, $post, $status, $post_type ) use ( &$captured_data ) {
+			$captured_data = [
+				'new_id'    => $new_id,
+				'post'      => $post,
+				'status'    => $status,
+				'post_type' => $post_type,
+			];
+		};
+
+		\add_action( 'duplicate_post_after_duplicated', $callback, 10, 4 );
+
+		$original = $this->factory->post->create_and_get(
+			[
+				'post_type'    => 'dp_test_cpt',
+				'post_title'   => 'Original Custom Post Type',
+				'post_content' => 'Custom post type content for testing hook.',
+				'post_status'  => 'publish',
+			]
+		);
+
+		$new_id = \duplicate_post_create_duplicate( $original, 'pending' );
+
+		\remove_action( 'duplicate_post_after_duplicated', $callback, 10 );
+
+		// Unregister the custom post type.
+		\unregister_post_type( 'dp_test_cpt' );
+
+		$this->assertEquals( $new_id, $captured_data['new_id'] );
+		$this->assertEquals( $original->ID, $captured_data['post']->ID );
+		$this->assertEquals( 'dp_test_cpt', $captured_data['post_type'] );
+		$this->assertEquals( 'pending', $captured_data['status'] );
+	}
+
+	/**
 	 * Tests that duplicate_post_create_duplicate works with pages.
 	 *
 	 * @covers ::duplicate_post_create_duplicate
