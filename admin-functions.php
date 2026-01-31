@@ -744,10 +744,10 @@ function duplicate_post_create_duplicate( $post, $status = '', $parent_id = '' )
 
 		// Deprecated hooks for backward compatibility.
 		if ( $post->post_type === 'page' || is_post_type_hierarchical( $post->post_type ) ) {
-			do_action_deprecated( 'dp_duplicate_page', [ $new_post_id, $post, $status ], '4.6', 'duplicate_post_after_duplicated' );
+			do_action_deprecated( 'dp_duplicate_page', [ $new_post_id, $post, $status ], 'Yoast Duplicate Post 4.6', 'duplicate_post_after_duplicated' );
 		}
 		else {
-			do_action_deprecated( 'dp_duplicate_post', [ $new_post_id, $post, $status ], '4.6', 'duplicate_post_after_duplicated' );
+			do_action_deprecated( 'dp_duplicate_post', [ $new_post_id, $post, $status ], 'Yoast Duplicate Post 4.6', 'duplicate_post_after_duplicated' );
 		}
 
 		delete_post_meta( $new_post_id, '_dp_original' );
