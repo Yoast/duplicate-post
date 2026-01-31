@@ -982,9 +982,9 @@ final class Admin_Functions_Test extends TestCase {
 		$captured_data = [];
 		$callback      = static function ( $new_id, $post, $status, $post_type ) use ( &$captured_data ) {
 			$captured_data = [
-				'new_id' => $new_id,
-				'post'   => $post,
-				'status' => $status,
+				'new_id'    => $new_id,
+				'post'      => $post,
+				'status'    => $status,
 				'post_type' => $post_type,
 			];
 		};
@@ -1035,7 +1035,7 @@ final class Admin_Functions_Test extends TestCase {
 	 * @return void
 	 */
 	public function test_create_duplicate_applies_new_post_filter() {
-		$callback = static function ( $new_post, $post ) {
+		$callback = static function ( $new_post ) {
 			$new_post['post_title'] = 'Modified by filter';
 			return $new_post;
 		};
