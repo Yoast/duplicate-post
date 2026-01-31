@@ -10,6 +10,152 @@ import { select, subscribe, dispatch } from "@wordpress/data";
 import apiFetch from "@wordpress/api-fetch";
 import { redirectOnSaveCompletion } from "./duplicate-post-functions";
 
+/**
+ * Functional component for the Duplicate Post sidebar panel.
+ *
+ * @returns {JSX.Element|null} The rendered panel or null.
+ */
+function DuplicatePostPanel() {
+	const [ isConfirmOpen, setIsConfirmOpen ] = useState( false );
+	const [ isRemoving, setIsRemoving ] = useState( false );
+	const [ referenceRemoved, setReferenceRemoved ] = useState( false );
+
+	const originalItem = duplicatePost.originalItem;
+	const isRewriting = parseInt( duplicatePost.rewriting, 10 );
+	const showMetaBox = duplicatePost.showOriginalMetaBox && originalItem && ! referenceRemoved;
+
+	/**
+	 * Handles the removal of the original reference via REST API.
+	 *
+	 * @returns {void}
+	 */
+	const handleRemoveOriginal = async () => {
+		setIsRemoving( true );
+		try {
+			await apiFetch( {
+				path: `/duplicate-post/v1/original/${ duplicatePost.postId }`,
+				method: 'DELETE',
+			} );
+			setReferenceRemoved( true );
+			setIsConfirmOpen( false );
+		} catch ( error ) {
+			// eslint-disable-next-line no-console
+			console.error( 'Failed to remove original reference:', error );
+		} finally {
+			setIsRemoving( false );
+		}
+	};
+
+	if ( ! showMetaBox ) {
+		return null;
+	}
+
+	return (
+		<PluginDocumentSettingPanel
+			name="duplicate-post-panel"
+			title={ __( "Yoast Duplicate Post", "duplicate-post" ) }
+			className="duplicate-post-panel"
+		>
+			<p className="duplicate-post-original-item">
+				{ __( 'The original item this was copied from is:', 'duplicate-post' ) }
+				{ ' ' }
+				<span className="duplicate_post_original_item_title_span">
+					{ originalItem.canEdit ? (
+						<ExternalLink href={ originalItem.editUrl }>
+							{ originalItem.title }
+						</ExternalLink>
+					) : (
+						<ExternalLink href={ originalItem.viewUrl }>
+							{ originalItem.title }
+						</ExternalLink>
+					) }
+				</span>
+			</p>
+			{ ! isRewriting &&
+				<Button
+					variant="secondary"
+					isDestructive
+					onClick={ () => setIsConfirmOpen( true ) }
+					style={ { marginTop: '16px', width: '100%', justifyContent: 'center' } }
+				>
+					{ __( "Remove connection", "duplicate-post" ) }
+				</Button>
+			}
+			{ isConfirmOpen &&
+				<Modal
+					title={ __( "Remove connection", "duplicate-post" ) }
+					onRequestClose={ () => setIsConfirmOpen( false ) }
+				>
+					<p>
+						{ __( "Are you sure you want to remove the connection to the original post? This action cannot be undone.", "duplicate-post" ) }
+					</p>
+					<div style={ { display: 'flex', justifyContent: 'flex-end', gap: '8px', marginTop: '16px' } }>
+						<Button
+							variant="tertiary"
+							onClick={ () => setIsConfirmOpen( false ) }
+						>
+							{ __( "Cancel", "duplicate-post" ) }
+						</Button>
+						<Button
+							variant="primary"
+							isDestructive
+							isBusy={ isRemoving }
+							onClick={ handleRemoveOriginal }
+						>
+							{ __( "Remove", "duplicate-post" ) }
+						</Button>
+					</div>
+				</Modal>
+			}
+		</PluginDocumentSettingPanel>
+	);
+}
+
+/**
+ * Functional component for the Duplicate Post plugin render.
+ *
+ * @returns {JSX.Element|null} The rendered component or null.
+ */
+function DuplicatePostRender() {
+	// Don't try to render anything if there is no store.
+	if ( ! select( 'core/editor' ) || ! ( wp.editor && wp.editor.PluginPostStatusInfo ) ) {
+		return null;
+	}
+
+	const currentPostStatus = select( 'core/editor' ).getEditedPostAttribute( 'status' );
+
+	return (
+		<Fragment>
+			{ ( duplicatePost.showLinksIn.submitbox === '1' ) &&
+				<Fragment>
+					{ ( duplicatePost.newDraftLink !== '' && duplicatePost.showLinks.new_draft === '1' ) &&
+						<PluginPostStatusInfo>
+							<Button
+								isTertiary={ true }
+								className="dp-editor-post-copy-to-draft"
+								href={ duplicatePost.newDraftLink }
+							>
+								{ __( 'Copy to a new draft', 'duplicate-post' ) }
+							</Button>
+						</PluginPostStatusInfo>
+					}
+					{ ( currentPostStatus === 'publish' && duplicatePost.rewriteAndRepublishLink !== '' && duplicatePost.showLinks.rewrite_republish === '1' ) &&
+						<PluginPostStatusInfo>
+							<Button
+								isTertiary={ true }
+								className="dp-editor-post-rewrite-republish"
+								href={ duplicatePost.rewriteAndRepublishLink }
+							>
+								{ __( 'Rewrite & Republish', 'duplicate-post' ) }
+							</Button>
+						</PluginPostStatusInfo>
+					}
+				</Fragment>
+			}
+			<DuplicatePostPanel />
+		</Fragment>
+	);
+}
 
 class DuplicatePost {
 	constructor() {
@@ -120,145 +266,11 @@ class DuplicatePost {
 			dispatch( 'core/editor' ).removeEditorPanel( 'post-link' );
 		}
 	}
-
-	/**
-	 * Renders the links in the PluginPostStatusInfo component.
-	 *
-	 * @returns {JSX.Element} The rendered links.
-	 */
-	render() {
-		// Don't try to render anything if there is no store.
-		if ( ! select( 'core/editor' ) || ! ( wp.editor && wp.editor.PluginPostStatusInfo ) ) {
-			return null;
-		}
-
-		const currentPostStatus = select( 'core/editor' ).getEditedPostAttribute( 'status' );
-
-		const [ isConfirmOpen, setIsConfirmOpen ] = useState( false );
-		const [ isRemoving, setIsRemoving ] = useState( false );
-		const [ referenceRemoved, setReferenceRemoved ] = useState( false );
-
-		/**
-		 * Handles the removal of the original reference via REST API.
-		 *
-		 * @returns {void}
-		 */
-		const handleRemoveOriginal = async () => {
-			setIsRemoving( true );
-			try {
-				await apiFetch( {
-					path: `/duplicate-post/v1/original/${ duplicatePost.postId }`,
-					method: 'DELETE',
-				} );
-				setReferenceRemoved( true );
-				setIsConfirmOpen( false );
-			} catch ( error ) {
-				// eslint-disable-next-line no-console
-				console.error( 'Failed to remove original reference:', error );
-			} finally {
-				setIsRemoving( false );
-			}
-		};
-
-		const originalItem = duplicatePost.originalItem;
-		const isRewriting = parseInt( duplicatePost.rewriting, 10 );
-		const showMetaBox = duplicatePost.showOriginalMetaBox && originalItem && ! referenceRemoved;
-
-		return (
-			<Fragment>
-				{ ( duplicatePost.showLinksIn.submitbox === '1' ) &&
-					<Fragment>
-						{ ( duplicatePost.newDraftLink !== '' && duplicatePost.showLinks.new_draft === '1' ) &&
-							<PluginPostStatusInfo>
-								<Button
-									isTertiary={ true }
-									className="dp-editor-post-copy-to-draft"
-									href={ duplicatePost.newDraftLink }
-								>
-									{ __( 'Copy to a new draft', 'duplicate-post' ) }
-								</Button>
-							</PluginPostStatusInfo>
-						}
-						{ ( currentPostStatus === 'publish' && duplicatePost.rewriteAndRepublishLink !== '' && duplicatePost.showLinks.rewrite_republish === '1' ) &&
-							<PluginPostStatusInfo>
-								<Button
-									isTertiary={ true }
-									className="dp-editor-post-rewrite-republish"
-									href={ duplicatePost.rewriteAndRepublishLink }
-								>
-									{ __( 'Rewrite & Republish', 'duplicate-post' ) }
-								</Button>
-							</PluginPostStatusInfo>
-						}
-					</Fragment>
-				}
-			{ showMetaBox &&
-				<PluginDocumentSettingPanel
-					name="duplicate-post-panel"
-					title={ __( "Yoast Duplicate Post", "duplicate-post" ) }
-					className="duplicate-post-panel"
-				>
-					<p className="duplicate-post-original-item">
-						{ __( 'The original item this was copied from is:', 'duplicate-post' ) }
-						{ ' ' }
-						<span className="duplicate_post_original_item_title_span">
-							{ originalItem.canEdit ? (
-								<ExternalLink href={ originalItem.editUrl }>
-									{ originalItem.title }
-								</ExternalLink>
-							) : (
-								<ExternalLink href={ originalItem.viewUrl }>
-									{ originalItem.title }
-								</ExternalLink>
-							) }
-						</span>
-					</p>
-					{ ! isRewriting &&
-						<Button
-							variant="secondary"
-							isDestructive
-							onClick={ () => setIsConfirmOpen( true ) }
-							style={ { marginTop: '16px', width: '100%', justifyContent: 'center' } }
-						>
-							{ __( "Remove connection", "duplicate-post" ) }
-						</Button>
-					}
-					{ isConfirmOpen &&
-						<Modal
-							title={ __( "Remove connection", "duplicate-post" ) }
-							onRequestClose={ () => setIsConfirmOpen( false ) }
-						>
-							<p>
-								{ __( "Are you sure you want to remove the connection to the original post? This action cannot be undone.", "duplicate-post" ) }
-							</p>
-							<div style={ { display: 'flex', justifyContent: 'flex-end', gap: '8px', marginTop: '16px' } }>
-								<Button
-									variant="tertiary"
-									onClick={ () => setIsConfirmOpen( false ) }
-								>
-									{ __( "Cancel", "duplicate-post" ) }
-								</Button>
-								<Button
-									variant="primary"
-									isDestructive
-									isBusy={ isRemoving }
-									onClick={ handleRemoveOriginal }
-								>
-									{ __( "Remove", "duplicate-post" ) }
-								</Button>
-							</div>
-						</Modal>
-					}
-				</PluginDocumentSettingPanel>
-			}
-			</Fragment>
-		);
-	}
 }
 
 const instance = new DuplicatePost();
 instance.handleRedirect();
 
 registerPlugin( 'duplicate-post', {
-	render: instance.render
+	render: DuplicatePostRender
 } );
