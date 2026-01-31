@@ -8,8 +8,6 @@ use Yoast\WPTestUtils\WPIntegration\TestCase;
 
 /**
  * Integration tests for the duplicate_post_create_duplicate() function.
- *
- * @coversDefaultClass duplicate_post_create_duplicate
  */
 final class Admin_Functions_Test extends TestCase {
 
@@ -992,13 +990,14 @@ final class Admin_Functions_Test extends TestCase {
 		\add_action( 'duplicate_post_after_duplicated', $callback, 10, 4 );
 
 		$original = $this->create_original_post();
-		$new_id   = \duplicate_post_create_duplicate( $original );
+		$new_id   = \duplicate_post_create_duplicate( $original, 'draft' );
 
 		\remove_action( 'duplicate_post_after_duplicated', $callback, 10 );
 
 		$this->assertEquals( $new_id, $captured_data['new_id'] );
 		$this->assertEquals( $original->ID, $captured_data['post']->ID );
 		$this->assertEquals( 'post', $captured_data['post_type'] );
+		$this->assertEquals( 'draft', $captured_data['status'] );
 	}
 
 	/**
