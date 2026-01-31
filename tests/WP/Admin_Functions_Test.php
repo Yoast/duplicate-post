@@ -8,6 +8,8 @@ use Yoast\WPTestUtils\WPIntegration\TestCase;
 
 /**
  * Integration tests for the duplicate_post_create_duplicate() function.
+ *
+ * @coversDefaultClass duplicate_post_create_duplicate
  */
 final class Admin_Functions_Test extends TestCase {
 
@@ -66,17 +68,11 @@ final class Admin_Functions_Test extends TestCase {
 
 		// Register the hooks that are normally registered in admin_init.
 		// These are always needed for duplication to work properly.
-		if ( ! \has_action( 'dp_duplicate_post', 'duplicate_post_copy_post_meta_info' ) ) {
-			\add_action( 'dp_duplicate_post', 'duplicate_post_copy_post_meta_info', 10, 2 );
+		if ( ! \has_action( 'duplicate_post_after_duplicated', 'duplicate_post_copy_post_meta_info' ) ) {
+			\add_action( 'duplicate_post_after_duplicated', 'duplicate_post_copy_post_meta_info', 10, 2 );
 		}
-		if ( ! \has_action( 'dp_duplicate_page', 'duplicate_post_copy_post_meta_info' ) ) {
-			\add_action( 'dp_duplicate_page', 'duplicate_post_copy_post_meta_info', 10, 2 );
-		}
-		if ( ! \has_action( 'dp_duplicate_post', 'duplicate_post_copy_post_taxonomies' ) ) {
-			\add_action( 'dp_duplicate_post', 'duplicate_post_copy_post_taxonomies', 50, 2 );
-		}
-		if ( ! \has_action( 'dp_duplicate_page', 'duplicate_post_copy_post_taxonomies' ) ) {
-			\add_action( 'dp_duplicate_page', 'duplicate_post_copy_post_taxonomies', 50, 2 );
+		if ( ! \has_action( 'duplicate_post_after_duplicated', 'duplicate_post_copy_post_taxonomies' ) ) {
+			\add_action( 'duplicate_post_after_duplicated', 'duplicate_post_copy_post_taxonomies', 50, 2 );
 		}
 	}
 
@@ -87,6 +83,9 @@ final class Admin_Functions_Test extends TestCase {
 	 */
 	public function set_up() {
 		parent::set_up();
+
+		// Ensure we're in admin context.
+		\set_current_screen( 'edit.php' );
 
 		// Store original options.
 		foreach ( self::$options_to_reset as $option ) {
@@ -788,7 +787,7 @@ final class Admin_Functions_Test extends TestCase {
 
 		// The hook is registered in admin_init based on the option value at that time.
 		// Since we changed the option after admin_init, we need to add the hook manually.
-		\add_action( 'dp_duplicate_page', 'duplicate_post_copy_children', 20, 3 );
+		\add_action( 'duplicate_post_after_duplicated', 'duplicate_post_copy_children', 20, 3 );
 
 		$parent = $this->factory->post->create_and_get(
 			[
@@ -810,7 +809,7 @@ final class Admin_Functions_Test extends TestCase {
 		$new_parent_id = \duplicate_post_create_duplicate( $parent );
 
 		// Remove the hook to avoid affecting other tests.
-		\remove_action( 'dp_duplicate_page', 'duplicate_post_copy_children', 20 );
+		\remove_action( 'duplicate_post_after_duplicated', 'duplicate_post_copy_children', 20 );
 
 		// Get children of the new parent.
 		$new_children = \get_children(
@@ -878,7 +877,7 @@ final class Admin_Functions_Test extends TestCase {
 
 		// The hook is registered in admin_init based on the option value at that time.
 		// Since we changed the option after admin_init, we need to add the hook manually.
-		\add_action( 'dp_duplicate_post', 'duplicate_post_copy_comments', 40, 2 );
+		\add_action( 'duplicate_post_after_duplicated', 'duplicate_post_copy_comments', 40, 2 );
 
 		$original = $this->create_original_post();
 
@@ -892,7 +891,7 @@ final class Admin_Functions_Test extends TestCase {
 		$new_id = \duplicate_post_create_duplicate( $original );
 
 		// Remove the hook to avoid affecting other tests.
-		\remove_action( 'dp_duplicate_post', 'duplicate_post_copy_comments', 40 );
+		\remove_action( 'duplicate_post_after_duplicated', 'duplicate_post_copy_comments', 40 );
 
 		$new_comments = \get_comments( [ 'post_id' => $new_id ] );
 
@@ -973,31 +972,33 @@ final class Admin_Functions_Test extends TestCase {
 	}
 
 	/**
-	 * Tests that duplicate_post_create_duplicate fires the dp_duplicate_post action.
+	 * Tests that duplicate_post_create_duplicate fires the after_duplicated action.
 	 *
 	 * @covers ::duplicate_post_create_duplicate
 	 *
 	 * @return void
 	 */
-	public function test_create_duplicate_fires_dp_duplicate_post_action() {
+	public function test_create_duplicate_fires_after_duplicated_action() {
 		$captured_data = [];
-		$callback      = static function ( $new_id, $post, $status ) use ( &$captured_data ) {
+		$callback      = static function ( $new_id, $post, $status, $post_type ) use ( &$captured_data ) {
 			$captured_data = [
 				'new_id' => $new_id,
 				'post'   => $post,
 				'status' => $status,
+				'post_type' => $post_type,
 			];
 		};
 
-		\add_action( 'dp_duplicate_post', $callback, 10, 3 );
+		\add_action( 'duplicate_post_after_duplicated', $callback, 10, 4 );
 
 		$original = $this->create_original_post();
 		$new_id   = \duplicate_post_create_duplicate( $original );
 
-		\remove_action( 'dp_duplicate_post', $callback, 10 );
+		\remove_action( 'duplicate_post_after_duplicated', $callback, 10 );
 
 		$this->assertEquals( $new_id, $captured_data['new_id'] );
 		$this->assertEquals( $original->ID, $captured_data['post']->ID );
+		$this->assertEquals( 'post', $captured_data['post_type'] );
 	}
 
 	/**
@@ -1034,7 +1035,7 @@ final class Admin_Functions_Test extends TestCase {
 	 * @return void
 	 */
 	public function test_create_duplicate_applies_new_post_filter() {
-		$callback = static function ( $new_post ) {
+		$callback = static function ( $new_post, $post ) {
 			$new_post['post_title'] = 'Modified by filter';
 			return $new_post;
 		};
