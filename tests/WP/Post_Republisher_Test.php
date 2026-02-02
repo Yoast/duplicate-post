@@ -1428,4 +1428,34 @@ final class Post_Republisher_Test extends TestCase {
 		// This is the expected behavior based on how the duplicator works.
 		$this->assertEquals( 'original_value', \get_post_meta( $original->ID, 'custom_meta_to_remove', true ) );
 	}
+
+	/**
+	 * Tests that duplicate_post_before_republish is fired before duplicate_post_after_republish.
+	 *
+	 * @covers ::republish
+	 *
+	 * @return void
+	 */
+	public function test_republish_fires_hooks_in_correct_order() {
+		$action_order    = [];
+		$before_callback = static function () use ( &$action_order ) {
+			$action_order[] = 'before';
+		};
+		$after_callback  = static function () use ( &$action_order ) {
+			$action_order[] = 'after';
+		};
+
+		\add_action( 'duplicate_post_before_republish', $before_callback );
+		\add_action( 'duplicate_post_after_republish', $after_callback );
+
+		$original = $this->create_original_post();
+		$copy     = $this->create_rewrite_and_republish_copy( $original );
+
+		$this->instance->republish( $copy, $original );
+
+		\remove_action( 'duplicate_post_before_republish', $before_callback );
+		\remove_action( 'duplicate_post_after_republish', $after_callback );
+
+		$this->assertSame( [ 'before', 'after' ], $action_order );
+	}
 }

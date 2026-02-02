@@ -257,6 +257,21 @@ class Post_Republisher {
 	 * @return void
 	 */
 	public function republish( WP_Post $post, WP_Post $original_post ) {
+
+		/**
+		 * Fires before the Rewrite & Republish copy is republished to the original post.
+		 *
+		 * This action runs before any content, taxonomies, or meta are copied from the
+		 * Rewrite & Republish copy to the original post. Use this hook to perform actions
+		 * or modifications before the republishing process begins.
+		 *
+		 * @since 4.6
+		 *
+		 * @param WP_Post $post          The Rewrite & Republish copy.
+		 * @param WP_Post $original_post The original post that will be overwritten.
+		 */
+		\do_action( 'duplicate_post_before_republish', $post, $original_post );
+
 		// Remove WordPress default filter so a new revision is not created on republish.
 		\remove_action( 'post_updated', 'wp_save_post_revision', 10 );
 
@@ -272,6 +287,21 @@ class Post_Republisher {
 
 		// Re-enable the creation of a new revision.
 		\add_action( 'post_updated', 'wp_save_post_revision', 10, 1 );
+
+		/**
+		 * Fires after the Rewrite & Republish copy has been republished to the original post.
+		 *
+		 * This action runs after all content, taxonomies, and meta have been copied from
+		 * the Rewrite & Republish copy to the original post. The copy is marked as republished
+		 * but has not yet been deleted. Use this hook to perform cleanup or additional
+		 * processing after the republishing is complete.
+		 *
+		 * @since 4.6
+		 *
+		 * @param WP_Post $post          The Rewrite & Republish copy.
+		 * @param WP_Post $original_post The original post that has been updated.
+		 */
+		\do_action( 'duplicate_post_after_republish', $post, $original_post );
 	}
 
 	/**
