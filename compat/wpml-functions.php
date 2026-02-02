@@ -17,8 +17,7 @@ add_action( 'admin_init', 'duplicate_post_wpml_init' );
  */
 function duplicate_post_wpml_init() {
 	if ( defined( 'ICL_SITEPRESS_VERSION' ) ) {
-		add_action( 'dp_duplicate_page', 'duplicate_post_wpml_copy_translations', 10, 3 );
-		add_action( 'dp_duplicate_post', 'duplicate_post_wpml_copy_translations', 10, 3 );
+		add_action( 'duplicate_post_after_duplicated', 'duplicate_post_wpml_copy_translations', 10, 3 );
 		add_action( 'shutdown', 'duplicate_wpml_string_packages', 11 );
 	}
 }
@@ -44,8 +43,7 @@ function duplicate_post_wpml_copy_translations( $post_id, $post, $status = '' ) 
 	global $sitepress;
 	global $duplicated_posts;
 
-	remove_action( 'dp_duplicate_page', 'duplicate_post_wpml_copy_translations', 10 );
-	remove_action( 'dp_duplicate_post', 'duplicate_post_wpml_copy_translations', 10 );
+	remove_action( 'duplicate_post_after_duplicated', 'duplicate_post_wpml_copy_translations', 10 );
 
 	$current_language = $sitepress->get_current_language();
 	$trid             = $sitepress->get_element_trid( $post->ID );
