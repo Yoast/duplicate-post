@@ -92,6 +92,10 @@ final class Metabox_Test extends TestCase {
 		$post               = Mockery::mock( WP_Post::class );
 		$original_item      = Mockery::mock( WP_Post::class );
 
+		Monkey\Functions\expect( '\use_block_editor_for_post' )
+			->with( $post )
+			->andReturn( false );
+
 		$this->permissions_helper->expects( 'get_enabled_post_types' )
 			->andReturn( $enabled_post_types );
 
@@ -126,6 +130,10 @@ final class Metabox_Test extends TestCase {
 		$enabled_post_types = [ 'post' ];
 		$post               = Mockery::mock( WP_Post::class );
 
+		Monkey\Functions\expect( '\use_block_editor_for_post' )
+			->with( $post )
+			->andReturn( false );
+
 		$this->permissions_helper
 			->expects( 'get_enabled_post_types' )
 			->andReturn( $enabled_post_types );
@@ -150,6 +158,10 @@ final class Metabox_Test extends TestCase {
 		$enabled_post_types = [ 'post', 'page' ];
 		$post               = Mockery::mock( WP_Post::class );
 
+		Monkey\Functions\expect( '\use_block_editor_for_post' )
+			->with( $post )
+			->andReturn( false );
+
 		$this->permissions_helper
 			->expects( 'get_enabled_post_types' )
 			->andReturn( $enabled_post_types );
@@ -157,6 +169,28 @@ final class Metabox_Test extends TestCase {
 		$utils->expects( 'get_original' )
 			->with( $post )
 			->andReturn( null );
+
+		Monkey\Functions\expect( 'add_meta_box' )
+			->never();
+
+		$this->instance->add_custom_metabox( 'post', $post );
+	}
+
+	/**
+	 * Tests the call to the add_custom_metabox function when using block editor.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Metabox::add_custom_metabox
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 *
+	 * @return void
+	 */
+	public function test_add_custom_metabox_block_editor() {
+		$post = Mockery::mock( WP_Post::class );
+
+		Monkey\Functions\expect( '\use_block_editor_for_post' )
+			->with( $post )
+			->andReturn( true );
 
 		Monkey\Functions\expect( 'add_meta_box' )
 			->never();

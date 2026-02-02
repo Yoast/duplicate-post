@@ -47,6 +47,11 @@ class Metabox {
 	 * @return void
 	 */
 	public function add_custom_metabox( $post_type, $post ) {
+		// Don't show the metabox in the block editor, we use the sidebar panel instead.
+		if ( \use_block_editor_for_post( $post ) ) {
+			return;
+		}
+
 		$enabled_post_types = $this->permissions_helper->get_enabled_post_types();
 
 		if ( \in_array( $post_type, $enabled_post_types, true )

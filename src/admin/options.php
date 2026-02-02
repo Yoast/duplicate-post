@@ -233,10 +233,10 @@ class Options {
 				'tab'         => 'display',
 				'fieldset'    => 'show-original',
 				'type'        => 'checkbox',
-				'label'       => \__( 'In a metabox in the Edit screen', 'duplicate-post' ),
+				'label'       => \__( 'In a sidebar panel or in a metabox in the Edit screen', 'duplicate-post' ),
 				'value'       => 1,
 				'description' => [
-					\__( "You'll also be able to delete the reference to the original item with a checkbox", 'duplicate-post' ),
+					\__( "You'll also be able to delete the reference to the original item", 'duplicate-post' ),
 				],
 			],
 			'duplicate_post_show_original_column'         => [

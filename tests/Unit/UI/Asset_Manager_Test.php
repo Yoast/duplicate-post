@@ -107,6 +107,7 @@ final class Asset_Manager_Test extends TestCase {
 				'duplicate_post_edit_script',
 				$edit_script_url,
 				[
+					'wp-api-fetch',
 					'wp-components',
 					'wp-element',
 					'wp-i18n',

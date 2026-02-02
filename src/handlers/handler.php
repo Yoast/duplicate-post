@@ -55,6 +55,13 @@ class Handler {
 	protected $check_handler;
 
 	/**
+	 * The REST API handler.
+	 *
+	 * @var Rest_API_Handler
+	 */
+	protected $rest_api_handler;
+
+	/**
 	 * Initializes the class.
 	 *
 	 * @param Post_Duplicator    $post_duplicator    The Post_Duplicator object.
@@ -68,10 +75,12 @@ class Handler {
 		$this->link_handler      = new Link_Handler( $this->post_duplicator, $this->permissions_helper );
 		$this->check_handler     = new Check_Changes_Handler( $this->permissions_helper );
 		$this->save_post_handler = new Save_Post_Handler( $this->permissions_helper );
+		$this->rest_api_handler  = new Rest_API_Handler( $this->permissions_helper );
 
 		$this->bulk_handler->register_hooks();
 		$this->link_handler->register_hooks();
 		$this->check_handler->register_hooks();
 		$this->save_post_handler->register_hooks();
+		$this->rest_api_handler->register_hooks();
 	}
 }
