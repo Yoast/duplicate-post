@@ -186,6 +186,35 @@ final class Post_Republisher_Test extends TestCase {
 	}
 
 	/**
+	 * Tests that create_duplicate_for_rewrite_and_republish copies taxonomies.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Post_Duplicator::create_duplicate_for_rewrite_and_republish
+	 * @covers \Yoast\WP\Duplicate_Post\Post_Duplicator::copy_post_taxonomies
+	 *
+	 * @return void
+	 */
+	public function test_create_duplicate_for_rewrite_and_republish_copies_taxonomies() {
+		$category_id = $this->factory->category->create( [ 'name' => 'Test Category' ] );
+		$tag_id      = $this->factory->tag->create( [ 'name' => 'Test Tag' ] );
+
+		$original = $this->create_original_post();
+		\wp_set_post_categories( $original->ID, [ $category_id ] );
+		\wp_set_post_tags( $original->ID, [ $tag_id ] );
+
+		$copy = $this->create_rewrite_and_republish_copy( $original );
+
+		// Verify categories are copied.
+		$original_categories = \wp_get_post_categories( $original->ID );
+		$copy_categories     = \wp_get_post_categories( $copy->ID );
+		$this->assertEquals( $original_categories, $copy_categories );
+
+		// Verify tags are copied.
+		$original_tags = \wp_get_post_tags( $original->ID, [ 'fields' => 'ids' ] );
+		$copy_tags     = \wp_get_post_tags( $copy->ID, [ 'fields' => 'ids' ] );
+		$this->assertEquals( $original_tags, $copy_tags );
+	}
+
+	/**
 	 * Tests that republish overwrites the original post with copy content.
 	 *
 	 * @covers ::republish
@@ -552,6 +581,73 @@ final class Post_Republisher_Test extends TestCase {
 		$updated_original = \get_post( $original->ID );
 		$this->assertEquals( 'Private Copy Title', $updated_original->post_title );
 		$this->assertEquals( 'private', $updated_original->post_status );
+	}
+
+	/**
+	 * Tests that republish_request does nothing when copy is in draft status.
+	 *
+	 * @covers ::republish_request
+	 *
+	 * @return void
+	 */
+	public function test_republish_request_does_not_republish_draft_copy() {
+		$original = $this->create_original_post(
+			[
+				'post_title'   => 'Original Title',
+				'post_content' => 'Original content.',
+			]
+		);
+		$copy     = $this->create_rewrite_and_republish_copy( $original );
+
+		// Copy is a draft by default - modify it.
+		\wp_update_post(
+			[
+				'ID'         => $copy->ID,
+				'post_title' => 'Draft Copy Title',
+			]
+		);
+		$copy = \get_post( $copy->ID );
+
+		// Try republish_request on draft copy.
+		$this->instance->republish_request( $copy );
+
+		// Original should be unchanged.
+		$unchanged_original = \get_post( $original->ID );
+		$this->assertEquals( 'Original Title', $unchanged_original->post_title );
+	}
+
+	/**
+	 * Tests that republish_request does nothing when copy is in pending status.
+	 *
+	 * @covers ::republish_request
+	 *
+	 * @return void
+	 */
+	public function test_republish_request_does_not_republish_pending_copy() {
+		$original = $this->create_original_post(
+			[
+				'post_title'   => 'Original Title',
+				'post_content' => 'Original content.',
+			]
+		);
+		$copy     = $this->create_rewrite_and_republish_copy( $original );
+
+		// Update copy to pending status.
+		$this->update_post_without_republish(
+			[
+				'ID'           => $copy->ID,
+				'post_title'   => 'Pending Copy Title',
+				'post_status'  => 'pending',
+			]
+		);
+		$copy = \get_post( $copy->ID );
+
+		// Try republish_request on pending copy.
+		$this->instance->republish_request( $copy );
+
+		// Original should be unchanged.
+		$unchanged_original = \get_post( $original->ID );
+		$this->assertEquals( 'Original Title', $unchanged_original->post_title );
 	}
 
 	/**
