@@ -3,6 +3,7 @@
 namespace Yoast\WP\Duplicate_Post\Tests\WP;
 
 use WP_Post;
+use WPDieException;
 use Yoast\WP\Duplicate_Post\Permissions_Helper;
 use Yoast\WP\Duplicate_Post\Post_Duplicator;
 use Yoast\WP\Duplicate_Post\Post_Republisher;
@@ -1361,5 +1362,98 @@ final class Post_Republisher_Test extends TestCase {
 		\remove_action( 'duplicate_post_after_republish', $after_callback );
 
 		$this->assertSame( [ 'before', 'after' ], $action_order );
+	}
+
+	/**
+	 * Tests that clean_up_after_redirect does nothing when no redirect parameters are present.
+	 *
+	 * @covers ::clean_up_after_redirect
+	 *
+	 * @return void
+	 */
+	public function test_clean_up_after_redirect_does_nothing_without_params() {
+		// Ensure no $_GET parameters are set.
+		unset( $_GET['dprepublished'], $_GET['post'], $_GET['dpnonce'] );
+
+		// This should not throw any exception.
+		$this->instance->clean_up_after_redirect();
+
+		// If we get here without errors, the test passed.
+		$this->assertTrue( true );
+	}
+
+	/**
+	 * Tests that clean_up_after_redirect does nothing when only some redirect parameters are present.
+	 *
+	 * @covers ::clean_up_after_redirect
+	 *
+	 * @return void
+	 */
+	public function test_clean_up_after_redirect_does_nothing_with_partial_params() {
+		// Set only dprepublished, missing post and dpnonce.
+		$_GET['dprepublished'] = '1';
+		unset( $_GET['post'], $_GET['dpnonce'] );
+
+		// This should not throw any exception.
+		$this->instance->clean_up_after_redirect();
+
+		// Clean up.
+		unset( $_GET['dprepublished'] );
+
+		// If we get here without errors, the test passed.
+		$this->assertTrue( true );
+	}
+
+	/**
+	 * Tests that clean_up_after_redirect verifies the nonce when all redirect parameters are present.
+	 *
+	 * @covers ::clean_up_after_redirect
+	 *
+	 * @return void
+	 */
+	public function test_clean_up_after_redirect_verifies_nonce_with_valid_nonce() {
+		$original = $this->create_original_post();
+
+		// Set the redirect parameters with a valid nonce.
+		$_GET['dprepublished'] = '1';
+		$_GET['post']          = $original->ID;
+		$_GET['dpnonce']       = \wp_create_nonce( 'dp-republish' );
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput,WordPress.Security.NonceVerification -- Setting up test data.
+		$_REQUEST['dpnonce'] = $_GET['dpnonce'];
+
+		// This should not throw any exception because the nonce is valid.
+		$this->instance->clean_up_after_redirect();
+
+		// Clean up.
+		unset( $_GET['dprepublished'], $_GET['post'], $_GET['dpnonce'], $_REQUEST['dpnonce'] );
+
+		// If we get here without errors, the test passed.
+		$this->assertTrue( true );
+	}
+
+	/**
+	 * Tests that clean_up_after_redirect dies with invalid nonce.
+	 *
+	 * @covers ::clean_up_after_redirect
+	 *
+	 * @return void
+	 */
+	public function test_clean_up_after_redirect_dies_with_invalid_nonce() {
+		$original = $this->create_original_post();
+
+		// Set the redirect parameters with an invalid nonce.
+		$_GET['dprepublished'] = '1';
+		$_GET['post']          = $original->ID;
+		$_GET['dpnonce']       = 'invalid_nonce';
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput,WordPress.Security.NonceVerification -- Setting up test data.
+		$_REQUEST['dpnonce'] = $_GET['dpnonce'];
+
+		// Expect wp_die to be called due to invalid nonce.
+		$this->expectException( WPDieException::class );
+
+		$this->instance->clean_up_after_redirect();
+
+		// Clean up (may not be reached due to exception).
+		unset( $_GET['dprepublished'], $_GET['post'], $_GET['dpnonce'], $_REQUEST['dpnonce'] );
 	}
 }
