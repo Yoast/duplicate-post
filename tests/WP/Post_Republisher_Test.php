@@ -1398,6 +1398,50 @@ final class Post_Republisher_Test extends TestCase {
 	}
 
 	/**
+	 * Tests that republish_request dies when user cannot edit the original post.
+	 *
+	 * @covers ::republish_request
+	 *
+	 * @return void
+	 */
+	public function test_republish_request_dies_when_user_cannot_edit_original() {
+		// Create an admin user who will own the original post.
+		$admin_user_id = $this->factory->user->create( [ 'role' => 'administrator' ] );
+		\wp_set_current_user( $admin_user_id );
+
+		$original = $this->create_original_post(
+			[
+				'post_title'   => 'Admin Post',
+				'post_content' => 'Admin content.',
+				'post_author'  => $admin_user_id,
+			]
+		);
+
+		$copy = $this->create_rewrite_and_republish_copy( $original );
+
+		// Update copy status to dp-rewrite-republish.
+		$this->update_post_without_republish(
+			[
+				'ID'          => $copy->ID,
+				'post_status' => 'dp-rewrite-republish',
+			]
+		);
+		$copy = \get_post( $copy->ID );
+
+		// Switch to a contributor user who cannot edit the admin's post.
+		$contributor_user_id = $this->factory->user->create( [ 'role' => 'contributor' ] );
+		\wp_set_current_user( $contributor_user_id );
+
+		// Verify the contributor cannot edit the original post.
+		$this->assertFalse( \current_user_can( 'edit_post', $original->ID ) );
+
+		// Expect wp_die to be called.
+		$this->expectException( 'WPDieException' );
+
+		$this->instance->republish_request( $copy );
+	}
+
+	/**
 	 * Tests that republish does not remove meta that was deleted from copy.
 	 *
 	 * Note: The copy_post_meta_info method only copies meta that exists in the copy,

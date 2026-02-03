@@ -89,8 +89,13 @@ class Bulk_Handler {
 		}
 
 		$counter = 0;
+		$skipped = 0;
 		if ( \is_array( $post_ids ) ) {
 			foreach ( $post_ids as $post_id ) {
+				if ( ! \current_user_can( 'edit_post', $post_id ) ) {
+					++$skipped;
+					continue;
+				}
 				$post = \get_post( $post_id );
 				if ( ! empty( $post ) && $this->permissions_helper->should_rewrite_and_republish_be_allowed( $post ) ) {
 					$new_post_id = $this->post_duplicator->create_duplicate_for_rewrite_and_republish( $post );
@@ -100,7 +105,11 @@ class Bulk_Handler {
 				}
 			}
 		}
-		return \add_query_arg( 'bulk_rewriting', $counter, $redirect_to );
+		$redirect_to = \add_query_arg( 'bulk_rewriting', $counter, $redirect_to );
+		if ( $skipped > 0 ) {
+			$redirect_to = \add_query_arg( 'bulk_rewriting_skipped', $skipped, $redirect_to );
+		}
+		return $redirect_to;
 	}
 
 	/**
@@ -118,8 +127,13 @@ class Bulk_Handler {
 		}
 
 		$counter = 0;
+		$skipped = 0;
 		if ( \is_array( $post_ids ) ) {
 			foreach ( $post_ids as $post_id ) {
+				if ( ! \current_user_can( 'edit_post', $post_id ) ) {
+					++$skipped;
+					continue;
+				}
 				$post = \get_post( $post_id );
 				if ( ! empty( $post ) && ! $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
 					if ( \intval( \get_option( 'duplicate_post_copychildren' ) !== 1 )
@@ -133,6 +147,10 @@ class Bulk_Handler {
 				}
 			}
 		}
-		return \add_query_arg( 'bulk_cloned', $counter, $redirect_to );
+		$redirect_to = \add_query_arg( 'bulk_cloned', $counter, $redirect_to );
+		if ( $skipped > 0 ) {
+			$redirect_to = \add_query_arg( 'bulk_cloned_skipped', $skipped, $redirect_to );
+		}
+		return $redirect_to;
 	}
 }
