@@ -61,10 +61,10 @@ class Post_Republisher {
 		 */
 		\add_action( 'wp_insert_post', [ $this, 'republish_after_post_request' ], \PHP_INT_MAX, 2 );
 
-		// Clean up orphaned R&R copies when opening a post for editing.
-		\add_action( 'load-post.php', [ $this, 'clean_up_orphaned_copy' ], 5 );
 		// Clean up after the redirect to the original post.
 		\add_action( 'load-post.php', [ $this, 'clean_up_after_redirect' ] );
+		// Clean up orphaned R&R copies when opening a post for editing.
+		\add_action( 'load-post.php', [ $this, 'clean_up_orphaned_copy' ], 11 );
 		// Clean up the original when the copy is manually deleted from the trash.
 		\add_action( 'before_delete_post', [ $this, 'clean_up_when_copy_manually_deleted' ] );
 		// Ensure scheduled Rewrite and Republish posts are properly handled.
