@@ -119,7 +119,7 @@ final class Post_Republisher_Test extends TestCase {
 			->with( [ $this->instance, 'clean_up_after_redirect' ] );
 
 		Monkey\Actions\expectAdded( 'load-post.php' )
-			->with( [ $this->instance, 'clean_up_orphaned_copy' ], 11, 1 );
+			->with( [ $this->instance, 'clean_up_orphaned_copy' ], 11 );
 
 		Monkey\Actions\expectAdded( 'before_delete_post' )
 			->with( [ $this->instance, 'clean_up_when_copy_manually_deleted' ] );

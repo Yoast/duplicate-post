@@ -937,7 +937,7 @@ final class Post_Republisher_Test extends TestCase {
 	 *
 	 * @return void
 	 */
-	public function test_republish_removes_taxonomies_when_removed_from_copy() {
+	public function test_republish_replaces_taxonomies_from_copy() {
 		$category_id = $this->factory->category->create( [ 'name' => 'Original Category' ] );
 		$tag_id      = $this->factory->tag->create( [ 'name' => 'Original Tag' ] );
 

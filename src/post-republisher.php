@@ -146,7 +146,7 @@ class Post_Republisher {
 
 		// Trigger the redirect in the Classic Editor.
 		if ( $this->is_classic_editor_post_request() ) {
-			$this->redirect( $original_post->ID, $post->ID );
+			$this->redirect( $original_post->ID );
 		}
 	}
 
@@ -445,7 +445,7 @@ class Post_Republisher {
 					'dprepublished' => 1,
 					'dpnonce'       => \wp_create_nonce( 'dp-republish' ),
 				],
-				\admin_url( 'post.php?action=edit&post=' . (int) $original_post_id )
+				\admin_url( 'post.php?action=edit&post=' . $original_post_id )
 			)
 		);
 		exit();
