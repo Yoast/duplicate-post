@@ -199,6 +199,61 @@ final class Bulk_Handler_Test extends TestCase {
 	}
 
 	/**
+	 * Tests that clone_bulk_action_handler does not increment counter when duplication returns WP_Error.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Handlers\Bulk_Handler::clone_bulk_action_handler
+	 *
+	 * @return void
+	 */
+	public function test_clone_bulk_action_handler_handles_wp_error() {
+		$redirect_to     = 'http://example.com/wp-admin/edit.php';
+		$post            = Mockery::mock( WP_Post::class );
+		$post->ID        = 1;
+		$post->post_type = 'post';
+		$wp_error        = Mockery::mock( 'WP_Error' );
+
+		Monkey\Functions\expect( 'current_user_can' )
+			->with( 'edit_post', 1 )
+			->andReturn( true );
+
+		Monkey\Functions\expect( 'get_post' )
+			->with( 1 )
+			->andReturn( $post );
+
+		$this->permissions_helper
+			->expects( 'is_rewrite_and_republish_copy' )
+			->with( $post )
+			->andReturn( false );
+
+		Monkey\Functions\expect( 'get_option' )
+			->with( 'duplicate_post_copychildren' )
+			->andReturn( 0 );
+
+		Monkey\Functions\expect( 'is_post_type_hierarchical' )
+			->with( 'post' )
+			->andReturn( false );
+
+		Monkey\Functions\expect( 'duplicate_post_create_duplicate' )
+			->with( $post )
+			->andReturn( $wp_error );
+
+		Monkey\Functions\expect( 'is_wp_error' )
+			->with( $wp_error )
+			->andReturn( true );
+
+		Monkey\Functions\expect( 'add_query_arg' )
+			->andReturnUsing(
+				static function ( $key, $value, $url ) {
+					return $url . ( ( \strpos( $url, '?' ) === false ) ? '?' : '&' ) . $key . '=' . $value;
+				}
+			);
+
+		$result = $this->instance->clone_bulk_action_handler( $redirect_to, 'duplicate_post_bulk_clone', [ 1 ] );
+
+		$this->assertStringContainsString( 'bulk_cloned=0', $result );
+	}
+
+	/**
 	 * Tests that rewrite_bulk_action_handler returns early when action is not rewrite.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Handlers\Bulk_Handler::rewrite_bulk_action_handler
