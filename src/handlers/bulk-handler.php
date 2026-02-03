@@ -92,16 +92,17 @@ class Bulk_Handler {
 		$skipped = 0;
 		if ( \is_array( $post_ids ) ) {
 			foreach ( $post_ids as $post_id ) {
+				$post = \get_post( $post_id );
+				if ( empty( $post ) || ! $this->permissions_helper->should_rewrite_and_republish_be_allowed( $post ) ) {
+					continue;
+				}
 				if ( ! \current_user_can( 'edit_post', $post_id ) ) {
 					++$skipped;
 					continue;
 				}
-				$post = \get_post( $post_id );
-				if ( ! empty( $post ) && $this->permissions_helper->should_rewrite_and_republish_be_allowed( $post ) ) {
-					$new_post_id = $this->post_duplicator->create_duplicate_for_rewrite_and_republish( $post );
-					if ( ! \is_wp_error( $new_post_id ) ) {
-						++$counter;
-					}
+				$new_post_id = $this->post_duplicator->create_duplicate_for_rewrite_and_republish( $post );
+				if ( ! \is_wp_error( $new_post_id ) ) {
+					++$counter;
 				}
 			}
 		}
@@ -130,20 +131,22 @@ class Bulk_Handler {
 		$skipped = 0;
 		if ( \is_array( $post_ids ) ) {
 			foreach ( $post_ids as $post_id ) {
+				$post = \get_post( $post_id );
+				if ( empty( $post ) || $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
+					continue;
+				}
+				if ( \intval( \get_option( 'duplicate_post_copychildren' ) ) === 1
+					&& \is_post_type_hierarchical( $post->post_type )
+					&& Utils::has_ancestors_marked( $post, $post_ids )
+				) {
+					continue;
+				}
 				if ( ! \current_user_can( 'edit_post', $post_id ) ) {
 					++$skipped;
 					continue;
 				}
-				$post = \get_post( $post_id );
-				if ( ! empty( $post ) && ! $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
-					if ( \intval( \get_option( 'duplicate_post_copychildren' ) !== 1 )
-						|| ! \is_post_type_hierarchical( $post->post_type )
-						|| ( \is_post_type_hierarchical( $post->post_type ) && ! Utils::has_ancestors_marked( $post, $post_ids ) )
-					) {
-						if ( ! \is_wp_error( \duplicate_post_create_duplicate( $post ) ) ) {
-							++$counter;
-						}
-					}
+				if ( ! \is_wp_error( \duplicate_post_create_duplicate( $post ) ) ) {
+					++$counter;
 				}
 			}
 		}

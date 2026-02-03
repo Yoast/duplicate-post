@@ -92,7 +92,39 @@ final class Bulk_Handler_Test extends TestCase {
 	 * @return void
 	 */
 	public function test_clone_bulk_action_handler_skips_posts_user_cannot_edit() {
-		$redirect_to = 'http://example.com/wp-admin/edit.php';
+		$redirect_to      = 'http://example.com/wp-admin/edit.php';
+		$post1            = Mockery::mock( WP_Post::class );
+		$post1->ID        = 1;
+		$post1->post_type = 'post';
+		$post2            = Mockery::mock( WP_Post::class );
+		$post2->ID        = 2;
+		$post2->post_type = 'post';
+
+		Monkey\Functions\expect( 'get_post' )
+			->with( 1 )
+			->andReturn( $post1 );
+
+		Monkey\Functions\expect( 'get_post' )
+			->with( 2 )
+			->andReturn( $post2 );
+
+		$this->permissions_helper
+			->allows( 'is_rewrite_and_republish_copy' )
+			->with( $post1 )
+			->andReturn( false );
+
+		$this->permissions_helper
+			->allows( 'is_rewrite_and_republish_copy' )
+			->with( $post2 )
+			->andReturn( false );
+
+		Monkey\Functions\expect( 'get_option' )
+			->with( 'duplicate_post_copychildren' )
+			->andReturn( 0 );
+
+		Monkey\Functions\expect( 'is_post_type_hierarchical' )
+			->with( 'post' )
+			->andReturn( false );
 
 		Monkey\Functions\expect( 'current_user_can' )
 			->with( 'edit_post', 1 )
@@ -189,7 +221,31 @@ final class Bulk_Handler_Test extends TestCase {
 	 * @return void
 	 */
 	public function test_rewrite_bulk_action_handler_skips_posts_user_cannot_edit() {
-		$redirect_to = 'http://example.com/wp-admin/edit.php';
+		$redirect_to        = 'http://example.com/wp-admin/edit.php';
+		$post1              = Mockery::mock( WP_Post::class );
+		$post1->ID          = 1;
+		$post1->post_status = 'publish';
+		$post2              = Mockery::mock( WP_Post::class );
+		$post2->ID          = 2;
+		$post2->post_status = 'publish';
+
+		Monkey\Functions\expect( 'get_post' )
+			->with( 1 )
+			->andReturn( $post1 );
+
+		Monkey\Functions\expect( 'get_post' )
+			->with( 2 )
+			->andReturn( $post2 );
+
+		$this->permissions_helper
+			->allows( 'should_rewrite_and_republish_be_allowed' )
+			->with( $post1 )
+			->andReturn( true );
+
+		$this->permissions_helper
+			->allows( 'should_rewrite_and_republish_be_allowed' )
+			->with( $post2 )
+			->andReturn( true );
 
 		Monkey\Functions\expect( 'current_user_can' )
 			->with( 'edit_post', 1 )
