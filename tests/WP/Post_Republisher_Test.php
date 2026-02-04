@@ -270,8 +270,11 @@ final class Post_Republisher_Test extends TestCase {
 		// Verify the original is still published.
 		$this->assertEquals( 'publish', $updated_original->post_status );
 
-		// Verify the copy is deleted after republishing.
-		$this->assertNull( \get_post( $copy->ID ) );
+		// Verify the copy is NOT deleted by republish() - deletion is handled separately.
+		$this->assertNotNull( \get_post( $copy->ID ) );
+
+		// Verify the copy was marked as republished.
+		$this->assertEquals( '1', \get_post_meta( $copy->ID, '_dp_has_been_republished', true ) );
 	}
 
 	/**
@@ -1040,13 +1043,16 @@ final class Post_Republisher_Test extends TestCase {
 	}
 
 	/**
-	 * Tests the full Rewrite & Republish workflow from start to finish.
+	 * Tests the Rewrite & Republish workflow updates original content.
+	 *
+	 * Note: This test verifies that republish() updates the original post content.
+	 * The copy deletion is handled separately by delete_copy() and tested in
+	 * test_full_rewrite_and_republish_workflow_with_delete().
 	 *
 	 * @covers ::republish
 	 * @covers ::republish_post_elements
 	 * @covers ::republish_post_taxonomies
 	 * @covers ::republish_post_meta
-	 * @covers ::delete_copy
 	 *
 	 * @return void
 	 */
@@ -1088,9 +1094,11 @@ final class Post_Republisher_Test extends TestCase {
 		$this->assertEquals( 'Rewritten content.', $updated_original->post_content );
 		$this->assertEquals( 'publish', $updated_original->post_status );
 
-		// Step 6: Verify the copy is deleted and meta is cleaned up.
-		$this->assertNull( \get_post( $copy->ID ) );
-		$this->assertEmpty( \get_post_meta( $original->ID, '_dp_has_rewrite_republish_copy', true ) );
+		// Step 6: Verify the copy is NOT deleted by republish() - deletion is separate.
+		$this->assertNotNull( \get_post( $copy->ID ) );
+
+		// Verify the copy was marked as republished.
+		$this->assertEquals( '1', \get_post_meta( $copy->ID, '_dp_has_been_republished', true ) );
 	}
 
 	/**
@@ -1313,36 +1321,22 @@ final class Post_Republisher_Test extends TestCase {
 	}
 
 	/**
-	 * Tests that republish still updates original even if delete_copy fails.
+	 * Tests that delete_copy cleans up meta even if wp_delete_post fails.
 	 *
-	 * This verifies the behavior when wp_delete_post() fails during republish.
-	 * The original post should still be updated, and the meta cleanup should still happen.
+	 * This verifies the behavior when wp_delete_post() fails during delete_copy().
+	 * The meta cleanup should still happen even if the post is not actually deleted.
 	 *
-	 * @covers ::republish
 	 * @covers ::delete_copy
-	 * @covers ::republish_post_elements
 	 *
 	 * @return void
 	 */
-	public function test_republish_updates_original_even_if_delete_fails() {
-		$original = $this->create_original_post(
-			[
-				'post_title'   => 'Original Title',
-				'post_content' => 'Original content.',
-			],
-		);
+	public function test_delete_copy_cleans_meta_even_if_wp_delete_post_fails() {
+		$original = $this->create_original_post();
 		$copy     = $this->create_rewrite_and_republish_copy( $original );
 		$copy_id  = $copy->ID;
 
-		// Update copy content.
-		\wp_update_post(
-			[
-				'ID'           => $copy->ID,
-				'post_title'   => 'Updated Title',
-				'post_content' => 'Updated content.',
-			],
-		);
-		$copy = \get_post( $copy->ID );
+		// Verify the meta exists before deletion.
+		$this->assertEquals( $copy_id, (int) \get_post_meta( $original->ID, '_dp_has_rewrite_republish_copy', true ) );
 
 		// Prevent deletion by filtering pre_delete_post.
 		$prevent_deletion = static function ( $delete, $post ) use ( $copy_id ) {
@@ -1353,16 +1347,11 @@ final class Post_Republisher_Test extends TestCase {
 		};
 		\add_filter( 'pre_delete_post', $prevent_deletion, 10, 2 );
 
-		// Republish - delete will fail but republish should still work.
-		$this->instance->republish( $copy, $original );
+		// Call delete_copy - wp_delete_post will fail but meta cleanup should still happen.
+		$this->instance->delete_copy( $copy_id, $original->ID );
 
 		// Remove the filter.
 		\remove_filter( 'pre_delete_post', $prevent_deletion, 10 );
-
-		// Verify the original was still updated despite delete failure.
-		$updated_original = \get_post( $original->ID );
-		$this->assertEquals( 'Updated Title', $updated_original->post_title );
-		$this->assertEquals( 'Updated content.', $updated_original->post_content );
 
 		// Verify the copy still exists (because deletion failed).
 		$still_existing_copy = \get_post( $copy_id );
@@ -1370,9 +1359,6 @@ final class Post_Republisher_Test extends TestCase {
 
 		// Verify the meta was still cleaned up from the original.
 		$this->assertEmpty( \get_post_meta( $original->ID, '_dp_has_rewrite_republish_copy', true ) );
-
-		// Verify the copy was marked as republished.
-		$this->assertEquals( '1', \get_post_meta( $copy_id, '_dp_has_been_republished', true ) );
 
 		// Clean up manually.
 		\wp_delete_post( $copy_id, true );
@@ -1484,9 +1470,11 @@ final class Post_Republisher_Test extends TestCase {
 	 */
 	public function test_clean_up_after_redirect_dies_with_invalid_nonce() {
 		$original = $this->create_original_post();
+		$copy     = $this->create_rewrite_and_republish_copy( $original );
 
 		// Set the redirect parameters with an invalid nonce.
 		$_GET['dprepublished'] = '1';
+		$_GET['dpcopy']        = $copy->ID;
 		$_GET['post']          = $original->ID;
 		$_GET['dpnonce']       = 'invalid_nonce';
 		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput,WordPress.Security.NonceVerification -- Setting up test data.
@@ -1498,6 +1486,6 @@ final class Post_Republisher_Test extends TestCase {
 		$this->instance->clean_up_after_redirect();
 
 		// Clean up (may not be reached due to exception).
-		unset( $_GET['dprepublished'], $_GET['post'], $_GET['dpnonce'], $_REQUEST['dpnonce'] );
+		unset( $_GET['dprepublished'], $_GET['dpcopy'], $_GET['post'], $_GET['dpnonce'], $_REQUEST['dpnonce'] );
 	}
 }
