@@ -63,6 +63,8 @@ class Post_Republisher {
 
 		// Clean up after the redirect to the original post.
 		\add_action( 'load-post.php', [ $this, 'clean_up_after_redirect' ] );
+		// Clean up orphaned R&R copies when opening a post for editing.
+		\add_action( 'load-post.php', [ $this, 'clean_up_orphaned_copy' ], 11 );
 		// Clean up the original when the copy is manually deleted from the trash.
 		\add_action( 'before_delete_post', [ $this, 'clean_up_when_copy_manually_deleted' ] );
 		// Ensure scheduled Rewrite and Republish posts are properly handled.
@@ -144,7 +146,7 @@ class Post_Republisher {
 
 		// Trigger the redirect in the Classic Editor.
 		if ( $this->is_classic_editor_post_request() ) {
-			$this->redirect( $original_post->ID, $post->ID );
+			$this->redirect( $original_post->ID );
 		}
 	}
 
@@ -206,23 +208,49 @@ class Post_Republisher {
 	}
 
 	/**
-	 * Cleans up the copied post and temporary metadata after the user has been redirected.
+	 * Cleans up orphaned Rewrite & Republish copies when opening a post for editing.
+	 *
+	 * This ensures that if a copy is stuck in the dp-rewrite-republish status,
+	 * it gets deleted automatically to unblock the R&R functionality.
+	 *
+	 * @return void
+	 */
+	public function clean_up_orphaned_copy() {
+		if ( empty( $_GET['post'] ) || empty( $_GET['action'] ) || $_GET['action'] !== 'edit' ) {
+			return;
+		}
+
+		$post_id = \intval( \wp_unslash( $_GET['post'] ) );
+		$post    = \get_post( $post_id );
+
+		if ( ! $post || $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
+			return;
+		}
+
+		// Check if this post has an orphaned R&R copy.
+		$copy = $this->permissions_helper->get_rewrite_and_republish_copy( $post );
+
+		if ( ! $copy ) {
+			return;
+		}
+
+		// If the copy is in dp-rewrite-republish status, it's orphaned and should be deleted.
+		if ( $copy->post_status === 'dp-rewrite-republish' ) {
+			$this->delete_copy( $copy->ID, $post->ID );
+		}
+	}
+
+	/**
+	 * Cleans up after the user has been redirected to the original post.
+	 *
+	 * Note: The copy is now deleted immediately after republishing, so this method
+	 * only verifies the nonce when the redirect parameters are present.
 	 *
 	 * @return void
 	 */
 	public function clean_up_after_redirect() {
-		if ( ! empty( $_GET['dprepublished'] ) && ! empty( $_GET['dpcopy'] ) && ! empty( $_GET['post'] ) ) {
-			$copy_id = \intval( \wp_unslash( $_GET['dpcopy'] ) );
-			$post_id = \intval( \wp_unslash( $_GET['post'] ) );
-
+		if ( ! empty( $_GET['dprepublished'] ) && ! empty( $_GET['post'] ) && isset( $_GET['dpnonce'] ) ) {
 			\check_admin_referer( 'dp-republish', 'dpnonce' );
-
-			if ( \intval( \get_post_meta( $copy_id, '_dp_has_been_republished', true ) ) === 1 ) {
-				$this->delete_copy( $copy_id, $post_id );
-			}
-			else {
-				\wp_die( \esc_html__( 'An error occurred while deleting the Rewrite & Republish copy.', 'duplicate-post' ) );
-			}
 		}
 	}
 
@@ -284,6 +312,9 @@ class Post_Republisher {
 
 		// Mark the copy as already published.
 		\update_post_meta( $post->ID, '_dp_has_been_republished', '1' );
+
+		// Delete the copy immediately after republishing.
+		$this->delete_copy( $post->ID, $original_post->ID );
 
 		// Re-enable the creation of a new revision.
 		\add_action( 'post_updated', 'wp_save_post_revision', 10, 1 );
@@ -404,16 +435,14 @@ class Post_Republisher {
 	 * Redirects the user to the original post.
 	 *
 	 * @param int $original_post_id The ID of the original post to redirect to.
-	 * @param int $copy_id          The ID of the copy post.
 	 *
 	 * @return void
 	 */
-	protected function redirect( $original_post_id, $copy_id ) {
+	protected function redirect( $original_post_id ) {
 		\wp_safe_redirect(
 			\add_query_arg(
 				[
 					'dprepublished' => 1,
-					'dpcopy'        => $copy_id,
 					'dpnonce'       => \wp_create_nonce( 'dp-republish' ),
 				],
 				\admin_url( 'post.php?action=edit&post=' . $original_post_id )
