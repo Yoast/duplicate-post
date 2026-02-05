@@ -77,11 +77,8 @@ function duplicate_post_clone_post_link( $link = null, $before = '', $after = ''
 		return;
 	}
 
-	if ( $link === null ) {
-		$link = __( 'Copy to a new draft', 'duplicate-post' );
-	}
-
-	$link = '<a class="post-clone-link" href="' . esc_url( $url ) . '">' . esc_html( $link ) . '</a>';
+	$link ??= __( 'Copy to a new draft', 'duplicate-post' );
+	$link   = '<a class="post-clone-link" href="' . esc_url( $url ) . '">' . esc_html( $link ) . '</a>';
 
 	/**
 	 * Filter on the clone link HTML.

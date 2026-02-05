@@ -54,7 +54,7 @@ final class Metabox_Test extends TestCase {
 	public function test_constructor() {
 		$this->assertInstanceOf(
 			Permissions_Helper::class,
-			$this->getPropertyValue( $this->instance, 'permissions_helper' )
+			$this->getPropertyValue( $this->instance, 'permissions_helper' ),
 		);
 	}
 
@@ -111,7 +111,7 @@ final class Metabox_Test extends TestCase {
 				'post',
 				'side',
 				'default',
-				[ 'original' => $original_item ]
+				[ 'original' => $original_item ],
 			);
 
 		$this->instance->add_custom_metabox( 'post', $post );

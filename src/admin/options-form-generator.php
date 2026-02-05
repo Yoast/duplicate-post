@@ -78,7 +78,7 @@ class Options_Form_Generator {
 						$option,
 						$option_values['value'],
 						$id,
-						$this->is_checked( $option, $option_values, $parent_option )
+						$this->is_checked( $option, $option_values, $parent_option ),
 					);
 
 					$output .= \sprintf( '<label for="%s">%s</label>', $id, \esc_html( $option_values['label'] ) );
@@ -176,7 +176,7 @@ class Options_Form_Generator {
 						'checked' => \in_array( $taxonomy->name, $taxonomies_blacklist, true ),
 						'label'   => $taxonomy->labels->name . ' [' . $taxonomy->name . ']',
 					],
-				]
+				],
 			);
 			$output .= '</div>';
 		}
@@ -212,7 +212,7 @@ class Options_Form_Generator {
 							'checked' => $role->has_cap( 'copy_posts' ),
 							'label'   => \translate_user_role( $display_name ),
 						],
-					]
+					],
 				);
 			}
 		}
@@ -246,7 +246,7 @@ class Options_Form_Generator {
 						'checked' => $this->is_post_type_enabled( $post_type_object->name ),
 						'label'   => $post_type_object->labels->name,
 					],
-				]
+				],
 			);
 		}
 

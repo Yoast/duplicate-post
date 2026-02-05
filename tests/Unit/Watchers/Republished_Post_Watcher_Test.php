@@ -38,7 +38,7 @@ final class Republished_Post_Watcher_Test extends TestCase {
 		$this->permissions_helper = Mockery::mock( Permissions_Helper::class );
 
 		$this->instance = Mockery::mock(
-			Republished_Post_Watcher::class
+			Republished_Post_Watcher::class,
 		)->makePartial();
 		$this->instance->__construct( $this->permissions_helper );
 	}
@@ -53,7 +53,7 @@ final class Republished_Post_Watcher_Test extends TestCase {
 	public function test_constructor() {
 		$this->assertInstanceOf(
 			Permissions_Helper::class,
-			$this->getPropertyValue( $this->instance, 'permissions_helper' )
+			$this->getPropertyValue( $this->instance, 'permissions_helper' ),
 		);
 
 		$this->instance->expects( 'register_hooks' )->once();
@@ -87,7 +87,7 @@ final class Republished_Post_Watcher_Test extends TestCase {
 
 		$this->assertSame(
 			'Your original post has been replaced with the rewritten post. You are now viewing the (rewritten) original post.',
-			$this->instance->get_notice_text()
+			$this->instance->get_notice_text(),
 		);
 	}
 
@@ -162,7 +162,7 @@ final class Republished_Post_Watcher_Test extends TestCase {
 			->with(
 				'duplicate_post_edit_script',
 				'duplicatePostNotices.republished_notice = {"text":"notice","status":"success","isDismissible":true};',
-				'before'
+				'before',
 			);
 
 		$_REQUEST['dprepublished'] = '1';
@@ -242,7 +242,7 @@ final class Republished_Post_Watcher_Test extends TestCase {
 				'dpcopy',
 				'dpnonce',
 			],
-			$this->instance->add_removable_query_args( $array )
+			$this->instance->add_removable_query_args( $array ),
 		);
 	}
 }

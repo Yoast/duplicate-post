@@ -48,7 +48,7 @@ final class Post_Republisher_Test extends TestCase {
 
 		$this->instance = Mockery::mock(
 			Post_Republisher::class,
-			[ $this->post_duplicator, $this->permissions_helper ]
+			[ $this->post_duplicator, $this->permissions_helper ],
 		)->makePartial();
 	}
 
@@ -73,12 +73,12 @@ final class Post_Republisher_Test extends TestCase {
 	public function test_constructor() {
 		$this->assertInstanceOf(
 			Post_Duplicator::class,
-			$this->getPropertyValue( $this->instance, 'post_duplicator' )
+			$this->getPropertyValue( $this->instance, 'post_duplicator' ),
 		);
 
 		$this->assertInstanceOf(
 			Permissions_Helper::class,
-			$this->getPropertyValue( $this->instance, 'permissions_helper' )
+			$this->getPropertyValue( $this->instance, 'permissions_helper' ),
 		);
 	}
 
@@ -380,7 +380,7 @@ final class Post_Republisher_Test extends TestCase {
 				'wp_unslash' => static function ( $value ) {
 					return $value;
 				},
-			]
+			],
 		);
 
 		Monkey\Functions\expect( 'get_post' )
@@ -432,7 +432,7 @@ final class Post_Republisher_Test extends TestCase {
 				'wp_unslash' => static function ( $value ) {
 					return $value;
 				},
-			]
+			],
 		);
 
 		Monkey\Functions\expect( 'get_post' )
@@ -479,7 +479,7 @@ final class Post_Republisher_Test extends TestCase {
 				'wp_unslash' => static function ( $value ) {
 					return $value;
 				},
-			]
+			],
 		);
 
 		Monkey\Functions\expect( 'get_post' )

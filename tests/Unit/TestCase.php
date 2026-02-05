@@ -32,7 +32,7 @@ abstract class TestCase extends YoastTestCase {
 				'has_cap'    => true,
 				'add_cap'    => null,
 				'remove_cap' => null,
-			]
+			],
 		);
 
 		$role2               = Mockery::mock( WP_Role::class );
@@ -47,7 +47,7 @@ abstract class TestCase extends YoastTestCase {
 				'has_cap'    => false,
 				'add_cap'    => null,
 				'remove_cap' => null,
-			]
+			],
 		);
 
 		$role3               = Mockery::mock( WP_Role::class );
@@ -58,7 +58,7 @@ abstract class TestCase extends YoastTestCase {
 				'has_cap'    => false,
 				'add_cap'    => null,
 				'remove_cap' => null,
-			]
+			],
 		);
 
 		$role_objects = [
@@ -72,7 +72,7 @@ abstract class TestCase extends YoastTestCase {
 				'get_role' => static function ( $name ) use ( $role_objects ) {
 					return $role_objects[ $name ];
 				},
-			]
+			],
 		);
 	}
 }

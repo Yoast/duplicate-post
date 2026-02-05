@@ -277,10 +277,10 @@ class Classic_Editor {
 				/* translators: 1: The post title with a link to the frontend page, 2: The scheduled date and time. */
 				\esc_html__(
 					'This rewritten post %1$s is now scheduled to replace the original post. It will be published on %2$s.',
-					'duplicate-post'
+					'duplicate-post',
 				),
 				'<a href="' . $permalink . '">' . $post->post_title . '</a>',
-				'<strong>' . $scheduled_date . ' ' . $scheduled_time . '</strong>'
+				'<strong>' . $scheduled_date . ' ' . $scheduled_time . '</strong>',
 			);
 			return $messages;
 		}
@@ -290,10 +290,10 @@ class Classic_Editor {
 				/* translators: 1: The page title with a link to the frontend page, 2: The scheduled date and time. */
 				\esc_html__(
 					'This rewritten page %1$s is now scheduled to replace the original page. It will be published on %2$s.',
-					'duplicate-post'
+					'duplicate-post',
 				),
 				'<a href="' . $permalink . '">' . $post->post_title . '</a>',
-				'<strong>' . $scheduled_date . ' ' . $scheduled_time . '</strong>'
+				'<strong>' . $scheduled_date . ' ' . $scheduled_time . '</strong>',
 			);
 		}
 

@@ -221,7 +221,7 @@ if ( ! \defined( 'DUPLICATE_POST_CURRENT_VERSION' ) ) {
 								'<code>',
 								'</code>',
 								'<a href="' . \esc_url( 'https://developer.yoast.com/duplicate-post/functions-template-tags#duplicate_post_clone_post_link' ) . '">',
-								'</a>'
+								'</a>',
 							);
 							?>
 						</p>

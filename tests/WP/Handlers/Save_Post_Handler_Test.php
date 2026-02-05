@@ -228,7 +228,7 @@ final class Save_Post_Handler_Test extends TestCase {
 		$_POST['duplicate_post_remove_original'] = '1';
 
 		// Call the method with a non-existent post ID - should not throw error.
-		$this->instance->delete_on_save_post( 999999 );
+		$this->instance->delete_on_save_post( 999_999. );
 
 		// If we get here without errors, the test passes.
 	}

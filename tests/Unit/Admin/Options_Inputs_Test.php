@@ -45,17 +45,17 @@ final class Options_Inputs_Test extends TestCase {
 			->andReturnUsing(
 				static function ( $checked, $current = true ) {
 					return ( (string) $checked === (string) $current ) ? " checked='checked'" : '';
-				}
+				},
 			);
 
 		$this->assertSame(
 			'<input type="checkbox" name="test_checkbox" id="test-checkbox-id" value="1"  />',
-			$this->instance->checkbox( 'test_checkbox', 1, 'test-checkbox-id', false )
+			$this->instance->checkbox( 'test_checkbox', 1, 'test-checkbox-id', false ),
 		);
 
 		$this->assertSame(
 			'<input type="checkbox" name="test_checkbox2" id="test-checkbox-id2" value="1"  checked=\'checked\' />',
-			$this->instance->checkbox( 'test_checkbox2', 1, 'test-checkbox-id2', true )
+			$this->instance->checkbox( 'test_checkbox2', 1, 'test-checkbox-id2', true ),
 		);
 	}
 
@@ -69,7 +69,7 @@ final class Options_Inputs_Test extends TestCase {
 	public function test_text() {
 		$this->assertSame(
 			'<input type="text" name="test_text" id="test-text-id" value="Hello world"  />',
-			$this->instance->text( 'test_text', 'Hello world', 'test-text-id' )
+			$this->instance->text( 'test_text', 'Hello world', 'test-text-id' ),
 		);
 	}
 
@@ -83,7 +83,7 @@ final class Options_Inputs_Test extends TestCase {
 	public function test_number() {
 		$this->assertSame(
 			'<input type="number" name="test_number" id="test-number-id" value="1" min="0" step="1" />',
-			$this->instance->number( 'test_number', '1', 'test-number-id' )
+			$this->instance->number( 'test_number', '1', 'test-number-id' ),
 		);
 	}
 }

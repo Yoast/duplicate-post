@@ -49,7 +49,7 @@ class Copied_Post_Watcher {
 		if ( $this->permissions_helper->has_trashed_rewrite_and_republish_copy( $post ) ) {
 			return \__(
 				'You can only make one Rewrite & Republish duplicate at a time, and a duplicate of this post already exists in the trash. Permanently delete it if you want to make a new duplicate.',
-				'duplicate-post'
+				'duplicate-post',
 			);
 		}
 
@@ -57,7 +57,7 @@ class Copied_Post_Watcher {
 		if ( ! $scheduled_copy ) {
 			return \__(
 				'A duplicate of this post was made. Please note that any changes you make to this post will be replaced when the duplicated version is republished.',
-				'duplicate-post'
+				'duplicate-post',
 			);
 		}
 
@@ -65,10 +65,10 @@ class Copied_Post_Watcher {
 			/* translators: %1$s: scheduled date of the copy, %2$s: scheduled time of the copy. */
 			\__(
 				'A duplicate of this post was made, which is scheduled to replace this post on %1$s at %2$s.',
-				'duplicate-post'
+				'duplicate-post',
 			),
 			\get_the_time( \get_option( 'date_format' ), $scheduled_copy ),
-			\get_the_time( \get_option( 'time_format' ), $scheduled_copy )
+			\get_the_time( \get_option( 'time_format' ), $scheduled_copy ),
 		);
 	}
 
@@ -118,7 +118,7 @@ class Copied_Post_Watcher {
 			\wp_add_inline_script(
 				'duplicate_post_edit_script',
 				'duplicatePostNotices.has_rewrite_and_republish_notice = ' . \wp_json_encode( $notice ) . ';',
-				'before'
+				'before',
 			);
 		}
 	}

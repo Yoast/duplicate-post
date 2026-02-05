@@ -61,12 +61,12 @@ final class Row_Actions_Test extends TestCase {
 	public function test_constructor() {
 		$this->assertInstanceOf(
 			Link_Builder::class,
-			$this->getPropertyValue( $this->instance, 'link_builder' )
+			$this->getPropertyValue( $this->instance, 'link_builder' ),
 		);
 
 		$this->assertInstanceOf(
 			Permissions_Helper::class,
-			$this->getPropertyValue( $this->instance, 'permissions_helper' )
+			$this->getPropertyValue( $this->instance, 'permissions_helper' ),
 		);
 	}
 
@@ -145,7 +145,7 @@ final class Row_Actions_Test extends TestCase {
 			->andReturnUsing(
 				static function ( $post ) {
 					return $post->post_title;
-				}
+				},
 			);
 
 		$this->link_builder
@@ -161,7 +161,7 @@ final class Row_Actions_Test extends TestCase {
 				'view'                 => '<a href="http://basic.wordpress.test/?p=464&#038;preview=true" rel="bookmark" aria-label="Preview &#8220;Title&#8221;">Preview</a>',
 				'clone'                => '<a href="http://basic.wordpress.test/wp-admin/admin.php?action=duplicate_post_clone&amp;post=464" aria-label="Clone &#8220;Title&#8221;">Clone</a>',
 			],
-			$this->instance->add_clone_action_link( $actions, $post )
+			$this->instance->add_clone_action_link( $actions, $post ),
 		);
 	}
 
@@ -200,7 +200,7 @@ final class Row_Actions_Test extends TestCase {
 				'trash'                => '<a href="http://basic.wordpress.test/wp-admin/post.php?post=464&amp;action=trash&amp;_wpnonce=e52d0bff9b" class="submitdelete" aria-label="Move &#8220;Title&#8221; to the Trash">Trash</a>',
 				'view'                 => '<a href="http://basic.wordpress.test/?p=464&#038;preview=true" rel="bookmark" aria-label="Preview &#8220;Title&#8221;">Preview</a>',
 			],
-			$this->instance->add_clone_action_link( $actions, $post )
+			$this->instance->add_clone_action_link( $actions, $post ),
 		);
 	}
 
@@ -237,7 +237,7 @@ final class Row_Actions_Test extends TestCase {
 			->andReturnUsing(
 				static function ( $post ) {
 					return $post->post_title;
-				}
+				},
 			);
 
 		$this->link_builder
@@ -253,7 +253,7 @@ final class Row_Actions_Test extends TestCase {
 				'view'                 => '<a href="http://basic.wordpress.test/?p=464&#038;preview=true" rel="bookmark" aria-label="Preview &#8220;Title&#8221;">Preview</a>',
 				'edit_as_new_draft'    => '<a href="http://basic.wordpress.test/wp-admin/admin.php?action=duplicate_post_new_draft&amp;post=464" aria-label="New draft of &#8220;Title&#8221;">New Draft</a>',
 			],
-			$this->instance->add_new_draft_action_link( $actions, $post )
+			$this->instance->add_new_draft_action_link( $actions, $post ),
 		);
 	}
 
@@ -292,7 +292,7 @@ final class Row_Actions_Test extends TestCase {
 				'trash'                => '<a href="http://basic.wordpress.test/wp-admin/post.php?post=464&amp;action=trash&amp;_wpnonce=e52d0bff9b" class="submitdelete" aria-label="Move &#8220;Title&#8221; to the Trash">Trash</a>',
 				'view'                 => '<a href="http://basic.wordpress.test/?p=464&#038;preview=true" rel="bookmark" aria-label="Preview &#8220;Title&#8221;">Preview</a>',
 			],
-			$this->instance->add_new_draft_action_link( $actions, $post )
+			$this->instance->add_new_draft_action_link( $actions, $post ),
 		);
 	}
 
@@ -335,7 +335,7 @@ final class Row_Actions_Test extends TestCase {
 			->andReturnUsing(
 				static function ( $post ) {
 					return $post->post_title;
-				}
+				},
 			);
 
 		$this->link_builder
@@ -351,7 +351,7 @@ final class Row_Actions_Test extends TestCase {
 				'view'                 => '<a href="http://basic.wordpress.test/?p=464&#038;preview=true" rel="bookmark" aria-label="Preview &#8220;Title&#8221;">Preview</a>',
 				'rewrite'              => '<a href="http://basic.wordpress.test/wp-admin/admin.php?action=duplicate_post_rewrite&amp;post=464" aria-label="Rewrite & Republish &#8220;Title&#8221;">Rewrite & Republish</a>',
 			],
-			$this->instance->add_rewrite_and_republish_action_link( $actions, $post )
+			$this->instance->add_rewrite_and_republish_action_link( $actions, $post ),
 		);
 	}
 
@@ -396,7 +396,7 @@ final class Row_Actions_Test extends TestCase {
 				'trash'                => '<a href="http://basic.wordpress.test/wp-admin/post.php?post=464&amp;action=trash&amp;_wpnonce=e52d0bff9b" class="submitdelete" aria-label="Move &#8220;Title&#8221; to the Trash">Trash</a>',
 				'view'                 => '<a href="http://basic.wordpress.test/?p=464&#038;preview=true" rel="bookmark" aria-label="Preview &#8220;Title&#8221;">Preview</a>',
 			],
-			$this->instance->add_rewrite_and_republish_action_link( $actions, $post )
+			$this->instance->add_rewrite_and_republish_action_link( $actions, $post ),
 		);
 	}
 
@@ -440,7 +440,7 @@ final class Row_Actions_Test extends TestCase {
 				'trash'                => '<a href="http://basic.wordpress.test/wp-admin/post.php?post=464&amp;action=trash&amp;_wpnonce=e52d0bff9b" class="submitdelete" aria-label="Move &#8220;Title&#8221; to the Trash">Trash</a>',
 				'view'                 => '<a href="http://basic.wordpress.test/?p=464&#038;preview=true" rel="bookmark" aria-label="Preview &#8220;Title&#8221;">Preview</a>',
 			],
-			$this->instance->add_rewrite_and_republish_action_link( $actions, $post )
+			$this->instance->add_rewrite_and_republish_action_link( $actions, $post ),
 		);
 		$this->assertTrue( Monkey\Filters\applied( 'duplicate_post_show_link' ) === 0 );
 	}

@@ -62,7 +62,7 @@ final class Block_Editor_Test extends TestCase {
 				$this->link_builder,
 				$this->permissions_helper,
 				$this->asset_manager,
-			]
+			],
 		)->makePartial();
 	}
 
@@ -76,12 +76,12 @@ final class Block_Editor_Test extends TestCase {
 	public function test_constructor() {
 		$this->assertInstanceOf(
 			Link_Builder::class,
-			$this->getPropertyValue( $this->instance, 'link_builder' )
+			$this->getPropertyValue( $this->instance, 'link_builder' ),
 		);
 
 		$this->assertInstanceOf(
 			Permissions_Helper::class,
-			$this->getPropertyValue( $this->instance, 'permissions_helper' )
+			$this->getPropertyValue( $this->instance, 'permissions_helper' ),
 		);
 	}
 
@@ -101,9 +101,9 @@ final class Block_Editor_Test extends TestCase {
 				[
 					$this->instance,
 					'hide_elementor_post_status',
-				]
+				],
 			),
-			'Does not have expected elementor/editor/after_enqueue_styles action'
+			'Does not have expected elementor/editor/after_enqueue_styles action',
 		);
 
 		$this->assertNotFalse(
@@ -112,9 +112,9 @@ final class Block_Editor_Test extends TestCase {
 				[
 					$this->instance,
 					'enqueue_elementor_script',
-				]
+				],
 			),
-			'Does not have expected elementor/editor/before_enqueue_scripts action'
+			'Does not have expected elementor/editor/before_enqueue_scripts action',
 		);
 
 		$this->assertNotFalse(
@@ -123,9 +123,9 @@ final class Block_Editor_Test extends TestCase {
 				[
 					$this->instance,
 					'should_previously_used_keyword_assessment_run',
-				]
+				],
 			),
-			'Does not have expected admin_enqueue_scripts action'
+			'Does not have expected admin_enqueue_scripts action',
 		);
 
 		$this->assertNotFalse(
@@ -134,9 +134,9 @@ final class Block_Editor_Test extends TestCase {
 				[
 					$this->instance,
 					'enqueue_block_editor_scripts',
-				]
+				],
 			),
-			'Does not have expected enqueue_block_editor_assets action'
+			'Does not have expected enqueue_block_editor_assets action',
 		);
 
 		$this->assertNotFalse(
@@ -145,9 +145,9 @@ final class Block_Editor_Test extends TestCase {
 				[
 					$this->instance,
 					'remove_original_from_wpseo_link_suggestions',
-				]
+				],
 			),
-			'Does not have expected wpseo_link_suggestions_indexables filter'
+			'Does not have expected wpseo_link_suggestions_indexables filter',
 		);
 	}
 
@@ -803,7 +803,7 @@ final class Block_Editor_Test extends TestCase {
 			->andReturnUsing(
 				static function ( $query_string ) {
 					return 'http://basic.wordpress.test/wp-admin/' . $query_string;
-				}
+				},
 			);
 
 		Monkey\Functions\expect( '\wp_create_nonce' )
@@ -818,12 +818,12 @@ final class Block_Editor_Test extends TestCase {
 					}
 
 					return $query_string;
-				}
+				},
 			);
 
 		$this->assertSame(
 			'http://basic.wordpress.test/wp-admin/post.php?action=edit&post=64&dprepublished=1&dpcopy=128&dpnonce=12345678',
-			$this->instance->get_original_post_edit_url()
+			$this->instance->get_original_post_edit_url(),
 		);
 	}
 
@@ -850,7 +850,7 @@ final class Block_Editor_Test extends TestCase {
 
 		$this->assertSame(
 			'',
-			$this->instance->get_original_post_edit_url()
+			$this->instance->get_original_post_edit_url(),
 		);
 	}
 
@@ -867,7 +867,7 @@ final class Block_Editor_Test extends TestCase {
 
 		$this->assertSame(
 			'',
-			$this->instance->get_original_post_edit_url()
+			$this->instance->get_original_post_edit_url(),
 		);
 	}
 
@@ -901,7 +901,7 @@ final class Block_Editor_Test extends TestCase {
 
 		$this->assertSame(
 			'',
-			$this->instance->get_original_post_edit_url()
+			$this->instance->get_original_post_edit_url(),
 		);
 	}
 
@@ -927,7 +927,7 @@ final class Block_Editor_Test extends TestCase {
 		Monkey\Functions\expect( '\wp_add_inline_style' )
 			->with(
 				'elementor-editor',
-				'.elementor-control-post_status { display: none !important; }'
+				'.elementor-control-post_status { display: none !important; }',
 			);
 
 		$this->instance->hide_elementor_post_status();

@@ -29,7 +29,7 @@ require_once WPIntegration\get_path_to_wp_test_dir() . 'includes/functions.php';
 	'muplugins_loaded',
 	static function () {
 		require_once \dirname( __DIR__, 2 ) . '/duplicate-post.php';
-	}
+	},
 );
 
 /*

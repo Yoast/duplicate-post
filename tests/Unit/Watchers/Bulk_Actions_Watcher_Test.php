@@ -124,7 +124,7 @@ final class Bulk_Actions_Watcher_Test extends TestCase {
 				'bulk_cloned',
 				'bulk_rewriting',
 			],
-			$this->instance->add_removable_query_args( $array )
+			$this->instance->add_removable_query_args( $array ),
 		);
 	}
 

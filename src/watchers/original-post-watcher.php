@@ -50,7 +50,7 @@ class Original_Post_Watcher {
 	public function get_notice_text() {
 		return \__(
 			'The original post has been edited in the meantime. If you click "Republish", this rewritten post will replace the original post.',
-			'duplicate-post'
+			'duplicate-post',
 		);
 	}
 
@@ -100,7 +100,7 @@ class Original_Post_Watcher {
 			\wp_add_inline_script(
 				'duplicate_post_edit_script',
 				'duplicatePostNotices.has_original_changed_notice = ' . \wp_json_encode( $notice ) . ';',
-				'before'
+				'before',
 			);
 		}
 	}

@@ -103,7 +103,7 @@ final class Options_Test extends TestCase {
 					'value'    => 1,
 				],
 			],
-			$options
+			$options,
 		);
 	}
 
@@ -127,7 +127,7 @@ final class Options_Test extends TestCase {
 					'value'    => 1,
 				],
 			],
-			$options
+			$options,
 		);
 	}
 
@@ -177,7 +177,7 @@ final class Options_Test extends TestCase {
 					'value'    => 1,
 				],
 			],
-			$options
+			$options,
 		);
 	}
 

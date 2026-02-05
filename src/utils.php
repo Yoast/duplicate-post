@@ -120,7 +120,7 @@ class Utils {
 				\esc_url( \get_edit_post_link( $post->ID ) ),
 				/* translators: Hidden accessibility text; %s: post title */
 				\esc_attr( \sprintf( \__( 'Edit &#8220;%s&#8221;', 'duplicate-post' ), $title ) ),
-				$title
+				$title,
 			);
 		}
 		elseif ( \is_post_type_viewable( $post_type_object ) ) {
@@ -132,7 +132,7 @@ class Utils {
 						\esc_url( $preview_link ),
 						/* translators: Hidden accessibility text; %s: post title */
 						\esc_attr( \sprintf( \__( 'Preview &#8220;%s&#8221;', 'duplicate-post' ), $title ) ),
-						$title
+						$title,
 					);
 				}
 			}
@@ -142,7 +142,7 @@ class Utils {
 					\esc_url( \get_permalink( $post->ID ) ),
 					/* translators: Hidden accessibility text; %s: post title */
 					\esc_attr( \sprintf( \__( 'View &#8220;%s&#8221;', 'duplicate-post' ), $title ) ),
-					$title
+					$title,
 				);
 			}
 		}

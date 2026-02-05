@@ -792,7 +792,7 @@ final class Admin_Functions_Test extends TestCase {
 				'post_type'   => 'page',
 				'post_title'  => 'Parent Page',
 				'post_status' => 'publish',
-			]
+			],
 		);
 
 		$this->factory->post->create_and_get(
@@ -801,7 +801,7 @@ final class Admin_Functions_Test extends TestCase {
 				'post_title'  => 'Child Page',
 				'post_parent' => $parent->ID,
 				'post_status' => 'publish',
-			]
+			],
 		);
 
 		$new_parent_id = \duplicate_post_create_duplicate( $parent );
@@ -814,7 +814,7 @@ final class Admin_Functions_Test extends TestCase {
 			[
 				'post_parent' => $new_parent_id,
 				'post_type'   => 'page',
-			]
+			],
 		);
 
 		$this->assertCount( 1, $new_children );
@@ -837,7 +837,7 @@ final class Admin_Functions_Test extends TestCase {
 				'post_type'   => 'page',
 				'post_title'  => 'Parent Page',
 				'post_status' => 'publish',
-			]
+			],
 		);
 
 		$this->factory->post->create_and_get(
@@ -846,7 +846,7 @@ final class Admin_Functions_Test extends TestCase {
 				'post_title'  => 'Child Page',
 				'post_parent' => $parent->ID,
 				'post_status' => 'publish',
-			]
+			],
 		);
 
 		$new_parent_id = \duplicate_post_create_duplicate( $parent );
@@ -856,7 +856,7 @@ final class Admin_Functions_Test extends TestCase {
 			[
 				'post_parent' => $new_parent_id,
 				'post_type'   => 'page',
-			]
+			],
 		);
 
 		$this->assertCount( 0, $new_children );
@@ -883,7 +883,7 @@ final class Admin_Functions_Test extends TestCase {
 			[
 				'comment_post_ID' => $original->ID,
 				'comment_content' => 'Test comment content',
-			]
+			],
 		);
 
 		$new_id = \duplicate_post_create_duplicate( $original );
@@ -913,7 +913,7 @@ final class Admin_Functions_Test extends TestCase {
 			[
 				'comment_post_ID' => $original->ID,
 				'comment_content' => 'Test comment content',
-			]
+			],
 		);
 
 		$new_id = \duplicate_post_create_duplicate( $original );
@@ -1026,7 +1026,7 @@ final class Admin_Functions_Test extends TestCase {
 				'post_title'   => 'Original Page for Hook Test',
 				'post_content' => 'Page content for testing hook.',
 				'post_status'  => 'publish',
-			]
+			],
 		);
 
 		$new_id = \duplicate_post_create_duplicate( $original, 'draft' );
@@ -1054,7 +1054,7 @@ final class Admin_Functions_Test extends TestCase {
 				'public'   => true,
 				'label'    => 'Test CPT',
 				'supports' => [ 'title', 'editor', 'excerpt' ],
-			]
+			],
 		);
 
 		// Enable the custom post type for duplication.
@@ -1078,7 +1078,7 @@ final class Admin_Functions_Test extends TestCase {
 				'post_title'   => 'Original Custom Post Type',
 				'post_content' => 'Custom post type content for testing hook.',
 				'post_status'  => 'publish',
-			]
+			],
 		);
 
 		$new_id = \duplicate_post_create_duplicate( $original, 'pending' );
@@ -1108,7 +1108,7 @@ final class Admin_Functions_Test extends TestCase {
 				'post_title'   => 'Original Page',
 				'post_content' => 'Page content.',
 				'post_status'  => 'publish',
-			]
+			],
 		);
 
 		$new_id     = \duplicate_post_create_duplicate( $original );
@@ -1214,7 +1214,7 @@ final class Admin_Functions_Test extends TestCase {
 				'post_mime_type' => 'image/png',
 				'post_type'      => 'attachment',
 				'post_title'     => 'Test Image',
-			]
+			],
 		);
 
 		// Set thumbnail via meta (more reliable in tests than set_post_thumbnail).
@@ -1248,7 +1248,7 @@ final class Admin_Functions_Test extends TestCase {
 				'post_mime_type' => 'image/png',
 				'post_type'      => 'attachment',
 				'post_title'     => 'Test Image',
-			]
+			],
 		);
 
 		// Set thumbnail via meta (more reliable in tests than set_post_thumbnail).

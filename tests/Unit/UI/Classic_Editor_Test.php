@@ -62,7 +62,7 @@ final class Classic_Editor_Test extends TestCase {
 				$this->link_builder,
 				$this->permissions_helper,
 				$this->asset_manager,
-			]
+			],
 		)->makePartial();
 	}
 
@@ -76,12 +76,12 @@ final class Classic_Editor_Test extends TestCase {
 	public function test_constructor() {
 		$this->assertInstanceOf(
 			Link_Builder::class,
-			$this->getPropertyValue( $this->instance, 'link_builder' )
+			$this->getPropertyValue( $this->instance, 'link_builder' ),
 		);
 
 		$this->assertInstanceOf(
 			Permissions_Helper::class,
-			$this->getPropertyValue( $this->instance, 'permissions_helper' )
+			$this->getPropertyValue( $this->instance, 'permissions_helper' ),
 		);
 	}
 
@@ -239,7 +239,7 @@ final class Classic_Editor_Test extends TestCase {
 			->andReturn( $url );
 
 		$this->expectOutputRegex(
-			'`\s*<div id="duplicate-action">\s+<a class="submitduplicate duplication"\s+href="[^"]+">Copy to a new draft\s+</a>\s+</div>`'
+			'`\s*<div id="duplicate-action">\s+<a class="submitduplicate duplication"\s+href="[^"]+">Copy to a new draft\s+</a>\s+</div>`',
 		);
 
 		$this->instance->add_new_draft_post_button( $post );
@@ -280,7 +280,7 @@ final class Classic_Editor_Test extends TestCase {
 			->andReturn( $url );
 
 		$this->expectOutputRegex(
-			'`\s*<div id="duplicate-action">\s+<a class="submitduplicate duplication"\s+href="[^"]+">Copy to a new draft\s+</a>\s+</div>`'
+			'`\s*<div id="duplicate-action">\s+<a class="submitduplicate duplication"\s+href="[^"]+">Copy to a new draft\s+</a>\s+</div>`',
 		);
 
 		$this->instance->add_new_draft_post_button();
@@ -387,7 +387,7 @@ final class Classic_Editor_Test extends TestCase {
 			->andReturn( $url );
 
 		$this->expectOutputRegex(
-			'`\s*<div id="rewrite-republish-action">\s+<a class="submitduplicate duplication" href="[^"]+">Rewrite & Republish\s+</a>\s+</div>`'
+			'`\s*<div id="rewrite-republish-action">\s+<a class="submitduplicate duplication" href="[^"]+">Rewrite & Republish\s+</a>\s+</div>`',
 		);
 
 		$this->instance->add_rewrite_and_republish_post_button( $post );
@@ -434,7 +434,7 @@ final class Classic_Editor_Test extends TestCase {
 			->andReturn( $url );
 
 		$this->expectOutputRegex(
-			'`\s*<div id="rewrite-republish-action">\s+<a class="submitduplicate duplication" href="[^"]+">Rewrite & Republish\s+</a>\s+</div>`'
+			'`\s*<div id="rewrite-republish-action">\s+<a class="submitduplicate duplication" href="[^"]+">Rewrite & Republish\s+</a>\s+</div>`',
 		);
 
 		$this->instance->add_rewrite_and_republish_post_button();

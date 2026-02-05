@@ -172,7 +172,7 @@ final class Post_Republisher_Test extends TestCase {
 				'post_title'   => 'Test Title',
 				'post_content' => 'Test content here.',
 				'post_excerpt' => 'Test excerpt.',
-			]
+			],
 		);
 
 		$copy = $this->create_rewrite_and_republish_copy( $original );
@@ -231,7 +231,7 @@ final class Post_Republisher_Test extends TestCase {
 			[
 				'post_title'   => 'Original Title',
 				'post_content' => 'Original content.',
-			]
+			],
 		);
 
 		$original_slug = $original->post_name;
@@ -246,7 +246,7 @@ final class Post_Republisher_Test extends TestCase {
 				'post_title'   => 'Updated Title',
 				'post_content' => 'Updated content.',
 				'post_excerpt' => 'Updated excerpt.',
-			]
+			],
 		);
 
 		// Refresh the copy object.
@@ -393,7 +393,7 @@ final class Post_Republisher_Test extends TestCase {
 			[
 				'post_title'   => 'Original Title',
 				'post_content' => 'Original content.',
-			]
+			],
 		);
 
 		$original_id = $original->ID;
@@ -406,7 +406,7 @@ final class Post_Republisher_Test extends TestCase {
 				'ID'           => $copy->ID,
 				'post_title'   => 'Scheduled Updated Title',
 				'post_content' => 'Scheduled updated content.',
-			]
+			],
 		);
 
 		// Refresh the copy.
@@ -516,7 +516,7 @@ final class Post_Republisher_Test extends TestCase {
 			[
 				'post_title'   => 'Original Title',
 				'post_content' => 'Original content.',
-			]
+			],
 		);
 		$copy     = $this->create_rewrite_and_republish_copy( $original );
 
@@ -527,7 +527,7 @@ final class Post_Republisher_Test extends TestCase {
 				'post_title'   => 'Republished Title',
 				'post_content' => 'Republished content.',
 				'post_status'  => 'dp-rewrite-republish',
-			]
+			],
 		);
 		$copy = \get_post( $copy->ID );
 
@@ -557,7 +557,7 @@ final class Post_Republisher_Test extends TestCase {
 			[
 				'post_title'   => 'Original Title',
 				'post_content' => 'Original content.',
-			]
+			],
 		);
 		$copy     = $this->create_rewrite_and_republish_copy( $original );
 
@@ -568,7 +568,7 @@ final class Post_Republisher_Test extends TestCase {
 				'post_title'   => 'Private Copy Title',
 				'post_content' => 'Private copy content.',
 				'post_status'  => 'private',
-			]
+			],
 		);
 		$copy = \get_post( $copy->ID );
 
@@ -596,7 +596,7 @@ final class Post_Republisher_Test extends TestCase {
 			[
 				'post_title'   => 'Original Title',
 				'post_content' => 'Original content.',
-			]
+			],
 		);
 		$copy     = $this->create_rewrite_and_republish_copy( $original );
 
@@ -605,7 +605,7 @@ final class Post_Republisher_Test extends TestCase {
 			[
 				'ID'         => $copy->ID,
 				'post_title' => 'Draft Copy Title',
-			]
+			],
 		);
 		$copy = \get_post( $copy->ID );
 
@@ -629,7 +629,7 @@ final class Post_Republisher_Test extends TestCase {
 			[
 				'post_title'   => 'Original Title',
 				'post_content' => 'Original content.',
-			]
+			],
 		);
 		$copy     = $this->create_rewrite_and_republish_copy( $original );
 
@@ -639,7 +639,7 @@ final class Post_Republisher_Test extends TestCase {
 				'ID'           => $copy->ID,
 				'post_title'   => 'Pending Copy Title',
 				'post_status'  => 'pending',
-			]
+			],
 		);
 		$copy = \get_post( $copy->ID );
 
@@ -674,7 +674,7 @@ final class Post_Republisher_Test extends TestCase {
 				'ID'           => $copy->ID,
 				'post_title'   => 'Updated Title Without Taxonomies',
 				'post_content' => 'Updated content.',
-			]
+			],
 		);
 		$copy = \get_post( $copy->ID );
 
@@ -706,7 +706,7 @@ final class Post_Republisher_Test extends TestCase {
 				'post_type'   => 'custom_type',
 				'post_status' => 'publish',
 				'post_title'  => 'Custom Type Post',
-			]
+			],
 		);
 		$post    = \get_post( $post_id );
 
@@ -743,7 +743,7 @@ final class Post_Republisher_Test extends TestCase {
 			[
 				'post_title'   => 'Original Title',
 				'post_content' => 'Original content.',
-			]
+			],
 		);
 		$copy     = $this->create_rewrite_and_republish_copy( $original );
 
@@ -751,7 +751,7 @@ final class Post_Republisher_Test extends TestCase {
 		$base_modified_gmt = ( $original->post_modified_gmt ) ? $original->post_modified_gmt : \get_gmt_from_date( $original->post_modified );
 		$modified_time_gmt = \gmdate(
 			'Y-m-d H:i:s',
-			\strtotime( '+1 second', \strtotime( $base_modified_gmt ) )
+			\strtotime( '+1 second', \strtotime( $base_modified_gmt ) ),
 		);
 		$modified_time     = \get_date_from_gmt( $modified_time_gmt );
 
@@ -764,7 +764,7 @@ final class Post_Republisher_Test extends TestCase {
 				'post_date_gmt'     => $modified_time_gmt,
 				'post_modified'     => $modified_time,
 				'post_modified_gmt' => $modified_time_gmt,
-			]
+			],
 		);
 
 		// Modify the copy with different content.
@@ -773,7 +773,7 @@ final class Post_Republisher_Test extends TestCase {
 				'ID'           => $copy->ID,
 				'post_title'   => 'Copy Title',
 				'post_content' => 'Copy content.',
-			]
+			],
 		);
 		$copy = \get_post( $copy->ID );
 
@@ -799,7 +799,7 @@ final class Post_Republisher_Test extends TestCase {
 			[
 				'post_title'   => 'Original Title',
 				'post_content' => 'Original content.',
-			]
+			],
 		);
 		$copy     = $this->create_rewrite_and_republish_copy( $original );
 
@@ -813,7 +813,7 @@ final class Post_Republisher_Test extends TestCase {
 				'ID'           => $original->ID,
 				'post_title'   => 'Modified Original',
 				'post_content' => 'Modified content.',
-			]
+			],
 		);
 
 		// Refresh copy - should still have original content.
@@ -836,7 +836,7 @@ final class Post_Republisher_Test extends TestCase {
 			[
 				'post_type'  => 'page',
 				'post_title' => 'Original Page',
-			]
+			],
 		);
 
 		$copy = $this->create_rewrite_and_republish_copy( $original );
@@ -850,7 +850,7 @@ final class Post_Republisher_Test extends TestCase {
 			[
 				'ID'         => $copy->ID,
 				'post_title' => 'Updated Page Title',
-			]
+			],
 		);
 		$copy = \get_post( $copy->ID );
 
@@ -872,7 +872,7 @@ final class Post_Republisher_Test extends TestCase {
 			[
 				'post_title'   => 'Original Title',
 				'post_content' => 'Original content.',
-			]
+			],
 		);
 		$copy     = $this->create_rewrite_and_republish_copy( $original );
 
@@ -881,7 +881,7 @@ final class Post_Republisher_Test extends TestCase {
 			[
 				'ID'         => $copy->ID,
 				'post_title' => 'Trashed Copy Title',
-			]
+			],
 		);
 		\wp_trash_post( $copy->ID );
 		$copy = \get_post( $copy->ID );
@@ -917,7 +917,7 @@ final class Post_Republisher_Test extends TestCase {
 				'post_author'  => $copy_author_id,
 				'post_title'   => 'Updated Title',
 				'post_content' => 'Updated content.',
-			]
+			],
 		);
 		$copy = \get_post( $copy->ID );
 
@@ -1013,7 +1013,7 @@ final class Post_Republisher_Test extends TestCase {
 				'post_title'   => 'Original Title',
 				'post_content' => 'Original content.',
 				'post_status'  => 'publish',
-			]
+			],
 		);
 
 		// Step 2: Create a Rewrite & Republish copy.
@@ -1030,7 +1030,7 @@ final class Post_Republisher_Test extends TestCase {
 				'ID'           => $copy->ID,
 				'post_title'   => 'Rewritten Title',
 				'post_content' => 'Rewritten content.',
-			]
+			],
 		);
 
 		$copy = \get_post( $copy->ID );
@@ -1131,7 +1131,7 @@ final class Post_Republisher_Test extends TestCase {
 			[
 				'post_title' => 'Original Title',
 				'post_name'  => 'original-slug',
-			]
+			],
 		);
 
 		// Create a R&R copy.
@@ -1142,7 +1142,7 @@ final class Post_Republisher_Test extends TestCase {
 			[
 				'ID'         => $copy->ID,
 				'post_title' => 'Completely Different Title',
-			]
+			],
 		);
 
 		$copy = \get_post( $copy->ID );
@@ -1174,7 +1174,7 @@ final class Post_Republisher_Test extends TestCase {
 			[
 				'post_title'  => 'Original Title',
 				'post_status' => 'publish',
-			]
+			],
 		);
 
 		// Create a R&R copy.
@@ -1191,7 +1191,7 @@ final class Post_Republisher_Test extends TestCase {
 			[
 				'ID'         => $copy->ID,
 				'post_title' => 'Updated Title',
-			]
+			],
 		);
 
 		$copy = \get_post( $copy->ID );
@@ -1256,7 +1256,7 @@ final class Post_Republisher_Test extends TestCase {
 				$fired_post_id = $post_id;
 			},
 			10,
-			2
+			2,
 		);
 
 		// Delete the copy.
@@ -1285,7 +1285,7 @@ final class Post_Republisher_Test extends TestCase {
 			[
 				'post_title'   => 'Original Title',
 				'post_content' => 'Original content.',
-			]
+			],
 		);
 		$copy     = $this->create_rewrite_and_republish_copy( $original );
 		$copy_id  = $copy->ID;
@@ -1296,7 +1296,7 @@ final class Post_Republisher_Test extends TestCase {
 				'ID'           => $copy->ID,
 				'post_title'   => 'Updated Title',
 				'post_content' => 'Updated content.',
-			]
+			],
 		);
 		$copy = \get_post( $copy->ID );
 

@@ -51,7 +51,7 @@ final class Post_States_Test extends TestCase {
 	public function test_constructor() {
 		$this->assertInstanceOf(
 			Permissions_Helper::class,
-			$this->getPropertyValue( $this->instance, 'permissions_helper' )
+			$this->getPropertyValue( $this->instance, 'permissions_helper' ),
 		);
 	}
 
@@ -109,7 +109,7 @@ final class Post_States_Test extends TestCase {
 				'draft'                        => 'Draft',
 				'duplicate_post_original_item' => 'Original: <a href="http://basic.wordpress.test/wp-admin/post.php?post=373&amp;action=edit" aria-label="Edit “Original post”">Original post</a>',
 			],
-			$this->instance->show_original_in_post_states( $post_states, $post )
+			$this->instance->show_original_in_post_states( $post_states, $post ),
 		);
 	}
 
@@ -148,7 +148,7 @@ final class Post_States_Test extends TestCase {
 			[
 				'draft' => 'Draft',
 			],
-			$this->instance->show_original_in_post_states( $post_states, $post )
+			$this->instance->show_original_in_post_states( $post_states, $post ),
 		);
 	}
 
@@ -193,7 +193,7 @@ final class Post_States_Test extends TestCase {
 				'draft'                        => 'Draft',
 				'duplicate_post_original_item' => 'Rewrite & Republish of <a href="http://basic.wordpress.test/wp-admin/post.php?post=373&amp;action=edit" aria-label="Edit “Original post”">Original post</a>',
 			],
-			$this->instance->show_original_in_post_states( $post_states, $post )
+			$this->instance->show_original_in_post_states( $post_states, $post ),
 		);
 	}
 
@@ -232,7 +232,7 @@ final class Post_States_Test extends TestCase {
 			[
 				'draft' => 'Draft',
 			],
-			$this->instance->show_original_in_post_states( $post_states, $post )
+			$this->instance->show_original_in_post_states( $post_states, $post ),
 		);
 	}
 }

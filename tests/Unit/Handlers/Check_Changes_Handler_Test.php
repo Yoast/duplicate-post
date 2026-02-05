@@ -54,7 +54,7 @@ final class Check_Changes_Handler_Test extends TestCase {
 	public function test_constructor() {
 		$this->assertInstanceOf(
 			Permissions_Helper::class,
-			$this->getPropertyValue( $this->instance, 'permissions_helper' )
+			$this->getPropertyValue( $this->instance, 'permissions_helper' ),
 		);
 	}
 
@@ -149,7 +149,7 @@ final class Check_Changes_Handler_Test extends TestCase {
 				</div>
 			</div>
 		</div>
-		'
+		',
 		);
 		$this->instance->check_changes_action_handler();
 
