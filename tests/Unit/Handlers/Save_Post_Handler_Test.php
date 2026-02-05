@@ -64,7 +64,7 @@ final class Save_Post_Handler_Test extends TestCase {
 	public function test_constructor() {
 		$this->assertInstanceOf(
 			Permissions_Helper::class,
-			$this->getPropertyValue( $this->instance, 'permissions_helper' )
+			$this->getPropertyValue( $this->instance, 'permissions_helper' ),
 		);
 	}
 

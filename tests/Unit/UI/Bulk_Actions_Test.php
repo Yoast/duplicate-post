@@ -49,7 +49,7 @@ final class Bulk_Actions_Test extends TestCase {
 	public function test_constructor() {
 		$this->assertInstanceOf(
 			Permissions_Helper::class,
-			$this->getPropertyValue( $this->instance, 'permissions_helper' )
+			$this->getPropertyValue( $this->instance, 'permissions_helper' ),
 		);
 	}
 
@@ -182,7 +182,7 @@ final class Bulk_Actions_Test extends TestCase {
 				'duplicate_post_bulk_clone'             => 'Clone',
 				'duplicate_post_bulk_rewrite_republish' => 'Rewrite & Republish',
 			],
-			$this->instance->register_bulk_action( $array )
+			$this->instance->register_bulk_action( $array ),
 		);
 	}
 }

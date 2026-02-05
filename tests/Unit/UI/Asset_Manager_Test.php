@@ -64,7 +64,7 @@ final class Asset_Manager_Test extends TestCase {
 				'duplicate-post',
 				$styles_url,
 				[],
-				\DUPLICATE_POST_CURRENT_VERSION
+				\DUPLICATE_POST_CURRENT_VERSION,
 			);
 
 		Monkey\Functions\expect( '\wp_register_style' )
@@ -72,7 +72,7 @@ final class Asset_Manager_Test extends TestCase {
 				'duplicate-post-options',
 				$options_styles_url,
 				[],
-				\DUPLICATE_POST_CURRENT_VERSION
+				\DUPLICATE_POST_CURRENT_VERSION,
 			);
 
 		$this->instance->register_styles();
@@ -113,12 +113,12 @@ final class Asset_Manager_Test extends TestCase {
 					'wp-i18n',
 				],
 				\DUPLICATE_POST_CURRENT_VERSION,
-				true
+				true,
 			);
 		Monkey\Functions\expect( '\wp_set_script_translations' )
 			->with(
 				'duplicate_post_edit_script',
-				'duplicate-post'
+				'duplicate-post',
 			);
 
 		Monkey\Functions\expect( '\wp_register_script' )
@@ -131,12 +131,12 @@ final class Asset_Manager_Test extends TestCase {
 					'wp-i18n',
 				],
 				\DUPLICATE_POST_CURRENT_VERSION,
-				true
+				true,
 			);
 		Monkey\Functions\expect( '\wp_set_script_translations' )
 			->with(
 				'duplicate_post_strings',
-				'duplicate-post'
+				'duplicate-post',
 			);
 
 		Monkey\Functions\expect( '\wp_register_script' )
@@ -145,7 +145,7 @@ final class Asset_Manager_Test extends TestCase {
 				$quick_edit_script_url,
 				[ 'jquery' ],
 				\DUPLICATE_POST_CURRENT_VERSION,
-				true
+				true,
 			);
 
 		Monkey\Functions\expect( '\wp_register_script' )
@@ -154,7 +154,7 @@ final class Asset_Manager_Test extends TestCase {
 				$options_script_url,
 				[ 'jquery' ],
 				\DUPLICATE_POST_CURRENT_VERSION,
-				true
+				true,
 			);
 
 		$this->instance->register_scripts();

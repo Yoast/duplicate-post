@@ -64,7 +64,7 @@ function duplicate_post_wpml_copy_translations( $post_id, $post, $status = '' ) 
 							'post_' . $translation->post_type,
 							$new_trid,
 							$code,
-							$current_language
+							$current_language,
 						);
 					}
 				}
@@ -112,7 +112,7 @@ function duplicate_wpml_string_packages() { // phpcs:ignore WordPress.NamingConv
 									$new_string->id,
 									$language,
 									$translated_string['value'],
-									$translated_string['status']
+									$translated_string['status'],
 								);
 							}
 						}

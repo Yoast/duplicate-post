@@ -56,10 +56,10 @@ class Bulk_Actions_Watcher {
 						'%s item copied.',
 						'%s items copied.',
 						$copied_posts,
-						'duplicate-post'
-					)
+						'duplicate-post',
+					),
 				) . '</p></div>',
-				\esc_html( $copied_posts )
+				\esc_html( $copied_posts ),
 			);
 		}
 	}
@@ -80,10 +80,10 @@ class Bulk_Actions_Watcher {
 						'%s post duplicated. You can now start rewriting your post in the duplicate of the original post. Once you choose to republish it your changes will be merged back into the original post.',
 						'%s posts duplicated. You can now start rewriting your posts in the duplicates of the original posts. Once you choose to republish them your changes will be merged back into the original post.',
 						$copied_posts,
-						'duplicate-post'
-					)
+						'duplicate-post',
+					),
 				) . '</p></div>',
-				\esc_html( $copied_posts )
+				\esc_html( $copied_posts ),
 			);
 		}
 	}

@@ -73,14 +73,14 @@ class Link_Handler {
 			\wp_die(
 				\esc_html(
 					\__( 'Copy creation failed, could not find original:', 'duplicate-post' ) . ' '
-					. $id
-				)
+					. $id,
+				),
 			);
 		}
 
 		if ( $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
 			\wp_die(
-				\esc_html__( 'You cannot create a copy of a post which is intended for Rewrite & Republish.', 'duplicate-post' )
+				\esc_html__( 'You cannot create a copy of a post which is intended for Rewrite & Republish.', 'duplicate-post' ),
 			);
 		}
 
@@ -88,7 +88,7 @@ class Link_Handler {
 
 		if ( \is_wp_error( $new_id ) ) {
 			\wp_die(
-				\esc_html__( 'Copy creation failed, could not create a copy.', 'duplicate-post' )
+				\esc_html__( 'Copy creation failed, could not create a copy.', 'duplicate-post' ),
 			);
 		}
 
@@ -98,8 +98,8 @@ class Link_Handler {
 					'cloned' => 1,
 					'ids'    => $post->ID,
 				],
-				\admin_url( 'post.php?action=edit&post=' . $new_id . ( isset( $_GET['classic-editor'] ) ? '&classic-editor' : '' ) )
-			)
+				\admin_url( 'post.php?action=edit&post=' . $new_id . ( isset( $_GET['classic-editor'] ) ? '&classic-editor' : '' ) ),
+			),
 		);
 		exit();
 	}
@@ -129,14 +129,14 @@ class Link_Handler {
 			\wp_die(
 				\esc_html(
 					\__( 'Copy creation failed, could not find original:', 'duplicate-post' ) . ' '
-					. $id
-				)
+					. $id,
+				),
 			);
 		}
 
 		if ( $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
 			\wp_die(
-				\esc_html__( 'You cannot create a copy of a post which is intended for Rewrite & Republish.', 'duplicate-post' )
+				\esc_html__( 'You cannot create a copy of a post which is intended for Rewrite & Republish.', 'duplicate-post' ),
 			);
 		}
 
@@ -144,7 +144,7 @@ class Link_Handler {
 
 		if ( \is_wp_error( $new_id ) ) {
 			\wp_die(
-				\esc_html__( 'Copy creation failed, could not create a copy.', 'duplicate-post' )
+				\esc_html__( 'Copy creation failed, could not create a copy.', 'duplicate-post' ),
 			);
 		}
 
@@ -172,8 +172,8 @@ class Link_Handler {
 					'cloned' => 1,
 					'ids'    => $post->ID,
 				],
-				$sendback
-			)
+				$sendback,
+			),
 		);
 		exit();
 	}
@@ -203,14 +203,14 @@ class Link_Handler {
 			\wp_die(
 				\esc_html(
 					\__( 'Copy creation failed, could not find original:', 'duplicate-post' ) . ' '
-					. $id
-				)
+					. $id,
+				),
 			);
 		}
 
 		if ( ! $this->permissions_helper->should_rewrite_and_republish_be_allowed( $post ) ) {
 			\wp_die(
-				\esc_html__( 'You cannot create a copy for Rewrite & Republish if the original is not published or if it already has a copy.', 'duplicate-post' )
+				\esc_html__( 'You cannot create a copy for Rewrite & Republish if the original is not published or if it already has a copy.', 'duplicate-post' ),
 			);
 		}
 
@@ -218,7 +218,7 @@ class Link_Handler {
 
 		if ( \is_wp_error( $new_id ) ) {
 			\wp_die(
-				\esc_html__( 'Copy creation failed, could not create a copy.', 'duplicate-post' )
+				\esc_html__( 'Copy creation failed, could not create a copy.', 'duplicate-post' ),
 			);
 		}
 
@@ -228,8 +228,8 @@ class Link_Handler {
 					'rewriting' => 1,
 					'ids'       => $post->ID,
 				],
-				\admin_url( 'post.php?action=edit&post=' . $new_id . ( isset( $_GET['classic-editor'] ) ? '&classic-editor' : '' ) )
-			)
+				\admin_url( 'post.php?action=edit&post=' . $new_id . ( isset( $_GET['classic-editor'] ) ? '&classic-editor' : '' ) ),
+			),
 		);
 		exit();
 	}

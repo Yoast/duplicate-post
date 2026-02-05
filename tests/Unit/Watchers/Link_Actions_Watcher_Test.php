@@ -38,7 +38,7 @@ final class Link_Actions_Watcher_Test extends TestCase {
 		$this->permissions_helper = Mockery::mock( Permissions_Helper::class );
 
 		$this->instance = Mockery::mock(
-			Link_Actions_Watcher::class
+			Link_Actions_Watcher::class,
 		)->makePartial();
 		$this->instance->__construct( $this->permissions_helper );
 	}
@@ -53,7 +53,7 @@ final class Link_Actions_Watcher_Test extends TestCase {
 	public function test_constructor() {
 		$this->assertInstanceOf(
 			Permissions_Helper::class,
-			$this->getPropertyValue( $this->instance, 'permissions_helper' )
+			$this->getPropertyValue( $this->instance, 'permissions_helper' ),
 		);
 	}
 
@@ -141,7 +141,7 @@ final class Link_Actions_Watcher_Test extends TestCase {
 				'cloned',
 				'rewriting',
 			],
-			$this->instance->add_removable_query_args( $array )
+			$this->instance->add_removable_query_args( $array ),
 		);
 	}
 
@@ -264,7 +264,7 @@ final class Link_Actions_Watcher_Test extends TestCase {
 			->with(
 				'duplicate_post_edit_script',
 				'duplicatePostNotices.rewriting_notice = {"text":"You can now start rewriting your post in this duplicate of the original post. If you click \"Republish\", this rewritten post will replace the original post.","status":"warning","isDismissible":true};',
-				'before'
+				'before',
 			);
 
 		$this->instance->add_rewrite_and_republish_block_editor_notice();

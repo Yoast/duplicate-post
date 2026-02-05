@@ -70,7 +70,7 @@ final class Options_Form_Generator_Test extends TestCase {
 				'translate_user_role' => static function ( $role ) {
 					return $role;
 				},
-			]
+			],
 		);
 	}
 
@@ -86,7 +86,7 @@ final class Options_Form_Generator_Test extends TestCase {
 
 		$this->assertInstanceOf(
 			Options_Inputs::class,
-			$this->getPropertyValue( $this->instance, 'options_inputs' )
+			$this->getPropertyValue( $this->instance, 'options_inputs' ),
 		);
 	}
 
@@ -103,7 +103,7 @@ final class Options_Form_Generator_Test extends TestCase {
 				'checkbox' => '<input type="checkbox" />',
 				'text'     => '<input type="text" />',
 				'number'   => '<input type="number" />',
-			]
+			],
 		);
 
 		Monkey\Functions\expect( '\get_option' )->twice();
@@ -234,7 +234,7 @@ final class Options_Form_Generator_Test extends TestCase {
 
 		$this->assertSame(
 			'<input type="text" name="option_2" id="option-2" value="1"  /><br />',
-			$this->instance->generate_options_input( $options )
+			$this->instance->generate_options_input( $options ),
 		);
 	}
 
@@ -265,12 +265,12 @@ final class Options_Form_Generator_Test extends TestCase {
 			->andReturnUsing(
 				static function ( $checked, $current = true ) {
 					return ( (string) $checked === (string) $current ) ? " checked='checked'" : '';
-				}
+				},
 			);
 
 		$this->assertSame(
 			'<input type="checkbox" name="option_1[sub_option_1]" id="option-1-sub-option-1" value="1"  /><label for="option-1-sub-option-1">Suboption 1</label><br />',
-			$this->instance->generate_options_input( $options )
+			$this->instance->generate_options_input( $options ),
 		);
 	}
 
@@ -287,8 +287,8 @@ final class Options_Form_Generator_Test extends TestCase {
 			$this->instance
 				->extract_description(
 					'this is a description',
-					'textfield-1'
-				)
+					'textfield-1',
+				),
 		);
 
 		$this->assertSame(
@@ -299,8 +299,8 @@ final class Options_Form_Generator_Test extends TestCase {
 						'this is a description',
 						'this is another description',
 					],
-					'textfield-1'
-				)
+					'textfield-1',
+				),
 		);
 	}
 
@@ -365,12 +365,12 @@ final class Options_Form_Generator_Test extends TestCase {
 			->andReturnUsing(
 				static function ( $checked, $current = true ) {
 					return ( (string) $checked === (string) $current ) ? " checked='checked'" : '';
-				}
+				},
 			);
 
 		$this->assertSame(
 			'<div class="taxonomy_public"><input type="checkbox" name="duplicate_post_taxonomies_blacklist[]" id="duplicate-post-custom-taxonomy-public-1" value="custom_taxonomy_public_1"  /><label for="duplicate-post-custom-taxonomy-public-1">A Foo [custom_taxonomy_public_1]</label><br /></div><div class="taxonomy_public"><input type="checkbox" name="duplicate_post_taxonomies_blacklist[]" id="duplicate-post-custom-taxonomy-public-2" value="custom_taxonomy_public_2"  /><label for="duplicate-post-custom-taxonomy-public-2">a foo [custom_taxonomy_public_2]</label><br /></div><div class="taxonomy_private"><input type="checkbox" name="duplicate_post_taxonomies_blacklist[]" id="duplicate-post-custom-taxonomy-private-1" value="custom_taxonomy_private_1"  checked=\'checked\' /><label for="duplicate-post-custom-taxonomy-private-1">Bar [custom_taxonomy_private_1]</label><br /></div><div class="taxonomy_private"><input type="checkbox" name="duplicate_post_taxonomies_blacklist[]" id="duplicate-post-custom-taxonomy-private-2" value="custom_taxonomy_private_2"  checked=\'checked\' /><label for="duplicate-post-custom-taxonomy-private-2">Baz [custom_taxonomy_private_2]</label><br /></div>',
-			$this->instance->generate_taxonomy_exclusion_list()
+			$this->instance->generate_taxonomy_exclusion_list(),
 		);
 	}
 
@@ -395,7 +395,7 @@ final class Options_Form_Generator_Test extends TestCase {
 					'editor'        => 'Editor',
 					'administrator' => 'Administrator',
 					'subscriber'    => 'Subscriber',
-				]
+				],
 			);
 
 		Monkey\Functions\expect( 'checked' )
@@ -403,12 +403,12 @@ final class Options_Form_Generator_Test extends TestCase {
 			->andReturnUsing(
 				static function ( $checked, $current = true ) {
 					return ( (string) $checked === (string) $current ) ? " checked='checked'" : '';
-				}
+				},
 			);
 
 		$this->assertSame(
 			'<input type="checkbox" name="duplicate_post_roles[]" id="duplicate-post-editor" value="editor"  checked=\'checked\' /><label for="duplicate-post-editor">Editor</label><br /><input type="checkbox" name="duplicate_post_roles[]" id="duplicate-post-administrator" value="administrator"  /><label for="duplicate-post-administrator">Administrator</label><br />',
-			$this->instance->generate_roles_permission_list()
+			$this->instance->generate_roles_permission_list(),
 		);
 	}
 
@@ -427,7 +427,7 @@ final class Options_Form_Generator_Test extends TestCase {
 					'attachment',
 					'wp_block',
 					'product',
-				]
+				],
 			);
 
 		$this->instance
@@ -445,12 +445,12 @@ final class Options_Form_Generator_Test extends TestCase {
 			->andReturnUsing(
 				static function ( $checked, $current = true ) {
 					return ( (string) $checked === (string) $current ) ? " checked='checked'" : '';
-				}
+				},
 			);
 
 		$this->assertSame(
 			'<input type="checkbox" name="duplicate_post_types_enabled[]" id="duplicate-post-Books" value="Books"  checked=\'checked\' /><label for="duplicate-post-Books">Custom Type</label><br /><input type="checkbox" name="duplicate_post_types_enabled[]" id="duplicate-post-Movies" value="Movies"  /><label for="duplicate-post-Movies">Custom Type</label><br />',
-			$this->instance->generate_post_types_list()
+			$this->instance->generate_post_types_list(),
 		);
 	}
 

@@ -73,12 +73,12 @@ final class Options_Page_Test extends TestCase {
 
 		$this->assertInstanceOf(
 			Options::class,
-			$this->getPropertyValue( $this->instance, 'options' )
+			$this->getPropertyValue( $this->instance, 'options' ),
 		);
 
 		$this->assertInstanceOf(
 			Options_Form_Generator::class,
-			$this->getPropertyValue( $this->instance, 'generator' )
+			$this->getPropertyValue( $this->instance, 'generator' ),
 		);
 	}
 
@@ -157,7 +157,7 @@ final class Options_Page_Test extends TestCase {
 					'manage_options',
 					'duplicatepost',
 					[ $this->instance, 'generate_page' ],
-				]
+				],
 			)
 			->once()
 			->andReturn( 'duplicatepost_page_hook' );
@@ -209,7 +209,7 @@ final class Options_Page_Test extends TestCase {
 				[
 					'administrator',
 					'editor',
-				]
+				],
 			);
 
 		$this->instance->register_capabilities();

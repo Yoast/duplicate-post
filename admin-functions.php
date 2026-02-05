@@ -142,7 +142,7 @@ function duplicate_post_plugin_upgrade() {
 			'new_draft'         => '1',
 			'clone'             => '1',
 			'rewrite_republish' => '1',
-		]
+		],
 	);
 	add_option( 'duplicate_post_show_link_in', $show_links_in_defaults );
 
@@ -228,7 +228,7 @@ function duplicate_post_show_update_notice() {
 	$title = sprintf(
 		/* translators: %s: Yoast Duplicate Post. */
 		esc_html__( 'You\'ve successfully installed %s!', 'duplicate-post' ),
-		'Yoast Duplicate Post'
+		'Yoast Duplicate Post',
 	);
 
 	$img_path = plugins_url( '/duplicate_post_yoast_icon-125x125.png', __FILE__ );
@@ -453,7 +453,7 @@ function duplicate_post_copy_attachments( $new_id, $post ) {
 			'numberposts' => -1,
 			'post_status' => 'any',
 			'post_parent' => $post->ID,
-		]
+		],
 	);
 	// Clone old attachments.
 	foreach ( $children as $child ) {
@@ -518,7 +518,7 @@ function duplicate_post_copy_children( $new_id, $post, $status = '' ) {
 			'numberposts' => -1,
 			'post_status' => 'any',
 			'post_parent' => $post->ID,
-		]
+		],
 	);
 
 	foreach ( $children as $child ) {
@@ -543,7 +543,7 @@ function duplicate_post_copy_comments( $new_id, $post ) {
 			'post_id' => $post->ID,
 			'order'   => 'ASC',
 			'orderby' => 'comment_date_gmt',
-		]
+		],
 	);
 
 	$old_id_to_new = [];
@@ -619,8 +619,8 @@ function duplicate_post_create_duplicate( $post, $status = '', $parent_id = '' )
 		wp_die(
 			esc_html(
 				__( 'Copy features for this post type are not enabled in options page', 'duplicate-post' ) . ': '
-				. $post->post_type
-			)
+				. $post->post_type,
+			),
 		);
 	}
 

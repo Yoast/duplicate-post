@@ -97,7 +97,7 @@ class Column {
 			\printf(
 				'<span class="duplicate_post_original_link"%s>%s</span>',
 				$data_attr, // phpcs:ignore WordPress.Security.EscapeOutput
-				$column_content // phpcs:ignore WordPress.Security.EscapeOutput
+				$column_content, // phpcs:ignore WordPress.Security.EscapeOutput
 			);
 		}
 	}
@@ -129,19 +129,19 @@ class Column {
 		</fieldset>',
 			\esc_html__(
 				'Delete reference to original item.',
-				'duplicate-post'
+				'duplicate-post',
 			),
 			\wp_kses(
 				\__(
 					'The original item this was copied from is: <span class="duplicate_post_original_item_title_span"></span>',
-					'duplicate-post'
+					'duplicate-post',
 				),
 				[
 					'span' => [
 						'class' => [],
 					],
-				]
-			)
+				],
+			),
 		);
 	}
 

@@ -65,7 +65,7 @@ final class Admin_Bar_Test extends TestCase {
 				$this->link_builder,
 				$this->permissions_helper,
 				$this->asset_manager,
-			]
+			],
 		)->makePartial();
 	}
 
@@ -79,17 +79,17 @@ final class Admin_Bar_Test extends TestCase {
 	public function test_constructor() {
 		$this->assertInstanceOf(
 			Link_Builder::class,
-			$this->getPropertyValue( $this->instance, 'link_builder' )
+			$this->getPropertyValue( $this->instance, 'link_builder' ),
 		);
 
 		$this->assertInstanceOf(
 			Permissions_Helper::class,
-			$this->getPropertyValue( $this->instance, 'permissions_helper' )
+			$this->getPropertyValue( $this->instance, 'permissions_helper' ),
 		);
 
 		$this->assertInstanceOf(
 			Asset_Manager::class,
-			$this->getPropertyValue( $this->instance, 'asset_manager' )
+			$this->getPropertyValue( $this->instance, 'asset_manager' ),
 		);
 	}
 

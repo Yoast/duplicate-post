@@ -93,7 +93,7 @@ function duplicate_post_plugin_actions( $actions ) {
 			menu_page_url( 'duplicatepost', false ),
 			/* translators: Hidden accessibility text. */
 			'aria-label="' . __( 'Settings for Duplicate Post', 'duplicate-post' ) . '"',
-			esc_html__( 'Settings', 'duplicate-post' )
+			esc_html__( 'Settings', 'duplicate-post' ),
 		),
 	];
 

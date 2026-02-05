@@ -37,7 +37,7 @@ class Options {
 			$options,
 			static function ( $option ) use ( $tab ) {
 				return \array_key_exists( 'tab', $option ) && $option['tab'] === $tab;
-			}
+			},
 		);
 
 		if ( empty( $options ) ) {
@@ -50,7 +50,7 @@ class Options {
 				$options,
 				static function ( $option ) use ( $fieldset ) {
 					return \array_key_exists( 'fieldset', $option ) && $option['fieldset'] === $fieldset;
-				}
+				},
 			);
 		}
 

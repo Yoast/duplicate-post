@@ -64,7 +64,7 @@ final class Post_Duplicator_Test extends TestCase {
 				'taxonomies_excludelist' => [],
 				'use_filters'            => true,
 			],
-			$this->instance->get_default_options()
+			$this->instance->get_default_options(),
 		);
 	}
 
@@ -175,7 +175,7 @@ final class Post_Duplicator_Test extends TestCase {
 			->andReturnUsing(
 				static function ( $post_type ) {
 					return $post_type !== 'post' && $post_type === 'page';
-				}
+				},
 			);
 
 		Monkey\Functions\expect( '\current_user_can' )
@@ -281,7 +281,7 @@ final class Post_Duplicator_Test extends TestCase {
 			->andReturnUsing(
 				static function ( $post_type ) {
 					return $post_type !== 'post' && $post_type === 'page';
-				}
+				},
 			);
 
 		Monkey\Functions\expect( '\current_user_can' )

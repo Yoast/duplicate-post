@@ -59,12 +59,12 @@ final class Column_Test extends TestCase {
 	public function test_constructor() {
 		$this->assertInstanceOf(
 			Permissions_Helper::class,
-			$this->getPropertyValue( $this->instance, 'permissions_helper' )
+			$this->getPropertyValue( $this->instance, 'permissions_helper' ),
 		);
 
 		$this->assertInstanceOf(
 			Asset_Manager::class,
-			$this->getPropertyValue( $this->instance, 'asset_manager' )
+			$this->getPropertyValue( $this->instance, 'asset_manager' ),
 		);
 	}
 
@@ -129,7 +129,7 @@ final class Column_Test extends TestCase {
 				'date'                         => 'Date',
 				'duplicate_post_original_item' => 'Original item',
 			],
-			$this->instance->add_original_column( $array )
+			$this->instance->add_original_column( $array ),
 		);
 	}
 }

@@ -39,7 +39,7 @@ final class Copied_Post_Watcher_Test extends TestCase {
 		$this->permissions_helper = Mockery::mock( Permissions_Helper::class );
 
 		$this->instance = Mockery::mock(
-			Copied_Post_Watcher::class
+			Copied_Post_Watcher::class,
 		)->makePartial();
 		$this->instance->__construct( $this->permissions_helper );
 	}
@@ -54,7 +54,7 @@ final class Copied_Post_Watcher_Test extends TestCase {
 	public function test_constructor() {
 		$this->assertInstanceOf(
 			Permissions_Helper::class,
-			$this->getPropertyValue( $this->instance, 'permissions_helper' )
+			$this->getPropertyValue( $this->instance, 'permissions_helper' ),
 		);
 	}
 
@@ -96,7 +96,7 @@ final class Copied_Post_Watcher_Test extends TestCase {
 
 		$this->assertSame(
 			'A duplicate of this post was made. Please note that any changes you make to this post will be replaced when the duplicated version is republished.',
-			$this->instance->get_notice_text( $post )
+			$this->instance->get_notice_text( $post ),
 		);
 	}
 
@@ -133,7 +133,7 @@ final class Copied_Post_Watcher_Test extends TestCase {
 
 		$this->assertSame(
 			'A duplicate of this post was made, which is scheduled to replace this post on 2020/12/02 at 10:30 am.',
-			$this->instance->get_notice_text( $post )
+			$this->instance->get_notice_text( $post ),
 		);
 	}
 
@@ -160,7 +160,7 @@ final class Copied_Post_Watcher_Test extends TestCase {
 
 		$this->assertSame(
 			'You can only make one Rewrite & Republish duplicate at a time, and a duplicate of this post already exists in the trash. Permanently delete it if you want to make a new duplicate.',
-			$this->instance->get_notice_text( $post )
+			$this->instance->get_notice_text( $post ),
 		);
 	}
 
@@ -278,7 +278,7 @@ final class Copied_Post_Watcher_Test extends TestCase {
 			->with(
 				'duplicate_post_edit_script',
 				'duplicatePostNotices.has_rewrite_and_republish_notice = {"text":"notice","status":"warning","isDismissible":true};',
-				'before'
+				'before',
 			);
 
 		$this->instance->add_block_editor_notice();

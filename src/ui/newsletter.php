@@ -20,9 +20,9 @@ class Newsletter {
 		/* translators: 1: Yoast */
 			\esc_html__(
 				'If you want to stay up to date about all the exciting developments around Duplicate Post, subscribe to the %1$s newsletter!',
-				'duplicate-post'
+				'duplicate-post',
 			),
-			'Yoast'
+			'Yoast',
 		);
 
 		$email_label = \esc_html__( 'Email address', 'duplicate-post' );
@@ -31,10 +31,10 @@ class Newsletter {
 			/* translators: %1$s and %2$s are replaced by opening and closing anchor tags. */
 			\esc_html__(
 				'Yoast respects your privacy. Read %1$sour privacy policy%2$s on how we handle your personal information.',
-				'duplicate-post'
+				'duplicate-post',
 			),
 			'<a href="https://yoa.st/4jf" target="_blank">',
-			'</a>'
+			'</a>',
 		);
 
 		$response_html = '';
@@ -119,7 +119,7 @@ class Newsletter {
 					],
 					'list'            => 'Yoast newsletter',
 				],
-			]
+			],
 		);
 
 		$wp_remote_retrieve_response_code = \wp_remote_retrieve_response_code( $response );

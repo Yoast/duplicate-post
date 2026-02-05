@@ -50,7 +50,7 @@ final class Link_Builder_Test extends TestCase {
 
 		$this->assertSame(
 			$url,
-			$this->instance->build_rewrite_and_republish_link( $post, $context )
+			$this->instance->build_rewrite_and_republish_link( $post, $context ),
 		);
 	}
 
@@ -73,7 +73,7 @@ final class Link_Builder_Test extends TestCase {
 
 		$this->assertSame(
 			$url,
-			$this->instance->build_clone_link( $post, $context )
+			$this->instance->build_clone_link( $post, $context ),
 		);
 	}
 
@@ -96,7 +96,7 @@ final class Link_Builder_Test extends TestCase {
 
 		$this->assertSame(
 			$url,
-			$this->instance->build_new_draft_link( $post, $context )
+			$this->instance->build_new_draft_link( $post, $context ),
 		);
 	}
 
@@ -119,7 +119,7 @@ final class Link_Builder_Test extends TestCase {
 
 		$this->assertSame(
 			$url,
-			$this->instance->build_check_link( $post, $context )
+			$this->instance->build_check_link( $post, $context ),
 		);
 	}
 
@@ -143,7 +143,7 @@ final class Link_Builder_Test extends TestCase {
 			->andReturnUsing(
 				static function ( $query_string ) {
 					return 'http://basic.wordpress.test/wp-admin/' . $query_string;
-				}
+				},
 			);
 
 		Monkey\Functions\expect( '\wp_nonce_url' )
@@ -151,7 +151,7 @@ final class Link_Builder_Test extends TestCase {
 
 		$this->assertSame(
 			'http://basic.wordpress.test/wp-admin/admin.php?action=duplicate_post_clone&amp;post=123',
-			$this->instance->build_link( $post, $context, $action_name )
+			$this->instance->build_link( $post, $context, $action_name ),
 		);
 		$this->assertTrue( Monkey\Filters\applied( 'duplicate_post_get_clone_post_link' ) > 0 );
 	}
@@ -176,7 +176,7 @@ final class Link_Builder_Test extends TestCase {
 			->andReturnUsing(
 				static function ( $query_string ) {
 					return 'http://basic.wordpress.test/wp-admin/' . $query_string;
-				}
+				},
 			);
 
 		Monkey\Functions\expect( '\wp_nonce_url' )
@@ -184,7 +184,7 @@ final class Link_Builder_Test extends TestCase {
 
 		$this->assertSame(
 			'http://basic.wordpress.test/wp-admin/admin.php?action=duplicate_post_clone&post=123',
-			$this->instance->build_link( $post, $context, $action_name )
+			$this->instance->build_link( $post, $context, $action_name ),
 		);
 		$this->assertTrue( Monkey\Filters\applied( 'duplicate_post_get_clone_post_link' ) > 0 );
 	}
@@ -212,7 +212,7 @@ final class Link_Builder_Test extends TestCase {
 
 		$this->assertSame(
 			'',
-			$this->instance->build_link( $post, $context, $action_name )
+			$this->instance->build_link( $post, $context, $action_name ),
 		);
 		$this->assertTrue( Monkey\Filters\applied( 'duplicate_post_get_clone_post_link' ) === 0 );
 	}

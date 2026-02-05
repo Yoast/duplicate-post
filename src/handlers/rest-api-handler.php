@@ -71,7 +71,7 @@ class Rest_API_Handler {
 						'sanitize_callback' => 'absint',
 					],
 				],
-			]
+			],
 		);
 	}
 
@@ -90,7 +90,7 @@ class Rest_API_Handler {
 			return new WP_Error(
 				'rest_post_not_found',
 				\__( 'Post not found.', 'duplicate-post' ),
-				[ 'status' => 404 ]
+				[ 'status' => 404 ],
 			);
 		}
 
@@ -98,7 +98,7 @@ class Rest_API_Handler {
 			return new WP_Error(
 				'rest_forbidden',
 				\__( 'You do not have permission to edit this post.', 'duplicate-post' ),
-				[ 'status' => 403 ]
+				[ 'status' => 403 ],
 			);
 		}
 
@@ -106,7 +106,7 @@ class Rest_API_Handler {
 			return new WP_Error(
 				'rest_forbidden',
 				\__( 'Cannot remove original reference from a Rewrite & Republish copy.', 'duplicate-post' ),
-				[ 'status' => 403 ]
+				[ 'status' => 403 ],
 			);
 		}
 
@@ -129,7 +129,7 @@ class Rest_API_Handler {
 			return new WP_Error(
 				'rest_cannot_delete',
 				\__( 'Could not remove the original reference.', 'duplicate-post' ),
-				[ 'status' => 500 ]
+				[ 'status' => 500 ],
 			);
 		}
 
@@ -138,7 +138,7 @@ class Rest_API_Handler {
 				'success' => true,
 				'message' => \__( 'Original reference removed successfully.', 'duplicate-post' ),
 			],
-			200
+			200,
 		);
 	}
 }

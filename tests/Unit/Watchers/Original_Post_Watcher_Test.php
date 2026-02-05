@@ -39,7 +39,7 @@ final class Original_Post_Watcher_Test extends TestCase {
 		$this->permissions_helper = Mockery::mock( Permissions_Helper::class );
 
 		$this->instance = Mockery::mock(
-			Original_Post_Watcher::class
+			Original_Post_Watcher::class,
 		)->makePartial();
 		$this->instance->__construct( $this->permissions_helper );
 	}
@@ -54,7 +54,7 @@ final class Original_Post_Watcher_Test extends TestCase {
 	public function test_constructor() {
 		$this->assertInstanceOf(
 			Permissions_Helper::class,
-			$this->getPropertyValue( $this->instance, 'permissions_helper' )
+			$this->getPropertyValue( $this->instance, 'permissions_helper' ),
 		);
 	}
 
@@ -84,7 +84,7 @@ final class Original_Post_Watcher_Test extends TestCase {
 
 		$this->assertSame(
 			'The original post has been edited in the meantime. If you click "Republish", this rewritten post will replace the original post.',
-			$this->instance->get_notice_text()
+			$this->instance->get_notice_text(),
 		);
 	}
 
@@ -201,7 +201,7 @@ final class Original_Post_Watcher_Test extends TestCase {
 			->with(
 				'duplicate_post_edit_script',
 				'duplicatePostNotices.has_original_changed_notice = {"text":"notice","status":"warning","isDismissible":true};',
-				'before'
+				'before',
 			);
 
 		$this->instance->add_block_editor_notice();

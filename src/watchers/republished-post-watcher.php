@@ -64,7 +64,7 @@ class Republished_Post_Watcher {
 	public function get_notice_text() {
 		return \__(
 			'Your original post has been replaced with the rewritten post. You are now viewing the (rewritten) original post.',
-			'duplicate-post'
+			'duplicate-post',
 		);
 	}
 
@@ -101,7 +101,7 @@ class Republished_Post_Watcher {
 			\wp_add_inline_script(
 				'duplicate_post_edit_script',
 				'duplicatePostNotices.republished_notice = ' . \wp_json_encode( $notice ) . ';',
-				'before'
+				'before',
 			);
 		}
 	}

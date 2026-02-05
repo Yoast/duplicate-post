@@ -65,7 +65,7 @@ class Check_Changes_Handler {
 		if ( ! ( isset( $_GET['post'] ) || isset( $_POST['post'] )
 			|| ( isset( $_REQUEST['action'] ) && $_REQUEST['action'] === 'duplicate_post_check_changes' ) ) ) {
 			\wp_die(
-				\esc_html__( 'No post has been supplied!', 'duplicate-post' )
+				\esc_html__( 'No post has been supplied!', 'duplicate-post' ),
 			);
 			return;
 		}
@@ -82,9 +82,9 @@ class Check_Changes_Handler {
 					\sprintf(
 						/* translators: %s: post ID. */
 						\__( 'Changes overview failed, could not find post with ID %s.', 'duplicate-post' ),
-						$id
-					)
-				)
+						$id,
+					),
+				),
 			);
 			return;
 		}
@@ -94,8 +94,8 @@ class Check_Changes_Handler {
 		if ( ! $this->original ) {
 			\wp_die(
 				\esc_html(
-					\__( 'Changes overview failed, could not find original post.', 'duplicate-post' )
-				)
+					\__( 'Changes overview failed, could not find original post.', 'duplicate-post' ),
+				),
 			);
 			return;
 		}
@@ -109,7 +109,7 @@ class Check_Changes_Handler {
 				\printf(
 					/* translators: %s: original item link (to view or edit) or title. */
 					\esc_html__( 'Compare changes of duplicated post with the original (&#8220;%s&#8221;)', 'duplicate-post' ),
-					Utils::get_edit_or_view_link( $this->original ) // phpcs:ignore WordPress.Security.EscapeOutput
+					Utils::get_edit_or_view_link( $this->original ), // phpcs:ignore WordPress.Security.EscapeOutput
 				);
 			?>
 				</h1>

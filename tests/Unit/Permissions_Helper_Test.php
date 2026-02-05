@@ -212,7 +212,7 @@ final class Permissions_Helper_Test extends TestCase {
 
 		$this->assertSame(
 			$copy,
-			$this->instance->has_scheduled_rewrite_and_republish_copy( $post )
+			$this->instance->has_scheduled_rewrite_and_republish_copy( $post ),
 		);
 	}
 

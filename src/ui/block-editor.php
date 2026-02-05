@@ -87,7 +87,7 @@ class Block_Editor {
 		}
 		\wp_add_inline_style(
 			'elementor-editor',
-			'.elementor-control-post_status { display: none !important; }'
+			'.elementor-control-post_status { display: none !important; }',
 		);
 	}
 
@@ -214,7 +214,7 @@ class Block_Editor {
 				'dpcopy'        => $post->ID,
 				'dpnonce'       => \wp_create_nonce( 'dp-republish' ),
 			],
-			\admin_url( 'post.php?action=edit&post=' . $original_post_id )
+			\admin_url( 'post.php?action=edit&post=' . $original_post_id ),
 		);
 	}
 
@@ -282,7 +282,7 @@ class Block_Editor {
 			$suggestions,
 			static function ( $suggestion ) use ( $original_post_id ) {
 				return $suggestion->object_id !== $original_post_id;
-			}
+			},
 		);
 	}
 }
