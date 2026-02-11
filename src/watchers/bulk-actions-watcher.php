@@ -35,7 +35,9 @@ class Bulk_Actions_Watcher {
 	public function add_removable_query_args( $removable_query_args ) {
 		if ( \is_array( $removable_query_args ) ) {
 			$removable_query_args[] = 'bulk_cloned';
+			$removable_query_args[] = 'bulk_cloned_skipped';
 			$removable_query_args[] = 'bulk_rewriting';
+			$removable_query_args[] = 'bulk_rewriting_skipped';
 		}
 		return $removable_query_args;
 	}
@@ -62,6 +64,22 @@ class Bulk_Actions_Watcher {
 				\esc_html( $copied_posts ),
 			);
 		}
+		if ( ! empty( $_REQUEST['bulk_cloned_skipped'] ) ) {
+			$skipped_posts = \intval( $_REQUEST['bulk_cloned_skipped'] );
+			\printf(
+				'<div id="message" class="notice notice-warning fade"><p>'
+				. \esc_html(
+					/* translators: %s: Number of posts skipped. */
+					\_n(
+						'%s item skipped due to insufficient permissions.',
+						'%s items skipped due to insufficient permissions.',
+						$skipped_posts,
+						'duplicate-post'
+					)
+				) . '</p></div>',
+				\esc_html( $skipped_posts )
+			);
+		}
 	}
 
 	/**
@@ -84,6 +102,22 @@ class Bulk_Actions_Watcher {
 					),
 				) . '</p></div>',
 				\esc_html( $copied_posts ),
+			);
+		}
+		if ( ! empty( $_REQUEST['bulk_rewriting_skipped'] ) ) {
+			$skipped_posts = \intval( $_REQUEST['bulk_rewriting_skipped'] );
+			\printf(
+				'<div id="message" class="notice notice-warning fade"><p>'
+				. \esc_html(
+					/* translators: %s: Number of posts skipped. */
+					\_n(
+						'%s item skipped due to insufficient permissions.',
+						'%s items skipped due to insufficient permissions.',
+						$skipped_posts,
+						'duplicate-post'
+					)
+				) . '</p></div>',
+				\esc_html( $skipped_posts )
 			);
 		}
 	}

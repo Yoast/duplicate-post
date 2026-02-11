@@ -122,7 +122,9 @@ final class Bulk_Actions_Watcher_Test extends TestCase {
 				'updated',
 				'wp-post-new-reload',
 				'bulk_cloned',
+				'bulk_cloned_skipped',
 				'bulk_rewriting',
+				'bulk_rewriting_skipped',
 			],
 			$this->instance->add_removable_query_args( $array ),
 		);
@@ -210,5 +212,89 @@ final class Bulk_Actions_Watcher_Test extends TestCase {
 
 		// Clean up after the test.
 		unset( $_REQUEST['bulk_rewriting'] );
+	}
+
+	/**
+	 * Tests the add_bulk_clone_admin_notice function when 1 post is skipped.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Bulk_Actions_Watcher::add_bulk_clone_admin_notice
+	 *
+	 * @return void
+	 */
+	public function test_add_bulk_clone_admin_notice_skipped_1() {
+		$this->stubEscapeFunctions();
+		$this->stubTranslationFunctions();
+
+		$_REQUEST['bulk_cloned_skipped'] = '1';
+
+		$this->instance->add_bulk_clone_admin_notice();
+
+		$this->expectOutputString( '<div id="message" class="notice notice-warning fade"><p>1 item skipped due to insufficient permissions.</p></div>' );
+
+		// Clean up after the test.
+		unset( $_REQUEST['bulk_cloned_skipped'] );
+	}
+
+	/**
+	 * Tests the add_bulk_clone_admin_notice function when more than 1 post is skipped.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Bulk_Actions_Watcher::add_bulk_clone_admin_notice
+	 *
+	 * @return void
+	 */
+	public function test_add_bulk_clone_admin_notice_skipped_2() {
+		$this->stubEscapeFunctions();
+		$this->stubTranslationFunctions();
+
+		$_REQUEST['bulk_cloned_skipped'] = '2';
+
+		$this->instance->add_bulk_clone_admin_notice();
+
+		$this->expectOutputString( '<div id="message" class="notice notice-warning fade"><p>2 items skipped due to insufficient permissions.</p></div>' );
+
+		// Clean up after the test.
+		unset( $_REQUEST['bulk_cloned_skipped'] );
+	}
+
+	/**
+	 * Tests the add_bulk_rewrite_and_republish_admin_notice function when 1 post is skipped.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Bulk_Actions_Watcher::add_bulk_rewrite_and_republish_admin_notice
+	 *
+	 * @return void
+	 */
+	public function test_add_bulk_rewrite_and_republish_admin_notice_skipped_1() {
+		$this->stubEscapeFunctions();
+		$this->stubTranslationFunctions();
+
+		$_REQUEST['bulk_rewriting_skipped'] = '1';
+
+		$this->instance->add_bulk_rewrite_and_republish_admin_notice();
+
+		$this->expectOutputString( '<div id="message" class="notice notice-warning fade"><p>1 item skipped due to insufficient permissions.</p></div>' );
+
+		// Clean up after the test.
+		unset( $_REQUEST['bulk_rewriting_skipped'] );
+	}
+
+	/**
+	 * Tests the add_bulk_rewrite_and_republish_admin_notice function when more than 1 post is skipped.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Bulk_Actions_Watcher::add_bulk_rewrite_and_republish_admin_notice
+	 *
+	 * @return void
+	 */
+	public function test_add_bulk_rewrite_and_republish_admin_notice_skipped_2() {
+		$this->stubEscapeFunctions();
+		$this->stubTranslationFunctions();
+
+		$_REQUEST['bulk_rewriting_skipped'] = '2';
+
+		$this->instance->add_bulk_rewrite_and_republish_admin_notice();
+
+		$this->expectOutputString( '<div id="message" class="notice notice-warning fade"><p>2 items skipped due to insufficient permissions.</p></div>' );
+
+		// Clean up after the test.
+		unset( $_REQUEST['bulk_rewriting_skipped'] );
 	}
 }

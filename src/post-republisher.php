@@ -142,6 +142,14 @@ class Post_Republisher {
 			return;
 		}
 
+		if ( ! \current_user_can( 'edit_post', $original_post->ID ) ) {
+			\wp_die(
+				\esc_html__( 'You are not allowed to republish this post.', 'duplicate-post' ),
+				\esc_html__( 'Permission denied', 'duplicate-post' ),
+				[ 'response' => 403 ]
+			);
+		}
+
 		$this->republish( $post, $original_post );
 
 		// Trigger the redirect in the Classic Editor.
