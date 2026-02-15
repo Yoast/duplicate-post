@@ -980,7 +980,7 @@ final class Post_Republisher_Test extends TestCase {
 				'post_title'   => 'Admin Post',
 				'post_content' => 'Admin content.',
 				'post_author'  => $admin_user_id,
-			]
+			],
 		);
 
 		$copy = $this->create_rewrite_and_republish_copy( $original );
@@ -990,7 +990,7 @@ final class Post_Republisher_Test extends TestCase {
 			[
 				'ID'          => $copy->ID,
 				'post_status' => 'dp-rewrite-republish',
-			]
+			],
 		);
 		$copy = \get_post( $copy->ID );
 

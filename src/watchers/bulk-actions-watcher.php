@@ -74,10 +74,10 @@ class Bulk_Actions_Watcher {
 						'%s item skipped due to insufficient permissions.',
 						'%s items skipped due to insufficient permissions.',
 						$skipped_posts,
-						'duplicate-post'
-					)
+						'duplicate-post',
+					),
 				) . '</p></div>',
-				\esc_html( $skipped_posts )
+				\esc_html( $skipped_posts ),
 			);
 		}
 	}
@@ -114,10 +114,10 @@ class Bulk_Actions_Watcher {
 						'%s item skipped due to insufficient permissions.',
 						'%s items skipped due to insufficient permissions.',
 						$skipped_posts,
-						'duplicate-post'
-					)
+						'duplicate-post',
+					),
 				) . '</p></div>',
-				\esc_html( $skipped_posts )
+				\esc_html( $skipped_posts ),
 			);
 		}
 	}

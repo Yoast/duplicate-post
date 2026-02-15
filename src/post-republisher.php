@@ -146,7 +146,7 @@ class Post_Republisher {
 			\wp_die(
 				\esc_html__( 'You are not allowed to republish this post.', 'duplicate-post' ),
 				\esc_html__( 'Permission denied', 'duplicate-post' ),
-				[ 'response' => 403 ]
+				[ 'response' => 403 ],
 			);
 		}
 

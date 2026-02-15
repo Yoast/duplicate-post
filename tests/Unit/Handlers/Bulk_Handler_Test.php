@@ -60,12 +60,12 @@ final class Bulk_Handler_Test extends TestCase {
 	public function test_constructor() {
 		$this->assertInstanceOf(
 			Post_Duplicator::class,
-			$this->getPropertyValue( $this->instance, 'post_duplicator' )
+			$this->getPropertyValue( $this->instance, 'post_duplicator' ),
 		);
 
 		$this->assertInstanceOf(
 			Permissions_Helper::class,
-			$this->getPropertyValue( $this->instance, 'permissions_helper' )
+			$this->getPropertyValue( $this->instance, 'permissions_helper' ),
 		);
 	}
 
@@ -138,7 +138,7 @@ final class Bulk_Handler_Test extends TestCase {
 			->andReturnUsing(
 				static function ( $key, $value, $url ) {
 					return $url . ( ( \strpos( $url, '?' ) === false ) ? '?' : '&' ) . $key . '=' . $value;
-				}
+				},
 			);
 
 		$result = $this->instance->clone_bulk_action_handler( $redirect_to, 'duplicate_post_bulk_clone', [ 1, 2 ] );
@@ -245,7 +245,7 @@ final class Bulk_Handler_Test extends TestCase {
 			->andReturnUsing(
 				static function ( $key, $value, $url ) {
 					return $url . ( ( \strpos( $url, '?' ) === false ) ? '?' : '&' ) . $key . '=' . $value;
-				}
+				},
 			);
 
 		$result = $this->instance->clone_bulk_action_handler( $redirect_to, 'duplicate_post_bulk_clone', [ 1 ] );
@@ -314,7 +314,7 @@ final class Bulk_Handler_Test extends TestCase {
 			->andReturnUsing(
 				static function ( $key, $value, $url ) {
 					return $url . ( ( \strpos( $url, '?' ) === false ) ? '?' : '&' ) . $key . '=' . $value;
-				}
+				},
 			);
 
 		$result = $this->instance->rewrite_bulk_action_handler( $redirect_to, 'duplicate_post_bulk_rewrite_republish', [ 1, 2 ] );
