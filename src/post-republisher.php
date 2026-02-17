@@ -154,7 +154,7 @@ class Post_Republisher {
 
 		// Trigger the redirect in the Classic Editor.
 		if ( $this->is_classic_editor_post_request() ) {
-			$this->redirect( $original_post->ID );
+			$this->redirect( $original_post->ID, $post->ID );
 		}
 	}
 
@@ -249,16 +249,23 @@ class Post_Republisher {
 	}
 
 	/**
-	 * Cleans up after the user has been redirected to the original post.
-	 *
-	 * Note: The copy is now deleted immediately after republishing, so this method
-	 * only verifies the nonce when the redirect parameters are present.
+	 * Cleans up the copied post and temporary metadata after the user has been redirected.
 	 *
 	 * @return void
 	 */
 	public function clean_up_after_redirect() {
-		if ( ! empty( $_GET['dprepublished'] ) && ! empty( $_GET['post'] ) && isset( $_GET['dpnonce'] ) ) {
+		if ( ! empty( $_GET['dprepublished'] ) && ! empty( $_GET['dpcopy'] ) && ! empty( $_GET['post'] ) ) {
+			$copy_id = \intval( \wp_unslash( $_GET['dpcopy'] ) );
+			$post_id = \intval( \wp_unslash( $_GET['post'] ) );
+
 			\check_admin_referer( 'dp-republish', 'dpnonce' );
+
+			if ( \intval( \get_post_meta( $copy_id, '_dp_has_been_republished', true ) ) === 1 ) {
+				$this->delete_copy( $copy_id, $post_id );
+			}
+			else {
+				\wp_die( \esc_html__( 'An error occurred while deleting the Rewrite & Republish copy.', 'duplicate-post' ) );
+			}
 		}
 	}
 
@@ -320,9 +327,6 @@ class Post_Republisher {
 
 		// Mark the copy as already published.
 		\update_post_meta( $post->ID, '_dp_has_been_republished', '1' );
-
-		// Delete the copy immediately after republishing.
-		$this->delete_copy( $post->ID, $original_post->ID );
 
 		// Re-enable the creation of a new revision.
 		\add_action( 'post_updated', 'wp_save_post_revision', 10, 1 );
@@ -443,14 +447,16 @@ class Post_Republisher {
 	 * Redirects the user to the original post.
 	 *
 	 * @param int $original_post_id The ID of the original post to redirect to.
+	 * @param int $copy_id          The ID of the copy post.
 	 *
 	 * @return void
 	 */
-	protected function redirect( $original_post_id ) {
+	protected function redirect( $original_post_id, $copy_id ) {
 		\wp_safe_redirect(
 			\add_query_arg(
 				[
 					'dprepublished' => 1,
+					'dpcopy'        => $copy_id,
 					'dpnonce'       => \wp_create_nonce( 'dp-republish' ),
 				],
 				\admin_url( 'post.php?action=edit&post=' . $original_post_id ),
