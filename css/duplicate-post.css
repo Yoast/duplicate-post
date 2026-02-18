@@ -36,6 +36,11 @@
 	justify-content: center;
 }
 
+.components-button.dp-editor-post-copy-to-draft{
+	margin-bottom: 4px;
+}
+
+
 #check-changes-action  {
 	padding: 6px 10px 8px;
 }
