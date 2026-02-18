@@ -71,6 +71,41 @@ If Duplicate Post is still in English, or if there are some untranslated strings
 
 == Changelog ==
 
+= 4.6 =
+
+Release date: 2026-03-03
+
+#### Enhancements
+
+* Improves the compatibility with the Block Editor.
+* Improves the style of the _Copy to a new draft_ and _Rewrite & Republish_ actions in the Block Editor.
+* Replaces the metabox with a sidebar panel in the Block Editor.
+
+#### Bugfixes
+
+* Fixes a bug where cloning an attachment did not copy its caption as expected. Props to @masteradhoc.
+* Fixes a bug where cloning an attachment did not copy its description as expected.
+* Fixes a bug where notices would not be appearing in the block editor, throwing console errors, with some locales.
+* Fixes a bug where Rewrite & Republish copies could remain orphaned, blocking editors from creating a new Rewrite & Republish copy for the original post.
+* Fixes a bug where translations where missing in the buttons and the notices in the Block Editor. Props to @petitphp.
+* Minor security improvement
+
+#### Other
+
+* Adds `duplicate_post_before_republish` and `duplicate_post_after_republish` action hooks fired before and after republishing. Props to @piscis.
+* Deprecates the `dp_duplicate_post` and `dp_duplicate_page` hooks and introduces a new unified `duplicate_post_after_duplicated` action hook that replaces them. The new hook includes the post type as a fourth parameter for flexible filtering.
+* Drops compatibility with PHP 5.6, 7.0 and 7.1.
+* Drops compatibility with PHP 7.2 and 7.3.
+* Improves discoverability of security policy in Packagist.
+* Improves how the translations are loaded by relying on the WordPress mechanism for that. Props to @swissspidy.
+* Improves security of the Bulk Clone action and the republishing of a copy.
+* Sets the minimum supported WordPress version to 6.8.
+* Sets the WordPress tested up to version to 6.9.
+* The plugin has no known incompatibilities with PHP 8.3
+* Users requiring this package via [WP]Packagist can now use the `composer/installers` v2.
+* Verified compatibility with PHP 8.5
+* Verified PHP 8.2 compatibility.
+
 = 4.5 =
 
 Release date: 2022-06-28
@@ -86,24 +121,6 @@ Release date: 2022-06-28
 #### Other
 
 * Sets the WordPress tested up to version to 6.0.
-
-= 4.4 =
-
-Release date: 2022-01-25
-
-#### Enhancements
-
-* Converts the upgrade notice into a welcome notice for first-time users.
-
-#### Bugfixes
-
-* Fixes a bug where HTML tags in a Custom HTML block would be removed when republishing a scheduled Rewrite & Republish copy.
-* Fixes a bug where the button style would be broken in the Classic Editor.
-* Fixes a bug where a fatal error would be triggered in the Widgets page in combination with some themes or plugins.
-
-#### Other
-
-* Sets the WordPress tested up to version to 5.9.
 
 = Earlier versions =
 For the changelog of earlier versions, please refer to [the changelog on yoast.com](https://yoa.st/duplicate-post-changelog).
