@@ -138,7 +138,7 @@ function DuplicatePostRender() {
 					{ ( duplicatePost.newDraftLink !== '' && duplicatePost.showLinks.new_draft === '1' ) &&
 						<PluginPostStatusInfo>
 							<Button
-								isTertiary={ true }
+								variant="secondary"
 								className="dp-editor-post-copy-to-draft"
 								href={ duplicatePost.newDraftLink }
 							>
@@ -149,7 +149,7 @@ function DuplicatePostRender() {
 					{ ( currentPostStatus === 'publish' && duplicatePost.rewriteAndRepublishLink !== '' && duplicatePost.showLinks.rewrite_republish === '1' ) &&
 						<PluginPostStatusInfo>
 							<Button
-								isTertiary={ true }
+								variant="secondary"
 								className="dp-editor-post-rewrite-republish"
 								href={ duplicatePost.rewriteAndRepublishLink }
 							>

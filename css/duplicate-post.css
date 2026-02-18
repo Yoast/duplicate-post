@@ -32,9 +32,14 @@
 /* Copy links in the block editor. */
 .components-button.dp-editor-post-copy-to-draft,
 .components-button.dp-editor-post-rewrite-republish {
-	margin-left: -6px;
-	text-decoration: underline;
+	width: 100%;
+	justify-content: center;
 }
+
+.components-button.dp-editor-post-copy-to-draft{
+	margin-bottom: 4px;
+}
+
 
 #check-changes-action  {
 	padding: 6px 10px 8px;
