@@ -144,7 +144,7 @@ final class Save_Post_Handler_Test extends TestCase {
 		\add_post_meta( $copy_post, '_dp_original', $original_post );
 
 		// Verify the meta exists.
-		$this->assertEquals( $original_post, \get_post_meta( $copy_post, '_dp_original', true ) );
+		$this->assertSame( $original_post, (int) \get_post_meta( $copy_post, '_dp_original', true ) );
 
 		// Set the checkbox.
 		$_POST['duplicate_post_remove_original'] = '1';
@@ -172,7 +172,7 @@ final class Save_Post_Handler_Test extends TestCase {
 		\add_post_meta( $copy_post, '_dp_original', $original_post );
 
 		// Verify the meta exists.
-		$this->assertEquals( $original_post, \get_post_meta( $copy_post, '_dp_original', true ) );
+		$this->assertSame( $original_post, (int) \get_post_meta( $copy_post, '_dp_original', true ) );
 
 		// Don't set the checkbox.
 		unset( $_POST['duplicate_post_remove_original'] );
@@ -181,7 +181,7 @@ final class Save_Post_Handler_Test extends TestCase {
 		$this->instance->delete_on_save_post( $copy_post );
 
 		// Verify the meta still exists.
-		$this->assertEquals( $original_post, \get_post_meta( $copy_post, '_dp_original', true ) );
+		$this->assertSame( $original_post, (int) \get_post_meta( $copy_post, '_dp_original', true ) );
 	}
 
 	/**
@@ -200,7 +200,7 @@ final class Save_Post_Handler_Test extends TestCase {
 		\add_post_meta( $copy_post, '_dp_original', $original_post );
 
 		// Verify the meta exists.
-		$this->assertEquals( $original_post, \get_post_meta( $copy_post, '_dp_original', true ) );
+		$this->assertSame( $original_post, (int) \get_post_meta( $copy_post, '_dp_original', true ) );
 
 		// Set the checkbox.
 		$_POST['duplicate_post_remove_original'] = '1';
@@ -209,7 +209,7 @@ final class Save_Post_Handler_Test extends TestCase {
 		$this->instance->delete_on_save_post( $copy_post );
 
 		// Verify the meta still exists (user has no permission).
-		$this->assertEquals( $original_post, \get_post_meta( $copy_post, '_dp_original', true ) );
+		$this->assertSame( $original_post, (int) \get_post_meta( $copy_post, '_dp_original', true ) );
 	}
 
 	/**
@@ -252,7 +252,7 @@ final class Save_Post_Handler_Test extends TestCase {
 		\add_post_meta( $copy_post, '_dp_is_rewrite_republish_copy', '1' );
 
 		// Verify the meta exists.
-		$this->assertEquals( $original_post, \get_post_meta( $copy_post, '_dp_original', true ) );
+		$this->assertSame( $original_post, (int) \get_post_meta( $copy_post, '_dp_original', true ) );
 
 		// Set the checkbox.
 		$_POST['duplicate_post_remove_original'] = '1';
@@ -261,6 +261,6 @@ final class Save_Post_Handler_Test extends TestCase {
 		$this->instance->delete_on_save_post( $copy_post );
 
 		// Verify the meta still exists (R&R copy should not be modified).
-		$this->assertEquals( $original_post, \get_post_meta( $copy_post, '_dp_original', true ) );
+		$this->assertSame( $original_post, (int) \get_post_meta( $copy_post, '_dp_original', true ) );
 	}
 }

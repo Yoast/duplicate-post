@@ -240,7 +240,7 @@ final class Admin_Functions_Test extends TestCase {
 		$duplicated = \get_post( $new_id );
 
 		$this->assertIsInt( $new_id );
-		$this->assertEquals( $expected_title, $duplicated->post_title );
+		$this->assertSame( $expected_title, $duplicated->post_title );
 	}
 
 	/**
@@ -308,8 +308,8 @@ final class Admin_Functions_Test extends TestCase {
 		$duplicated = \get_post( $new_id );
 
 		$this->assertIsInt( $new_id );
-		$this->assertEquals( $expected_content, $duplicated->post_content );
-		$this->assertEquals( $expected_excerpt, $duplicated->post_excerpt );
+		$this->assertSame( $expected_content, $duplicated->post_content );
+		$this->assertSame( $expected_excerpt, $duplicated->post_excerpt );
 	}
 
 	/**
@@ -328,7 +328,7 @@ final class Admin_Functions_Test extends TestCase {
 		$duplicated    = \get_post( $new_id );
 
 		$this->assertIsInt( $new_id );
-		$this->assertEquals( $original_date, $duplicated->post_date );
+		$this->assertSame( $original_date, $duplicated->post_date );
 	}
 
 	/**
@@ -347,7 +347,7 @@ final class Admin_Functions_Test extends TestCase {
 		$duplicated    = \get_post( $new_id );
 
 		$this->assertIsInt( $new_id );
-		$this->assertNotEquals( $original_date, $duplicated->post_date );
+		$this->assertNotSame( $original_date, $duplicated->post_date );
 	}
 
 	/**
@@ -406,7 +406,7 @@ final class Admin_Functions_Test extends TestCase {
 		$duplicated = \get_post( $new_id );
 
 		$this->assertIsInt( $new_id );
-		$this->assertEquals( $expected_status, $duplicated->post_status );
+		$this->assertSame( $expected_status, $duplicated->post_status );
 	}
 
 	/**
@@ -444,7 +444,7 @@ final class Admin_Functions_Test extends TestCase {
 
 		$this->assertIsInt( $new_id );
 		// When slug is not copied, WP generates a new one based on the title.
-		$this->assertNotEquals( 'my-custom-slug', $duplicated->post_name );
+		$this->assertNotSame( 'my-custom-slug', $duplicated->post_name );
 	}
 
 	/**
@@ -465,7 +465,7 @@ final class Admin_Functions_Test extends TestCase {
 		$duplicated = \get_post( $new_id );
 
 		$this->assertIsInt( $new_id );
-		$this->assertEquals( $other_author_id, (int) $duplicated->post_author );
+		$this->assertSame( $other_author_id, (int) $duplicated->post_author );
 	}
 
 	/**
@@ -486,7 +486,7 @@ final class Admin_Functions_Test extends TestCase {
 		$duplicated = \get_post( $new_id );
 
 		$this->assertIsInt( $new_id );
-		$this->assertEquals( $current_user_id, (int) $duplicated->post_author );
+		$this->assertSame( $current_user_id, (int) $duplicated->post_author );
 	}
 
 	/**
@@ -512,7 +512,7 @@ final class Admin_Functions_Test extends TestCase {
 
 		$this->assertIsInt( $new_id );
 		// Should use current user (contributor), not original author.
-		$this->assertEquals( $contributor_id, (int) $duplicated->post_author );
+		$this->assertSame( $contributor_id, (int) $duplicated->post_author );
 	}
 
 	/**
@@ -535,7 +535,7 @@ final class Admin_Functions_Test extends TestCase {
 
 		$this->assertIsInt( $new_id );
 		// Should be pending because contributor cannot publish.
-		$this->assertEquals( 'pending', $duplicated->post_status );
+		$this->assertSame( 'pending', $duplicated->post_status );
 	}
 
 	/**
@@ -553,7 +553,7 @@ final class Admin_Functions_Test extends TestCase {
 		$duplicated = \get_post( $new_id );
 
 		$this->assertIsInt( $new_id );
-		$this->assertEquals( 'secret123', $duplicated->post_password );
+		$this->assertSame( 'secret123', $duplicated->post_password );
 	}
 
 	/**
@@ -571,7 +571,7 @@ final class Admin_Functions_Test extends TestCase {
 		$duplicated = \get_post( $new_id );
 
 		$this->assertIsInt( $new_id );
-		$this->assertEquals( '', $duplicated->post_password );
+		$this->assertSame( '', $duplicated->post_password );
 	}
 
 	/**
@@ -631,7 +631,7 @@ final class Admin_Functions_Test extends TestCase {
 		$duplicated = \get_post( $new_id );
 
 		$this->assertIsInt( $new_id );
-		$this->assertEquals( $expected_order, $duplicated->menu_order );
+		$this->assertSame( $expected_order, $duplicated->menu_order );
 	}
 
 	/**
@@ -646,7 +646,7 @@ final class Admin_Functions_Test extends TestCase {
 		$new_id   = \duplicate_post_create_duplicate( $original );
 
 		$this->assertIsInt( $new_id );
-		$this->assertEquals( $original->ID, (int) \get_post_meta( $new_id, '_dp_original', true ) );
+		$this->assertSame( $original->ID, (int) \get_post_meta( $new_id, '_dp_original', true ) );
 	}
 
 	/**
@@ -665,7 +665,7 @@ final class Admin_Functions_Test extends TestCase {
 		$duplicated = \get_post( $new_id );
 
 		$this->assertIsInt( $new_id );
-		$this->assertEquals( 'pending', $duplicated->post_status );
+		$this->assertSame( 'pending', $duplicated->post_status );
 	}
 
 	/**
@@ -683,7 +683,7 @@ final class Admin_Functions_Test extends TestCase {
 		$duplicated = \get_post( $new_id );
 
 		$this->assertIsInt( $new_id );
-		$this->assertEquals( $parent->ID, $duplicated->post_parent );
+		$this->assertSame( $parent->ID, $duplicated->post_parent );
 	}
 
 	/**
@@ -730,7 +730,7 @@ final class Admin_Functions_Test extends TestCase {
 		$new_tags       = \wp_get_post_tags( $new_id );
 
 		$this->assertContains( $category_id, $new_categories );
-		$this->assertEquals( 'Test Tag', $new_tags[0]->name );
+		$this->assertSame( 'Test Tag', $new_tags[0]->name );
 	}
 
 	/**
@@ -747,7 +747,7 @@ final class Admin_Functions_Test extends TestCase {
 
 		$new_id = \duplicate_post_create_duplicate( $original );
 
-		$this->assertEquals( 'custom_meta_value', \get_post_meta( $new_id, 'custom_meta_key', true ) );
+		$this->assertSame( 'custom_meta_value', \get_post_meta( $new_id, 'custom_meta_key', true ) );
 	}
 
 	/**
@@ -767,8 +767,8 @@ final class Admin_Functions_Test extends TestCase {
 
 		$new_id = \duplicate_post_create_duplicate( $original );
 
-		$this->assertEquals( '', \get_post_meta( $new_id, 'blocked_meta_key', true ) );
-		$this->assertEquals( 'allowed_value', \get_post_meta( $new_id, 'allowed_meta_key', true ) );
+		$this->assertSame( '', \get_post_meta( $new_id, 'blocked_meta_key', true ) );
+		$this->assertSame( 'allowed_value', \get_post_meta( $new_id, 'allowed_meta_key', true ) );
 	}
 
 	/**
@@ -819,7 +819,7 @@ final class Admin_Functions_Test extends TestCase {
 
 		$this->assertCount( 1, $new_children );
 		$new_child = \array_shift( $new_children );
-		$this->assertEquals( 'Child Page', $new_child->post_title );
+		$this->assertSame( 'Child Page', $new_child->post_title );
 	}
 
 	/**
@@ -894,7 +894,7 @@ final class Admin_Functions_Test extends TestCase {
 		$new_comments = \get_comments( [ 'post_id' => $new_id ] );
 
 		$this->assertCount( 1, $new_comments );
-		$this->assertEquals( 'Test comment content', $new_comments[0]->comment_content );
+		$this->assertSame( 'Test comment content', $new_comments[0]->comment_content );
 	}
 
 	/**
@@ -966,7 +966,7 @@ final class Admin_Functions_Test extends TestCase {
 
 		\remove_action( 'duplicate_post_post_copy', $callback );
 
-		$this->assertEquals( $new_id, $captured_new_id );
+		$this->assertSame( $new_id, $captured_new_id );
 	}
 
 	/**
@@ -994,10 +994,10 @@ final class Admin_Functions_Test extends TestCase {
 
 		\remove_action( 'duplicate_post_after_duplicated', $callback, 10 );
 
-		$this->assertEquals( $new_id, $captured_data['new_id'] );
-		$this->assertEquals( $original->ID, $captured_data['post']->ID );
-		$this->assertEquals( 'post', $captured_data['post_type'] );
-		$this->assertEquals( 'draft', $captured_data['status'] );
+		$this->assertSame( $new_id, $captured_data['new_id'] );
+		$this->assertSame( $original->ID, $captured_data['post']->ID );
+		$this->assertSame( 'post', $captured_data['post_type'] );
+		$this->assertSame( 'draft', $captured_data['status'] );
 	}
 
 	/**
@@ -1033,10 +1033,10 @@ final class Admin_Functions_Test extends TestCase {
 
 		\remove_action( 'duplicate_post_after_duplicated', $callback, 10 );
 
-		$this->assertEquals( $new_id, $captured_data['new_id'] );
-		$this->assertEquals( $original->ID, $captured_data['post']->ID );
-		$this->assertEquals( 'page', $captured_data['post_type'] );
-		$this->assertEquals( 'draft', $captured_data['status'] );
+		$this->assertSame( $new_id, $captured_data['new_id'] );
+		$this->assertSame( $original->ID, $captured_data['post']->ID );
+		$this->assertSame( 'page', $captured_data['post_type'] );
+		$this->assertSame( 'draft', $captured_data['status'] );
 	}
 
 	/**
@@ -1088,10 +1088,10 @@ final class Admin_Functions_Test extends TestCase {
 		// Unregister the custom post type.
 		\unregister_post_type( 'dp_test_cpt' );
 
-		$this->assertEquals( $new_id, $captured_data['new_id'] );
-		$this->assertEquals( $original->ID, $captured_data['post']->ID );
-		$this->assertEquals( 'dp_test_cpt', $captured_data['post_type'] );
-		$this->assertEquals( 'pending', $captured_data['status'] );
+		$this->assertSame( $new_id, $captured_data['new_id'] );
+		$this->assertSame( $original->ID, $captured_data['post']->ID );
+		$this->assertSame( 'dp_test_cpt', $captured_data['post_type'] );
+		$this->assertSame( 'pending', $captured_data['status'] );
 	}
 
 	/**
@@ -1115,9 +1115,9 @@ final class Admin_Functions_Test extends TestCase {
 		$duplicated = \get_post( $new_id );
 
 		$this->assertIsInt( $new_id );
-		$this->assertEquals( 'page', $duplicated->post_type );
-		$this->assertEquals( 'Original Page', $duplicated->post_title );
-		$this->assertEquals( 'Page content.', $duplicated->post_content );
+		$this->assertSame( 'page', $duplicated->post_type );
+		$this->assertSame( 'Original Page', $duplicated->post_title );
+		$this->assertSame( 'Page content.', $duplicated->post_content );
 	}
 
 	/**
@@ -1141,7 +1141,7 @@ final class Admin_Functions_Test extends TestCase {
 
 		\remove_filter( 'duplicate_post_new_post', $callback, 10 );
 
-		$this->assertEquals( 'Modified by filter', $duplicated->post_title );
+		$this->assertSame( 'Modified by filter', $duplicated->post_title );
 	}
 
 	/**
@@ -1221,7 +1221,7 @@ final class Admin_Functions_Test extends TestCase {
 		\add_post_meta( $original->ID, '_thumbnail_id', $attachment_id );
 
 		// Verify thumbnail meta is set on original.
-		$this->assertEquals( $attachment_id, \get_post_meta( $original->ID, '_thumbnail_id', true ), 'Original post should have thumbnail meta' );
+		$this->assertSame( $attachment_id, (int) \get_post_meta( $original->ID, '_thumbnail_id', true ), 'Original post should have thumbnail meta' );
 
 		$new_id = \duplicate_post_create_duplicate( $original );
 
@@ -1255,11 +1255,11 @@ final class Admin_Functions_Test extends TestCase {
 		\add_post_meta( $original->ID, '_thumbnail_id', $attachment_id );
 
 		// Verify thumbnail meta is set on original.
-		$this->assertEquals( $attachment_id, \get_post_meta( $original->ID, '_thumbnail_id', true ), 'Original post should have thumbnail meta' );
+		$this->assertSame( $attachment_id, (int) \get_post_meta( $original->ID, '_thumbnail_id', true ), 'Original post should have thumbnail meta' );
 
 		$new_id = \duplicate_post_create_duplicate( $original );
 
 		// Thumbnail SHOULD be copied when enabled.
-		$this->assertEquals( $attachment_id, \get_post_meta( $new_id, '_thumbnail_id', true ) );
+		$this->assertSame( $attachment_id, (int) \get_post_meta( $new_id, '_thumbnail_id', true ) );
 	}
 }

@@ -142,17 +142,17 @@ final class Post_Republisher_Test extends TestCase {
 		$this->assertNotEquals( $original->ID, $copy->ID );
 
 		// Verify the copy has the R&R meta.
-		$this->assertEquals( 1, (int) \get_post_meta( $copy->ID, '_dp_is_rewrite_republish_copy', true ) );
+		$this->assertSame( 1, (int) \get_post_meta( $copy->ID, '_dp_is_rewrite_republish_copy', true ) );
 
 		// Verify the original has reference to the copy.
-		$this->assertEquals( $copy->ID, (int) \get_post_meta( $original->ID, '_dp_has_rewrite_republish_copy', true ) );
+		$this->assertSame( $copy->ID, (int) \get_post_meta( $original->ID, '_dp_has_rewrite_republish_copy', true ) );
 
 		// Verify the creation date is set.
 		$creation_date = \get_post_meta( $copy->ID, '_dp_creation_date_gmt', true );
 		$this->assertNotEmpty( $creation_date );
 
 		// Verify the copy references the original.
-		$this->assertEquals( $original->ID, (int) \get_post_meta( $copy->ID, '_dp_original', true ) );
+		$this->assertSame( $original->ID, (int) \get_post_meta( $copy->ID, '_dp_original', true ) );
 	}
 
 	/**
@@ -178,12 +178,12 @@ final class Post_Republisher_Test extends TestCase {
 		$copy = $this->create_rewrite_and_republish_copy( $original );
 
 		// Verify content is copied.
-		$this->assertEquals( $original->post_title, $copy->post_title );
-		$this->assertEquals( $original->post_content, $copy->post_content );
-		$this->assertEquals( $original->post_excerpt, $copy->post_excerpt );
+		$this->assertSame( $original->post_title, $copy->post_title );
+		$this->assertSame( $original->post_content, $copy->post_content );
+		$this->assertSame( $original->post_excerpt, $copy->post_excerpt );
 
 		// Verify the copy is a draft.
-		$this->assertEquals( 'draft', $copy->post_status );
+		$this->assertSame( 'draft', $copy->post_status );
 	}
 
 	/**
@@ -207,12 +207,12 @@ final class Post_Republisher_Test extends TestCase {
 		// Verify categories are copied.
 		$original_categories = \wp_get_post_categories( $original->ID );
 		$copy_categories     = \wp_get_post_categories( $copy->ID );
-		$this->assertEquals( $original_categories, $copy_categories );
+		$this->assertSame( $original_categories, $copy_categories );
 
 		// Verify tags are copied.
 		$original_tags = \wp_get_post_tags( $original->ID, [ 'fields' => 'ids' ] );
 		$copy_tags     = \wp_get_post_tags( $copy->ID, [ 'fields' => 'ids' ] );
-		$this->assertEquals( $original_tags, $copy_tags );
+		$this->assertSame( $original_tags, $copy_tags );
 	}
 
 	/**
@@ -259,22 +259,22 @@ final class Post_Republisher_Test extends TestCase {
 		$updated_original = \get_post( $original_id );
 
 		// Verify the original post has updated content.
-		$this->assertEquals( 'Updated Title', $updated_original->post_title );
-		$this->assertEquals( 'Updated content.', $updated_original->post_content );
-		$this->assertEquals( 'Updated excerpt.', $updated_original->post_excerpt );
+		$this->assertSame( 'Updated Title', $updated_original->post_title );
+		$this->assertSame( 'Updated content.', $updated_original->post_content );
+		$this->assertSame( 'Updated excerpt.', $updated_original->post_excerpt );
 
 		// Verify the original keeps its ID and slug.
-		$this->assertEquals( $original_id, $updated_original->ID );
-		$this->assertEquals( $original_slug, $updated_original->post_name );
+		$this->assertSame( $original_id, $updated_original->ID );
+		$this->assertSame( $original_slug, $updated_original->post_name );
 
 		// Verify the original is still published.
-		$this->assertEquals( 'publish', $updated_original->post_status );
+		$this->assertSame( 'publish', $updated_original->post_status );
 
 		// Verify the copy is NOT deleted by republish() - deletion is handled separately.
 		$this->assertNotNull( \get_post( $copy->ID ) );
 
 		// Verify the copy was marked as republished.
-		$this->assertEquals( '1', \get_post_meta( $copy->ID, '_dp_has_been_republished', true ) );
+		$this->assertSame( '1', \get_post_meta( $copy->ID, '_dp_has_been_republished', true ) );
 	}
 
 	/**
@@ -293,7 +293,7 @@ final class Post_Republisher_Test extends TestCase {
 
 		$result = $this->instance->change_post_copy_status( $data, $postarr );
 
-		$this->assertEquals( 'dp-rewrite-republish', $result['post_status'] );
+		$this->assertSame( 'dp-rewrite-republish', $result['post_status'] );
 	}
 
 	/**
@@ -311,7 +311,7 @@ final class Post_Republisher_Test extends TestCase {
 
 		$result = $this->instance->change_post_copy_status( $data, $postarr );
 
-		$this->assertEquals( 'publish', $result['post_status'] );
+		$this->assertSame( 'publish', $result['post_status'] );
 	}
 
 	/**
@@ -330,7 +330,7 @@ final class Post_Republisher_Test extends TestCase {
 
 		$result = $this->instance->change_post_copy_status( $data, $postarr );
 
-		$this->assertEquals( 'draft', $result['post_status'] );
+		$this->assertSame( 'draft', $result['post_status'] );
 	}
 
 	/**
@@ -346,7 +346,7 @@ final class Post_Republisher_Test extends TestCase {
 		$copy_id  = $copy->ID;
 
 		// Verify the original has the copy reference.
-		$this->assertEquals( $copy_id, (int) \get_post_meta( $original->ID, '_dp_has_rewrite_republish_copy', true ) );
+		$this->assertSame( $copy_id, (int) \get_post_meta( $original->ID, '_dp_has_rewrite_republish_copy', true ) );
 
 		// Delete the copy.
 		$this->instance->delete_copy( $copy_id, $original->ID );
@@ -376,7 +376,7 @@ final class Post_Republisher_Test extends TestCase {
 		// Verify the copy is trashed, not deleted.
 		$trashed_copy = \get_post( $copy_id );
 		$this->assertNotNull( $trashed_copy );
-		$this->assertEquals( 'trash', $trashed_copy->post_status );
+		$this->assertSame( 'trash', $trashed_copy->post_status );
 	}
 
 	/**
@@ -422,8 +422,8 @@ final class Post_Republisher_Test extends TestCase {
 		$updated_original = \get_post( $original_id );
 
 		// Verify the original was updated.
-		$this->assertEquals( 'Scheduled Updated Title', $updated_original->post_title );
-		$this->assertEquals( 'Scheduled updated content.', $updated_original->post_content );
+		$this->assertSame( 'Scheduled Updated Title', $updated_original->post_title );
+		$this->assertSame( 'Scheduled updated content.', $updated_original->post_content );
 
 		// Verify the copy was deleted.
 		$this->assertNull( \get_post( $copy->ID ) );
@@ -454,7 +454,7 @@ final class Post_Republisher_Test extends TestCase {
 		// Verify the copy is trashed, not deleted.
 		$trashed_copy = \get_post( $copy_id );
 		$this->assertNotNull( $trashed_copy );
-		$this->assertEquals( 'trash', $trashed_copy->post_status );
+		$this->assertSame( 'trash', $trashed_copy->post_status );
 	}
 
 	/**
@@ -474,8 +474,8 @@ final class Post_Republisher_Test extends TestCase {
 
 		// Verify nothing changed.
 		$unchanged_post = \get_post( $post->ID );
-		$this->assertEquals( $original_title, $unchanged_post->post_title );
-		$this->assertEquals( $original_content, $unchanged_post->post_content );
+		$this->assertSame( $original_title, $unchanged_post->post_title );
+		$this->assertSame( $original_content, $unchanged_post->post_content );
 	}
 
 	/**
@@ -500,7 +500,7 @@ final class Post_Republisher_Test extends TestCase {
 
 		// Verify the original stays trashed.
 		$updated_original = \get_post( $original->ID );
-		$this->assertEquals( 'trash', $updated_original->post_status );
+		$this->assertSame( 'trash', $updated_original->post_status );
 	}
 
 	/**
@@ -535,15 +535,15 @@ final class Post_Republisher_Test extends TestCase {
 		$copy = \get_post( $copy->ID );
 
 		// Verify copy has the correct status.
-		$this->assertEquals( 'dp-rewrite-republish', $copy->post_status );
+		$this->assertSame( 'dp-rewrite-republish', $copy->post_status );
 
 		// Use republish() directly to avoid redirect.
 		$this->instance->republish( $copy, $original );
 
 		// Original should be updated.
 		$updated_original = \get_post( $original->ID );
-		$this->assertEquals( 'Republished Title', $updated_original->post_title );
-		$this->assertEquals( 'Republished content.', $updated_original->post_content );
+		$this->assertSame( 'Republished Title', $updated_original->post_title );
+		$this->assertSame( 'Republished content.', $updated_original->post_content );
 	}
 
 	/**
@@ -576,15 +576,15 @@ final class Post_Republisher_Test extends TestCase {
 		$copy = \get_post( $copy->ID );
 
 		// Verify copy has private status.
-		$this->assertEquals( 'private', $copy->post_status );
+		$this->assertSame( 'private', $copy->post_status );
 
 		// Use republish() directly to avoid redirect.
 		$this->instance->republish( $copy, $original );
 
 		// Original should be updated and set to private.
 		$updated_original = \get_post( $original->ID );
-		$this->assertEquals( 'Private Copy Title', $updated_original->post_title );
-		$this->assertEquals( 'private', $updated_original->post_status );
+		$this->assertSame( 'Private Copy Title', $updated_original->post_title );
+		$this->assertSame( 'private', $updated_original->post_status );
 	}
 
 	/**
@@ -617,7 +617,7 @@ final class Post_Republisher_Test extends TestCase {
 
 		// Original should be unchanged.
 		$unchanged_original = \get_post( $original->ID );
-		$this->assertEquals( 'Original Title', $unchanged_original->post_title );
+		$this->assertSame( 'Original Title', $unchanged_original->post_title );
 	}
 
 	/**
@@ -651,7 +651,7 @@ final class Post_Republisher_Test extends TestCase {
 
 		// Original should be unchanged.
 		$unchanged_original = \get_post( $original->ID );
-		$this->assertEquals( 'Original Title', $unchanged_original->post_title );
+		$this->assertSame( 'Original Title', $unchanged_original->post_title );
 	}
 
 	/**
@@ -686,7 +686,7 @@ final class Post_Republisher_Test extends TestCase {
 
 		// Verify the content was updated.
 		$updated_original = \get_post( $original->ID );
-		$this->assertEquals( 'Updated Title Without Taxonomies', $updated_original->post_title );
+		$this->assertSame( 'Updated Title Without Taxonomies', $updated_original->post_title );
 	}
 
 	/**
@@ -719,8 +719,8 @@ final class Post_Republisher_Test extends TestCase {
 		// Verify the copy was created.
 		$this->assertNotEmpty( $copy_id );
 		$copy = \get_post( $copy_id );
-		$this->assertEquals( 'custom_type', $copy->post_type );
-		$this->assertEquals( 'Custom Type Post', $copy->post_title );
+		$this->assertSame( 'custom_type', $copy->post_type );
+		$this->assertSame( 'Custom Type Post', $copy->post_title );
 
 		// Clean up.
 		\wp_delete_post( $copy_id, true );
@@ -785,8 +785,8 @@ final class Post_Republisher_Test extends TestCase {
 
 		// Original should have copy's content, not the modified content.
 		$updated_original = \get_post( $original->ID );
-		$this->assertEquals( 'Copy Title', $updated_original->post_title );
-		$this->assertEquals( 'Copy content.', $updated_original->post_content );
+		$this->assertSame( 'Copy Title', $updated_original->post_title );
+		$this->assertSame( 'Copy content.', $updated_original->post_content );
 	}
 
 	/**
@@ -807,8 +807,8 @@ final class Post_Republisher_Test extends TestCase {
 		$copy     = $this->create_rewrite_and_republish_copy( $original );
 
 		// Copy should have the same content as original at creation time.
-		$this->assertEquals( 'Original Title', $copy->post_title );
-		$this->assertEquals( 'Original content.', $copy->post_content );
+		$this->assertSame( 'Original Title', $copy->post_title );
+		$this->assertSame( 'Original content.', $copy->post_content );
 
 		// Modify the original - copy should not change.
 		\wp_update_post(
@@ -821,8 +821,8 @@ final class Post_Republisher_Test extends TestCase {
 
 		// Refresh copy - should still have original content.
 		$copy = \get_post( $copy->ID );
-		$this->assertEquals( 'Original Title', $copy->post_title );
-		$this->assertEquals( 'Original content.', $copy->post_content );
+		$this->assertSame( 'Original Title', $copy->post_title );
+		$this->assertSame( 'Original content.', $copy->post_content );
 	}
 
 	/**
@@ -846,7 +846,7 @@ final class Post_Republisher_Test extends TestCase {
 
 		// Verify the copy was created.
 		$this->assertInstanceOf( WP_Post::class, $copy );
-		$this->assertEquals( 'page', $copy->post_type );
+		$this->assertSame( 'page', $copy->post_type );
 
 		// Update and republish.
 		\wp_update_post(
@@ -860,7 +860,7 @@ final class Post_Republisher_Test extends TestCase {
 		$this->instance->republish( $copy, $original );
 
 		$updated_original = \get_post( $original->ID );
-		$this->assertEquals( 'Updated Page Title', $updated_original->post_title );
+		$this->assertSame( 'Updated Page Title', $updated_original->post_title );
 	}
 
 	/**
@@ -894,7 +894,7 @@ final class Post_Republisher_Test extends TestCase {
 
 		// Original should be unchanged.
 		$unchanged_original = \get_post( $original->ID );
-		$this->assertEquals( 'Original Title', $unchanged_original->post_title );
+		$this->assertSame( 'Original Title', $unchanged_original->post_title );
 	}
 
 	/**
@@ -929,7 +929,7 @@ final class Post_Republisher_Test extends TestCase {
 
 		// The author should change to the copy's author.
 		$updated_original = \get_post( $original->ID );
-		$this->assertEquals( $copy_author_id, (int) $updated_original->post_author );
+		$this->assertSame( $copy_author_id, (int) $updated_original->post_author );
 	}
 
 	/**
@@ -1028,7 +1028,7 @@ final class Post_Republisher_Test extends TestCase {
 		$copy = $this->create_rewrite_and_republish_copy( $original );
 
 		// Verify the meta was copied.
-		$this->assertEquals( 'original_value', \get_post_meta( $copy->ID, 'custom_meta_to_remove', true ) );
+		$this->assertSame( 'original_value', \get_post_meta( $copy->ID, 'custom_meta_to_remove', true ) );
 
 		// Delete the meta from the copy.
 		\delete_post_meta( $copy->ID, 'custom_meta_to_remove' );
@@ -1039,7 +1039,7 @@ final class Post_Republisher_Test extends TestCase {
 		// The meta on the original is NOT removed because copy_post_meta_info
 		// only copies existing meta, it doesn't delete missing ones.
 		// This is the expected behavior based on how the duplicator works.
-		$this->assertEquals( 'original_value', \get_post_meta( $original->ID, 'custom_meta_to_remove', true ) );
+		$this->assertSame( 'original_value', \get_post_meta( $original->ID, 'custom_meta_to_remove', true ) );
 	}
 
 	/**
@@ -1071,8 +1071,8 @@ final class Post_Republisher_Test extends TestCase {
 		$this->assertInstanceOf( WP_Post::class, $copy );
 
 		// Verify the relationship is established.
-		$this->assertEquals( 1, (int) \get_post_meta( $copy->ID, '_dp_is_rewrite_republish_copy', true ) );
-		$this->assertEquals( $copy->ID, (int) \get_post_meta( $original->ID, '_dp_has_rewrite_republish_copy', true ) );
+		$this->assertSame( 1, (int) \get_post_meta( $copy->ID, '_dp_is_rewrite_republish_copy', true ) );
+		$this->assertSame( $copy->ID, (int) \get_post_meta( $original->ID, '_dp_has_rewrite_republish_copy', true ) );
 
 		// Step 3: Edit the copy.
 		\wp_update_post(
@@ -1090,15 +1090,15 @@ final class Post_Republisher_Test extends TestCase {
 
 		// Step 5: Verify the original has the new content.
 		$updated_original = \get_post( $original->ID );
-		$this->assertEquals( 'Rewritten Title', $updated_original->post_title );
-		$this->assertEquals( 'Rewritten content.', $updated_original->post_content );
-		$this->assertEquals( 'publish', $updated_original->post_status );
+		$this->assertSame( 'Rewritten Title', $updated_original->post_title );
+		$this->assertSame( 'Rewritten content.', $updated_original->post_content );
+		$this->assertSame( 'publish', $updated_original->post_status );
 
 		// Step 6: Verify the copy is NOT deleted by republish() - deletion is separate.
 		$this->assertNotNull( \get_post( $copy->ID ) );
 
 		// Verify the copy was marked as republished.
-		$this->assertEquals( '1', \get_post_meta( $copy->ID, '_dp_has_been_republished', true ) );
+		$this->assertSame( '1', \get_post_meta( $copy->ID, '_dp_has_been_republished', true ) );
 	}
 
 	/**
@@ -1153,7 +1153,7 @@ final class Post_Republisher_Test extends TestCase {
 		$copy = $this->create_rewrite_and_republish_copy( $original );
 
 		// Verify the copy has the original meta.
-		$this->assertEquals( 'original_value', \get_post_meta( $copy->ID, 'existing_meta_key', true ) );
+		$this->assertSame( 'original_value', \get_post_meta( $copy->ID, 'existing_meta_key', true ) );
 
 		// Update the copy's existing meta and add new meta.
 		\update_post_meta( $copy->ID, 'existing_meta_key', 'updated_value' );
@@ -1163,10 +1163,10 @@ final class Post_Republisher_Test extends TestCase {
 		$this->instance->republish( $copy, $original );
 
 		// Verify the original has the updated meta.
-		$this->assertEquals( 'updated_value', \get_post_meta( $original->ID, 'existing_meta_key', true ) );
+		$this->assertSame( 'updated_value', \get_post_meta( $original->ID, 'existing_meta_key', true ) );
 
 		// Verify the original also has the new meta.
-		$this->assertEquals( 'new_value', \get_post_meta( $original->ID, 'new_meta_key', true ) );
+		$this->assertSame( 'new_value', \get_post_meta( $original->ID, 'new_meta_key', true ) );
 	}
 
 	/**
@@ -1206,9 +1206,9 @@ final class Post_Republisher_Test extends TestCase {
 		$updated_original = \get_post( $original->ID );
 
 		// Verify the slug is preserved.
-		$this->assertEquals( 'original-slug', $updated_original->post_name );
+		$this->assertSame( 'original-slug', $updated_original->post_name );
 		// Verify the title is updated.
-		$this->assertEquals( 'Completely Different Title', $updated_original->post_title );
+		$this->assertSame( 'Completely Different Title', $updated_original->post_title );
 	}
 
 	/**
@@ -1255,8 +1255,8 @@ final class Post_Republisher_Test extends TestCase {
 		$updated_original = \get_post( $original->ID );
 
 		// Verify the original remains trashed but has updated content.
-		$this->assertEquals( 'trash', $updated_original->post_status );
-		$this->assertEquals( 'Updated Title', $updated_original->post_title );
+		$this->assertSame( 'trash', $updated_original->post_status );
+		$this->assertSame( 'Updated Title', $updated_original->post_title );
 	}
 
 	/**
@@ -1274,7 +1274,7 @@ final class Post_Republisher_Test extends TestCase {
 		$copy = $this->create_rewrite_and_republish_copy( $original );
 
 		// Verify the meta exists.
-		$this->assertEquals( $copy->ID, (int) \get_post_meta( $original->ID, '_dp_has_rewrite_republish_copy', true ) );
+		$this->assertSame( $copy->ID, (int) \get_post_meta( $original->ID, '_dp_has_rewrite_republish_copy', true ) );
 
 		// Simulate manual deletion by calling clean_up_when_copy_manually_deleted.
 		$this->instance->clean_up_when_copy_manually_deleted( $copy->ID );
@@ -1316,8 +1316,8 @@ final class Post_Republisher_Test extends TestCase {
 
 		// Verify the action was fired.
 		$this->assertTrue( $action_fired );
-		$this->assertEquals( $copy_id, $fired_copy_id );
-		$this->assertEquals( $original->ID, $fired_post_id );
+		$this->assertSame( $copy_id, $fired_copy_id );
+		$this->assertSame( $original->ID, $fired_post_id );
 	}
 
 	/**
@@ -1336,7 +1336,7 @@ final class Post_Republisher_Test extends TestCase {
 		$copy_id  = $copy->ID;
 
 		// Verify the meta exists before deletion.
-		$this->assertEquals( $copy_id, (int) \get_post_meta( $original->ID, '_dp_has_rewrite_republish_copy', true ) );
+		$this->assertSame( $copy_id, (int) \get_post_meta( $original->ID, '_dp_has_rewrite_republish_copy', true ) );
 
 		// Prevent deletion by filtering pre_delete_post.
 		$prevent_deletion = static function ( $delete, $post ) use ( $copy_id ) {
