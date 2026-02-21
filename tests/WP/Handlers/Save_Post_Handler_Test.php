@@ -153,7 +153,7 @@ final class Save_Post_Handler_Test extends TestCase {
 		$this->instance->delete_on_save_post( $copy_post );
 
 		// Verify the meta is removed.
-		$this->assertEmpty( \get_post_meta( $copy_post, '_dp_original', true ) );
+		$this->assertSame( '', \get_post_meta( $copy_post, '_dp_original', true ) );
 	}
 
 	/**

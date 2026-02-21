@@ -355,7 +355,7 @@ final class Post_Republisher_Test extends TestCase {
 		$this->assertNull( \get_post( $copy_id ) );
 
 		// Verify the meta is cleaned up from the original.
-		$this->assertEmpty( \get_post_meta( $original->ID, '_dp_has_rewrite_republish_copy', true ) );
+		$this->assertSame( '', \get_post_meta( $original->ID, '_dp_has_rewrite_republish_copy', true ) );
 	}
 
 	/**
@@ -429,7 +429,7 @@ final class Post_Republisher_Test extends TestCase {
 		$this->assertNull( \get_post( $copy->ID ) );
 
 		// Verify meta cleanup.
-		$this->assertEmpty( \get_post_meta( $original_id, '_dp_has_rewrite_republish_copy', true ) );
+		$this->assertSame( '', \get_post_meta( $original_id, '_dp_has_rewrite_republish_copy', true ) );
 	}
 
 	/**
@@ -963,7 +963,7 @@ final class Post_Republisher_Test extends TestCase {
 
 		// Note: WordPress may assign default category.
 		$this->assertNotContains( $category_id, $updated_categories );
-		$this->assertEmpty( $updated_tags );
+		$this->assertSame( [], $updated_tags );
 	}
 
 	/**
@@ -1280,7 +1280,7 @@ final class Post_Republisher_Test extends TestCase {
 		$this->instance->clean_up_when_copy_manually_deleted( $copy->ID );
 
 		// Verify the meta is removed from the original.
-		$this->assertEmpty( \get_post_meta( $original->ID, '_dp_has_rewrite_republish_copy', true ) );
+		$this->assertSame( '', \get_post_meta( $original->ID, '_dp_has_rewrite_republish_copy', true ) );
 	}
 
 	/**
@@ -1358,7 +1358,7 @@ final class Post_Republisher_Test extends TestCase {
 		$this->assertNotNull( $still_existing_copy );
 
 		// Verify the meta was still cleaned up from the original.
-		$this->assertEmpty( \get_post_meta( $original->ID, '_dp_has_rewrite_republish_copy', true ) );
+		$this->assertSame( '', \get_post_meta( $original->ID, '_dp_has_rewrite_republish_copy', true ) );
 
 		// Clean up manually.
 		\wp_delete_post( $copy_id, true );
