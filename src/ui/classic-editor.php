@@ -99,7 +99,7 @@ class Classic_Editor {
 			$id   = \intval( \wp_unslash( $_GET['post'] ) );
 			$post = \get_post( $id );
 
-			if ( ! \is_null( $post ) && $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
+			if ( $post !== null && $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
 				$this->asset_manager->enqueue_strings_script();
 			}
 		}
@@ -116,7 +116,7 @@ class Classic_Editor {
 			$id   = \intval( \wp_unslash( $_GET['post'] ) );
 			$post = \get_post( $id );
 
-			if ( ! \is_null( $post ) && $this->permissions_helper->should_links_be_displayed( $post ) ) {
+			if ( $post !== null && $this->permissions_helper->should_links_be_displayed( $post ) ) {
 				$this->asset_manager->enqueue_styles();
 			}
 		}
@@ -130,7 +130,7 @@ class Classic_Editor {
 	 * @return void
 	 */
 	public function add_new_draft_post_button( $post = null ) {
-		if ( \is_null( $post ) ) {
+		if ( $post === null ) {
 			if ( isset( $_GET['post'] ) ) {
 				$id   = \intval( \wp_unslash( $_GET['post'] ) );
 				$post = \get_post( $id );
@@ -156,7 +156,7 @@ class Classic_Editor {
 	 * @return void
 	 */
 	public function add_rewrite_and_republish_post_button( $post = null ) {
-		if ( \is_null( $post ) ) {
+		if ( $post === null ) {
 			if ( isset( $_GET['post'] ) ) {
 				$id   = \intval( \wp_unslash( $_GET['post'] ) );
 				$post = \get_post( $id );
@@ -185,7 +185,7 @@ class Classic_Editor {
 	 * @return void
 	 */
 	public function add_check_changes_link( $post = null ) {
-		if ( \is_null( $post ) ) {
+		if ( $post === null ) {
 			if ( isset( $_GET['post'] ) ) {
 				$id   = \intval( \wp_unslash( $_GET['post'] ) );
 				$post = \get_post( $id );
