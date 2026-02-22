@@ -106,13 +106,13 @@ final class Rest_API_Handler_Test extends TestCase {
 		\add_post_meta( $copy_post, '_dp_original', $original_post );
 
 		// Verify the meta exists.
-		$this->assertEquals( $original_post, \get_post_meta( $copy_post, '_dp_original', true ) );
+		$this->assertSame( $original_post, (int) \get_post_meta( $copy_post, '_dp_original', true ) );
 
 		// Make the REST request.
 		$request  = new WP_REST_Request( 'DELETE', '/duplicate-post/v1/original/' . $copy_post );
 		$response = \rest_do_request( $request );
 
-		$this->assertEquals( 200, $response->get_status() );
+		$this->assertSame( 200, $response->get_status() );
 
 		$data = $response->get_data();
 		$this->assertTrue( $data['success'] );
@@ -140,10 +140,10 @@ final class Rest_API_Handler_Test extends TestCase {
 		$request  = new WP_REST_Request( 'DELETE', '/duplicate-post/v1/original/' . $copy_post );
 		$response = \rest_do_request( $request );
 
-		$this->assertEquals( 403, $response->get_status() );
+		$this->assertSame( 403, $response->get_status() );
 
 		// Verify the meta still exists.
-		$this->assertEquals( $original_post, \get_post_meta( $copy_post, '_dp_original', true ) );
+		$this->assertSame( $original_post, (int) \get_post_meta( $copy_post, '_dp_original', true ) );
 	}
 
 	/**
@@ -165,10 +165,10 @@ final class Rest_API_Handler_Test extends TestCase {
 		$request  = new WP_REST_Request( 'DELETE', '/duplicate-post/v1/original/' . $copy_post );
 		$response = \rest_do_request( $request );
 
-		$this->assertEquals( 403, $response->get_status() );
+		$this->assertSame( 403, $response->get_status() );
 
 		// Verify the meta still exists.
-		$this->assertEquals( $original_post, \get_post_meta( $copy_post, '_dp_original', true ) );
+		$this->assertSame( $original_post, (int) \get_post_meta( $copy_post, '_dp_original', true ) );
 	}
 
 	/**
@@ -185,7 +185,7 @@ final class Rest_API_Handler_Test extends TestCase {
 		$request  = new WP_REST_Request( 'DELETE', '/duplicate-post/v1/original/999999' );
 		$response = \rest_do_request( $request );
 
-		$this->assertEquals( 404, $response->get_status() );
+		$this->assertSame( 404, $response->get_status() );
 	}
 
 	/**
@@ -208,10 +208,10 @@ final class Rest_API_Handler_Test extends TestCase {
 		$request  = new WP_REST_Request( 'DELETE', '/duplicate-post/v1/original/' . $copy_post );
 		$response = \rest_do_request( $request );
 
-		$this->assertEquals( 403, $response->get_status() );
+		$this->assertSame( 403, $response->get_status() );
 
 		// Verify the meta still exists.
-		$this->assertEquals( $original_post, \get_post_meta( $copy_post, '_dp_original', true ) );
+		$this->assertSame( $original_post, (int) \get_post_meta( $copy_post, '_dp_original', true ) );
 	}
 
 	/**
@@ -232,7 +232,7 @@ final class Rest_API_Handler_Test extends TestCase {
 		$response = \rest_do_request( $request );
 
 		// delete_post_meta returns false when the meta doesn't exist, so we expect a 500 error.
-		$this->assertEquals( 500, $response->get_status() );
+		$this->assertSame( 500, $response->get_status() );
 	}
 
 	/**
@@ -250,6 +250,6 @@ final class Rest_API_Handler_Test extends TestCase {
 		$response = \rest_do_request( $request );
 
 		// 0 is not valid per our validate_callback.
-		$this->assertEquals( 400, $response->get_status() );
+		$this->assertSame( 400, $response->get_status() );
 	}
 }
