@@ -46,7 +46,7 @@ add_action( 'admin_init', 'duplicate_post_admin_init' );
 function duplicate_post_admin_init() {
 	duplicate_post_plugin_upgrade();
 
-	if ( intval( get_site_option( 'duplicate_post_show_notice' ) ) === 1 ) {
+	if ( (int) get_site_option( 'duplicate_post_show_notice' ) === 1 ) {
 		if ( is_multisite() ) {
 			add_action( 'network_admin_notices', 'duplicate_post_show_update_notice' );
 		}
@@ -58,15 +58,15 @@ function duplicate_post_admin_init() {
 
 	add_action( 'duplicate_post_after_duplicated', 'duplicate_post_copy_post_meta_info', 10, 2 );
 
-	if ( intval( get_option( 'duplicate_post_copychildren' ) ) === 1 ) {
+	if ( (int) get_option( 'duplicate_post_copychildren' ) === 1 ) {
 		add_action( 'duplicate_post_after_duplicated', 'duplicate_post_copy_children', 20, 3 );
 	}
 
-	if ( intval( get_option( 'duplicate_post_copyattachments' ) ) === 1 ) {
+	if ( (int) get_option( 'duplicate_post_copyattachments' ) === 1 ) {
 		add_action( 'duplicate_post_after_duplicated', 'duplicate_post_copy_attachments', 30, 2 );
 	}
 
-	if ( intval( get_option( 'duplicate_post_copycomments' ) ) === 1 ) {
+	if ( (int) get_option( 'duplicate_post_copycomments' ) === 1 ) {
 		add_action( 'duplicate_post_after_duplicated', 'duplicate_post_copy_comments', 40, 2 );
 	}
 
@@ -298,7 +298,7 @@ function duplicate_post_copy_post_taxonomies( $new_id, $post ) {
 		elseif ( ! is_array( $taxonomies_blacklist ) ) {
 			$taxonomies_blacklist = [ $taxonomies_blacklist ];
 		}
-		if ( intval( get_option( 'duplicate_post_copyformat' ) ) === 0 ) {
+		if ( (int) get_option( 'duplicate_post_copyformat' ) === 0 ) {
 			$taxonomies_blacklist[] = 'post_format';
 		}
 
@@ -350,10 +350,10 @@ function duplicate_post_copy_post_meta_info( $new_id, $post ) {
 	$meta_blacklist[] = '_edit_last'; // Edit lock.
 	$meta_blacklist[] = '_dp_is_rewrite_republish_copy';
 	$meta_blacklist[] = '_dp_has_rewrite_republish_copy';
-	if ( intval( get_option( 'duplicate_post_copytemplate' ) ) === 0 ) {
+	if ( (int) get_option( 'duplicate_post_copytemplate' ) === 0 ) {
 		$meta_blacklist[] = '_wp_page_template';
 	}
-	if ( intval( get_option( 'duplicate_post_copythumbnail' ) ) === 0 ) {
+	if ( (int) get_option( 'duplicate_post_copythumbnail' ) === 0 ) {
 		$meta_blacklist[] = '_thumbnail_id';
 	}
 
@@ -495,7 +495,7 @@ function duplicate_post_copy_attachments( $new_id, $post ) {
 		}
 
 		// If we have cloned the post thumbnail, set the copy as the thumbnail for the new post.
-		if ( intval( get_option( 'duplicate_post_copythumbnail' ) ) === 1 && $old_thumbnail_id === $child->ID ) {
+		if ( (int) get_option( 'duplicate_post_copythumbnail' ) === 1 && $old_thumbnail_id === $child->ID ) {
 			set_post_thumbnail( $new_id, $new_attachment_id );
 		}
 	}
@@ -567,7 +567,7 @@ function duplicate_post_copy_comments( $new_id, $post ) {
 			'comment_karma'        => $comment->comment_karma,
 			'comment_approved'     => $comment->comment_approved,
 		];
-		if ( intval( get_option( 'duplicate_post_copydate' ) ) === 1 ) {
+		if ( (int) get_option( 'duplicate_post_copydate' ) === 1 ) {
 			$commentdata['comment_date']     = $comment->comment_date;
 			$commentdata['comment_date_gmt'] = get_gmt_from_date( $comment->comment_date );
 		}
@@ -630,7 +630,7 @@ function duplicate_post_create_duplicate( $post, $status = '', $parent_id = '' )
 	if ( $post->post_type !== 'attachment' ) {
 		$prefix = sanitize_text_field( get_option( 'duplicate_post_title_prefix' ) );
 		$suffix = sanitize_text_field( get_option( 'duplicate_post_title_suffix' ) );
-		if ( intval( get_option( 'duplicate_post_copytitle' ) ) === 1 ) {
+		if ( (int) get_option( 'duplicate_post_copytitle' ) === 1 ) {
 			$title = $post->post_title;
 			if ( ! empty( $prefix ) ) {
 				$prefix .= ' ';
@@ -652,7 +652,7 @@ function duplicate_post_create_duplicate( $post, $status = '', $parent_id = '' )
 		 * }
 		 */
 
-		if ( intval( get_option( 'duplicate_post_copystatus' ) ) === 0 ) {
+		if ( (int) get_option( 'duplicate_post_copystatus' ) === 0 ) {
 			$new_post_status = 'draft';
 		}
 		elseif ( $new_post_status === 'publish' || $new_post_status === 'future' ) {
@@ -670,7 +670,7 @@ function duplicate_post_create_duplicate( $post, $status = '', $parent_id = '' )
 
 	$new_post_author    = wp_get_current_user();
 	$new_post_author_id = $new_post_author->ID;
-	if ( intval( get_option( 'duplicate_post_copyauthor' ) ) === 1 ) {
+	if ( (int) get_option( 'duplicate_post_copyauthor' ) === 1 ) {
 		// Check if the user has the right capability.
 		if ( is_post_type_hierarchical( $post->post_type ) ) {
 			if ( current_user_can( 'edit_others_pages' ) ) {
@@ -682,14 +682,14 @@ function duplicate_post_create_duplicate( $post, $status = '', $parent_id = '' )
 		}
 	}
 
-	$menu_order             = ( intval( get_option( 'duplicate_post_copymenuorder' ) ) === 1 ) ? $post->menu_order : 0;
+	$menu_order             = ( (int) get_option( 'duplicate_post_copymenuorder' ) === 1 ) ? $post->menu_order : 0;
 	$increase_menu_order_by = get_option( 'duplicate_post_increase_menu_order_by' );
 	if ( ! empty( $increase_menu_order_by ) && is_numeric( $increase_menu_order_by ) ) {
-		$menu_order += intval( $increase_menu_order_by );
+		$menu_order += (int) $increase_menu_order_by;
 	}
 
 	$post_name = $post->post_name;
-	if ( intval( get_option( 'duplicate_post_copyslug' ) ) !== 1 ) {
+	if ( (int) get_option( 'duplicate_post_copyslug' ) !== 1 ) {
 		$post_name = '';
 	}
 	$new_post_parent = empty( $parent_id ) ? $post->post_parent : $parent_id;
@@ -699,19 +699,19 @@ function duplicate_post_create_duplicate( $post, $status = '', $parent_id = '' )
 		'comment_status'        => $post->comment_status,
 		'ping_status'           => $post->ping_status,
 		'post_author'           => $new_post_author_id,
-		'post_content'          => ( intval( get_option( 'duplicate_post_copycontent' ) ) === 1 ) ? $post->post_content : '',
-		'post_content_filtered' => ( intval( get_option( 'duplicate_post_copycontent' ) ) === 1 ) ? $post->post_content_filtered : '',
-		'post_excerpt'          => ( intval( get_option( 'duplicate_post_copyexcerpt' ) ) === 1 ) ? $post->post_excerpt : '',
+		'post_content'          => ( (int) get_option( 'duplicate_post_copycontent' ) === 1 ) ? $post->post_content : '',
+		'post_content_filtered' => ( (int) get_option( 'duplicate_post_copycontent' ) === 1 ) ? $post->post_content_filtered : '',
+		'post_excerpt'          => ( (int) get_option( 'duplicate_post_copyexcerpt' ) === 1 ) ? $post->post_excerpt : '',
 		'post_mime_type'        => $post->post_mime_type,
 		'post_parent'           => $new_post_parent,
-		'post_password'         => ( intval( get_option( 'duplicate_post_copypassword' ) ) === 1 ) ? $post->post_password : '',
+		'post_password'         => ( (int) get_option( 'duplicate_post_copypassword' ) === 1 ) ? $post->post_password : '',
 		'post_status'           => $new_post_status,
 		'post_title'            => $title,
 		'post_type'             => $post->post_type,
 		'post_name'             => $post_name,
 	];
 
-	if ( intval( get_option( 'duplicate_post_copydate' ) ) === 1 ) {
+	if ( (int) get_option( 'duplicate_post_copydate' ) === 1 ) {
 		$new_post_date             = $post->post_date;
 		$new_post['post_date']     = $new_post_date;
 		$new_post['post_date_gmt'] = get_gmt_from_date( $new_post_date );

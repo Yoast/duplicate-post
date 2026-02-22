@@ -32,7 +32,7 @@ class Bulk_Actions {
 	 * @return void
 	 */
 	public function register_hooks() {
-		if ( \intval( Utils::get_option( 'duplicate_post_show_link_in', 'bulkactions' ) ) === 0 ) {
+		if ( (int) Utils::get_option( 'duplicate_post_show_link_in', 'bulkactions' ) === 0 ) {
 			return;
 		}
 
@@ -65,12 +65,13 @@ class Bulk_Actions {
 	public function register_bulk_action( $bulk_actions ) {
 		$is_draft_or_trash = isset( $_REQUEST['post_status'] ) && \in_array( $_REQUEST['post_status'], [ 'draft', 'trash' ], true );
 
-		if ( \intval( Utils::get_option( 'duplicate_post_show_link', 'clone' ) ) === 1 ) {
+		if ( (int) Utils::get_option( 'duplicate_post_show_link', 'clone' ) === 1 ) {
 			$bulk_actions['duplicate_post_bulk_clone'] = \esc_html__( 'Clone', 'duplicate-post' );
 		}
 
 		if ( ! $is_draft_or_trash
-			&& \intval( Utils::get_option( 'duplicate_post_show_link', 'rewrite_republish' ) ) === 1 ) {
+			&& (int) Utils::get_option( 'duplicate_post_show_link', 'rewrite_republish' ) === 1
+		) {
 			$bulk_actions['duplicate_post_bulk_rewrite_republish'] = \esc_html__( 'Rewrite & Republish', 'duplicate-post' );
 		}
 
