@@ -247,7 +247,7 @@ class Block_Editor {
 			'showLinksIn'             => Utils::get_option( 'duplicate_post_show_link_in' ),
 			'rewriting'               => ( $is_rewrite_and_republish_copy ) ? 1 : 0,
 			'originalEditURL'         => $this->get_original_post_edit_url(),
-			'showOriginalMetaBox'     => \intval( \get_option( 'duplicate_post_show_original_meta_box' ) ) === 1,
+			'showOriginalMetaBox'     => (int) \get_option( 'duplicate_post_show_original_meta_box' ) === 1,
 			'originalItem'            => $original_data,
 		];
 	}

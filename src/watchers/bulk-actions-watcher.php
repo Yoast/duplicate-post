@@ -49,7 +49,7 @@ class Bulk_Actions_Watcher {
 	 */
 	public function add_bulk_clone_admin_notice() {
 		if ( ! empty( $_REQUEST['bulk_cloned'] ) ) {
-			$copied_posts = \intval( $_REQUEST['bulk_cloned'] );
+			$copied_posts = (int) $_REQUEST['bulk_cloned'];
 			\printf(
 				'<div id="message" class="notice notice-success fade"><p>'
 				. \esc_html(
@@ -65,7 +65,7 @@ class Bulk_Actions_Watcher {
 			);
 		}
 		if ( ! empty( $_REQUEST['bulk_cloned_skipped'] ) ) {
-			$skipped_posts = \intval( $_REQUEST['bulk_cloned_skipped'] );
+			$skipped_posts = (int) $_REQUEST['bulk_cloned_skipped'];
 			\printf(
 				'<div id="message" class="notice notice-warning fade"><p>'
 				. \esc_html(
@@ -89,7 +89,7 @@ class Bulk_Actions_Watcher {
 	 */
 	public function add_bulk_rewrite_and_republish_admin_notice() {
 		if ( ! empty( $_REQUEST['bulk_rewriting'] ) ) {
-			$copied_posts = \intval( $_REQUEST['bulk_rewriting'] );
+			$copied_posts = (int) $_REQUEST['bulk_rewriting'];
 			\printf(
 				'<div id="message" class="notice notice-success fade"><p>'
 				. \esc_html(
@@ -105,7 +105,7 @@ class Bulk_Actions_Watcher {
 			);
 		}
 		if ( ! empty( $_REQUEST['bulk_rewriting_skipped'] ) ) {
-			$skipped_posts = \intval( $_REQUEST['bulk_rewriting_skipped'] );
+			$skipped_posts = (int) $_REQUEST['bulk_rewriting_skipped'];
 			\printf(
 				'<div id="message" class="notice notice-warning fade"><p>'
 				. \esc_html(

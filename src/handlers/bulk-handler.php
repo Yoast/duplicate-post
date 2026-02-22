@@ -135,7 +135,7 @@ class Bulk_Handler {
 				if ( empty( $post ) || $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
 					continue;
 				}
-				if ( \intval( \get_option( 'duplicate_post_copychildren' ) ) === 1
+				if ( (int) \get_option( 'duplicate_post_copychildren' ) === 1
 					&& \is_post_type_hierarchical( $post->post_type )
 					&& Utils::has_ancestors_marked( $post, $post_ids )
 				) {

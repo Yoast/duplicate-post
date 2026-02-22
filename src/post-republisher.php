@@ -260,7 +260,7 @@ class Post_Republisher {
 
 			\check_admin_referer( 'dp-republish', 'dpnonce' );
 
-			if ( \intval( \get_post_meta( $copy_id, '_dp_has_been_republished', true ) ) === 1 ) {
+			if ( (int) \get_post_meta( $copy_id, '_dp_has_been_republished', true ) === 1 ) {
 				$this->delete_copy( $copy_id, $post_id );
 			}
 			else {

@@ -42,7 +42,7 @@ class Column {
 	 * @return void
 	 */
 	public function register_hooks() {
-		if ( \intval( \get_option( 'duplicate_post_show_original_column' ) ) === 1 ) {
+		if ( (int) \get_option( 'duplicate_post_show_original_column' ) === 1 ) {
 			$enabled_post_types = $this->permissions_helper->get_enabled_post_types();
 			if ( \count( $enabled_post_types ) ) {
 				foreach ( $enabled_post_types as $enabled_post_type ) {

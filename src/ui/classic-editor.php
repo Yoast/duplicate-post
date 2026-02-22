@@ -53,12 +53,12 @@ class Classic_Editor {
 	public function register_hooks() {
 		\add_action( 'post_submitbox_misc_actions', [ $this, 'add_check_changes_link' ], 90 );
 
-		if ( \intval( Utils::get_option( 'duplicate_post_show_link_in', 'submitbox' ) ) === 1 ) {
-			if ( \intval( Utils::get_option( 'duplicate_post_show_link', 'new_draft' ) ) === 1 ) {
+		if ( (int) Utils::get_option( 'duplicate_post_show_link_in', 'submitbox' ) === 1 ) {
+			if ( (int) Utils::get_option( 'duplicate_post_show_link', 'new_draft' ) === 1 ) {
 				\add_action( 'post_submitbox_start', [ $this, 'add_new_draft_post_button' ] );
 			}
 
-			if ( \intval( Utils::get_option( 'duplicate_post_show_link', 'rewrite_republish' ) ) === 1 ) {
+			if ( (int) Utils::get_option( 'duplicate_post_show_link', 'rewrite_republish' ) === 1 ) {
 				\add_action( 'post_submitbox_start', [ $this, 'add_rewrite_and_republish_post_button' ] );
 			}
 		}
@@ -67,9 +67,10 @@ class Classic_Editor {
 		\add_filter( 'post_updated_messages', [ $this, 'change_scheduled_notice_classic_editor' ] );
 
 		\add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_classic_editor_scripts' ] );
-		if ( \intval( Utils::get_option( 'duplicate_post_show_link_in', 'submitbox' ) ) === 1 ) {
-			if ( \intval( Utils::get_option( 'duplicate_post_show_link', 'new_draft' ) ) === 1
-				|| \intval( Utils::get_option( 'duplicate_post_show_link', 'rewrite_republish' ) ) === 1 ) {
+		if ( (int) Utils::get_option( 'duplicate_post_show_link_in', 'submitbox' ) === 1 ) {
+			if ( (int) Utils::get_option( 'duplicate_post_show_link', 'new_draft' ) === 1
+				|| (int) Utils::get_option( 'duplicate_post_show_link', 'rewrite_republish' ) === 1
+			) {
 				\add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_classic_editor_styles' ] );
 			}
 		}

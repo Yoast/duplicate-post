@@ -64,7 +64,7 @@ class Permissions_Helper {
 	 * @return bool Whether the post is a copy intended for Rewrite & Republish.
 	 */
 	public function is_rewrite_and_republish_copy( WP_Post $post ) {
-		return ( \intval( \get_post_meta( $post->ID, '_dp_is_rewrite_republish_copy', true ) ) === 1 );
+		return ( (int) \get_post_meta( $post->ID, '_dp_is_rewrite_republish_copy', true ) === 1 );
 	}
 
 	/**
