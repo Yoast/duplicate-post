@@ -12,23 +12,6 @@ use WP_Post;
 class Utils {
 
 	/**
-	 * Flattens a version number for use in a filename.
-	 *
-	 * @param string $version The original version number.
-	 *
-	 * @return string The flattened version number.
-	 */
-	public static function flatten_version( $version ) {
-		$parts = \explode( '.', $version );
-
-		if ( \count( $parts ) === 2 && \preg_match( '/^\d+$/', $parts[1] ) === 1 ) {
-			$parts[] = '0';
-		}
-
-		return \implode( '', $parts );
-	}
-
-	/**
 	 * Adds slashes only to strings.
 	 *
 	 * @param mixed $value Value to slash only if string.

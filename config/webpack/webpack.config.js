@@ -3,7 +3,6 @@ const {
 } = require( "@wordpress/dependency-extraction-webpack-plugin/lib/util" );
 
 const paths = require( "./paths" );
-const pkg = require( "../../package.json" );
 
 const externals = {
 	// This is necessary for Gutenberg to work.
@@ -50,10 +49,8 @@ const wordpressExternals = wordpressPackages.reduce( ( memo, packageName ) => {
 }, {} );
 
 
-function getOutputFilename( mode ) {
-	const pluginVersionSlug = paths.flattenVersionForFile( pkg.yoast.pluginVersion );
-
-	return "[name]-" + pluginVersionSlug + ".js";
+function getOutputFilename() {
+	return "[name].js";
 }
 
 module.exports = ( env = { environment: "production" } ) => {
@@ -73,7 +70,7 @@ module.exports = ( env = { environment: "production" } ) => {
 		},
 		output: {
 			path: paths.jsDist,
-			filename: getOutputFilename( mode ),
+			filename: getOutputFilename(),
 			chunkLoadingGlobal: "duplicatePostWebpackJsonp",
 		},
 		resolve: {
