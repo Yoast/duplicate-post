@@ -345,6 +345,9 @@ final class Block_Editor_Test extends TestCase {
 		];
 
 		$this->asset_manager
+			->expects( 'enqueue_styles' );
+
+		$this->asset_manager
 			->expects( 'enqueue_edit_script' )
 			->with( $edit_js_object );
 
@@ -443,6 +446,9 @@ final class Block_Editor_Test extends TestCase {
 		];
 
 		$this->asset_manager
+			->expects( 'enqueue_styles' );
+
+		$this->asset_manager
 			->expects( 'enqueue_edit_script' )
 			->with( $edit_js_object );
 
@@ -477,6 +483,10 @@ final class Block_Editor_Test extends TestCase {
 			->andReturnNull();
 
 		$this->asset_manager
+			->expects( 'enqueue_styles' )
+			->never();
+
+		$this->asset_manager
 			->expects( 'enqueue_edit_script' )
 			->never();
 
@@ -502,6 +512,10 @@ final class Block_Editor_Test extends TestCase {
 		$this->permissions_helper
 			->expects( 'is_new_post_screen' )
 			->andReturnFalse();
+
+		$this->asset_manager
+			->expects( 'enqueue_styles' )
+			->never();
 
 		$this->asset_manager
 			->expects( 'enqueue_edit_script' )
