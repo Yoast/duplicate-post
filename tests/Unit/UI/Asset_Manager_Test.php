@@ -82,22 +82,14 @@ final class Asset_Manager_Test extends TestCase {
 	 * Tests the register_scripts function.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Asset_Manager::register_scripts
-	 * @runInSeparateProcess
-	 * @preserveGlobalState disabled
 	 *
 	 * @return void
 	 */
 	public function test_register_scripts() {
-		$utils                 = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
-		$flattened_version     = '40';
-		$edit_script_url       = 'http://basic.wordpress.test/wp-content/plugins/duplicate-post/js/dist/duplicate-post-edit-40.js';
-		$strings_script_url    = 'http://basic.wordpress.test/wp-content/plugins/duplicate-post/js/dist/duplicate-post-strings-40.js';
-		$quick_edit_script_url = 'http://basic.wordpress.test/wp-content/plugins/duplicate-post/js/dist/duplicate-post-quick-edit-40.js';
-		$options_script_url    = 'http://basic.wordpress.test/wp-content/plugins/duplicate-post/js/dist/duplicate-post-options-40.js';
-
-		$utils->expects( 'flatten_version' )
-			->with( \DUPLICATE_POST_CURRENT_VERSION )
-			->andReturn( $flattened_version );
+		$edit_script_url       = 'http://basic.wordpress.test/wp-content/plugins/duplicate-post/js/dist/duplicate-post-edit.js';
+		$strings_script_url    = 'http://basic.wordpress.test/wp-content/plugins/duplicate-post/js/dist/duplicate-post-strings.js';
+		$quick_edit_script_url = 'http://basic.wordpress.test/wp-content/plugins/duplicate-post/js/dist/duplicate-post-quick-edit.js';
+		$options_script_url    = 'http://basic.wordpress.test/wp-content/plugins/duplicate-post/js/dist/duplicate-post-options.js';
 
 		Monkey\Functions\expect( '\plugins_url' )
 			->andReturn( $edit_script_url, $strings_script_url, $quick_edit_script_url, $options_script_url );

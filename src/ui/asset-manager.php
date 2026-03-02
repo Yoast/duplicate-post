@@ -2,8 +2,6 @@
 
 namespace Yoast\WP\Duplicate_Post\UI;
 
-use Yoast\WP\Duplicate_Post\Utils;
-
 /**
  * Duplicate Post class to manage assets.
  */
@@ -35,11 +33,9 @@ class Asset_Manager {
 	 * @return void
 	 */
 	public function register_scripts() {
-		$flattened_version = Utils::flatten_version( \DUPLICATE_POST_CURRENT_VERSION );
-
 		\wp_register_script(
 			'duplicate_post_edit_script',
-			\plugins_url( \sprintf( 'js/dist/duplicate-post-edit-%s.js', $flattened_version ), \DUPLICATE_POST_FILE ),
+			\plugins_url( 'js/dist/duplicate-post-edit.js', \DUPLICATE_POST_FILE ),
 			[
 				'wp-api-fetch',
 				'wp-components',
@@ -53,7 +49,7 @@ class Asset_Manager {
 
 		\wp_register_script(
 			'duplicate_post_strings',
-			\plugins_url( \sprintf( 'js/dist/duplicate-post-strings-%s.js', $flattened_version ), \DUPLICATE_POST_FILE ),
+			\plugins_url( 'js/dist/duplicate-post-strings.js', \DUPLICATE_POST_FILE ),
 			[
 				'wp-components',
 				'wp-element',
@@ -66,7 +62,7 @@ class Asset_Manager {
 
 		\wp_register_script(
 			'duplicate_post_quick_edit_script',
-			\plugins_url( \sprintf( 'js/dist/duplicate-post-quick-edit-%s.js', $flattened_version ), \DUPLICATE_POST_FILE ),
+			\plugins_url( 'js/dist/duplicate-post-quick-edit.js', \DUPLICATE_POST_FILE ),
 			[ 'jquery' ],
 			\DUPLICATE_POST_CURRENT_VERSION,
 			true,
@@ -74,7 +70,7 @@ class Asset_Manager {
 
 		\wp_register_script(
 			'duplicate_post_options_script',
-			\plugins_url( \sprintf( 'js/dist/duplicate-post-options-%s.js', $flattened_version ), \DUPLICATE_POST_FILE ),
+			\plugins_url( 'js/dist/duplicate-post-options.js', \DUPLICATE_POST_FILE ),
 			[ 'jquery' ],
 			\DUPLICATE_POST_CURRENT_VERSION,
 			true,
@@ -164,12 +160,11 @@ class Asset_Manager {
 	 * @return void
 	 */
 	public function enqueue_elementor_script( $data_object = [] ) {
-		$flattened_version = Utils::flatten_version( \DUPLICATE_POST_CURRENT_VERSION );
-		$handle            = 'duplicate_post_elementor_script';
+		$handle = 'duplicate_post_elementor_script';
 
 		\wp_register_script(
 			$handle,
-			\plugins_url( \sprintf( 'js/dist/duplicate-post-elementor-%s.js', $flattened_version ), \DUPLICATE_POST_FILE ),
+			\plugins_url( 'js/dist/duplicate-post-elementor.js', \DUPLICATE_POST_FILE ),
 			[ 'jquery' ],
 			\DUPLICATE_POST_CURRENT_VERSION,
 			true,

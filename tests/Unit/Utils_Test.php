@@ -10,37 +10,6 @@ use Yoast\WP\Duplicate_Post\Utils;
 final class Utils_Test extends TestCase {
 
 	/**
-	 * Tests the flatten_version function.
-	 *
-	 * @covers       \Yoast\WP\Duplicate_Post\Utils::flatten_version
-	 * @dataProvider flatten_version_provider
-	 *
-	 * @param string $original Version number.
-	 * @param string $expected Expected output.
-	 *
-	 * @return void
-	 */
-	public function test_flatten_version( $original, $expected ) {
-		$this->assertSame( $expected, Utils::flatten_version( $original ) );
-	}
-
-	/**
-	 * Data provider for test_flatten_version.
-	 *
-	 * @return array<array<string>>
-	 */
-	public static function flatten_version_provider() {
-		return [
-			[ '3.0', '300' ],
-			[ '1.4', '140' ],
-			[ '', '' ],
-			[ '3.0.0', '300' ],
-			[ '25.1456.140', '251456140' ],
-			[ '1', '1' ],
-		];
-	}
-
-	/**
 	 * Tests the addslashes_to_strings_only function.
 	 *
 	 * @covers       \Yoast\WP\Duplicate_Post\Utils::addslashes_to_strings_only
