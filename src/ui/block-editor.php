@@ -129,6 +129,8 @@ class Block_Editor {
 			return;
 		}
 
+		$this->asset_manager->enqueue_styles();
+
 		$edit_js_object = $this->generate_js_object( $post );
 		$this->asset_manager->enqueue_edit_script( $edit_js_object );
 
