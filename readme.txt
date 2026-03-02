@@ -87,7 +87,7 @@ Release date: 2026-03-03
 * Fixes a bug where cloning an attachment did not copy its description as expected.
 * Fixes a bug where notices would not be appearing in the block editor, throwing console errors, with some locales.
 * Fixes a bug where Rewrite & Republish copies could remain orphaned, blocking editors from creating a new Rewrite & Republish copy for the original post.
-* Fixes a bug where the block editor button were not styled if the admin bar links where not present/
+* Fixes a bug where the block editor button were not styled if the admin bar links where not present.
 * Fixes a bug where translations where missing in the buttons and the notices in the Block Editor. Props to @petitphp.
 * Minor security improvement
 
