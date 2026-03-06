@@ -9,7 +9,7 @@ Changelog
 
 ## 4.6
 
-Release date: 2026-03-17
+Release date: 2026-03-09
 
 #### Enhancements
 
@@ -32,17 +32,14 @@ Release date: 2026-03-17
 * Adds `duplicate_post_before_republish` and `duplicate_post_after_republish` action hooks fired before and after republishing. Props to @piscis.
 * Deprecates the `dp_duplicate_post` and `dp_duplicate_page` hooks and introduces a new unified `duplicate_post_after_duplicated` action hook that replaces them. The new hook includes the post type as a fourth parameter for flexible filtering.
 * Sets the minimum supported WordPress version to 6.8.
-* Verified compatibility with PHP 8.5
 * Sets the WordPress tested up to version to 6.9.
-* Drops compatibility with PHP 7.2 and 7.3.
+* Drops compatibility with PHP < 7.4.
+* Verified compatibility with PHP up to version 8.5.
 * Fixes the Developer Guide link that was leading to a non-existent page. Props to @masteradhoc.
 * Fixes the documentation link to use a shortlink. Props to @masteradhoc.
 * Improves how the translations are loaded by relying on the WordPress mechanism for that. Props to @swissspidy.
 * Improves discoverability of security policy in Packagist.
-* The plugin has no known incompatibilities with PHP 8.3
 * Users requiring this package via [WP]Packagist can now use the `composer/installers` v2.
-* Drops compatibility with PHP 5.6, 7.0 and 7.1.
-* Verified PHP 8.2 compatibility.
 
 ## 4.5
 
