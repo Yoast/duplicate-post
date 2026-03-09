@@ -11,6 +11,8 @@ Changelog
 
 Release date: 2026-03-09
 
+Introduces smoother post duplication, more reliable rewrite workflows, and better compatibility across languages and configurations. [Read more here!](https://yoa.st/563)
+
 #### Enhancements
 
 * Improves the style of the _Copy to a new draft_ and _Rewrite & Republish_ actions in the Block Editor.
