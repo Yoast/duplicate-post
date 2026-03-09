@@ -194,7 +194,7 @@ final class Options_Form_Generator_Test extends TestCase {
 			'option_1' => [],
 		];
 
-		$this->assertEmpty( $this->instance->generate_options_input( $options ) );
+		$this->assertSame( '', $this->instance->generate_options_input( $options ) );
 	}
 
 	/**

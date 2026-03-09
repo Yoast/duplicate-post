@@ -1192,7 +1192,7 @@ final class Admin_Functions_Test extends TestCase {
 		$new_tags       = \wp_get_post_tags( $new_id );
 
 		$this->assertContains( $category_id, $new_categories );
-		$this->assertEmpty( $new_tags );
+		$this->assertSame( [], $new_tags );
 	}
 
 	/**
@@ -1226,7 +1226,7 @@ final class Admin_Functions_Test extends TestCase {
 		$new_id = \duplicate_post_create_duplicate( $original );
 
 		// Thumbnail should NOT be copied when disabled.
-		$this->assertEmpty( \get_post_meta( $new_id, '_thumbnail_id', true ) );
+		$this->assertSame( '', \get_post_meta( $new_id, '_thumbnail_id', true ) );
 	}
 
 	/**
