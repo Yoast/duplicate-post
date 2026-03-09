@@ -4,7 +4,7 @@ Donate link: 		https://yoast.com/wordpress/plugins/duplicate-post/
 Tags: 				duplicate post, copy, clone
 Requires at least: 	6.8
 Tested up to: 		6.9
-Stable tag: 		4.5
+Stable tag: 		4.6
 Requires PHP:		7.4
 License: 			GPLv2 or later
 License URI: 		http://www.gnu.org/licenses/gpl-2.0.html
@@ -73,7 +73,7 @@ If Duplicate Post is still in English, or if there are some untranslated strings
 
 = 4.6 =
 
-Release date: 2026-03-03
+Release date: 2026-03-09
 
 #### Enhancements
 
@@ -89,23 +89,21 @@ Release date: 2026-03-03
 * Fixes a bug where Rewrite & Republish copies could remain orphaned, blocking editors from creating a new Rewrite & Republish copy for the original post.
 * Fixes a bug where the block editor button were not styled if the admin bar links where not present.
 * Fixes a bug where translations where missing in the buttons and the notices in the Block Editor. Props to @petitphp.
-* Minor security improvement
 
 #### Other
 
+* Improves security of the Bulk Clone action and the republishing of a copy.
 * Adds `duplicate_post_before_republish` and `duplicate_post_after_republish` action hooks fired before and after republishing. Props to @piscis.
 * Deprecates the `dp_duplicate_post` and `dp_duplicate_page` hooks and introduces a new unified `duplicate_post_after_duplicated` action hook that replaces them. The new hook includes the post type as a fourth parameter for flexible filtering.
-* Drops compatibility with PHP 5.6, 7.0 and 7.1.
-* Drops compatibility with PHP 7.2 and 7.3.
-* Improves discoverability of security policy in Packagist.
-* Improves how the translations are loaded by relying on the WordPress mechanism for that. Props to @swissspidy.
-* Improves security of the Bulk Clone action and the republishing of a copy.
 * Sets the minimum supported WordPress version to 6.8.
 * Sets the WordPress tested up to version to 6.9.
-* The plugin has no known incompatibilities with PHP 8.3
+* Drops compatibility with PHP < 7.4.
+* Verified compatibility with PHP up to version 8.5.
+* Fixes the Developer Guide link that was leading to a non-existent page. Props to @masteradhoc.
+* Fixes the documentation link to use a shortlink. Props to @masteradhoc.
+* Improves how the translations are loaded by relying on the WordPress mechanism for that. Props to @swissspidy.
+* Improves discoverability of security policy in Packagist.
 * Users requiring this package via [WP]Packagist can now use the `composer/installers` v2.
-* Verified compatibility with PHP 8.5
-* Verified PHP 8.2 compatibility.
 
 = 4.5 =
 
