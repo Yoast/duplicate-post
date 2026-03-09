@@ -12,11 +12,12 @@ add_action( 'admin_init', 'duplicate_post_wpml_init' );
 
 /**
  * Add handlers for WPML compatibility.
+ *
+ * @return void
  */
 function duplicate_post_wpml_init() {
 	if ( defined( 'ICL_SITEPRESS_VERSION' ) ) {
-		add_action( 'dp_duplicate_page', 'duplicate_post_wpml_copy_translations', 10, 3 );
-		add_action( 'dp_duplicate_post', 'duplicate_post_wpml_copy_translations', 10, 3 );
+		add_action( 'duplicate_post_after_duplicated', 'duplicate_post_wpml_copy_translations', 10, 3 );
 		add_action( 'shutdown', 'duplicate_wpml_string_packages', 11 );
 	}
 }
@@ -35,13 +36,14 @@ $duplicated_posts = [];
  * @param int     $post_id ID of the copy.
  * @param WP_Post $post    Original post object.
  * @param string  $status  Status of the new post.
+ *
+ * @return void
  */
 function duplicate_post_wpml_copy_translations( $post_id, $post, $status = '' ) {
 	global $sitepress;
 	global $duplicated_posts;
 
-	remove_action( 'dp_duplicate_page', 'duplicate_post_wpml_copy_translations', 10 );
-	remove_action( 'dp_duplicate_post', 'duplicate_post_wpml_copy_translations', 10 );
+	remove_action( 'duplicate_post_after_duplicated', 'duplicate_post_wpml_copy_translations', 10 );
 
 	$current_language = $sitepress->get_current_language();
 	$trid             = $sitepress->get_element_trid( $post->ID );
@@ -62,7 +64,7 @@ function duplicate_post_wpml_copy_translations( $post_id, $post, $status = '' ) 
 							'post_' . $translation->post_type,
 							$new_trid,
 							$code,
-							$current_language
+							$current_language,
 						);
 					}
 				}
@@ -78,6 +80,8 @@ function duplicate_post_wpml_copy_translations( $post_id, $post, $status = '' ) 
  * Duplicate string packages.
  *
  * @global array() $duplicated_posts Array of duplicated posts.
+ *
+ * @return void
  */
 function duplicate_wpml_string_packages() { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals -- Reason: renaming the function would be a BC-break.
 	global $duplicated_posts;
@@ -108,7 +112,7 @@ function duplicate_wpml_string_packages() { // phpcs:ignore WordPress.NamingConv
 									$new_string->id,
 									$language,
 									$translated_string['value'],
-									$translated_string['status']
+									$translated_string['status'],
 								);
 							}
 						}

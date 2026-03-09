@@ -9,12 +9,14 @@
  * Plugin Name: Yoast Duplicate Post
  * Plugin URI:  https://yoast.com/wordpress/plugins/duplicate-post/
  * Description: The go-to tool for cloning posts and pages, including the powerful Rewrite & Republish feature.
- * Version:     4.5
+ * Version:     4.6-RC2
  * Author:      Enrico Battocchi & Team Yoast
- * Author URI:  https://yoast.com
+ * Author URI:  https://yoa.st/team-yoast-duplicate
  * Text Domain: duplicate-post
+ * Requires at least: 6.8
+ * Requires PHP: 7.4
  *
- * Copyright 2020-2022 Yoast BV (email : info@yoast.com)
+ * Copyright 2020-2024 Yoast BV (email : info@yoast.com)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -45,7 +47,7 @@ if ( ! defined( 'DUPLICATE_POST_PATH' ) ) {
 	define( 'DUPLICATE_POST_PATH', plugin_dir_path( __FILE__ ) );
 }
 
-define( 'DUPLICATE_POST_CURRENT_VERSION', '4.5' );
+define( 'DUPLICATE_POST_CURRENT_VERSION', '4.6-RC2' );
 
 $duplicate_post_autoload_file = DUPLICATE_POST_PATH . 'vendor/autoload.php';
 
@@ -66,19 +68,13 @@ if ( class_exists( Duplicate_Post::class ) ) {
  * @phpcs:disable PHPCompatibility.FunctionNameRestrictions.ReservedFunctionNames.FunctionDoubleUnderscore
  * @phpcs:disable WordPress.NamingConventions.ValidFunctionName.FunctionDoubleUnderscore
  * @phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedFunctionFound
+ *
+ * @return void
  */
 function __duplicate_post_main() {
 	new Duplicate_Post();
 }
 // phpcs:enable
-
-/**
- * Initialises the internationalisation domain.
- */
-function duplicate_post_load_plugin_textdomain() {
-	load_plugin_textdomain( 'duplicate-post', false, basename( __DIR__ ) . '/languages/' );
-}
-add_action( 'plugins_loaded', 'duplicate_post_load_plugin_textdomain' );
 
 add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'duplicate_post_plugin_actions', 10 );
 
@@ -87,16 +83,17 @@ add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'duplicate_pos
  *
  * @see 'plugin_action_links_$plugin_file'
  *
- * @param array $actions An array of plugin action links.
- * @return array
+ * @param array<string, string> $actions An array of plugin action links.
+ * @return array<string, string>
  */
 function duplicate_post_plugin_actions( $actions ) {
 	$settings_action = [
 		'settings' => sprintf(
 			'<a href="%1$s" %2$s>%3$s</a>',
 			menu_page_url( 'duplicatepost', false ),
+			/* translators: Hidden accessibility text. */
 			'aria-label="' . __( 'Settings for Duplicate Post', 'duplicate-post' ) . '"',
-			esc_html__( 'Settings', 'duplicate-post' )
+			esc_html__( 'Settings', 'duplicate-post' ),
 		),
 	];
 

@@ -88,7 +88,7 @@ class Admin_Bar {
 					'id'    => 'duplicate-post',
 					'title' => '<span class="ab-icon"></span><span class="ab-label">' . \__( 'Duplicate Post', 'duplicate-post' ) . '</span>',
 					'href'  => $this->link_builder->build_new_draft_link( $post ),
-				]
+				],
 			);
 			$wp_admin_bar->add_menu(
 				[
@@ -96,7 +96,7 @@ class Admin_Bar {
 					'parent' => 'duplicate-post',
 					'title'  => \__( 'Copy to a new draft', 'duplicate-post' ),
 					'href'   => $this->link_builder->build_new_draft_link( $post ),
-				]
+				],
 			);
 			$wp_admin_bar->add_menu(
 				[
@@ -104,7 +104,7 @@ class Admin_Bar {
 					'parent' => 'duplicate-post',
 					'title'  => \__( 'Rewrite & Republish', 'duplicate-post' ),
 					'href'   => $this->link_builder->build_rewrite_and_republish_link( $post ),
-				]
+				],
 			);
 		}
 		else {
@@ -114,7 +114,7 @@ class Admin_Bar {
 						'id'     => 'new-draft',
 						'title'  => '<span class="ab-icon"></span><span class="ab-label">' . \__( 'Copy to a new draft', 'duplicate-post' ) . '</span>',
 						'href'   => $this->link_builder->build_new_draft_link( $post ),
-					]
+					],
 				);
 			}
 
@@ -124,7 +124,7 @@ class Admin_Bar {
 						'id'     => 'rewrite-republish',
 						'title'  => '<span class="ab-icon"></span><span class="ab-label">' . \__( 'Rewrite & Republish', 'duplicate-post' ) . '</span>',
 						'href'   => $this->link_builder->build_rewrite_and_republish_link( $post ),
-					]
+					],
 				);
 			}
 		}

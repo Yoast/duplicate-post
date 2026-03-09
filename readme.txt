@@ -2,10 +2,10 @@
 Contributors: 		yoast, lopo
 Donate link: 		https://yoast.com/wordpress/plugins/duplicate-post/
 Tags: 				duplicate post, copy, clone
-Requires at least: 	5.8
-Tested up to: 		6.0
+Requires at least: 	6.8
+Tested up to: 		6.9
 Stable tag: 		4.5
-Requires PHP:		5.6.20
+Requires PHP:		7.4
 License: 			GPLv2 or later
 License URI: 		http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -31,7 +31,7 @@ How it works:
 
 There is also a **template tag**, so you can put it in your templates and clone your posts/pages from the front-end. Clicking on the link will lead you to the edit page for the new draft, just like the admin bar link.
 
-Duplicate Post has many useful settings to customize its behavior and restrict its use to certain roles or post types. Check out the extensive documentation [on yoast.com](https://yoast.com/wordpress/plugins/duplicate-post/) and our [developer docs](https://developer.yoast.com/duplicate-post/).
+Duplicate Post has many useful settings to customize its behavior and restrict its use to certain roles or post types. Check out the extensive documentation on [yoast.com](https://yoast.com/wordpress/plugins/duplicate-post/) and our [developer docs](https://developer.yoast.com/duplicate-post/overview/).
 
 == Installation ==
 
@@ -71,37 +71,55 @@ If Duplicate Post is still in English, or if there are some untranslated strings
 
 == Changelog ==
 
-= 4.5 =
-Release Date: June 28th, 2022
+= 4.6 =
 
-Enhancements:
+Release date: 2026-03-09
+
+#### Enhancements
+
+* Improves the compatibility with the Block Editor.
+* Improves the style of the _Copy to a new draft_ and _Rewrite & Republish_ actions in the Block Editor.
+* Replaces the metabox with a sidebar panel in the Block Editor.
+
+#### Bugfixes
+
+* Fixes a bug where cloning an attachment did not copy its caption as expected. Props to @masteradhoc.
+* Fixes a bug where cloning an attachment did not copy its description as expected.
+* Fixes a bug where notices would not be appearing in the block editor, throwing console errors, with some locales.
+* Fixes a bug where Rewrite & Republish copies could remain orphaned, blocking editors from creating a new Rewrite & Republish copy for the original post.
+* Fixes a bug where the block editor button were not styled if the admin bar links where not present.
+* Fixes a bug where translations where missing in the buttons and the notices in the Block Editor. Props to @petitphp.
+
+#### Other
+
+* Improves security of the Bulk Clone action and the republishing of a copy.
+* Adds `duplicate_post_before_republish` and `duplicate_post_after_republish` action hooks fired before and after republishing. Props to @piscis.
+* Deprecates the `dp_duplicate_post` and `dp_duplicate_page` hooks and introduces a new unified `duplicate_post_after_duplicated` action hook that replaces them. The new hook includes the post type as a fourth parameter for flexible filtering.
+* Sets the minimum supported WordPress version to 6.8.
+* Sets the WordPress tested up to version to 6.9.
+* Drops compatibility with PHP < 7.4.
+* Verified compatibility with PHP up to version 8.5.
+* Fixes the Developer Guide link that was leading to a non-existent page. Props to @masteradhoc.
+* Fixes the documentation link to use a shortlink. Props to @masteradhoc.
+* Improves how the translations are loaded by relying on the WordPress mechanism for that. Props to @swissspidy.
+* Improves discoverability of security policy in Packagist.
+* Users requiring this package via [WP]Packagist can now use the `composer/installers` v2.
+
+= 4.5 =
+
+Release date: 2022-06-28
+
+#### Enhancements
 
 * Improves the impact of the plugin on the performance of the site by avoiding useless calls on the `gettext` filter.
 
-Bugfixes:
+#### Bugfixes
 
 * Fixes a bug where a section in the Classic Editor's submitbox would be displayed with incorrect margins.
 
-Other:
+#### Other
 
 * Sets the WordPress tested up to version to 6.0.
-
-= 4.4 =
-Release Date: January 25th, 2022
-
-Enhancements:
-
-* Converts the upgrade notice into a welcome notice for first-time users.
-
-Bugfixes:
-
-* Fixes a bug where HTML tags in a Custom HTML block would be removed when republishing a scheduled Rewrite & Republish copy.
-* Fixes a bug where the button style would be broken in the Classic Editor.
-* Fixes a bug where a fatal error would be triggered in the Widgets page in combination with some themes or plugins.
-
-Other:
-
-* Sets the WordPress tested up to version to 5.9.
 
 = Earlier versions =
 For the changelog of earlier versions, please refer to [the changelog on yoast.com](https://yoa.st/duplicate-post-changelog).

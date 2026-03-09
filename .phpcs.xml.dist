@@ -8,7 +8,7 @@
 	<!--
 	#############################################################################
 	COMMAND LINE ARGUMENTS
-	https://github.com/squizlabs/PHP_CodeSniffer/wiki/Annotated-ruleset.xml
+	https://github.com/PHPCSStandards/PHP_CodeSniffer/wiki/Annotated-ruleset.xml
 	#############################################################################
 	-->
 
@@ -39,22 +39,31 @@
 	<rule ref="Yoast">
 		<properties>
 			<!-- Set the custom test class list for all sniffs which use it in one go.
-				 Ref: https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards/wiki/Customizable-sniff-properties#custom-unit-test-classes
+				 Ref: https://github.com/WordPress/WordPress-Coding-Standards/wiki/Customizable-sniff-properties#custom-unit-test-classes
 			-->
-			<property name="custom_test_class_whitelist" type="array">
-				<element value="Yoast\WP\Duplicate_Post\Tests\TestCase"/>
+			<property name="custom_test_classes" type="array">
+				<element value="Yoast\WP\Duplicate_Post\Tests\Unit\TestCase"/>
 			</property>
 
 			<!-- Provide the plugin specific prefixes for all naming related sniffs. -->
 			<property name="prefixes" type="array">
 				<element value="Yoast\WP\Duplicate_Post"/>
 				<element value="duplicate_post"/>
-				<element value="dp_"/>
+			</property>
+
+			<property name="psr4_paths" type="array">
+				<element key="Yoast\WP\Duplicate_Post\Tests\\" value="tests/"/>
 			</property>
 		</properties>
 
 		<!-- This plugin is not dependent on YoastSEO, so the replacement function will not be available. -->
-		<exclude name="Yoast.Yoast.AlternativeFunctions.json_encode_wp_json_encode"/>
+		<exclude name="Yoast.Yoast.JsonEncodeAlternative"/>
+	</rule>
+
+	<!-- Enforce PSR1 compatible namespaces. -->
+	<rule ref="PSR1.Classes.ClassDeclaration">
+		<!-- YoastCS only applies this rule to test files. Overrule it to apply to all files. -->
+		<include-pattern>*\.php</include-pattern>
 	</rule>
 
 
@@ -98,6 +107,15 @@
 		</properties>
 	</rule>
 
+	<!-- Make sure custom capabilities are recognized. -->
+	<rule ref="WordPress.WP.Capabilities">
+		<properties>
+			<property name="custom_capabilities" type="array">
+				<element value="copy_posts"/>
+			</property>
+		</properties>
+	</rule>
+
 
 	<!--
 	#############################################################################
@@ -108,19 +126,9 @@
 
 	<!-- TEST CODE -->
 
-	<!-- Valid usage: For testing purposes, some non-prefixed globals are being created, which is fine. -->
+	<!-- Valid usage: For testing purposes, some non-prefixed global constants are being created, which is fine. -->
 	<rule ref="WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound">
-		<exclude-pattern>/tests/*\.php$</exclude-pattern>
-	</rule>
-
-	<!-- Test code does not go into production, so security is not an issue. -->
-	<rule ref="WordPress.Security">
-		<exclude-pattern>/tests/*</exclude-pattern>
-	</rule>
-
-	<!-- These tests are not run within the context of a WP install, so overwritting globals is fine. -->
-	<rule ref="WordPress.WP.GlobalVariablesOverride">
-		<exclude-pattern>/tests/*</exclude-pattern>
+		<exclude-pattern>/tests/*/bootstrap\.php$</exclude-pattern>
 	</rule>
 
 
@@ -130,13 +138,6 @@
 	Adjustments which should be removed once the associated issue has been resolved.
 	#############################################################################
 	-->
-
-	<!-- Temporary exclude due to a bug in YoastCS.
-		 The bug has already been fixed and this exclude can be removed once YoastCS 2.2.0
-		 has been released. -->
-	<rule ref="Yoast.Files.FileName.InvalidClassFileName">
-		<exclude-pattern>/src/duplicate-post\.php$</exclude-pattern>
-	</rule>
 
 	<!-- The renaming of the hooks to use the namespace-like prefix is
 		 a breaking change and will be planned in to be actioned
@@ -154,7 +155,6 @@
 		<exclude-pattern>/src/handlers/save-post-handler\.php$</exclude-pattern>
 	</rule>
 	<rule ref="WordPress.Security.NonceVerification.Recommended">
-		<exclude-pattern>/compat/gutenberg-functions\.php$</exclude-pattern>
 		<exclude-pattern>/src/post-republisher\.php$</exclude-pattern>
 		<exclude-pattern>/src/admin/options-page\.php$</exclude-pattern>
 		<exclude-pattern>/src/ui/bulk-actions\.php$</exclude-pattern>

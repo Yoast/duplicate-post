@@ -16,14 +16,13 @@ class Newsletter {
 
 		$newsletter_form_response = self::newsletter_handle_form();
 
-
 		$copy = \sprintf(
 		/* translators: 1: Yoast */
 			\esc_html__(
 				'If you want to stay up to date about all the exciting developments around Duplicate Post, subscribe to the %1$s newsletter!',
-				'duplicate-post'
+				'duplicate-post',
 			),
-			'Yoast'
+			'Yoast',
 		);
 
 		$email_label = \esc_html__( 'Email address', 'duplicate-post' );
@@ -32,10 +31,10 @@ class Newsletter {
 			/* translators: %1$s and %2$s are replaced by opening and closing anchor tags. */
 			\esc_html__(
 				'Yoast respects your privacy. Read %1$sour privacy policy%2$s on how we handle your personal information.',
-				'duplicate-post'
+				'duplicate-post',
 			),
 			'<a href="https://yoa.st/4jf" target="_blank">',
-			'</a>'
+			'</a>',
 		);
 
 		$response_html = '';
@@ -49,7 +48,7 @@ class Newsletter {
 		$html = '
 		<!-- Begin Newsletter Signup Form -->
 		<form method="post" id="newsletter-subscribe-form" name="newsletter-subscribe-form" novalidate>
-		' . \wp_nonce_field( 'newsletter', 'newsletter_nonce' ) . '
+		' . \wp_nonce_field( 'newsletter', 'newsletter_nonce', true, false ) . '
 		<p>' . $copy . '</p>
 		<div class="newsletter-field-group" style="display: flex; flex-direction: column">
 			<label for="newsletter-email" style="margin: 0 0 4px 0;"><strong>' . $email_label . '</strong></label>
@@ -70,7 +69,7 @@ class Newsletter {
 	/**
 	 * Handles and validates Newsletter form.
 	 *
-	 * @return array|null
+	 * @return array<string, string>|null
 	 */
 	private static function newsletter_handle_form() {
 
@@ -106,7 +105,7 @@ class Newsletter {
 	 *
 	 * @param string $email Subscriber email.
 	 *
-	 * @return array Feedback response.
+	 * @return array<string, string> Feedback response.
 	 */
 	private static function newsletter_subscribe_to_mailblue( $email ) {
 		$response = \wp_remote_post(
@@ -120,7 +119,7 @@ class Newsletter {
 					],
 					'list'            => 'Yoast newsletter',
 				],
-			]
+			],
 		);
 
 		$wp_remote_retrieve_response_code = \wp_remote_retrieve_response_code( $response );

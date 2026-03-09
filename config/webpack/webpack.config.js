@@ -1,11 +1,8 @@
-const CaseSensitivePathsPlugin = require( "case-sensitive-paths-webpack-plugin" );
-
 const {
 	camelCaseDash,
 } = require( "@wordpress/dependency-extraction-webpack-plugin/lib/util" );
 
 const paths = require( "./paths" );
-const pkg = require( "../../package.json" );
 
 const externals = {
 	// This is necessary for Gutenberg to work.
@@ -31,7 +28,7 @@ const wordpressPackages = [
 	"@wordpress/data",
 	"@wordpress/dom",
 	"@wordpress/dom-ready",
-	"@wordpress/edit-post",
+	"@wordpress/editor",
 	"@wordpress/element",
 	"@wordpress/html-entities",
 	"@wordpress/i18n",
@@ -52,10 +49,8 @@ const wordpressExternals = wordpressPackages.reduce( ( memo, packageName ) => {
 }, {} );
 
 
-function getOutputFilename( mode ) {
-	const pluginVersionSlug = paths.flattenVersionForFile( pkg.yoast.pluginVersion );
-
-	return "[name]-" + pluginVersionSlug + ".js";
+function getOutputFilename() {
+	return "[name].js";
 }
 
 module.exports = ( env = { environment: "production" } ) => {
@@ -63,7 +58,7 @@ module.exports = ( env = { environment: "production" } ) => {
 
 	const config = {
 		mode,
-		devtool: mode === "development" ? "cheap-module-eval-source-map" : false,
+		devtool: mode === "development" ? "eval-cheap-module-source-map" : false,
 		entry: paths.entry,
 		context: paths.jsSrc,
 		optimization: {
@@ -75,8 +70,8 @@ module.exports = ( env = { environment: "production" } ) => {
 		},
 		output: {
 			path: paths.jsDist,
-			filename: getOutputFilename( mode ),
-			jsonpFunction: "duplicatePostWebpackJsonp",
+			filename: getOutputFilename(),
+			chunkLoadingGlobal: "duplicatePostWebpackJsonp",
 		},
 		resolve: {
 			extensions: [ ".js", ".jsx" ],
@@ -99,9 +94,7 @@ module.exports = ( env = { environment: "production" } ) => {
 				},
 			],
 		},
-		plugins: [
-			new CaseSensitivePathsPlugin(),
-		],
+		plugins: [],
 	};
 
 	if ( mode === "development" ) {

@@ -17,8 +17,12 @@ if ( ! \defined( 'DUPLICATE_POST_CURRENT_VERSION' ) ) {
 	<form id="duplicate_post_settings_form" method="post" action="options.php" style="clear: both">
 		<?php \settings_fields( 'duplicate_post_group' ); ?>
 
-		<header role="tablist" aria-label="<?php \esc_attr_e( 'Settings sections', 'duplicate-post' ); ?>"
-				class="nav-tab-wrapper">
+		<header role="tablist" aria-label="
+		<?php
+			/* translators: Hidden accessibility text. */
+			\esc_attr_e( 'Settings sections', 'duplicate-post' );
+		?>
+		" class="nav-tab-wrapper">
 			<button
 					type="button"
 					role="tab"
@@ -217,7 +221,7 @@ if ( ! \defined( 'DUPLICATE_POST_CURRENT_VERSION' ) ) {
 								'<code>',
 								'</code>',
 								'<a href="' . \esc_url( 'https://developer.yoast.com/duplicate-post/functions-template-tags#duplicate_post_clone_post_link' ) . '">',
-								'</a>'
+								'</a>',
 							);
 							?>
 						</p>
@@ -244,7 +248,7 @@ if ( ! \defined( 'DUPLICATE_POST_CURRENT_VERSION' ) ) {
 			</table>
 		</section>
 		<p class="submit">
-			<input type="submit" class="button button-primary" value="<?php \esc_html_e( 'Save changes', 'duplicate-post' ); ?>"/>
+			<input type="submit" class="button button-primary" value="<?php \esc_attr_e( 'Save changes', 'duplicate-post' ); ?>"/>
 		</p>
 	</form>
 </div>

@@ -35,7 +35,9 @@ class Bulk_Actions_Watcher {
 	public function add_removable_query_args( $removable_query_args ) {
 		if ( \is_array( $removable_query_args ) ) {
 			$removable_query_args[] = 'bulk_cloned';
+			$removable_query_args[] = 'bulk_cloned_skipped';
 			$removable_query_args[] = 'bulk_rewriting';
+			$removable_query_args[] = 'bulk_rewriting_skipped';
 		}
 		return $removable_query_args;
 	}
@@ -56,10 +58,26 @@ class Bulk_Actions_Watcher {
 						'%s item copied.',
 						'%s items copied.',
 						$copied_posts,
-						'duplicate-post'
-					)
+						'duplicate-post',
+					),
 				) . '</p></div>',
-				\esc_html( $copied_posts )
+				\esc_html( $copied_posts ),
+			);
+		}
+		if ( ! empty( $_REQUEST['bulk_cloned_skipped'] ) ) {
+			$skipped_posts = \intval( $_REQUEST['bulk_cloned_skipped'] );
+			\printf(
+				'<div id="message" class="notice notice-warning fade"><p>'
+				. \esc_html(
+					/* translators: %s: Number of posts skipped. */
+					\_n(
+						'%s item skipped due to insufficient permissions.',
+						'%s items skipped due to insufficient permissions.',
+						$skipped_posts,
+						'duplicate-post',
+					),
+				) . '</p></div>',
+				\esc_html( $skipped_posts ),
 			);
 		}
 	}
@@ -80,10 +98,26 @@ class Bulk_Actions_Watcher {
 						'%s post duplicated. You can now start rewriting your post in the duplicate of the original post. Once you choose to republish it your changes will be merged back into the original post.',
 						'%s posts duplicated. You can now start rewriting your posts in the duplicates of the original posts. Once you choose to republish them your changes will be merged back into the original post.',
 						$copied_posts,
-						'duplicate-post'
-					)
+						'duplicate-post',
+					),
 				) . '</p></div>',
-				\esc_html( $copied_posts )
+				\esc_html( $copied_posts ),
+			);
+		}
+		if ( ! empty( $_REQUEST['bulk_rewriting_skipped'] ) ) {
+			$skipped_posts = \intval( $_REQUEST['bulk_rewriting_skipped'] );
+			\printf(
+				'<div id="message" class="notice notice-warning fade"><p>'
+				. \esc_html(
+					/* translators: %s: Number of posts skipped. */
+					\_n(
+						'%s item skipped due to insufficient permissions.',
+						'%s items skipped due to insufficient permissions.',
+						$skipped_posts,
+						'duplicate-post',
+					),
+				) . '</p></div>',
+				\esc_html( $skipped_posts ),
 			);
 		}
 	}
