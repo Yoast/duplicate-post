@@ -47,6 +47,11 @@ class Metabox {
 	 * @return void
 	 */
 	public function add_custom_metabox( $post_type, $post ) {
+		// Don't show the metabox in the block editor, we use the sidebar panel instead.
+		if ( \use_block_editor_for_post( $post ) ) {
+			return;
+		}
+
 		$enabled_post_types = $this->permissions_helper->get_enabled_post_types();
 
 		if ( \in_array( $post_type, $enabled_post_types, true )
@@ -61,7 +66,7 @@ class Metabox {
 					$post_type,
 					'side',
 					'default',
-					[ 'original' => $original_item ]
+					[ 'original' => $original_item ],
 				);
 			}
 		}
@@ -99,15 +104,15 @@ class Metabox {
 					/* translators: %s: post title */
 					\__(
 						'The original item this was copied from is: <span class="duplicate_post_original_item_title_span">%s</span>',
-						'duplicate-post'
+						'duplicate-post',
 					),
 					[
 						'span' => [
 							'class' => [],
 						],
-					]
+					],
 				),
-				Utils::get_edit_or_view_link( $original_item )  // phpcs:ignore WordPress.Security.EscapeOutput
+				Utils::get_edit_or_view_link( $original_item ),  // phpcs:ignore WordPress.Security.EscapeOutput
 			);
 			?>
 		</p>

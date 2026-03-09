@@ -15,7 +15,7 @@ if ( ! \defined( 'ABSPATH' ) ) {
 $duplicate_post_options_page = new Options_Page(
 	new Options(),
 	new Options_Form_Generator( new Options_Inputs() ),
-	new Asset_Manager()
+	new Asset_Manager(),
 );
 
 $duplicate_post_options_page->register_hooks();

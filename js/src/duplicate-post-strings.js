@@ -1,6 +1,6 @@
 /* global duplicatePostStrings */
 
-import { createInterpolateElement } from "@wordpress/element";
+import { safeCreateInterpolateElement } from "./helpers/safe-create-interpolate-element";
 import { Button } from "@wordpress/components";
 import { __, setLocaleData } from "@wordpress/i18n";
 import { dispatch, subscribe } from "@wordpress/data";
@@ -34,7 +34,7 @@ const republishStrings = {
 
 	'Are you ready to publish?'	: __( 'Are you ready to republish your post?', 'duplicate-post' ),
 	'Double-check your settings before publishing.':
-		createInterpolateElement(
+		safeCreateInterpolateElement(
 			__( 'After republishing your changes will be merged into the original post and you\'ll be redirected there.<br /><br />Do you want to compare your changes with the original version before merging?<br /><br /><button>Save changes and compare</button>',
 				'duplicate-post' ),
 			{
@@ -49,7 +49,7 @@ const republishStrings = {
 
 	'Are you ready to schedule?' : __( 'Are you ready to schedule the republishing of your post?', 'duplicate-post' ),
 	'Your work will be published at the specified date and time.':
-		createInterpolateElement(
+		safeCreateInterpolateElement(
 			__( 'You\'re about to replace the original with this rewritten post at the specified date and time.<br /><br />Do you want to compare your changes with the original version before merging?<br /><br /><button>Save changes and compare</button>',
 				'duplicate-post' ),
 			{

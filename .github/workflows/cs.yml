@@ -1,11 +1,53 @@
 name: CS
 
 on:
-  # Run on all pushes (except to master) and on all pull requests.
+  # Run on all relevant pushes (except to main) and on all relevant pull requests.
   push:
     branches-ignore:
-      - 'master'
+      - 'main'
+    paths-ignore:
+      - '**.css'
+      - '**.js'
+      - '**.md'
+      - '**.png'
+      - '**.txt'
+      - '.babelrc'
+      - '.editorconfig'
+      - '.gitattributes'
+      - '.gitignore'
+      - 'CHANGELOG'
+      - 'LICENSE'
+      - 'package.json'
+      - 'phpunit.xml.dist'
+      - 'phpunit-wp.xml.dist'
+      - 'yarn.lock'
+      - '.github/dependabot.yml'
+      - 'config/**'
+      - '!config/composer/actions.php'
+      - 'css/**'
+      - 'js/**'
   pull_request:
+    paths-ignore:
+      - '**.css'
+      - '**.js'
+      - '**.md'
+      - '**.png'
+      - '**.txt'
+      - '.babelrc'
+      - '.editorconfig'
+      - '.gitattributes'
+      - '.gitignore'
+      - 'CHANGELOG'
+      - 'LICENSE'
+      - 'package.json'
+      - 'phpunit.xml.dist'
+      - 'phpunit-wp.xml.dist'
+      - 'yarn.lock'
+      - '.github/dependabot.yml'
+      - 'config/**'
+      - '!config/composer/actions.php'
+      - 'css/**'
+      - 'js/**'
   # Allow manually triggering the workflow.
   workflow_dispatch:
 
@@ -16,20 +58,44 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  actionlint:
+    name: 'Lint GH Action workflows'
+    uses: Yoast/.github/.github/workflows/reusable-actionlint.yml@c14f66005ab514663a48d00712db67617c98728c # v1.0.0
+
   checkcs:
     name: 'Check code style'
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: Determine the base branch for the file diff
+        id: base_branch
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            echo "NAME=$BASE_REF" >> "$GITHUB_OUTPUT"
+            echo "REF=origin/$BASE_REF" >> "$GITHUB_OUTPUT"
+          else
+            echo 'NAME=trunk' >> "$GITHUB_OUTPUT"
+            echo "REF=origin/trunk" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Fetch base branch
+        run: git fetch --no-tags --depth=1 origin ${{ steps.base_branch.outputs.NAME }}
 
       - name: Install PHP
-        uses: shivammathur/setup-php@v2
+        uses: shivammathur/setup-php@44454db4f0199b8b9685a5d763dc37cbf79108e1 # 2.36.0
         with:
-          php-version: '7.4'
+          php-version: 'latest'
           coverage: none
           tools: cs2pr
+        env:
+          fail-fast: true
 
       # Validate the composer.json file.
       # @link https://getcomposer.org/doc/03-cli.md#validate
@@ -37,16 +103,34 @@ jobs:
         run: composer validate --no-check-all
 
       # Install dependencies and handle caching in one go.
-      # @link https://github.com/marketplace/actions/install-composer-dependencies
+      # @link https://github.com/marketplace/actions/install-php-dependencies-with-composer
       - name: Install Composer dependencies
-        uses: ramsey/composer-install@v2
+        uses: ramsey/composer-install@3cf229dc2919194e9e36783941438d17239e8520 # 3.1.1
+        with:
+          # Bust the cache at least once a month - output format: YYYY-MM.
+          custom-cache-suffix: $(date -u "+%Y-%m")
 
-      # Check the codestyle of the files.
-      # The results of the CS check will be shown inline in the PR via the CS2PR tool.
+      # Check the codestyle of the files against a threshold of expected errors and warnings.
+      # Keep track of the exit code as it determines whether to run the branch check or not.
+      # Exit code 128 means the thresholds needs to be lowered. Other exit codes imply CS errors.
+      - name: Check PHP code style against the thresholds
+        id: thresholds
+        run: |
+          set +e
+          composer check-cs-thresholds
+          exitcode="$?"
+          echo "EXITCODE=$exitcode" >> "$GITHUB_OUTPUT"
+          exit "$exitcode"
+
+      # Check the codestyle only of the files which were changed in the current branch.
+      # This step will only be executed if the threshold check exited with a failure status.
+      # The results of this CS check will be shown inline in the PR via the CS2PR tool.
       # @link https://github.com/staabm/annotate-pull-request-from-checkstyle/
-      - name: Check PHP code style
-        continue-on-error: true
-        run: composer check-cs -- --report-full --report-checkstyle=./phpcs-report.xml
+      - name: Check PHP code style for the changes made in the branch only
+        if: ${{ failure() && steps.thresholds.outputs.EXITCODE != 128 }}
+        id: phpcs
+        run: composer check-branch-cs -- ${{ steps.base_branch.outputs.REF }}
 
       - name: Show PHPCS results in PR
+        if: ${{ always() && steps.phpcs.outcome == 'failure' }}
         run: cs2pr ./phpcs-report.xml

@@ -77,7 +77,7 @@ class Options_Page {
 			\__( 'Duplicate Post', 'duplicate-post' ),
 			'manage_options',
 			'duplicatepost',
-			[ $this, 'generate_page' ]
+			[ $this, 'generate_page' ],
 		);
 
 		\add_action( $page_hook, [ $this, 'enqueue_assets' ] );

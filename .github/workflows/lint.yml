@@ -1,15 +1,67 @@
 name: Lint
 
 on:
-  # Run on pushes to select branches and on all pull requests.
+  # Run on relevant pushes to select branches and on all relevant pull requests.
   push:
     branches:
-      - master
+      - main
       - trunk
       - 'release/**'
       - 'hotfix/[0-9]+.[0-9]+*'
       - 'feature/**'
+    paths-ignore:
+      - '**.css'
+      - '**.js'
+      - '**.md'
+      - '**.png'
+      - '**.txt'
+      - '.babelrc'
+      - '.editorconfig'
+      - '.gitattributes'
+      - '.gitignore'
+      - 'CHANGELOG'
+      - 'LICENSE'
+      - 'package.json'
+      - '.phpcs.xml.dist'
+      - 'phpcs.xml.dist'
+      - 'phpunit.xml.dist'
+      - 'phpunit-wp.xml.dist'
+      - 'yarn.lock'
+      - '.github/dependabot.yml'
+      - '.github/workflows/cs.yml'
+      - '.github/workflows/deploy.yml'
+      - '.github/workflows/test.yml'
+      - 'config/**'
+      - '!config/composer/actions.php'
+      - 'css/**'
+      - 'js/**'
   pull_request:
+    paths-ignore:
+      - '**.css'
+      - '**.js'
+      - '**.md'
+      - '**.png'
+      - '**.txt'
+      - '.babelrc'
+      - '.editorconfig'
+      - '.gitattributes'
+      - '.gitignore'
+      - 'CHANGELOG'
+      - 'LICENSE'
+      - 'package.json'
+      - '.phpcs.xml.dist'
+      - 'phpcs.xml.dist'
+      - 'phpunit.xml.dist'
+      - 'phpunit-wp.xml.dist'
+      - 'yarn.lock'
+      - '.github/dependabot.yml'
+      - '.github/workflows/cs.yml'
+      - '.github/workflows/deploy.yml'
+      - '.github/workflows/test.yml'
+      - 'config/**'
+      - '!config/composer/actions.php'
+      - 'css/**'
+      - 'js/**'
   # Allow manually triggering the workflow.
   workflow_dispatch:
 
@@ -27,29 +79,35 @@ jobs:
       matrix:
         # Lint against the highest/lowest supported versions of each PHP major.
         # And also do a run against "nightly" (the current dev version of PHP).
-        php_version: ['5.6', '7.0', '7.4', '8.0', '8.1', '8.2']
+        php_version: [ '7.4', '8.0', '8.5', 'nightly']
+
+    continue-on-error: ${{ matrix.php_version == 'nightly' }}
 
     name: "Lint: PHP ${{ matrix.php_version }}"
 
-    # Allow builds to fail on as-of-yet unreleased PHP versions.
-    continue-on-error: ${{ matrix.php_version == '8.2' }}
-
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
 
       - name: Install PHP
-        uses: shivammathur/setup-php@v2
+        uses: shivammathur/setup-php@44454db4f0199b8b9685a5d763dc37cbf79108e1 # 2.36.0
         with:
           php-version: ${{ matrix.php_version }}
-          ini-values: zend.assertions=1, error_reporting=-1, display_errors=On
+          ini-values: zend.assertions=1, assert.exception=1, error_reporting=-1, display_errors=On, display_startup_errors=On
           coverage: none
           tools: cs2pr
+        env:
+          fail-fast: true
 
       # Install dependencies and handle caching in one go.
-      # @link https://github.com/marketplace/actions/install-composer-dependencies
+      # @link https://github.com/marketplace/actions/install-php-dependencies-with-composer
       - name: Install Composer dependencies
-        uses: ramsey/composer-install@v2
+        uses: ramsey/composer-install@3cf229dc2919194e9e36783941438d17239e8520 # 3.1.1
+        with:
+          # Bust the cache at least once a month - output format: YYYY-MM.
+          custom-cache-suffix: $(date -u "+%Y-%m")
 
       - name: Lint against parse errors
         run: composer lint -- --checkstyle | cs2pr

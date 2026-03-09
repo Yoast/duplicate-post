@@ -25,7 +25,7 @@ class Options_Inputs {
 			\esc_attr( $name ),
 			\esc_attr( $id ),
 			\esc_attr( $value ),
-			$attributes
+			$attributes,
 		);
 	}
 

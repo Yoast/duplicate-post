@@ -89,18 +89,28 @@ class Bulk_Handler {
 		}
 
 		$counter = 0;
+		$skipped = 0;
 		if ( \is_array( $post_ids ) ) {
 			foreach ( $post_ids as $post_id ) {
 				$post = \get_post( $post_id );
-				if ( ! empty( $post ) && $this->permissions_helper->should_rewrite_and_republish_be_allowed( $post ) ) {
-					$new_post_id = $this->post_duplicator->create_duplicate_for_rewrite_and_republish( $post );
-					if ( ! \is_wp_error( $new_post_id ) ) {
-						++$counter;
-					}
+				if ( empty( $post ) || ! $this->permissions_helper->should_rewrite_and_republish_be_allowed( $post ) ) {
+					continue;
+				}
+				if ( ! \current_user_can( 'edit_post', $post_id ) ) {
+					++$skipped;
+					continue;
+				}
+				$new_post_id = $this->post_duplicator->create_duplicate_for_rewrite_and_republish( $post );
+				if ( ! \is_wp_error( $new_post_id ) ) {
+					++$counter;
 				}
 			}
 		}
-		return \add_query_arg( 'bulk_rewriting', $counter, $redirect_to );
+		$redirect_to = \add_query_arg( 'bulk_rewriting', $counter, $redirect_to );
+		if ( $skipped > 0 ) {
+			$redirect_to = \add_query_arg( 'bulk_rewriting_skipped', $skipped, $redirect_to );
+		}
+		return $redirect_to;
 	}
 
 	/**
@@ -118,21 +128,32 @@ class Bulk_Handler {
 		}
 
 		$counter = 0;
+		$skipped = 0;
 		if ( \is_array( $post_ids ) ) {
 			foreach ( $post_ids as $post_id ) {
 				$post = \get_post( $post_id );
-				if ( ! empty( $post ) && ! $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
-					if ( \intval( \get_option( 'duplicate_post_copychildren' ) !== 1 )
-						|| ! \is_post_type_hierarchical( $post->post_type )
-						|| ( \is_post_type_hierarchical( $post->post_type ) && ! Utils::has_ancestors_marked( $post, $post_ids ) )
-					) {
-						if ( ! \is_wp_error( \duplicate_post_create_duplicate( $post ) ) ) {
-							++$counter;
-						}
-					}
+				if ( empty( $post ) || $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
+					continue;
+				}
+				if ( \intval( \get_option( 'duplicate_post_copychildren' ) ) === 1
+					&& \is_post_type_hierarchical( $post->post_type )
+					&& Utils::has_ancestors_marked( $post, $post_ids )
+				) {
+					continue;
+				}
+				if ( ! \current_user_can( 'edit_post', $post_id ) ) {
+					++$skipped;
+					continue;
+				}
+				if ( ! \is_wp_error( \duplicate_post_create_duplicate( $post ) ) ) {
+					++$counter;
 				}
 			}
 		}
-		return \add_query_arg( 'bulk_cloned', $counter, $redirect_to );
+		$redirect_to = \add_query_arg( 'bulk_cloned', $counter, $redirect_to );
+		if ( $skipped > 0 ) {
+			$redirect_to = \add_query_arg( 'bulk_cloned_skipped', $skipped, $redirect_to );
+		}
+		return $redirect_to;
 	}
 }

@@ -49,7 +49,7 @@ class Column {
 					\add_filter( "manage_{$enabled_post_type}_posts_columns", [ $this, 'add_original_column' ] );
 					\add_action( "manage_{$enabled_post_type}_posts_custom_column", [ $this, 'show_original_item' ], 10, 2 );
 				}
-				\add_action( 'quick_edit_custom_box', [ $this, 'quick_edit_remove_original' ], 10, 2 );
+				\add_action( 'quick_edit_custom_box', [ $this, 'quick_edit_remove_original' ] );
 				\add_action( 'admin_enqueue_scripts', [ $this, 'admin_enqueue_scripts' ] );
 				\add_action( 'admin_enqueue_scripts', [ $this, 'admin_enqueue_styles' ] );
 			}
@@ -59,9 +59,9 @@ class Column {
 	/**
 	 * Adds Original item column to the post list.
 	 *
-	 * @param array $post_columns The post columns array.
+	 * @param array<string, string> $post_columns The post columns array.
 	 *
-	 * @return array The updated array.
+	 * @return array<string, string> The updated array.
 	 */
 	public function add_original_column( $post_columns ) {
 		if ( \is_array( $post_columns ) ) {
@@ -94,10 +94,10 @@ class Column {
 
 				$column_content = Utils::get_edit_or_view_link( $original_item );
 			}
-			echo \sprintf(
+			\printf(
 				'<span class="duplicate_post_original_link"%s>%s</span>',
 				$data_attr, // phpcs:ignore WordPress.Security.EscapeOutput
-				$column_content // phpcs:ignore WordPress.Security.EscapeOutput
+				$column_content, // phpcs:ignore WordPress.Security.EscapeOutput
 			);
 		}
 	}
@@ -129,19 +129,19 @@ class Column {
 		</fieldset>',
 			\esc_html__(
 				'Delete reference to original item.',
-				'duplicate-post'
+				'duplicate-post',
 			),
 			\wp_kses(
 				\__(
 					'The original item this was copied from is: <span class="duplicate_post_original_item_title_span"></span>',
-					'duplicate-post'
+					'duplicate-post',
 				),
 				[
 					'span' => [
 						'class' => [],
 					],
-				]
-			)
+				],
+			),
 		);
 	}
 

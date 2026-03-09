@@ -1,5 +1,4 @@
 /* global require, process */
-const { flattenVersionForFile } = require( './config/webpack/paths' );
 const path = require( "path" );
 
 module.exports = function( grunt ) {
@@ -15,7 +14,6 @@ module.exports = function( grunt ) {
 	const project = {
 		developmentBuild,
 		pluginVersion,
-		pluginVersionSlug: flattenVersionForFile( pluginVersion ),
 		pluginSlug: "duplicate-post",
 		pluginMainFile: "duplicate-post.php",
 		paths: {

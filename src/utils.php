@@ -12,23 +12,6 @@ use WP_Post;
 class Utils {
 
 	/**
-	 * Flattens a version number for use in a filename.
-	 *
-	 * @param string $version The original version number.
-	 *
-	 * @return string The flattened version number.
-	 */
-	public static function flatten_version( $version ) {
-		$parts = \explode( '.', $version );
-
-		if ( \count( $parts ) === 2 && \preg_match( '/^\d+$/', $parts[1] ) === 1 ) {
-			$parts[] = '0';
-		}
-
-		return \implode( '', $parts );
-	}
-
-	/**
 	 * Adds slashes only to strings.
 	 *
 	 * @param mixed $value Value to slash only if string.
@@ -118,9 +101,9 @@ class Utils {
 			return \sprintf(
 				'<a href="%s" aria-label="%s">%s</a>',
 				\esc_url( \get_edit_post_link( $post->ID ) ),
-				/* translators: %s: post title */
+				/* translators: Hidden accessibility text; %s: post title */
 				\esc_attr( \sprintf( \__( 'Edit &#8220;%s&#8221;', 'duplicate-post' ), $title ) ),
-				$title
+				$title,
 			);
 		}
 		elseif ( \is_post_type_viewable( $post_type_object ) ) {
@@ -130,9 +113,9 @@ class Utils {
 					return \sprintf(
 						'<a href="%s" rel="bookmark" aria-label="%s">%s</a>',
 						\esc_url( $preview_link ),
-						/* translators: %s: post title */
+						/* translators: Hidden accessibility text; %s: post title */
 						\esc_attr( \sprintf( \__( 'Preview &#8220;%s&#8221;', 'duplicate-post' ), $title ) ),
-						$title
+						$title,
 					);
 				}
 			}
@@ -140,9 +123,9 @@ class Utils {
 				return \sprintf(
 					'<a href="%s" rel="bookmark" aria-label="%s">%s</a>',
 					\esc_url( \get_permalink( $post->ID ) ),
-					/* translators: %s: post title */
+					/* translators: Hidden accessibility text; %s: post title */
 					\esc_attr( \sprintf( \__( 'View &#8220;%s&#8221;', 'duplicate-post' ), $title ) ),
-					$title
+					$title,
 				);
 			}
 		}
@@ -177,7 +160,7 @@ class Utils {
 	/**
 	 * Gets the default meta field names to be filtered out.
 	 *
-	 * @return array The names of the meta fields to filter out by default.
+	 * @return array<string> The names of the meta fields to filter out by default.
 	 */
 	public static function get_default_filtered_meta_names() {
 		return [

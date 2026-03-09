@@ -1,68 +1,117 @@
 {
-    "name": "yoast/duplicate-post",
-    "description": "The go-to tool for cloning posts and pages, including the powerful Rewrite & Republish feature.",
-    "keywords": [
-        "wordpress",
-        "post",
-        "copy",
-        "clone"
-    ],
-    "homepage": "https://wordpress.org/plugins/duplicate-post/",
-    "license": "GPL-2.0-or-later",
-    "authors": [
-        {
-            "name": "Enrico Battocchi & Team Yoast",
-            "email": "support@yoast.com",
-            "homepage": "https://yoast.com"
-        }
-    ],
-    "type": "wordpress-plugin",
-    "support": {
-        "issues": "https://github.com/Yoast/duplicate-post/issues",
-        "forum": "https://wordpress.org/support/plugin/duplicate-post",
-        "source": "https://github.com/Yoast/duplicate-post"
-    },
-    "require": {
-        "php": ">=5.6",
-        "composer/installers": "^1.12.0"
-    },
-    "require-dev": {
-        "yoast/yoastcs": "^2.2.1",
-        "yoast/wp-test-utils": "^1.0.0",
-        "roave/security-advisories": "dev-master"
-    },
-    "autoload": {
-        "classmap": [
-            "src/"
-        ]
-    },
-    "autoload-dev": {
-        "classmap": [
-            "tests/"
-        ]
-    },
-    "scripts": {
-        "lint": [
-            "@php ./vendor/php-parallel-lint/php-parallel-lint/parallel-lint . -e php --show-deprecated --exclude vendor --exclude node_modules --exclude .git"
-        ],
-        "check-cs": [
-            "@php ./vendor/squizlabs/php_codesniffer/bin/phpcs"
-        ],
-        "fix-cs": [
-            "@php ./vendor/squizlabs/php_codesniffer/bin/phpcbf"
-        ],
-        "test": [
-            "@php ./vendor/phpunit/phpunit/phpunit --no-coverage"
-        ],
-        "coverage": [
-            "@php ./vendor/phpunit/phpunit/phpunit"
-        ]
-    },
-    "config": {
-        "classmap-authoritative": true,
-        "allow-plugins": {
-            "dealerdirect/phpcodesniffer-composer-installer": true,
-            "composer/installers": true
-        }
-    }
+	"name": "yoast/duplicate-post",
+	"description": "The go-to tool for cloning posts and pages, including the powerful Rewrite & Republish feature.",
+	"license": "GPL-2.0-or-later",
+	"type": "wordpress-plugin",
+	"keywords": [
+		"wordpress",
+		"post",
+		"copy",
+		"clone"
+	],
+	"authors": [
+		{
+			"name": "Enrico Battocchi & Team Yoast",
+			"email": "support@yoast.com",
+			"homepage": "https://yoast.com"
+		}
+	],
+	"homepage": "https://wordpress.org/plugins/duplicate-post/",
+	"support": {
+		"issues": "https://github.com/Yoast/duplicate-post/issues",
+		"forum": "https://wordpress.org/support/plugin/duplicate-post",
+		"source": "https://github.com/Yoast/duplicate-post",
+		"security": "https://yoast.com/security-program/"
+	},
+	"require": {
+		"php": "^7.4 || ^8.0",
+		"composer/installers": "^1.12.0 || ^2.0"
+	},
+	"require-dev": {
+		"yoast/wp-test-utils": "^1.2.1",
+		"yoast/yoastcs": "^3.3.0"
+	},
+	"autoload": {
+		"classmap": [
+			"src/"
+		]
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"Yoast\\WP\\Duplicate_Post\\Tests\\": "tests/"
+		},
+		"classmap": [
+			"config/"
+		]
+	},
+	"config": {
+		"allow-plugins": {
+			"composer/installers": true,
+			"dealerdirect/phpcodesniffer-composer-installer": true
+		},
+		"classmap-authoritative": true,
+		"lock": false
+	},
+	"scripts": {
+		"lint": [
+			"@php ./vendor/php-parallel-lint/php-parallel-lint/parallel-lint . -e php --show-deprecated --exclude vendor --exclude node_modules --exclude .git"
+		],
+		"cs": [
+			"Yoast\\WP\\Duplicate_Post\\Config\\Composer\\Actions::check_coding_standards"
+		],
+		"check-cs-thresholds": [
+			"@putenv YOASTCS_THRESHOLD_ERRORS=57",
+			"@putenv YOASTCS_THRESHOLD_WARNINGS=0",
+			"Yoast\\WP\\Duplicate_Post\\Config\\Composer\\Actions::check_cs_thresholds"
+		],
+		"check-cs": [
+			"@check-cs-warnings -n"
+		],
+		"check-cs-warnings": [
+			"@php ./vendor/squizlabs/php_codesniffer/bin/phpcs"
+		],
+		"check-staged-cs": [
+			"@check-cs-warnings --filter=GitStaged"
+		],
+		"check-branch-cs": [
+			"Yoast\\WP\\Duplicate_Post\\Config\\Composer\\Actions::check_branch_cs"
+		],
+		"fix-cs": [
+			"@php ./vendor/squizlabs/php_codesniffer/bin/phpcbf"
+		],
+		"test": [
+			"@php ./vendor/phpunit/phpunit/phpunit --no-coverage"
+		],
+		"coverage": [
+			"@php ./vendor/phpunit/phpunit/phpunit"
+		],
+		"test-wp": [
+			"@php ./vendor/phpunit/phpunit/phpunit -c phpunit-wp.xml.dist --no-coverage"
+		],
+		"coverage-wp": [
+			"@php ./vendor/phpunit/phpunit/phpunit -c phpunit-wp.xml.dist"
+		],
+		"integration-test": [
+			"@test-wp"
+		],
+		"integration-coverage": [
+			"@coverage-wp"
+		]
+	},
+	"scripts-descriptions": {
+		"lint": "Check the PHP files for parse errors.",
+		"cs": "See a menu with the code style checking script options.",
+		"check-cs-thresholds": "Check the PHP files for code style violations and best practices and verify the number of issues does not exceed predefined thresholds.",
+		"check-cs": "Check the PHP files for code style violations and best practices, ignoring warnings.",
+		"check-cs-warnings": "Check the PHP files for code style violations and best practices, including warnings.",
+		"check-staged-cs": "Check the staged PHP files for code style violations and best practices.",
+		"check-branch-cs": "Check the PHP files changed in the current branch for code style violations and best practices.",
+		"fix-cs": "Auto-fix code style violations in the PHP files.",
+		"test": "Run the unit tests without code coverage.",
+		"coverage": "Run the unit tests with code coverage.",
+		"test-wp": "Run the WP unit tests without code coverage.",
+		"coverage-wp": "Run the WP unit tests with code coverage.",
+		"integration-test": "Deprecated. Alias for the \"test-wp\" script.",
+		"integration-coverage": "Deprecated. Alias for the \"coverage-wp\" script."
+	}
 }
