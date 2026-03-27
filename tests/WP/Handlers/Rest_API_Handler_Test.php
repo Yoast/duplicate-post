@@ -118,7 +118,7 @@ final class Rest_API_Handler_Test extends TestCase {
 		$this->assertTrue( $data['success'] );
 
 		// Verify the meta is removed.
-		$this->assertEmpty( \get_post_meta( $copy_post, '_dp_original', true ) );
+		$this->assertSame( '', \get_post_meta( $copy_post, '_dp_original', true ) );
 	}
 
 	/**
