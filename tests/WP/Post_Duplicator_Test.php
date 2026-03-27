@@ -2,6 +2,7 @@
 
 namespace Yoast\WP\Duplicate_Post\Tests\WP;
 
+use WP_Error;
 use Yoast\WP\Duplicate_Post\Post_Duplicator;
 use Yoast\WPTestUtils\WPIntegration\TestCase;
 
@@ -84,11 +85,11 @@ final class Post_Duplicator_Test extends TestCase {
 
 		$second_result = $this->instance->create_duplicate_for_rewrite_and_republish( $post );
 
-		$this->assertInstanceOf( \WP_Error::class, $second_result );
+		$this->assertInstanceOf( WP_Error::class, $second_result );
 		$this->assertSame( 'duplicate_post_already_has_copy', $second_result->get_error_code() );
 
 		// Original should still reference the first copy only.
-		$meta_values = \get_post_meta( $post->ID, '_dp_has_rewrite_republish_copy' );
+		$meta_values = \get_post_meta( $post->ID, '_dp_has_rewrite_republish_copy', false );
 		$this->assertCount( 1, $meta_values );
 		$this->assertSame( (string) $first_copy_id, $meta_values[0] );
 	}
@@ -113,7 +114,7 @@ final class Post_Duplicator_Test extends TestCase {
 
 		\remove_filter( 'wp_insert_post_empty_content', '__return_true' );
 
-		$this->assertInstanceOf( \WP_Error::class, $result );
+		$this->assertInstanceOf( WP_Error::class, $result );
 
 		// The claim should have been rolled back.
 		$this->assertSame( '', \get_post_meta( $post->ID, '_dp_has_rewrite_republish_copy', true ) );
