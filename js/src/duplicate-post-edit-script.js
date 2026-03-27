@@ -249,6 +249,56 @@ class DuplicatePost {
 			wasSavingMetaboxes = completed.isSavingMetaBoxes;
 			wasAutoSavingPost  = completed.isAutosavingPost;
 		} );
+
+		// When another collaborator republishes, the copy is deleted server-side.
+		// The RTC status change may not propagate (User A navigates away too quickly),
+		// so periodically check if the copy still exists via the REST API.
+		this.detectCopyDeletion();
+	}
+
+	/**
+	 * Periodically checks if the R&R copy still exists.
+	 *
+	 * When another collaborator republishes, the copy is deleted after cleanup.
+	 * A 404 response means the copy is gone and we should redirect to the original.
+	 *
+	 * @returns {void}
+	 */
+	detectCopyDeletion() {
+		const originalEditUrl = duplicatePost.originalItem?.editUrl;
+		if ( ! originalEditUrl || ! duplicatePost.restBase ) {
+			return;
+		}
+
+		const path = `/wp/v2/${ duplicatePost.restBase }/${ duplicatePost.postId }?_fields=id,status&context=edit`;
+
+		const redirectToOriginal = () => {
+			clearInterval( interval );
+			dispatch( 'core/notices' ).createNotice(
+				'info',
+				__( 'Another user has republished this post. Redirecting to the original…', 'duplicate-post' ),
+				{ isDismissible: false, type: 'snackbar' },
+			);
+			const separator = originalEditUrl.includes( '?' ) ? '&' : '?';
+			setTimeout( () => window.location.assign( originalEditUrl + separator + 'dpcollabredirected=1' ), 3000 );
+		};
+
+		const checkCopy = async () => {
+			try {
+				const response = await apiFetch( { path } );
+
+				// The copy was republished but not yet cleaned up.
+				if ( response.status === 'dp-rewrite-republish' || response.status === 'trash' ) {
+					redirectToOriginal();
+				}
+			} catch {
+				// 404 or 403 — the copy was deleted.
+				redirectToOriginal();
+			}
+		};
+
+		const interval = setInterval( checkCopy, 2000 );
+		checkCopy();
 	}
 
 	/**
