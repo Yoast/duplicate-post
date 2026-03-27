@@ -97,6 +97,17 @@ final class Block_Editor_Test extends TestCase {
 
 		$this->assertNotFalse(
 			\has_action(
+				'init',
+				[
+					$this->instance,
+					'register_post_meta',
+				],
+			),
+			'Does not have expected init action',
+		);
+
+		$this->assertNotFalse(
+			\has_action(
 				'elementor/editor/after_enqueue_styles',
 				[
 					$this->instance,
@@ -149,6 +160,37 @@ final class Block_Editor_Test extends TestCase {
 			),
 			'Does not have expected wpseo_link_suggestions_indexables filter',
 		);
+	}
+
+	/**
+	 * Tests that register_post_meta registers the meta for each enabled post type.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Block_Editor::register_post_meta
+	 *
+	 * @return void
+	 */
+	public function test_register_post_meta() {
+		$this->permissions_helper
+			->expects( 'get_enabled_post_types' )
+			->andReturn( [ 'post', 'page' ] );
+
+		Monkey\Functions\expect( '\register_post_meta' )
+			->once()
+			->with(
+				'post',
+				'_dp_has_rewrite_republish_copy',
+				Mockery::type( 'array' ),
+			);
+
+		Monkey\Functions\expect( '\register_post_meta' )
+			->once()
+			->with(
+				'page',
+				'_dp_has_rewrite_republish_copy',
+				Mockery::type( 'array' ),
+			);
+
+		$this->instance->register_post_meta();
 	}
 
 	/**

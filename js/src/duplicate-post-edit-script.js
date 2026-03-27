@@ -1,12 +1,12 @@
 /* global duplicatePost, duplicatePostNotices */
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { registerPlugin } from "@wordpress/plugins";
 import { PluginDocumentSettingPanel, PluginPostStatusInfo } from "@wordpress/editor";
 import { Fragment } from "@wordpress/element";
 import { Button, ExternalLink, Modal } from '@wordpress/components';
 import { __ } from "@wordpress/i18n";
-import { select, subscribe, dispatch } from "@wordpress/data";
+import { select, subscribe, dispatch, useSelect } from "@wordpress/data";
 import apiFetch from "@wordpress/api-fetch";
 import { redirectOnSaveCompletion } from "./duplicate-post-functions";
 
@@ -123,13 +123,62 @@ function DuplicatePostPanel() {
  *
  * @returns {JSX.Element|null} The rendered component or null.
  */
+/**
+ * Interval in milliseconds for polling the R&R copy meta.
+ *
+ * The R&R copy is created via a server-side admin action, so the meta change
+ * does not enter the RTC CRDT document. Periodic cache invalidation ensures
+ * the editor refetches the entity record and picks up the change.
+ *
+ * @type {number}
+ */
+const RR_COPY_POLL_INTERVAL = 15000;
+
 function DuplicatePostRender() {
 	// Don't try to render anything if there is no store.
 	if ( ! select( 'core/editor' ) || ! ( wp.editor && wp.editor.PluginPostStatusInfo ) ) {
 		return null;
 	}
 
-	const currentPostStatus = select( 'core/editor' ).getEditedPostAttribute( 'status' );
+	const { currentPostStatus, hasRewriteAndRepublishCopy, postType, postId } = useSelect( ( sel ) => {
+		const editor   = sel( 'core/editor' );
+		const type     = editor.getCurrentPostType();
+		const id       = editor.getCurrentPostId();
+		const record   = sel( 'core' ).getEntityRecord( 'postType', type, id );
+
+		return {
+			currentPostStatus: editor.getEditedPostAttribute( 'status' ),
+			hasRewriteAndRepublishCopy: !! record?.meta?._dp_has_rewrite_republish_copy,
+			postType: type,
+			postId: id,
+		};
+	}, [] );
+
+	const prevHasRRCopy = useRef( hasRewriteAndRepublishCopy );
+
+	// Periodically invalidate the entity record cache to detect server-side
+	// meta changes (e.g. when another user creates an R&R copy via admin action).
+	useEffect( () => {
+		if ( hasRewriteAndRepublishCopy || ! postType || ! postId ) {
+			return;
+		}
+		const interval = setInterval( () => {
+			dispatch( 'core' ).invalidateResolution( 'getEntityRecord', [ 'postType', postType, postId ] );
+		}, RR_COPY_POLL_INTERVAL );
+		return () => clearInterval( interval );
+	}, [ hasRewriteAndRepublishCopy, postType, postId ] );
+
+	// Notify the user when another collaborator creates an R&R copy.
+	useEffect( () => {
+		if ( hasRewriteAndRepublishCopy && ! prevHasRRCopy.current ) {
+			dispatch( 'core/notices' ).createNotice(
+				'info',
+				__( 'Another user has started a Rewrite & Republish for this post.', 'duplicate-post' ),
+				{ isDismissible: true, type: 'snackbar' },
+			);
+		}
+		prevHasRRCopy.current = hasRewriteAndRepublishCopy;
+	}, [ hasRewriteAndRepublishCopy ] );
 
 	return (
 		<Fragment>
@@ -146,7 +195,7 @@ function DuplicatePostRender() {
 							</Button>
 						</PluginPostStatusInfo>
 					}
-					{ ( currentPostStatus === 'publish' && duplicatePost.rewriteAndRepublishLink !== '' && duplicatePost.showLinks.rewrite_republish === '1' ) &&
+					{ ( currentPostStatus === 'publish' && ! hasRewriteAndRepublishCopy && duplicatePost.rewriteAndRepublishLink !== '' && duplicatePost.showLinks.rewrite_republish === '1' ) &&
 						<PluginPostStatusInfo>
 							<Button
 								variant="secondary"
