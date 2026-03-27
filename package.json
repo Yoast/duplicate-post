@@ -33,6 +33,7 @@
     "@babel/preset-react": "^7.18.5",
     "@babel/runtime": "^7.18.5",
     "@wordpress/dependency-extraction-webpack-plugin": "^6.6.0",
+    "@wordpress/env": "^11.2.0",
     "@wordpress/scripts": "^28.6.0",
     "@yoast/grunt-plugin-tasks": "^2.5",
     "babel-loader": "^9.1.3",
