@@ -50,4 +50,72 @@ final class Post_Duplicator_Test extends TestCase {
 
 		$this->assertIsInt( $id );
 	}
+
+	/**
+	 * Tests that creating an R&R copy claims the slot on the original post.
+	 *
+	 * @covers ::create_duplicate_for_rewrite_and_republish
+	 *
+	 * @return void
+	 */
+	public function test_create_duplicate_for_rewrite_and_republish_claims_slot() {
+		$post = $this->factory->post->create_and_get( [ 'post_status' => 'publish' ] );
+
+		$copy_id = $this->instance->create_duplicate_for_rewrite_and_republish( $post );
+
+		$this->assertIsInt( $copy_id );
+		$this->assertSame( (string) $copy_id, \get_post_meta( $post->ID, '_dp_has_rewrite_republish_copy', true ) );
+		$this->assertSame( 1, (int) \get_post_meta( $copy_id, '_dp_is_rewrite_republish_copy', true ) );
+	}
+
+	/**
+	 * Tests that creating an R&R copy fails when the original already has one.
+	 *
+	 * @covers ::create_duplicate_for_rewrite_and_republish
+	 *
+	 * @return void
+	 */
+	public function test_create_duplicate_for_rewrite_and_republish_blocks_duplicate() {
+		$post = $this->factory->post->create_and_get( [ 'post_status' => 'publish' ] );
+
+		$first_copy_id = $this->instance->create_duplicate_for_rewrite_and_republish( $post );
+
+		$this->assertIsInt( $first_copy_id );
+
+		$second_result = $this->instance->create_duplicate_for_rewrite_and_republish( $post );
+
+		$this->assertInstanceOf( \WP_Error::class, $second_result );
+		$this->assertSame( 'duplicate_post_already_has_copy', $second_result->get_error_code() );
+
+		// Original should still reference the first copy only.
+		$meta_values = \get_post_meta( $post->ID, '_dp_has_rewrite_republish_copy' );
+		$this->assertCount( 1, $meta_values );
+		$this->assertSame( (string) $first_copy_id, $meta_values[0] );
+	}
+
+	/**
+	 * Tests that the claim is rolled back when copy creation fails.
+	 *
+	 * @covers ::create_duplicate_for_rewrite_and_republish
+	 *
+	 * @return void
+	 */
+	public function test_create_duplicate_for_rewrite_and_republish_rolls_back_on_failure() {
+		$post = $this->factory->post->create_and_get( [ 'post_status' => 'publish' ] );
+
+		// Force wp_insert_post to fail by filtering the post data.
+		\add_filter(
+			'wp_insert_post_empty_content',
+			'__return_true',
+		);
+
+		$result = $this->instance->create_duplicate_for_rewrite_and_republish( $post );
+
+		\remove_filter( 'wp_insert_post_empty_content', '__return_true' );
+
+		$this->assertInstanceOf( \WP_Error::class, $result );
+
+		// The claim should have been rolled back.
+		$this->assertSame( '', \get_post_meta( $post->ID, '_dp_has_rewrite_republish_copy', true ) );
+	}
 }

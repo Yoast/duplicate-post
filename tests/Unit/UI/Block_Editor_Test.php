@@ -174,21 +174,23 @@ final class Block_Editor_Test extends TestCase {
 			->expects( 'get_enabled_post_types' )
 			->andReturn( [ 'post', 'page' ] );
 
-		Monkey\Functions\expect( '\register_post_meta' )
-			->once()
-			->with(
-				'post',
-				'_dp_has_rewrite_republish_copy',
-				Mockery::type( 'array' ),
-			);
+		$expected_args = Mockery::on(
+			static function ( $args ) {
+				return $args['show_in_rest'] === true
+					&& $args['single'] === true
+					&& $args['type'] === 'string'
+					&& $args['sanitize_callback'] === 'sanitize_text_field'
+					&& \is_callable( $args['auth_callback'] );
+			},
+		);
 
 		Monkey\Functions\expect( '\register_post_meta' )
 			->once()
-			->with(
-				'page',
-				'_dp_has_rewrite_republish_copy',
-				Mockery::type( 'array' ),
-			);
+			->with( 'post', '_dp_has_rewrite_republish_copy', $expected_args );
+
+		Monkey\Functions\expect( '\register_post_meta' )
+			->once()
+			->with( 'page', '_dp_has_rewrite_republish_copy', $expected_args );
 
 		$this->instance->register_post_meta();
 	}

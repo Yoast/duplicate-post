@@ -80,8 +80,8 @@ class Block_Editor {
 					'single'            => true,
 					'type'              => 'string',
 					'sanitize_callback' => 'sanitize_text_field',
-					'auth_callback'     => static function () {
-						return \current_user_can( 'edit_posts' );
+					'auth_callback'     => static function ( $allowed, $meta_key, $post_id ) {
+						return \current_user_can( 'edit_post', $post_id );
 					},
 				],
 			);
@@ -272,10 +272,14 @@ class Block_Editor {
 		}
 
 		$post_type_object = \get_post_type_object( $post->post_type );
+		$rest_base        = '';
+		if ( $post_type_object ) {
+			$rest_base = ! empty( $post_type_object->rest_base ) ? $post_type_object->rest_base : $post_type_object->name;
+		}
 
 		return [
 			'postId'                  => $post->ID,
-			'restBase'                => ( $post_type_object ) ? $post_type_object->rest_base : '',
+			'restBase'                => $rest_base,
 			'newDraftLink'            => $this->get_new_draft_permalink(),
 			'rewriteAndRepublishLink' => $this->get_rewrite_republish_permalink(),
 			'showLinks'               => Utils::get_option( 'duplicate_post_show_link' ),

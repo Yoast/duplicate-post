@@ -291,9 +291,12 @@ class DuplicatePost {
 				if ( response.status === 'dp-rewrite-republish' || response.status === 'trash' ) {
 					redirectToOriginal();
 				}
-			} catch {
-				// 404 or 403 — the copy was deleted.
-				redirectToOriginal();
+			} catch ( error ) {
+				// Only redirect on confirmed deletion/permission errors, not transient network failures.
+				const status = error?.data?.status ?? error?.status;
+				if ( status === 404 || status === 410 || status === 403 ) {
+					redirectToOriginal();
+				}
 			}
 		};
 
