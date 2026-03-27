@@ -93,6 +93,15 @@
 		"coverage-wp": [
 			"@php ./vendor/phpunit/phpunit/phpunit -c phpunit-wp.xml.dist"
 		],
+		"test-wp-env": [
+			"config/scripts/run-wp-env-tests.sh"
+		],
+		"coverage-wp-env": [
+			"config/scripts/run-wp-env-tests.sh --coverage"
+		],
+		"wp-env:stop": [
+			"npx wp-env stop"
+		],
 		"integration-test": [
 			"@test-wp"
 		],
@@ -113,6 +122,9 @@
 		"coverage": "Run the unit tests with code coverage.",
 		"test-wp": "Run the WP unit tests without code coverage.",
 		"coverage-wp": "Run the WP unit tests with code coverage.",
+		"test-wp-env": "Run the WP integration tests via wp-env (Docker) without code coverage.",
+		"coverage-wp-env": "Run the WP integration tests via wp-env (Docker) with code coverage.",
+		"wp-env:stop": "Stop the wp-env Docker environment.",
 		"integration-test": "Deprecated. Alias for the \"test-wp\" script.",
 		"integration-coverage": "Deprecated. Alias for the \"coverage-wp\" script."
 	}

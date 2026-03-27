@@ -48,6 +48,11 @@ composer.lock
 /.wordpress-svn
 
 ############
+## wp-env
+############
+.wp-env.override.json
+
+############
 ## Dev tool config overrides.
 ############
 .phpcs.xml
