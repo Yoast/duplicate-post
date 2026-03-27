@@ -154,7 +154,7 @@ class Post_Duplicator {
 		// permission check before either has set the meta.
 		$claimed = \add_post_meta( $post->ID, '_dp_has_rewrite_republish_copy', 'pending', true );
 		if ( ! $claimed ) {
-			return new \WP_Error(
+			return new WP_Error(
 				'duplicate_post_already_has_copy',
 				\__( 'A Rewrite & Republish copy already exists for this post.', 'duplicate-post' ),
 			);

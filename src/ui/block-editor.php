@@ -275,7 +275,7 @@ class Block_Editor {
 
 		return [
 			'postId'                  => $post->ID,
-			'restBase'                => $post_type_object ? $post_type_object->rest_base : '',
+			'restBase'                => ( $post_type_object ) ? $post_type_object->rest_base : '',
 			'newDraftLink'            => $this->get_new_draft_permalink(),
 			'rewriteAndRepublishLink' => $this->get_rewrite_republish_permalink(),
 			'showLinks'               => Utils::get_option( 'duplicate_post_show_link' ),
