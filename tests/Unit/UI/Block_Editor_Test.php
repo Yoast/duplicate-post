@@ -310,6 +310,7 @@ final class Block_Editor_Test extends TestCase {
 		$utils                      = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
 		$post                       = Mockery::mock( WP_Post::class );
 		$post->ID                   = 123;
+		$post->post_type            = 'post';
 		$new_draft_link             = 'http://fakeu.rl/new_draft';
 		$rewrite_and_republish_link = 'http://fakeu.rl/rewrite_and_republish';
 		$rewriting                  = 0;
@@ -374,8 +375,16 @@ final class Block_Editor_Test extends TestCase {
 			->with( $post )
 			->andReturnNull();
 
+		$post_type_object            = Mockery::mock( 'WP_Post_Type' );
+		$post_type_object->rest_base = 'posts';
+
+		Monkey\Functions\expect( '\get_post_type_object' )
+			->with( 'post' )
+			->andReturn( $post_type_object );
+
 		$edit_js_object = [
 			'postId'                  => 123,
+			'restBase'                => 'posts',
 			'newDraftLink'            => $new_draft_link,
 			'rewriteAndRepublishLink' => $rewrite_and_republish_link,
 			'showLinks'               => $show_links,
@@ -414,6 +423,7 @@ final class Block_Editor_Test extends TestCase {
 		$utils                      = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
 		$post                       = Mockery::mock( WP_Post::class );
 		$post->ID                   = 123;
+		$post->post_type            = 'post';
 		$new_draft_link             = 'http://fakeu.rl/new_draft';
 		$rewrite_and_republish_link = 'http://fakeu.rl/rewrite_and_republish';
 		$rewriting                  = 1;
@@ -475,8 +485,16 @@ final class Block_Editor_Test extends TestCase {
 			->with( $post )
 			->andReturnNull();
 
+		$post_type_object            = Mockery::mock( 'WP_Post_Type' );
+		$post_type_object->rest_base = 'posts';
+
+		Monkey\Functions\expect( '\get_post_type_object' )
+			->with( 'post' )
+			->andReturn( $post_type_object );
+
 		$edit_js_object = [
 			'postId'                  => 123,
+			'restBase'                => 'posts',
 			'newDraftLink'            => $new_draft_link,
 			'rewriteAndRepublishLink' => $rewrite_and_republish_link,
 			'showLinks'               => $show_links,

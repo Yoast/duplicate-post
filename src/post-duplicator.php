@@ -149,6 +149,17 @@ class Post_Duplicator {
 	 * @return int|WP_Error The copy ID, or a WP_Error object on failure.
 	 */
 	public function create_duplicate_for_rewrite_and_republish( WP_Post $post ) {
+		// Claim the slot on the original before creating the copy to prevent
+		// a race condition where two concurrent requests both pass the
+		// permission check before either has set the meta.
+		$claimed = \add_post_meta( $post->ID, '_dp_has_rewrite_republish_copy', 'pending', true );
+		if ( ! $claimed ) {
+			return new \WP_Error(
+				'duplicate_post_already_has_copy',
+				\__( 'A Rewrite & Republish copy already exists for this post.', 'duplicate-post' ),
+			);
+		}
+
 		$options  = [
 			'copy_title'      => true,
 			'copy_date'       => true,
@@ -164,14 +175,18 @@ class Post_Duplicator {
 
 		$new_post_id = $this->create_duplicate( $post, $options );
 
-		if ( ! \is_wp_error( $new_post_id ) ) {
-			$this->copy_post_taxonomies( $new_post_id, $post, $options );
-			$this->copy_post_meta_info( $new_post_id, $post, $options );
-
-			\update_post_meta( $new_post_id, '_dp_is_rewrite_republish_copy', 1 );
-			\update_post_meta( $post->ID, '_dp_has_rewrite_republish_copy', $new_post_id );
-			\update_post_meta( $new_post_id, '_dp_creation_date_gmt', \current_time( 'mysql', 1 ) );
+		if ( \is_wp_error( $new_post_id ) ) {
+			// Roll back the claim if copy creation failed.
+			\delete_post_meta( $post->ID, '_dp_has_rewrite_republish_copy' );
+			return $new_post_id;
 		}
+
+		$this->copy_post_taxonomies( $new_post_id, $post, $options );
+		$this->copy_post_meta_info( $new_post_id, $post, $options );
+
+		\update_post_meta( $new_post_id, '_dp_is_rewrite_republish_copy', 1 );
+		\update_post_meta( $post->ID, '_dp_has_rewrite_republish_copy', $new_post_id );
+		\update_post_meta( $new_post_id, '_dp_creation_date_gmt', \current_time( 'mysql', 1 ) );
 
 		return $new_post_id;
 	}
