@@ -4,6 +4,7 @@ namespace Yoast\WP\Duplicate_Post\Tests\Unit;
 
 use Brain\Monkey;
 use Mockery;
+use RuntimeException;
 use WP_Post;
 use Yoast\WP\Duplicate_Post\Permissions_Helper;
 use Yoast\WP\Duplicate_Post\Post_Duplicator;
@@ -269,6 +270,7 @@ final class Post_Republisher_Test extends TestCase {
 
 		$copy              = Mockery::mock( WP_Post::class );
 		$copy->ID          = 123;
+		$copy->post_author = '7';
 		$copy->post_status = 'future';
 
 		$this->permissions_helper
@@ -284,11 +286,82 @@ final class Post_Republisher_Test extends TestCase {
 			->once()
 			->andReturn( $original );
 
-		Monkey\Functions\expect( 'kses_remove_filters' );
-		Monkey\Functions\expect( 'kses_init_filters' );
+		Monkey\Functions\expect( 'get_current_user_id' )
+			->once()
+			->andReturn( 0 );
+		Monkey\Functions\expect( 'wp_set_current_user' )
+			->once()
+			->ordered()
+			->with( 7 );
 
-		$this->instance->expects( 'republish' )->with( $copy, $original )->once();
+		$this->instance->expects( 'republish' )->with( $copy, $original )->once()->ordered();
+
+		Monkey\Functions\expect( 'wp_set_current_user' )
+			->once()
+			->ordered()
+			->with( 0 );
+
 		$this->instance->expects( 'delete_copy' )->with( $copy->ID, $original->ID )->once();
+
+		$this->instance->republish_scheduled_post( $copy );
+	}
+
+	/**
+	 * Tests the republish_scheduled_post function restores the current user when republishing fails.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Post_Republisher::republish_scheduled_post
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 *
+	 * @return void
+	 */
+	public function test_republish_scheduled_post_restores_current_user_when_republish_fails() {
+		$original              = Mockery::mock( WP_Post::class );
+		$original->ID          = 1;
+		$original->post_status = 'publish';
+
+		$copy              = Mockery::mock( WP_Post::class );
+		$copy->ID          = 123;
+		$copy->post_author = '7';
+		$copy->post_status = 'future';
+
+		$this->permissions_helper
+			->expects( 'is_rewrite_and_republish_copy' )
+			->with( $copy )
+			->once()
+			->andReturnTrue();
+
+		$utils = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
+		$utils
+			->expects( 'get_original' )
+			->with( $copy->ID )
+			->once()
+			->andReturn( $original );
+
+		Monkey\Functions\expect( 'get_current_user_id' )
+			->once()
+			->andReturn( 0 );
+		Monkey\Functions\expect( 'wp_set_current_user' )
+			->once()
+			->ordered()
+			->with( 7 );
+
+		$this->instance
+			->expects( 'republish' )
+			->with( $copy, $original )
+			->once()
+			->ordered()
+			->andThrow( new RuntimeException( 'Republish failed.' ) );
+
+		Monkey\Functions\expect( 'wp_set_current_user' )
+			->once()
+			->ordered()
+			->with( 0 );
+
+		$this->instance->expects( 'delete_copy' )->never();
+
+		$this->expectException( RuntimeException::class );
+		$this->expectExceptionMessage( 'Republish failed.' );
 
 		$this->instance->republish_scheduled_post( $copy );
 	}
