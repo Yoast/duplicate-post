@@ -491,6 +491,11 @@ final class Post_Republisher_Test extends TestCase {
 	public function test_republish_scheduled_post_preserves_raw_html_content() {
 		$admin_id = $this->factory->user->create( [ 'role' => 'administrator' ] );
 
+		// On multisite, regular Administrators do not have `unfiltered_html`; only Super Admins do.
+		if ( \is_multisite() ) {
+			\grant_super_admin( $admin_id );
+		}
+
 		$raw_html_content = '<!-- wp:html --><section data-raw-html="preserved">'
 			. '<script>window.duplicatePostRawHtml = true;</script></section><!-- /wp:html -->';
 
