@@ -62,7 +62,7 @@ final class Post_Republisher_Test extends TestCase {
 	/**
 	 * Helper method to create a published post.
 	 *
-	 * @param array $args Optional. Arguments for wp_insert_post.
+	 * @param array<string, mixed> $args Optional. Arguments for wp_insert_post.
 	 *
 	 * @return WP_Post The created post object.
 	 */
@@ -99,7 +99,7 @@ final class Post_Republisher_Test extends TestCase {
 	 * This prevents the republish flow by removing the filter that changes the
 	 * copy status and by simulating a meta-box-loader request.
 	 *
-	 * @param array $postarr An array of post data to update.
+	 * @param array<string, mixed> $postarr An array of post data to update.
 	 *
 	 * @return int|WP_Error The post ID on success, WP_Error on failure.
 	 */
@@ -430,6 +430,145 @@ final class Post_Republisher_Test extends TestCase {
 
 		// Verify meta cleanup.
 		$this->assertSame( '', \get_post_meta( $original_id, '_dp_has_rewrite_republish_copy', true ) );
+	}
+
+	/**
+	 * Tests that republish_scheduled_post runs the republish as the copy author.
+	 *
+	 * This is a regression test for the scheduled-publish path stripping content
+	 * from capability-gated shortcodes (e.g. WPBakery's `[vc_raw_html]`) because
+	 * WP-Cron has no logged-in user and `current_user_can( 'unfiltered_html' )`
+	 * returns false. Setting the copy author as the current user before calling
+	 * `republish()` makes those filters evaluate against a real user.
+	 *
+	 * @covers ::republish_scheduled_post
+	 *
+	 * @return void
+	 */
+	public function test_republish_scheduled_post_runs_as_copy_author() {
+		$editor_id = $this->factory->user->create( [ 'role' => 'editor' ] );
+
+		$original = $this->create_original_post();
+		$copy     = $this->create_rewrite_and_republish_copy( $original );
+
+		$this->update_post_without_republish(
+			[
+				'ID'           => $copy->ID,
+				'post_author'  => $editor_id,
+				'post_title'   => 'Scheduled Title',
+				'post_content' => 'Scheduled content.',
+			],
+		);
+		$copy = \get_post( $copy->ID );
+
+		$captured_user_id = null;
+		$capture          = static function () use ( &$captured_user_id ) {
+			$captured_user_id = \get_current_user_id();
+		};
+		\add_action( 'duplicate_post_before_republish', $capture );
+
+		// Simulate WP-Cron: no logged-in user.
+		\wp_set_current_user( 0 );
+
+		try {
+			$this->instance->republish_scheduled_post( $copy );
+		}
+		finally {
+			\remove_action( 'duplicate_post_before_republish', $capture );
+		}
+
+		$this->assertSame( $editor_id, $captured_user_id );
+	}
+
+	/**
+	 * Tests that scheduled republishing preserves capability-gated raw HTML content.
+	 *
+	 * @covers ::republish_scheduled_post
+	 * @covers ::republish_post_elements
+	 *
+	 * @return void
+	 */
+	public function test_republish_scheduled_post_preserves_raw_html_content() {
+		$admin_id = $this->factory->user->create( [ 'role' => 'administrator' ] );
+
+		// On multisite, regular Administrators do not have `unfiltered_html`; only Super Admins do.
+		if ( \is_multisite() ) {
+			\grant_super_admin( $admin_id );
+		}
+
+		$raw_html_content = '<!-- wp:html --><section data-raw-html="preserved">'
+			. '<script>window.duplicatePostRawHtml = true;</script></section><!-- /wp:html -->';
+
+		$original = $this->create_original_post( [ 'post_author' => $admin_id ] );
+		$copy     = $this->create_rewrite_and_republish_copy( $original );
+
+		\wp_set_current_user( $admin_id );
+
+		$this->update_post_without_republish(
+			[
+				'ID'           => $copy->ID,
+				'post_author'  => $admin_id,
+				'post_content' => $raw_html_content,
+			],
+		);
+		$copy = \get_post( $copy->ID );
+
+		$strip_raw_html_for_users_without_capability = static function ( $data ) {
+			if ( \current_user_can( 'unfiltered_html' ) ) {
+				return $data;
+			}
+
+			$data['post_content'] = \preg_replace(
+				'/<!-- wp:html -->.*?<!-- \/wp:html -->/s',
+				'<!-- wp:html --><!-- /wp:html -->',
+				$data['post_content'],
+			);
+
+			return $data;
+		};
+		\add_filter( 'wp_insert_post_data', $strip_raw_html_for_users_without_capability, 20 );
+
+		// Simulate WP-Cron: no logged-in user.
+		\wp_set_current_user( 0 );
+
+		try {
+			$this->instance->republish_scheduled_post( $copy );
+		}
+		finally {
+			\remove_filter( 'wp_insert_post_data', $strip_raw_html_for_users_without_capability, 20 );
+		}
+
+		$updated_original = \get_post( $original->ID );
+		$this->assertSame( $raw_html_content, $updated_original->post_content );
+	}
+
+	/**
+	 * Tests that republish_scheduled_post restores the previous user context after running.
+	 *
+	 * @covers ::republish_scheduled_post
+	 *
+	 * @return void
+	 */
+	public function test_republish_scheduled_post_restores_previous_user_context() {
+		$admin_id  = $this->factory->user->create( [ 'role' => 'administrator' ] );
+		$editor_id = $this->factory->user->create( [ 'role' => 'editor' ] );
+
+		$original = $this->create_original_post( [ 'post_author' => $admin_id ] );
+		$copy     = $this->create_rewrite_and_republish_copy( $original );
+
+		$this->update_post_without_republish(
+			[
+				'ID'          => $copy->ID,
+				'post_author' => $editor_id,
+			],
+		);
+		$copy = \get_post( $copy->ID );
+
+		\wp_set_current_user( $admin_id );
+
+		$this->instance->republish_scheduled_post( $copy );
+
+		$this->assertSame( $admin_id, \get_current_user_id() );
 	}
 
 	/**

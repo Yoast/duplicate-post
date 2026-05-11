@@ -97,10 +97,10 @@ class Post_Republisher {
 	 * Runs on the `wp_insert_post_data` hook in `wp_insert_post()` when
 	 * submitting the post copy.
 	 *
-	 * @param array $data    An array of slashed, sanitized, and processed post data.
-	 * @param array $postarr An array of sanitized (and slashed) but otherwise unmodified post data.
+	 * @param array<string, array|bool|int|string|null> $data    An array of slashed, sanitized, and processed post data.
+	 * @param array<string, array|bool|int|string|null> $postarr An array of sanitized (and slashed) but otherwise unmodified post data.
 	 *
-	 * @return array An array of slashed, sanitized, and processed attachment post data.
+	 * @return array<string, array|bool|int|string|null> An array of slashed, sanitized, and processed attachment post data.
 	 */
 	public function change_post_copy_status( $data, $postarr ) {
 		if ( ! \array_key_exists( 'ID', $postarr ) || empty( $postarr['ID'] ) ) {
@@ -209,9 +209,21 @@ class Post_Republisher {
 			return;
 		}
 
-		\kses_remove_filters();
-		$this->republish( $copy, $original_post );
-		\kses_init_filters();
+		// WP-Cron runs without a logged-in user, which causes capability-gated save filters
+		// (kses, WPBakery's wpb_remove_custom_html, and similar) to strip otherwise valid
+		// content. Run the republish as the copy author so those filters evaluate against
+		// a real user; this also triggers kses_init via the set_current_user action, which
+		// adds or removes kses filters based on that user's actual capabilities.
+		$previous_user_id = \get_current_user_id();
+		\wp_set_current_user( (int) $copy->post_author );
+
+		try {
+			$this->republish( $copy, $original_post );
+		}
+		finally {
+			\wp_set_current_user( $previous_user_id );
+		}
+
 		$this->delete_copy( $copy->ID, $original_post->ID );
 	}
 
