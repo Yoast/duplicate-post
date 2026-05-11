@@ -51,11 +51,41 @@ class Block_Editor {
 	 * @return void
 	 */
 	public function register_hooks() {
+		\add_action( 'init', [ $this, 'register_post_meta' ] );
 		\add_action( 'elementor/editor/after_enqueue_styles', [ $this, 'hide_elementor_post_status' ] );
 		\add_action( 'elementor/editor/before_enqueue_scripts', [ $this, 'enqueue_elementor_script' ], 9 );
 		\add_action( 'admin_enqueue_scripts', [ $this, 'should_previously_used_keyword_assessment_run' ], 9 );
 		\add_action( 'enqueue_block_editor_assets', [ $this, 'enqueue_block_editor_scripts' ] );
 		\add_filter( 'wpseo_link_suggestions_indexables', [ $this, 'remove_original_from_wpseo_link_suggestions' ], 10, 3 );
+	}
+
+	/**
+	 * Registers the _dp_has_rewrite_republish_copy post meta for the REST API.
+	 *
+	 * This allows the block editor to reactively check whether a post already
+	 * has an R&R copy, enabling dynamic button state updates when collaborators
+	 * create a copy via Real-Time Collaboration.
+	 *
+	 * @return void
+	 */
+	public function register_post_meta() {
+		$enabled_post_types = $this->permissions_helper->get_enabled_post_types();
+
+		foreach ( $enabled_post_types as $post_type ) {
+			\register_post_meta(
+				$post_type,
+				'_dp_has_rewrite_republish_copy',
+				[
+					'show_in_rest'      => true,
+					'single'            => true,
+					'type'              => 'string',
+					'sanitize_callback' => 'sanitize_text_field',
+					'auth_callback'     => static function ( $allowed, $meta_key, $post_id ) {
+						return \current_user_can( 'edit_post', $post_id );
+					},
+				],
+			);
+		}
 	}
 
 	/**
@@ -241,8 +271,15 @@ class Block_Editor {
 			];
 		}
 
+		$post_type_object = \get_post_type_object( $post->post_type );
+		$rest_base        = '';
+		if ( $post_type_object ) {
+			$rest_base = ! empty( $post_type_object->rest_base ) ? $post_type_object->rest_base : $post_type_object->name;
+		}
+
 		return [
 			'postId'                  => $post->ID,
+			'restBase'                => $rest_base,
 			'newDraftLink'            => $this->get_new_draft_permalink(),
 			'rewriteAndRepublishLink' => $this->get_rewrite_republish_permalink(),
 			'showLinks'               => Utils::get_option( 'duplicate_post_show_link' ),
