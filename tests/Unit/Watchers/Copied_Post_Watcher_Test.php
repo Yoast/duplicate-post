@@ -81,8 +81,12 @@ final class Copied_Post_Watcher_Test extends TestCase {
 	 */
 	public function test_get_notice_text_not_scheduled() {
 		$this->stubTranslationFunctions();
+		$this->stubEscapeFunctions();
 
 		$post = Mockery::mock( WP_Post::class );
+		$copy = Mockery::mock( WP_Post::class );
+
+		$copy->ID = 456;
 
 		$this->permissions_helper
 			->expects( 'has_scheduled_rewrite_and_republish_copy' )
@@ -94,8 +98,16 @@ final class Copied_Post_Watcher_Test extends TestCase {
 			->with( $post )
 			->andReturnFalse();
 
+		$this->permissions_helper
+			->expects( 'get_rewrite_and_republish_copy' )
+			->with( $post )
+			->andReturn( $copy );
+
+		Monkey\Functions\when( '\get_edit_post_link' )
+			->justReturn( 'http://example.com/edit?post=456' );
+
 		$this->assertSame(
-			'A duplicate of this post was made. Please note that any changes you make to this post will be replaced when the duplicated version is republished.',
+			'A duplicate of this post was made. Please note that any changes you make to this post will be replaced when the duplicated version is republished. <a href="http://example.com/edit?post=456">Edit the duplicate.</a>',
 			$this->instance->get_notice_text( $post ),
 		);
 	}
@@ -109,9 +121,12 @@ final class Copied_Post_Watcher_Test extends TestCase {
 	 */
 	public function test_get_notice_text_scheduled() {
 		$this->stubTranslationFunctions();
+		$this->stubEscapeFunctions();
 
 		$post = Mockery::mock( WP_Post::class );
 		$copy = Mockery::mock( WP_Post::class );
+
+		$copy->ID = 789;
 
 		$this->permissions_helper
 			->expects( 'has_scheduled_rewrite_and_republish_copy' )
@@ -123,6 +138,14 @@ final class Copied_Post_Watcher_Test extends TestCase {
 			->with( $post )
 			->andReturnFalse();
 
+		$this->permissions_helper
+			->expects( 'get_rewrite_and_republish_copy' )
+			->with( $post )
+			->andReturn( $copy );
+
+		Monkey\Functions\when( '\get_edit_post_link' )
+			->justReturn( 'http://example.com/edit?post=789' );
+
 		Monkey\Functions\expect( '\get_option' )
 			->twice()
 			->andReturnValues( [ 'Y/m/d', 'g:i a' ] );
@@ -132,7 +155,7 @@ final class Copied_Post_Watcher_Test extends TestCase {
 			->andReturnValues( [ '2020/12/02', '10:30 am' ] );
 
 		$this->assertSame(
-			'A duplicate of this post was made, which is scheduled to replace this post on 2020/12/02 at 10:30 am.',
+			'A duplicate of this post was made, which is scheduled to replace this post on 2020/12/02 at 10:30 am. <a href="http://example.com/edit?post=789">Edit the duplicate.</a>',
 			$this->instance->get_notice_text( $post ),
 		);
 	}
@@ -146,8 +169,11 @@ final class Copied_Post_Watcher_Test extends TestCase {
 	 */
 	public function test_get_notice_text_copy_in_the_trash() {
 		$this->stubTranslationFunctions();
+		$this->stubEscapeFunctions();
 
 		$post = Mockery::mock( WP_Post::class );
+
+		$post->post_type = 'post';
 
 		$this->permissions_helper
 			->expects( 'has_scheduled_rewrite_and_republish_copy' )
@@ -158,8 +184,14 @@ final class Copied_Post_Watcher_Test extends TestCase {
 			->with( $post )
 			->andReturnTrue();
 
+		Monkey\Functions\when( '\admin_url' )
+			->justReturn( 'http://example.com/wp-admin/edit.php' );
+
+		Monkey\Functions\when( '\add_query_arg' )
+			->justReturn( 'http://example.com/wp-admin/edit.php?post_status=trash&post_type=post' );
+
 		$this->assertSame(
-			'You can only make one Rewrite & Republish duplicate at a time, and a duplicate of this post already exists in the trash. Permanently delete it if you want to make a new duplicate.',
+			'You can only make one Rewrite & Republish duplicate at a time, and a duplicate of this post already exists in the trash. Permanently delete it if you want to make a new duplicate. <a href="http://example.com/wp-admin/edit.php?post_status=trash&post_type=post">View trash.</a>',
 			$this->instance->get_notice_text( $post ),
 		);
 	}
@@ -190,6 +222,10 @@ final class Copied_Post_Watcher_Test extends TestCase {
 
 		$this->instance
 			->expects( 'get_notice_text' )
+			->andReturn( 'notice' );
+
+		Monkey\Functions\expect( '\wp_kses' )
+			->with( 'notice', [ 'a' => [ 'href' => [] ] ] )
 			->andReturn( 'notice' );
 
 		$this->instance->add_admin_notice();
@@ -268,16 +304,17 @@ final class Copied_Post_Watcher_Test extends TestCase {
 			'text'          => 'notice',
 			'status'        => 'warning',
 			'isDismissible' => true,
+			'isHTML'        => true,
 		];
 
 		Monkey\Functions\expect( '\wp_json_encode' )
 			->with( $notice )
-			->andReturn( '{"text":"notice","status":"warning","isDismissible":true}' );
+			->andReturn( '{"text":"notice","status":"warning","isDismissible":true,"isHTML":true}' );
 
 		Monkey\Functions\expect( '\wp_add_inline_script' )
 			->with(
 				'duplicate_post_edit_script',
-				'duplicatePostNotices.has_rewrite_and_republish_notice = {"text":"notice","status":"warning","isDismissible":true};',
+				'duplicatePostNotices.has_rewrite_and_republish_notice = {"text":"notice","status":"warning","isDismissible":true,"isHTML":true};',
 				'before',
 			);
 
