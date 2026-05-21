@@ -47,7 +47,7 @@ class Copied_Post_Watcher {
 	 */
 	public function get_notice_text( $post ) {
 		if ( $this->permissions_helper->has_trashed_rewrite_and_republish_copy( $post ) ) {
-			$trash_url = \add_query_arg(
+			$trash_url       = \add_query_arg(
 				[
 					'post_status' => 'trash',
 					'post_type'   => $post->post_type,
@@ -68,13 +68,14 @@ class Copied_Post_Watcher {
 
 		$copy      = $this->permissions_helper->get_rewrite_and_republish_copy( $post );
 		$edit_url  = ( $copy instanceof WP_Post ) ? \get_edit_post_link( $copy->ID, 'raw' ) : '';
-		$link_html = ( $edit_url !== '' )
-			? \sprintf(
+		$link_html = '';
+		if ( $edit_url !== '' ) {
+			$link_html = \sprintf(
 				' <a href="%1$s">%2$s</a>',
 				\esc_url( $edit_url ),
 				\__( 'Edit the duplicate.', 'duplicate-post' ),
-			)
-			: '';
+			);
+		}
 
 		$scheduled_copy = $this->permissions_helper->has_scheduled_rewrite_and_republish_copy( $post );
 		if ( ! $scheduled_copy ) {
