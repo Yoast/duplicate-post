@@ -329,7 +329,8 @@ jobs:
           PR_NUMBERS=$(git log --grep='Merge pull request' "$PREVIOUS_TAG..HEAD" --oneline | grep -oP '#\K[0-9]+' || true)
           for PR_NUM in $PR_NUMBERS; do
             PR_JSON=$(gh pr view "$PR_NUM" --json labels,body,title 2>/dev/null || echo '{"labels":[],"body":"","title":""}')
-            LABEL=$(echo "$PR_JSON" | jq -r '[.labels[].name] | map(select(startswith("changelog:"))) | first // empty' | sed 's/^changelog: //')
+            LABEL=$(echo "$PR_JSON" | jq -r '[.labels[].name] | map(select(startswith("changelog:"))) | first // empty')
+            LABEL="${LABEL#changelog: }"
             TITLE=$(echo "$PR_JSON" | jq -r '.title // ""')
             # Strip CRs (GitHub returns PR bodies with \r\n line endings; the trailing \r leaks
             # into captured bullets and breaks markdown rendering of any suffix we append).
@@ -353,7 +354,7 @@ jobs:
               if echo "$line" | grep -qP '^\* *\[(?!duplicate-post\])'; then
                 continue
               fi
-              line=$(echo "$line" | sed 's/^\(\* *\)\[duplicate-post\] */\1/')
+              line="${line/\[duplicate-post\] /}"
               FILTERED+="$line"$'\n'
             done <<< "$ENTRIES"
             if [ -z "$FILTERED" ]; then
