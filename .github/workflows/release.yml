@@ -108,7 +108,7 @@ jobs:
         env:
           VERSION: ${{ inputs.version }}
         run: |
-          if ! grep -qE "^## ${VERSION}\b" changelog.md; then
+          if ! grep -Fxq "## ${VERSION}" changelog.md; then
             echo "::error::No '## ${VERSION}' section found in changelog.md. Run the 'Generate Changelog' workflow first."
             exit 1
           fi
@@ -231,9 +231,7 @@ jobs:
           cp artifact.zip "${ZIP_NAME}"
           cp -a artifact duplicate-post
           # Sanity-check the zip shape: every entry must be under `duplicate-post/`.
-          BAD=$(unzip -l "${ZIP_NAME}" \
-            | awk 'NR>3 && $NF != "" && $NF !~ /^duplicate-post\// { print $NF }' \
-            | grep -vE '^[0-9-]+ files?$' || true)
+          BAD=$(unzip -Z1 "${ZIP_NAME}" | grep -v '^duplicate-post/' || true)
           if [ -n "$BAD" ]; then
             echo "::error::Artifact zip contains entries outside duplicate-post/:"
             echo "$BAD"
