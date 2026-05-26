@@ -1,0 +1,490 @@
+name: Release RC
+
+##############################################################################
+# Release-candidate workflow for duplicate-post.
+#
+# Triggered manually with `version`. Auto-detects the next RC iteration by
+# scanning existing `${version}-RC<n>` tags. Cuts (or re-uses) a
+# release/x.y branch from trunk, regenerates the public changelog.md section
+# from merged PRs since the previous release tag (unless
+# `skip-changelog-regen` is true), bumps the package version to x.y-RCn while
+# preserving the readme.txt `Stable tag:` (via `grunt update-version-trunk`,
+# so the wordpress.org listing keeps pointing at the last stable release),
+# tags x.y-RCn on the release branch, and creates a GitHub *pre-release* with
+# a QA-oriented changelog (incremental since previous RC/release, includes
+# non-user-facing entries and PR links) and the duplicate-post-${VERSION}.zip
+# attached. Optionally deploys the build to the wordpress.org SVN trunk
+# (opt-in via `deploy-to-svn-trunk`) so translators can pick up new strings;
+# the Stable tag stays at the last stable release so users do NOT see the RC.
+# Finally merges the release branch back into trunk so the version bump and
+# changelog regen land there too.
+#
+# Pass `dry-run=true` to rehearse the pipeline without any remote side effect:
+# every `git push`, the SVN deploy, the GitHub pre-release, and the merge-back
+# push are skipped. The built zip is uploaded as a workflow artifact so you
+# can inspect it. Overrides `deploy-to-svn-trunk`.
+##############################################################################
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Target version (e.g., 4.7)'
+        required: true
+        type: string
+      skip-changelog-regen:
+        description: 'Skip the automatic public-changelog regeneration step (preserves any hand-edits on the release branch).'
+        required: false
+        default: false
+        type: boolean
+      deploy-to-svn-trunk:
+        description: 'Push the build to wordpress.org SVN trunk so translators can pick up new strings. Stable tag stays on the last stable release.'
+        required: false
+        default: false
+        type: boolean
+      dry-run:
+        description: 'Dry-run: do all in-tree work (changelog regen, version bump, local commit/merge/tag, artifact build) but skip every remote side-effect (no git push, no SVN, no GH pre-release). The built zip is uploaded as a workflow artifact for inspection. Overrides `deploy-to-svn-trunk`.'
+        required: false
+        default: false
+        type: boolean
+
+concurrency:
+  group: ${{ github.workflow }}-${{ inputs.version }}
+  cancel-in-progress: false
+
+jobs:
+  release-rc:
+    name: "RC for ${{ inputs.version }}"
+    runs-on: ubuntu-latest
+
+    if: github.repository_owner == 'Yoast'
+
+    permissions:
+      contents: write
+      pull-requests: read
+
+    env:
+      RELEASE_BRANCH: "release/${{ inputs.version }}"
+
+    steps:
+      - name: Validate inputs
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+(\.[0-9]+)?$ ]]; then
+            echo "::error::Invalid version '$VERSION'. Expected formats: 4.7 or 4.7.1."
+            exit 1
+          fi
+
+      - name: Checkout trunk
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          ref: trunk
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Configure git
+        # Must run before any step that creates a git commit (including the merge commit
+        # produced by `Create or check out release branch` when the release branch already
+        # exists).
+        env:
+          ACTOR: ${{ github.actor }}
+        run: |
+          git config user.name 'GitHub Action'
+          git config user.email "$ACTOR@users.noreply.github.com"
+
+      - name: Determine next RC number
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          # Find the highest existing ${VERSION}-RC<n> tag and pick the next number.
+          git fetch --tags origin
+          LAST=$(git tag --list "${VERSION}-RC*" | grep -oE '[0-9]+$' | sort -n | tail -1 || true)
+          NEXT=$(( ${LAST:-0} + 1 ))
+          RC_VERSION="${VERSION}-RC${NEXT}"
+          echo "RC_VERSION=${RC_VERSION}" >> "$GITHUB_ENV"
+          echo "RC_NUM=${NEXT}" >> "$GITHUB_ENV"
+          echo "Previous RC: ${LAST:-none}. Next RC: ${RC_VERSION}"
+
+      - name: Create or check out release branch
+        run: |
+          git fetch origin "${RELEASE_BRANCH}" 2>/dev/null || true
+          if git show-ref --verify --quiet "refs/remotes/origin/${RELEASE_BRANCH}"; then
+            echo "Re-using existing release branch ${RELEASE_BRANCH}."
+            git checkout -B "${RELEASE_BRANCH}" "origin/${RELEASE_BRANCH}"
+            # Merge any new commits from trunk so subsequent RCs include them.
+            # If this conflicts, abort and fail loudly: the human releaser needs to resolve
+            # it on the release branch before the workflow can proceed.
+            if ! git merge --no-ff --no-edit origin/trunk -m "Merge trunk into ${RELEASE_BRANCH}"; then
+              git merge --abort || true
+              echo "::error::Merge of trunk into ${RELEASE_BRANCH} failed. Resolve conflicts on the release branch and re-run."
+              exit 1
+            fi
+          else
+            echo "Creating release branch ${RELEASE_BRANCH} from trunk."
+            git checkout -b "${RELEASE_BRANCH}"
+          fi
+
+      - name: Regenerate public changelog from merged PRs
+        if: ${{ inputs.skip-changelog-regen != true }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ inputs.version }}
+          DRY_RUN: ${{ inputs.dry-run }}
+        run: |
+          bash .github/scripts/generate-changelog.sh
+          if git diff --quiet -- changelog.md; then
+            echo "No changelog changes."
+          else
+            git add changelog.md
+            git commit -m "Update changelog for ${VERSION}"
+            if [ "$DRY_RUN" != "true" ]; then
+              git push origin "${RELEASE_BRANCH}"
+            fi
+          fi
+
+      - name: Verify public changelog section exists
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          if ! grep -qE "^## ${VERSION}\b" changelog.md; then
+            echo "::error::No '## ${VERSION}' section found in changelog.md. Either label the relevant PRs with a 'changelog:' label so they can be picked up, or run 'Generate Changelog' first."
+            exit 1
+          fi
+
+      - name: Install PHP
+        uses: shivammathur/setup-php@7c071dfe9dc99bdf297fa79cb49ea005b9fcadbc # 2.37.1
+        with:
+          php-version: 7.4
+          coverage: none
+        env:
+          fail-fast: true
+
+      - name: Set up Node
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version-file: './.nvmrc'
+          cache: ''
+          package-manager-cache: false
+
+      - name: Yarn install
+        run: yarn install
+
+      - name: "Grunt: set package version to RC"
+        run: grunt set-version -new-version="${RC_VERSION}"
+
+      - name: "Grunt: update version references (trunk variant)"
+        # `update-version-trunk` updates the plugin file Version header and
+        # DUPLICATE_POST_CURRENT_VERSION but deliberately leaves the readme.txt
+        # `Stable tag:` alone, so the wordpress.org listing keeps serving the
+        # last stable release while the RC zip is published.
+        run: grunt update-version-trunk
+
+      - name: Commit version bump on release branch
+        run: |
+          git add -A
+          if git diff --cached --quiet; then
+            echo "Nothing to commit."
+          else
+            git commit -m "Bump version number to ${RC_VERSION}"
+          fi
+
+      - name: Push release branch
+        if: ${{ inputs.dry-run != true }}
+        run: git push origin "${RELEASE_BRANCH}"
+
+      - name: Tag the RC
+        run: git tag -a "${RC_VERSION}" -m "${RC_VERSION}"
+
+      - name: Push RC tag
+        if: ${{ inputs.dry-run != true }}
+        run: git push origin "${RC_VERSION}"
+
+      - name: "Grunt: build artifact"
+        run: grunt artifact
+
+      - name: "Copy composer.json into artifact"
+        # Matches deploy.yml behaviour: the dist artifact includes composer.json so
+        # downstream tooling that requires it via Packagist installers keeps working.
+        run: cp composer.json ./artifact
+
+      - name: Reset working tree after artifact
+        # Throw away any in-tree side-effects of `grunt artifact`; the artifact we just
+        # built is intact under ./artifact and ./artifact.zip. This keeps the later
+        # `git checkout -B trunk origin/trunk` from refusing to overwrite tracked files.
+        run: git reset --hard HEAD
+
+      - name: Stage workflow-exposed artifacts
+        # 1. Rename the Grunt-built zip to the wp.org-style versioned name.
+        # 2. Copy the unzipped build under a `duplicate-post/` wrapper folder so
+        #    actions/upload-artifact (which always wraps its input in a zip of its own)
+        #    produces a downloadable `duplicate-post-${RC_VERSION}.zip` whose only
+        #    top-level entry is the `duplicate-post/` folder.
+        id: zip
+        run: |
+          set -euo pipefail
+          if [ ! -f artifact.zip ]; then
+            echo "::error::Expected artifact.zip from 'grunt artifact', but it is missing."
+            exit 1
+          fi
+          ZIP_NAME="duplicate-post-${RC_VERSION}.zip"
+          cp artifact.zip "${ZIP_NAME}"
+          cp -a artifact duplicate-post
+          BAD=$(unzip -l "${ZIP_NAME}" \
+            | awk 'NR>3 && $NF != "" && $NF !~ /^duplicate-post\// { print $NF }' \
+            | grep -vE '^[0-9-]+ files?$' || true)
+          if [ -n "$BAD" ]; then
+            echo "::error::Artifact zip contains entries outside duplicate-post/:"
+            echo "$BAD"
+            exit 1
+          fi
+          echo "name=${ZIP_NAME}" >> "$GITHUB_OUTPUT"
+
+      - name: Upload plugin folder as workflow artifact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: duplicate-post-${{ env.RC_VERSION }}
+          path: duplicate-post
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Deploy RC to wordpress.org SVN trunk
+        if: ${{ inputs.deploy-to-svn-trunk == true && inputs.dry-run != true }}
+        env:
+          SVN_USERNAME: ${{ secrets.WPORG_SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.WPORG_SVN_PASSWORD }}
+          SVN_URL: https://plugins.svn.wordpress.org/duplicate-post
+        run: |
+          set -euo pipefail
+          sudo apt-get install -y subversion >/dev/null
+
+          SVN_DIR="${RUNNER_TEMP}/svn"
+          svn checkout --depth=empty --non-interactive --no-auth-cache \
+            --username "$SVN_USERNAME" --password "$SVN_PASSWORD" \
+            "$SVN_URL" "$SVN_DIR"
+          svn update --set-depth=infinity --non-interactive --no-auth-cache \
+            --username "$SVN_USERNAME" --password "$SVN_PASSWORD" \
+            "$SVN_DIR/trunk" "$SVN_DIR/assets"
+
+          rsync -a --delete --exclude=.svn ./artifact/   "$SVN_DIR/trunk/"
+          rsync -a --delete --exclude=.svn ./svn-assets/ "$SVN_DIR/assets/"
+
+          pushd "$SVN_DIR" >/dev/null
+            # Stage newly-added files and removed files for SVN.
+            svn status trunk assets | awk '$1=="?" { sub(/^\?[[:space:]]+/, ""); print }' | xargs -r -d '\n' svn add --parents --force
+            svn status trunk assets | awk '$1=="!" { sub(/^\![[:space:]]+/, ""); print }' | xargs -r -d '\n' svn rm
+            svn commit --non-interactive --no-auth-cache \
+              --username "$SVN_USERNAME" --password "$SVN_PASSWORD" \
+              -m "RC ${RC_VERSION}: update trunk for translation strings"
+          popd >/dev/null
+
+      - name: Build QA changelog (incremental, with PR links and non-user-facing entries)
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          # Resolve the comparison tag for the QA notes:
+          #   * RC2+ -> the immediately previous RC of the same version (RC2 vs RC1, RC3 vs RC2),
+          #     so QA only sees what's new in this RC.
+          #   * RC1  -> the most recent non-RC release tag (e.g. 4.6), so QA sees the full diff
+          #     from the last shipped version.
+          if [ "$RC_NUM" -gt 1 ]; then
+            PREVIOUS_TAG="${VERSION}-RC$((RC_NUM - 1))"
+          else
+            PREVIOUS_TAG=$(git tag --sort=-creatordate --merged HEAD | grep -E '^[0-9]+\.[0-9]+(\.[0-9]+)?$' | head -1 || echo "")
+          fi
+          if [ -z "$PREVIOUS_TAG" ]; then
+            echo "::warning::No previous release tag found; QA changelog will be empty."
+            echo "## ${VERSION}" > qa-changelog.md
+            echo "" >> qa-changelog.md
+            echo "(no comparison tag available)" >> qa-changelog.md
+            exit 0
+          fi
+          echo "QA changelog comparison tag: ${PREVIOUS_TAG}"
+
+          # Pick up the planned release date from the changelog.md section; fall back to today.
+          RELEASE_DATE=$(awk -v ver="$VERSION" '
+            $0 ~ "^## "ver"$" { flag = 1; next }
+            flag && /^Release date:/ { sub(/^Release date: */, ""); print; exit }
+            flag && /^## / { exit }
+          ' changelog.md)
+          if [ -z "$RELEASE_DATE" ]; then
+            RELEASE_DATE=$(date +%Y-%m-%d)
+          fi
+
+          PR_BASE_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/pull"
+
+          {
+            echo "## ${VERSION}"
+            echo ""
+            echo "Release date: ${RELEASE_DATE}"
+            if [ "$RC_NUM" -gt 1 ]; then
+              echo "Changes compared to ${PREVIOUS_TAG}:"
+            fi
+            echo ""
+          } > qa-changelog.md
+
+          ENH=""; BUG=""; OTH=""; NUF=""
+          PR_NUMBERS=$(git log --grep='Merge pull request' "$PREVIOUS_TAG..HEAD" --oneline | grep -oP '#\K[0-9]+' || true)
+          for PR_NUM in $PR_NUMBERS; do
+            PR_JSON=$(gh pr view "$PR_NUM" --json labels,body,title 2>/dev/null || echo '{"labels":[],"body":"","title":""}')
+            LABEL=$(echo "$PR_JSON" | jq -r '[.labels[].name] | map(select(startswith("changelog:"))) | first // empty' | sed 's/^changelog: //')
+            TITLE=$(echo "$PR_JSON" | jq -r '.title // ""')
+            # Strip CRs (GitHub returns PR bodies with \r\n line endings; the trailing \r leaks
+            # into captured bullets and breaks markdown rendering of any suffix we append).
+            BODY=$(echo "$PR_JSON" | jq -r '.body // ""' | tr -d '\r')
+            # Strip HTML comments so PR-template guidance bullets aren't captured, then capture
+            # bullet lines between the changelog-entry anchor and the next `## ` heading.
+            ENTRIES=$(echo "$BODY" \
+              | awk 'BEGIN{c=0} /<!--/{c=1} !c{print} /-->/{c=0}' \
+              | sed -n '/[Ss]ummarized in the following [Cc]hangelog [Ee]ntry/,/^##/p' \
+              | grep '^\*' | grep -v '^\* *$' || true)
+            if [ -z "$ENTRIES" ]; then
+              ENTRIES="* ${TITLE}"
+            fi
+
+            # Apply duplicate-post's scoping rules (mirrors generate-changelog.sh lines 119-126):
+            #   - Skip entries scoped to other repos (e.g. [wordpress-seo-premium]).
+            #   - Strip the [duplicate-post] scope prefix when present.
+            FILTERED=""
+            while IFS= read -r line; do
+              [ -z "$line" ] && continue
+              if echo "$line" | grep -qP '^\* *\[(?!duplicate-post\])'; then
+                continue
+              fi
+              line=$(echo "$line" | sed 's/^\(\* *\)\[duplicate-post\] */\1/')
+              FILTERED+="$line"$'\n'
+            done <<< "$ENTRIES"
+            if [ -z "$FILTERED" ]; then
+              continue
+            fi
+            # Append a markdown PR link to each bullet for QA traceability.
+            FILTERED=$(printf '%s' "$FILTERED" | awk -v suffix=" [#${PR_NUM}](${PR_BASE_URL}/${PR_NUM})" 'NF { print $0 suffix }')
+            FILTERED="$FILTERED"$'\n'
+            case "$LABEL" in
+              enhancement)       ENH+="$FILTERED" ;;
+              bugfix)            BUG+="$FILTERED" ;;
+              other)             OTH+="$FILTERED" ;;
+              non-user-facing)   NUF+="$FILTERED" ;;
+              reverted)          ;; # Skip reverted entries entirely.
+              *)                 OTH+="$FILTERED" ;;
+            esac
+          done
+
+          {
+            if [ -n "$ENH" ]; then
+              echo "### Enhancements:"
+              echo ""
+              echo -n "$ENH" | sed '/^$/d'
+              echo ""
+            fi
+            if [ -n "$BUG" ]; then
+              echo "### Bugfixes:"
+              echo ""
+              echo -n "$BUG" | sed '/^$/d'
+              echo ""
+            fi
+            if [ -n "$OTH" ]; then
+              echo "### Other:"
+              echo ""
+              echo -n "$OTH" | sed '/^$/d'
+              echo ""
+            fi
+            if [ -n "$NUF" ]; then
+              echo "### Non user facing:"
+              echo ""
+              echo -n "$NUF" | sed '/^$/d'
+              echo ""
+            fi
+          } >> qa-changelog.md
+
+          echo "QA changelog:"
+          cat qa-changelog.md
+
+      - name: Create GitHub pre-release
+        if: ${{ inputs.dry-run != true }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ZIP: ${{ steps.zip.outputs.name }}
+        run: |
+          gh release create "${RC_VERSION}" \
+            --title "${RC_VERSION}" \
+            --notes-file qa-changelog.md \
+            --target "${RELEASE_BRANCH}" \
+            --prerelease \
+            "${ZIP}"
+
+      - name: Merge release branch back into trunk
+        # Note: this merges the RC commits, including the `Bump version number to x.y-RCn`
+        # commit, back into trunk. As a result trunk's package.json carries the
+        # `x.y-RCn` version until the final `Release` workflow overwrites it with `x.y`.
+        env:
+          MERGE_SOURCE: ${{ inputs.dry-run == true && format('{0}', env.RELEASE_BRANCH) || format('origin/{0}', env.RELEASE_BRANCH) }}
+        run: |
+          git fetch origin trunk
+          # Reset the local trunk to origin so we merge into the current upstream tip,
+          # not whatever the workflow checked out at the start of the run. In a real run
+          # we merge `origin/${RELEASE_BRANCH}` because the RC commits were just pushed
+          # there; in a dry-run nothing was pushed, so merge the local release branch.
+          git checkout -B trunk origin/trunk
+          if ! git merge --no-ff --no-edit "${MERGE_SOURCE}" -m "Merge ${RELEASE_BRANCH} (${RC_VERSION}) back into trunk"; then
+            git merge --abort || true
+            echo "::error::Merge of ${RELEASE_BRANCH} into trunk failed. Resolve conflicts and re-run."
+            exit 1
+          fi
+
+      - name: Push trunk (after merge-back)
+        if: ${{ inputs.dry-run != true }}
+        run: git push origin trunk
+
+      - name: "Write #test announcement to job summary"
+        env:
+          ZIP: ${{ steps.zip.outputs.name }}
+          DRY_RUN: ${{ inputs.dry-run }}
+        run: |
+          RELEASE_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/releases/tag/${RC_VERSION}"
+          HEADING="## Slack announcement"
+          if [ "$DRY_RUN" = "true" ]; then
+            HEADING="## Slack announcement (preview, not actually released)"
+          fi
+          cat >> "$GITHUB_STEP_SUMMARY" <<EOF
+          ${HEADING}
+
+          Copy this into **#test**:
+
+          \`\`\`
+          @plugin-testers @product-rc @supportleads
+          Yoast Duplicate Post ${RC_VERSION} is ready for testing.
+          Pre-release: ${RELEASE_URL}
+          Zip: ${ZIP}
+          \`\`\`
+          EOF
+
+      - name: Dry-run summary
+        if: ${{ inputs.dry-run == true }}
+        env:
+          DEPLOY_TO_SVN_TRUNK: ${{ inputs.deploy-to-svn-trunk }}
+          ZIP: ${{ steps.zip.outputs.name }}
+        run: |
+          {
+            echo "## Dry-run summary"
+            echo ""
+            echo "Nothing was pushed. The following actions would have happened in a real run:"
+            echo ""
+            echo "* \`git push origin ${RELEASE_BRANCH}\` (with the \"Update changelog for ${{ inputs.version }}\" and \"Bump version number to ${RC_VERSION}\" commits)"
+            echo "* \`git push origin ${RC_VERSION}\` (annotated tag on \`${RELEASE_BRANCH}\`)"
+            if [ "$DEPLOY_TO_SVN_TRUNK" = "true" ]; then
+              echo "* Push to wordpress.org SVN trunk (no SVN tag)"
+            else
+              echo "* (SVN trunk push skipped, \`deploy-to-svn-trunk\` was not enabled either)"
+            fi
+            echo "* \`gh release create ${RC_VERSION} --prerelease\` with \`${ZIP}\` attached and the QA changelog below"
+            echo "* \`git push origin trunk\` (after merging \`${RELEASE_BRANCH}\` back)"
+            echo ""
+            echo "The built plugin is available as the \`duplicate-post-${RC_VERSION}\` workflow artifact above (download yields \`${ZIP}\` containing the \`duplicate-post/\` folder)."
+            echo ""
+            echo "### QA changelog preview"
+            echo ""
+            cat qa-changelog.md
+          } >> "$GITHUB_STEP_SUMMARY"
