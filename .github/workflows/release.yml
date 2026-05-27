@@ -6,8 +6,9 @@ name: Release
 # Triggered manually with a `version` input (and optional `next-version`).
 # Performs the full release pipeline:
 #   1. Verifies a changelog section for the version exists in changelog.md.
-#   2. Bumps the version (package.json, plugin header, DUPLICATE_POST_CURRENT_VERSION, Stable tag).
-#   3. Commits to trunk, merges trunk into main (--no-ff), tags, pushes.
+#   2. Bumps the version (package.json, plugin header, DUPLICATE_POST_CURRENT_VERSION, Stable tag)
+#      on the source branch: release/x.y when an RC was cut, otherwise trunk.
+#   3. Merges the source branch into main (--no-ff), tags and pushes from main.
 #      (The tag push also triggers .github/workflows/deploy.yml, which builds
 #       and pushes the artifact to Yoast-dist/duplicate-post.)
 #   4. Builds the artifact locally and deploys it to wordpress.org SVN via the
@@ -97,12 +98,34 @@ jobs:
           echo "next=$NEXT" >> "$GITHUB_OUTPUT"
           echo "Resolved next version: $NEXT"
 
-      - name: Checkout trunk
+      - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           ref: trunk
           fetch-depth: 0
           persist-credentials: true
+
+      - name: Configure git
+        env:
+          ACTOR: ${{ github.actor }}
+        run: |
+          git config user.name 'GitHub Action'
+          git config user.email "$ACTOR@users.noreply.github.com"
+
+      - name: Check out the source branch
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          # The version bump happens on the source branch: release/x.y when an RC was cut
+          # (the frozen, QA'd line), otherwise trunk.
+          if git show-ref --verify --quiet "refs/remotes/origin/release/${VERSION}"; then
+            SOURCE="release/${VERSION}"
+          else
+            SOURCE="trunk"
+          fi
+          echo "SOURCE_BRANCH=${SOURCE}" >> "$GITHUB_ENV"
+          git checkout -B "${SOURCE}" "origin/${SOURCE}"
+          echo "Bumping version on: ${SOURCE}"
 
       - name: Verify changelog section exists
         env:
@@ -141,14 +164,7 @@ jobs:
         # AND readme.txt Stable tag (this is a stable release).
         run: grunt update-version
 
-      - name: Configure git
-        env:
-          ACTOR: ${{ github.actor }}
-        run: |
-          git config user.name 'GitHub Action'
-          git config user.email "$ACTOR@users.noreply.github.com"
-
-      - name: Commit version bump to trunk
+      - name: Commit version bump on the source branch
         env:
           VERSION: ${{ inputs.version }}
         run: |
@@ -159,21 +175,23 @@ jobs:
             git commit -m "Bump version number to ${VERSION}"
           fi
 
-      - name: Push trunk
+      - name: Push the source branch
         if: ${{ inputs.dry-run != true }}
-        run: git push origin trunk
+        run: git push origin "${SOURCE_BRANCH}"
 
-      - name: Merge trunk into main
+      - name: Merge the source branch into main
         env:
           VERSION: ${{ inputs.version }}
         run: |
+          # Release FROM main: merge the (version-bumped) source branch into main, then tag,
+          # build, deploy and create the release from main.
           git fetch origin main
-          # Create/reset local `main` from origin/main — a fresh actions/checkout only set up
-          # the `trunk` branch locally, so a plain `git checkout main` would fail.
+          # Create/reset local `main` from origin/main: a fresh actions/checkout only set up
+          # the source branch locally, so a plain `git checkout main` would fail.
           git checkout -B main origin/main
-          if ! git merge --no-ff --no-edit trunk -m "Release ${VERSION}"; then
+          if ! git merge --no-ff --no-edit "${SOURCE_BRANCH}" -m "Merge ${SOURCE_BRANCH} into main for ${VERSION}"; then
             git merge --abort || true
-            echo "::error::Merge of trunk into main failed. Resolve conflicts on main and re-run."
+            echo "::error::Merge of ${SOURCE_BRANCH} into main failed. Resolve conflicts on main and re-run."
             exit 1
           fi
 
@@ -199,6 +217,13 @@ jobs:
         # Matches deploy.yml behaviour: the dist artifact includes composer.json so
         # downstream tooling that requires it via Packagist installers keeps working.
         run: cp composer.json ./artifact
+
+      - name: Reset working tree after artifact
+        # Throw away any in-tree side-effects of `grunt artifact`; the artifact we just
+        # built is intact under ./artifact and ./artifact.zip. This keeps the later
+        # `git checkout -B trunk origin/trunk` (merge-back) from refusing to overwrite
+        # tracked files.
+        run: git reset --hard HEAD
 
       - name: Extract release notes from changelog.md
         env:
@@ -229,7 +254,11 @@ jobs:
           fi
           ZIP_NAME="duplicate-post-${VERSION}.zip"
           cp artifact.zip "${ZIP_NAME}"
-          cp -a artifact duplicate-post
+          # Stage the unzipped build under a `duplicate-post/` wrapper. Explicit mkdir +
+          # `cp artifact/.` is robust whether or not the wrapper already exists and does
+          # not depend on artifact/ having no inner wrapper dir.
+          mkdir duplicate-post
+          cp -a artifact/. duplicate-post/
           # Sanity-check the zip shape: every entry must be under `duplicate-post/`.
           BAD=$(unzip -Z1 "${ZIP_NAME}" | grep -v '^duplicate-post/' || true)
           if [ -n "$BAD" ]; then
@@ -340,8 +369,8 @@ jobs:
             echo ""
             echo "Nothing was pushed. The following actions would have happened in a real run:"
             echo ""
-            echo "* \`git push origin trunk\` (with the \"Bump version number to ${VERSION}\" commit)"
-            echo "* \`git push origin main\` (with the \"Release ${VERSION}\" merge commit)"
+            echo "* \`git push origin ${SOURCE_BRANCH}\` (with the \"Bump version number to ${VERSION}\" commit)"
+            echo "* \`git push origin main\` (with the \"Merge ${SOURCE_BRANCH} into main for ${VERSION}\" merge commit)"
             echo "* \`git push origin ${VERSION}\` (annotated tag)"
             echo "* Push to wordpress.org SVN: \`trunk/\`, \`assets/\`, new tag \`tags/${VERSION}/\`"
             echo "* \`gh release create ${VERSION}\` with \`${ZIP_NAME}\` attached and the release notes below"

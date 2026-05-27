@@ -4,9 +4,11 @@ name: Release RC
 # Release-candidate workflow for duplicate-post.
 #
 # Triggered manually with `version`. Auto-detects the next RC iteration by
-# scanning existing `${version}-RC<n>` tags. Cuts (or re-uses) a
-# release/x.y branch from trunk, regenerates the public changelog.md section
-# from merged PRs since the previous release tag (unless
+# scanning existing `${version}-RC<n>` tags. Creates release/x.y from trunk on
+# the first RC, or re-uses the existing release branch as-is on later RCs (it
+# does NOT merge trunk in: the release line stays frozen). Regenerates the
+# public changelog.md section from merged PRs since the previous release tag
+# (unless
 # `skip-changelog-regen` is true), bumps the package version to x.y-RCn while
 # preserving the readme.txt `Stable tag:` (via `grunt update-version-trunk`,
 # so the wordpress.org listing keeps pointing at the last stable release),
@@ -110,16 +112,12 @@ jobs:
         run: |
           git fetch origin "${RELEASE_BRANCH}" 2>/dev/null || true
           if git show-ref --verify --quiet "refs/remotes/origin/${RELEASE_BRANCH}"; then
-            echo "Re-using existing release branch ${RELEASE_BRANCH}."
+            # Re-use the existing release branch AS-IS. Do NOT merge trunk into it: the
+            # release line is frozen at branch-cut; trunk keeps receiving work aimed at the
+            # next version, and pulling that in would contaminate the RC. Fixes for this
+            # release reach the branch by targeting PRs at release/x.y directly.
+            echo "Re-using existing release branch ${RELEASE_BRANCH} as-is."
             git checkout -B "${RELEASE_BRANCH}" "origin/${RELEASE_BRANCH}"
-            # Merge any new commits from trunk so subsequent RCs include them.
-            # If this conflicts, abort and fail loudly: the human releaser needs to resolve
-            # it on the release branch before the workflow can proceed.
-            if ! git merge --no-ff --no-edit origin/trunk -m "Merge trunk into ${RELEASE_BRANCH}"; then
-              git merge --abort || true
-              echo "::error::Merge of trunk into ${RELEASE_BRANCH} failed. Resolve conflicts on the release branch and re-run."
-              exit 1
-            fi
           else
             echo "Creating release branch ${RELEASE_BRANCH} from trunk."
             git checkout -b "${RELEASE_BRANCH}"
@@ -229,7 +227,11 @@ jobs:
           fi
           ZIP_NAME="duplicate-post-${RC_VERSION}.zip"
           cp artifact.zip "${ZIP_NAME}"
-          cp -a artifact duplicate-post
+          # Stage the unzipped build under a `duplicate-post/` wrapper. Explicit mkdir +
+          # `cp artifact/.` is robust whether or not the wrapper already exists and does
+          # not depend on artifact/ having no inner wrapper dir.
+          mkdir duplicate-post
+          cp -a artifact/. duplicate-post/
           BAD=$(unzip -Z1 "${ZIP_NAME}" | grep -v '^duplicate-post/' || true)
           if [ -n "$BAD" ]; then
             echo "::error::Artifact zip contains entries outside duplicate-post/:"
