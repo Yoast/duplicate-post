@@ -113,6 +113,50 @@ final class Copied_Post_Watcher_Test extends TestCase {
 	}
 
 	/**
+	 * Tests that no link is appended when the current user cannot edit the copy.
+	 *
+	 * `get_edit_post_link()` returns `null` (not an empty string) when the user
+	 * lacks the `edit_post` capability for the copy, so the message should not
+	 * gain a broken link with an empty `href`.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Copied_Post_Watcher::get_notice_text
+	 *
+	 * @return void
+	 */
+	public function test_get_notice_text_not_scheduled_without_edit_link() {
+		$this->stubTranslationFunctions();
+		$this->stubEscapeFunctions();
+
+		$post = Mockery::mock( WP_Post::class );
+		$copy = Mockery::mock( WP_Post::class );
+
+		$copy->ID = 456;
+
+		$this->permissions_helper
+			->expects( 'has_scheduled_rewrite_and_republish_copy' )
+			->with( $post )
+			->andReturnFalse();
+
+		$this->permissions_helper
+			->expects( 'has_trashed_rewrite_and_republish_copy' )
+			->with( $post )
+			->andReturnFalse();
+
+		$this->permissions_helper
+			->expects( 'get_rewrite_and_republish_copy' )
+			->with( $post )
+			->andReturn( $copy );
+
+		Monkey\Functions\when( '\get_edit_post_link' )
+			->justReturn( null );
+
+		$this->assertSame(
+			'A duplicate of this post was made. Please note that any changes you make to this post will be replaced when the duplicated version is republished.',
+			$this->instance->get_notice_text( $post ),
+		);
+	}
+
+	/**
 	 * Tests the get_notice_text function when the copy is scheduled.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Watchers\Copied_Post_Watcher::get_notice_text

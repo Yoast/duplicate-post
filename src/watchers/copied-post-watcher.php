@@ -69,7 +69,7 @@ class Copied_Post_Watcher {
 		$copy      = $this->permissions_helper->get_rewrite_and_republish_copy( $post );
 		$edit_url  = ( $copy instanceof WP_Post ) ? \get_edit_post_link( $copy->ID, 'raw' ) : '';
 		$link_html = '';
-		if ( $edit_url !== '' ) {
+		if ( ! empty( $edit_url ) ) {
 			$link_html = \sprintf(
 				' <a href="%1$s">%2$s</a>',
 				\esc_url( $edit_url ),
