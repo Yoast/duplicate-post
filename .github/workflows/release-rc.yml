@@ -51,7 +51,7 @@ on:
         type: boolean
 
 concurrency:
-  group: ${{ github.workflow }}-${{ inputs.version }}
+  group: ${{ github.repository }}-release-pipeline
   cancel-in-progress: false
 
 jobs:
