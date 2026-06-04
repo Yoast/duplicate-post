@@ -1,0 +1,385 @@
+name: Release
+
+##############################################################################
+# End-to-end release workflow for duplicate-post.
+#
+# Triggered manually with a `version` input (and optional `next-version`).
+# Performs the full release pipeline:
+#   1. Verifies a changelog section for the version exists in changelog.md.
+#   2. Bumps the version (package.json, plugin header, DUPLICATE_POST_CURRENT_VERSION, Stable tag)
+#      on the source branch: release/x.y when an RC was cut, otherwise trunk.
+#   3. Merges the source branch into main (--no-ff), tags and pushes from main.
+#      (The tag push also triggers .github/workflows/deploy.yml, which builds
+#       and pushes the artifact to Yoast-dist/duplicate-post.)
+#   4. Builds the artifact locally and deploys it to wordpress.org SVN via the
+#      10up action (uses WPORG_SVN_USERNAME / WPORG_SVN_PASSWORD secrets).
+#   5. Creates a GitHub release with the changelog.md section as notes and
+#      the duplicate-post-${VERSION}.zip attached.
+#   6. Closes the milestone matching the version and opens a milestone for the
+#      next version.
+#   7. Merges main back into trunk.
+#   8. Emits a Slack message body in the job summary for manual posting.
+#
+# Pass `dry-run=true` to rehearse the pipeline without any remote side effect:
+# every `git push`, the SVN deploy, the GitHub release, and the milestone API
+# calls are skipped. The built zip is still uploaded as a workflow artifact
+# (named duplicate-post-${VERSION}, containing the duplicate-post/ folder)
+# so you can inspect it.
+##############################################################################
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release (e.g., 4.7)'
+        required: true
+        type: string
+      next-version:
+        description: 'Version for the next milestone (e.g., 4.8). Defaults to bumping the minor of `version`.'
+        required: false
+        type: string
+      dry-run:
+        description: 'Dry-run: do all in-tree work (version bump, local commit/merge/tag, artifact build) but skip every remote side-effect (no git push, no SVN, no GH release, no milestone changes). The built zip is uploaded as a workflow artifact for inspection.'
+        required: false
+        default: false
+        type: boolean
+
+concurrency:
+  group: ${{ github.repository }}-release-pipeline
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: "Release ${{ inputs.version }}"
+    runs-on: ubuntu-latest
+
+    # Don't run on forks.
+    if: github.repository_owner == 'Yoast'
+
+    permissions:
+      contents: write
+      issues: write
+
+    steps:
+      - name: Validate inputs
+        env:
+          VERSION: ${{ inputs.version }}
+          NEXT_INPUT: ${{ inputs.next-version }}
+        run: |
+          if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+(\.[0-9]+)?$ ]]; then
+            echo "::error::Invalid version '$VERSION'. Expected formats: 4.7 or 4.7.1."
+            exit 1
+          fi
+          if [ -n "$NEXT_INPUT" ] && ! [[ "$NEXT_INPUT" =~ ^[0-9]+\.[0-9]+(\.[0-9]+)?$ ]]; then
+            echo "::error::Invalid next-version '$NEXT_INPUT'. Expected formats: 4.8 or 4.7.1."
+            exit 1
+          fi
+
+      - name: Resolve next version
+        id: next
+        env:
+          VERSION: ${{ inputs.version }}
+          NEXT_INPUT: ${{ inputs.next-version }}
+        run: |
+          if [ -n "$NEXT_INPUT" ]; then
+            NEXT="$NEXT_INPUT"
+          else
+            # Default: for a patch release (4.7.1) bump the patch segment (-> 4.7.2);
+            # for a minor release (4.7) bump the minor segment (-> 4.8).
+            MAJOR=$(echo "$VERSION" | cut -d. -f1)
+            MINOR=$(echo "$VERSION" | cut -d. -f2)
+            PATCH=$(echo "$VERSION" | cut -d. -f3)
+            if [ -n "$PATCH" ]; then
+              NEXT="${MAJOR}.${MINOR}.$((PATCH + 1))"
+            else
+              NEXT="${MAJOR}.$((MINOR + 1))"
+            fi
+          fi
+          echo "next=$NEXT" >> "$GITHUB_OUTPUT"
+          echo "Resolved next version: $NEXT"
+
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          ref: trunk
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Configure git
+        env:
+          ACTOR: ${{ github.actor }}
+        run: |
+          git config user.name 'GitHub Action'
+          git config user.email "$ACTOR@users.noreply.github.com"
+
+      - name: Check out the source branch
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          # The version bump happens on the source branch: release/x.y when an RC was cut
+          # (the frozen, QA'd line), otherwise trunk.
+          if git show-ref --verify --quiet "refs/remotes/origin/release/${VERSION}"; then
+            SOURCE="release/${VERSION}"
+          else
+            SOURCE="trunk"
+          fi
+          echo "SOURCE_BRANCH=${SOURCE}" >> "$GITHUB_ENV"
+          git checkout -B "${SOURCE}" "origin/${SOURCE}"
+          echo "Bumping version on: ${SOURCE}"
+
+      - name: Verify changelog section exists
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          if ! grep -Fxq "## ${VERSION}" changelog.md; then
+            echo "::error::No '## ${VERSION}' section found in changelog.md. Run the 'Generate Changelog' workflow first."
+            exit 1
+          fi
+
+      - name: Install PHP
+        uses: shivammathur/setup-php@7c071dfe9dc99bdf297fa79cb49ea005b9fcadbc # 2.37.1
+        with:
+          php-version: 7.4
+          coverage: none
+        env:
+          fail-fast: true
+
+      - name: Set up Node
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version-file: './.nvmrc'
+          cache: ''
+          package-manager-cache: false
+
+      - name: Yarn install
+        run: yarn install
+
+      - name: "Grunt: set package version"
+        env:
+          VERSION: ${{ inputs.version }}
+        run: grunt set-version -new-version="$VERSION"
+
+      - name: "Grunt: update version references"
+        # Updates plugin file Version header, DUPLICATE_POST_CURRENT_VERSION,
+        # AND readme.txt Stable tag (this is a stable release).
+        run: grunt update-version
+
+      - name: Commit version bump on the source branch
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          git add -A
+          if git diff --cached --quiet; then
+            echo "Nothing to commit."
+          else
+            git commit -m "Bump version number to ${VERSION}"
+          fi
+
+      - name: Push the source branch
+        if: ${{ inputs.dry-run != true }}
+        run: git push origin "${SOURCE_BRANCH}"
+
+      - name: Merge the source branch into main
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          # Release FROM main: merge the (version-bumped) source branch into main, then tag,
+          # build, deploy and create the release from main.
+          git fetch origin main
+          # Create/reset local `main` from origin/main: a fresh actions/checkout only set up
+          # the source branch locally, so a plain `git checkout main` would fail.
+          git checkout -B main origin/main
+          if ! git merge --no-ff --no-edit "${SOURCE_BRANCH}" -m "Merge ${SOURCE_BRANCH} into main for ${VERSION}"; then
+            git merge --abort || true
+            echo "::error::Merge of ${SOURCE_BRANCH} into main failed. Resolve conflicts on main and re-run."
+            exit 1
+          fi
+
+      - name: Push main
+        if: ${{ inputs.dry-run != true }}
+        run: git push origin main
+
+      - name: Tag the release
+        env:
+          VERSION: ${{ inputs.version }}
+        run: git tag -a "${VERSION}" -m "${VERSION}"
+
+      - name: Push tag
+        if: ${{ inputs.dry-run != true }}
+        env:
+          VERSION: ${{ inputs.version }}
+        run: git push origin "${VERSION}"
+
+      - name: "Grunt: build artifact"
+        run: grunt artifact
+
+      - name: "Copy composer.json into artifact"
+        # Matches deploy.yml behaviour: the dist artifact includes composer.json so
+        # downstream tooling that requires it via Packagist installers keeps working.
+        run: cp composer.json ./artifact
+
+      - name: Reset working tree after artifact
+        # Throw away any in-tree side-effects of `grunt artifact`; the artifact we just
+        # built is intact under ./artifact and ./artifact.zip. This keeps the later
+        # `git checkout -B trunk origin/trunk` (merge-back) from refusing to overwrite
+        # tracked files.
+        run: git reset --hard HEAD
+
+      - name: Extract release notes from changelog.md
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          awk -v ver="$VERSION" '
+            $0 ~ "^## "ver"$" { flag = 1; next }
+            flag && /^## / { exit }
+            flag { print }
+          ' changelog.md > release-notes.md
+          echo "Generated release-notes.md:"
+          cat release-notes.md
+
+      - name: Stage workflow-exposed artifacts
+        # 1. Rename the Grunt-built zip to the wp.org-style versioned name.
+        # 2. Copy the unzipped build under a `duplicate-post/` wrapper folder so
+        #    actions/upload-artifact (which always wraps its input in a zip of its own)
+        #    produces a downloadable `duplicate-post-${VERSION}.zip` whose only
+        #    top-level entry is the `duplicate-post/` folder — same shape as a
+        #    wp.org plugin zip.
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          set -euo pipefail
+          if [ ! -f artifact.zip ]; then
+            echo "::error::Expected artifact.zip from 'grunt artifact', but it is missing."
+            exit 1
+          fi
+          ZIP_NAME="duplicate-post-${VERSION}.zip"
+          cp artifact.zip "${ZIP_NAME}"
+          # Stage the unzipped build under a `duplicate-post/` wrapper. Explicit mkdir +
+          # `cp artifact/.` is robust whether or not the wrapper already exists and does
+          # not depend on artifact/ having no inner wrapper dir.
+          mkdir duplicate-post
+          cp -a artifact/. duplicate-post/
+          # Sanity-check the zip shape: every entry must be under `duplicate-post/`.
+          BAD=$(unzip -Z1 "${ZIP_NAME}" | grep -v '^duplicate-post/' || true)
+          if [ -n "$BAD" ]; then
+            echo "::error::Artifact zip contains entries outside duplicate-post/:"
+            echo "$BAD"
+            exit 1
+          fi
+          echo "ZIP_NAME=${ZIP_NAME}" >> "$GITHUB_ENV"
+
+      - name: Upload plugin folder as workflow artifact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: duplicate-post-${{ inputs.version }}
+          path: duplicate-post
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Deploy to wordpress.org SVN
+        if: ${{ inputs.dry-run != true }}
+        uses: 10up/action-wordpress-plugin-deploy@54bd289b8525fd23a5c365ec369185f2966529c2 # v2.3.0
+        env:
+          SVN_USERNAME: ${{ secrets.WPORG_SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.WPORG_SVN_PASSWORD }}
+          SLUG: duplicate-post
+          VERSION: ${{ inputs.version }}
+          BUILD_DIR: ./artifact
+          ASSETS_DIR: svn-assets
+
+      - name: Create GitHub release
+        if: ${{ inputs.dry-run != true }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ inputs.version }}
+        run: |
+          # No --target: the tag pushed in the previous step is the source of truth.
+          gh release create "${VERSION}" \
+            --title "${VERSION}" \
+            --notes-file release-notes.md \
+            "${ZIP_NAME}"
+
+      - name: Close milestone and open the next one
+        if: ${{ inputs.dry-run != true }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ inputs.version }}
+          NEXT_VERSION: ${{ steps.next.outputs.next }}
+        run: |
+          MILESTONE_NUMBER=$(gh api "repos/${GITHUB_REPOSITORY}/milestones?state=open&per_page=100" \
+            --jq ".[] | select(.title==\"${VERSION}\") | .number" | head -1)
+          if [ -n "$MILESTONE_NUMBER" ]; then
+            gh api -X PATCH "repos/${GITHUB_REPOSITORY}/milestones/${MILESTONE_NUMBER}" -f state=closed
+            echo "Closed milestone ${VERSION} (#${MILESTONE_NUMBER})"
+          else
+            echo "::warning::No open milestone titled '${VERSION}' found; skipping close."
+          fi
+
+          EXISTING_NEXT=$(gh api "repos/${GITHUB_REPOSITORY}/milestones?state=open&per_page=100" \
+            --jq ".[] | select(.title==\"${NEXT_VERSION}\") | .number" | head -1)
+          if [ -z "$EXISTING_NEXT" ]; then
+            gh api -X POST "repos/${GITHUB_REPOSITORY}/milestones" -f title="${NEXT_VERSION}" >/dev/null
+            echo "Opened milestone ${NEXT_VERSION}"
+          else
+            echo "Milestone ${NEXT_VERSION} already exists; skipping create."
+          fi
+
+      - name: Merge main back into trunk
+        run: |
+          git fetch origin trunk
+          git checkout -B trunk origin/trunk
+          if ! git merge --no-ff --no-edit main -m "Merge main back into trunk"; then
+            git merge --abort || true
+            echo "::error::Merge of main into trunk failed. Resolve conflicts and re-run."
+            exit 1
+          fi
+
+      - name: Push trunk (after merge-back)
+        if: ${{ inputs.dry-run != true }}
+        run: git push origin trunk
+
+      - name: Write Slack announcement to job summary
+        env:
+          VERSION: ${{ inputs.version }}
+          DRY_RUN: ${{ inputs.dry-run }}
+        run: |
+          HEADING="## Slack announcement"
+          if [ "$DRY_RUN" = "true" ]; then
+            HEADING="## Slack announcement (preview, not actually released)"
+          fi
+          cat >> "$GITHUB_STEP_SUMMARY" <<EOF
+          ${HEADING}
+
+          Copy this into **#yoast_support** and **#dev-rc-releases**:
+
+          \`\`\`
+          We've just released Yoast Duplicate Post ${VERSION}.
+          Changelog: https://wordpress.org/plugins/duplicate-post/#developers
+          \`\`\`
+          EOF
+
+      - name: Dry-run summary
+        if: ${{ inputs.dry-run == true }}
+        env:
+          VERSION: ${{ inputs.version }}
+          NEXT_VERSION: ${{ steps.next.outputs.next }}
+        run: |
+          {
+            echo "## Dry-run summary"
+            echo ""
+            echo "Nothing was pushed. The following actions would have happened in a real run:"
+            echo ""
+            echo "* \`git push origin ${SOURCE_BRANCH}\` (with the \"Bump version number to ${VERSION}\" commit)"
+            echo "* \`git push origin main\` (with the \"Merge ${SOURCE_BRANCH} into main for ${VERSION}\" merge commit)"
+            echo "* \`git push origin ${VERSION}\` (annotated tag)"
+            echo "* Push to wordpress.org SVN: \`trunk/\`, \`assets/\`, new tag \`tags/${VERSION}/\`"
+            echo "* \`gh release create ${VERSION}\` with \`${ZIP_NAME}\` attached and the release notes below"
+            echo "* Close milestone \`${VERSION}\` and open milestone \`${NEXT_VERSION}\`"
+            echo "* \`git push origin trunk\` (after merging \`main\` back)"
+            echo ""
+            echo "The built plugin is available as the \`duplicate-post-${VERSION}\` workflow artifact above (download yields \`duplicate-post-${VERSION}.zip\` containing the \`duplicate-post/\` folder)."
+            echo ""
+            echo "### Release notes preview"
+            echo ""
+            cat release-notes.md
+          } >> "$GITHUB_STEP_SUMMARY"
