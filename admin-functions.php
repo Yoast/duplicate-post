@@ -241,10 +241,13 @@ function duplicate_post_show_update_notice() {
 			. '</div>
 		</div>';
 
+	$dismiss_nonce = wp_create_nonce( 'duplicate_post_dismiss_notice' );
+
 	echo "<script>
 			function duplicate_post_dismiss_notice(){
 				var data = {
 				'action': 'duplicate_post_dismiss_notice',
+				'nonce': '" . esc_js( $dismiss_nonce ) . "',
 				};
 
 				jQuery.post(ajaxurl, data, function(response) {
@@ -266,6 +269,14 @@ function duplicate_post_show_update_notice() {
  * @return bool
  */
 function duplicate_post_dismiss_notice() {
+	if ( ! current_user_can( 'manage_options' ) ) {
+		return false;
+	}
+
+	if ( ! check_ajax_referer( 'duplicate_post_dismiss_notice', 'nonce', false ) ) {
+		return false;
+	}
+
 	return update_site_option( 'duplicate_post_show_notice', 0 );
 }
 

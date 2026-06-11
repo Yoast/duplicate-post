@@ -1262,4 +1262,77 @@ final class Admin_Functions_Test extends TestCase {
 		// Thumbnail SHOULD be copied when enabled.
 		$this->assertSame( $attachment_id, (int) \get_post_meta( $new_id, '_thumbnail_id', true ) );
 	}
+
+	/**
+	 * Tests that duplicate_post_dismiss_notice() dismisses the notice for an authorized user with a valid nonce.
+	 *
+	 * @covers ::duplicate_post_dismiss_notice
+	 *
+	 * @return void
+	 */
+	public function test_dismiss_notice_succeeds_with_valid_nonce_and_capability() {
+		\update_site_option( 'duplicate_post_show_notice', 1 );
+
+		// The set_up() already logs in an administrator (has manage_options).
+		$_REQUEST['nonce'] = \wp_create_nonce( 'duplicate_post_dismiss_notice' );
+
+		$result = \duplicate_post_dismiss_notice();
+
+		$this->assertTrue( $result );
+		$this->assertSame( 0, (int) \get_site_option( 'duplicate_post_show_notice' ) );
+
+		// Clean up.
+		unset( $_REQUEST['nonce'] );
+		\delete_site_option( 'duplicate_post_show_notice' );
+	}
+
+	/**
+	 * Tests that duplicate_post_dismiss_notice() does nothing for a user without the manage_options capability.
+	 *
+	 * @covers ::duplicate_post_dismiss_notice
+	 *
+	 * @return void
+	 */
+	public function test_dismiss_notice_fails_without_capability() {
+		\update_site_option( 'duplicate_post_show_notice', 1 );
+
+		// Switch to a subscriber, who does not have manage_options.
+		$subscriber_id = $this->factory->user->create( [ 'role' => 'subscriber' ] );
+		\wp_set_current_user( $subscriber_id );
+
+		// Even with a valid nonce the capability check must block the action.
+		$_REQUEST['nonce'] = \wp_create_nonce( 'duplicate_post_dismiss_notice' );
+
+		$result = \duplicate_post_dismiss_notice();
+
+		$this->assertFalse( $result );
+		$this->assertSame( 1, (int) \get_site_option( 'duplicate_post_show_notice' ) );
+
+		// Clean up.
+		unset( $_REQUEST['nonce'] );
+		\delete_site_option( 'duplicate_post_show_notice' );
+	}
+
+	/**
+	 * Tests that duplicate_post_dismiss_notice() does nothing when the nonce is missing or invalid.
+	 *
+	 * @covers ::duplicate_post_dismiss_notice
+	 *
+	 * @return void
+	 */
+	public function test_dismiss_notice_fails_with_invalid_nonce() {
+		\update_site_option( 'duplicate_post_show_notice', 1 );
+
+		// The set_up() already logs in an administrator (has manage_options).
+		$_REQUEST['nonce'] = 'invalid-nonce';
+
+		$result = \duplicate_post_dismiss_notice();
+
+		$this->assertFalse( $result );
+		$this->assertSame( 1, (int) \get_site_option( 'duplicate_post_show_notice' ) );
+
+		// Clean up.
+		unset( $_REQUEST['nonce'] );
+		\delete_site_option( 'duplicate_post_show_notice' );
+	}
 }
