@@ -820,6 +820,7 @@ final class Classic_Editor_Test extends TestCase {
 	 */
 	public function test_should_change_scheduled_notice_post() {
 		$this->stubTranslationFunctions();
+		$this->stubEscapeFunctions();
 
 		$post             = Mockery::mock( WP_Post::class );
 		$post->post_type  = 'post';
@@ -936,6 +937,7 @@ final class Classic_Editor_Test extends TestCase {
 	 */
 	public function test_should_change_scheduled_notice_page() {
 		$this->stubTranslationFunctions();
+		$this->stubEscapeFunctions();
 
 		$post             = Mockery::mock( WP_Post::class );
 		$post->post_type  = 'page';
@@ -1041,6 +1043,80 @@ final class Classic_Editor_Test extends TestCase {
 			->andReturn( $scheduled_time );
 
 		$this->assertSame( $result, $this->instance->change_scheduled_notice_classic_editor( $messages ) );
+	}
+
+	/**
+	 * Tests that change_scheduled_notice_classic_editor escapes a malicious post title (CVE-2026-53740).
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Classic_Editor::change_scheduled_notice_classic_editor
+	 *
+	 * @return void
+	 */
+	public function test_change_scheduled_notice_escapes_malicious_title() {
+		$this->stubTranslationFunctions();
+
+		Monkey\Functions\when( '\esc_html' )->alias(
+			static function ( $text ) {
+				return \htmlspecialchars( (string) $text, \ENT_QUOTES, 'UTF-8' );
+			},
+		);
+		Monkey\Functions\when( '\esc_url' )->alias(
+			static function ( $url ) {
+				return \htmlspecialchars( (string) $url, \ENT_QUOTES, 'UTF-8' );
+			},
+		);
+
+		$post             = Mockery::mock( WP_Post::class );
+		$post->post_type  = 'post';
+		$post->post_title = '</a><script>alert(1)</script>';
+		$post->ID         = 1;
+
+		$permalink      = 'http://basic.wordpress.test/example_post';
+		$date_format    = 'F j, Y';
+		$scheduled_date = 'December 18, 2020';
+		$time_format    = 'g:i a';
+		$scheduled_time = '2:30 pm';
+
+		Monkey\Functions\expect( '\get_post' )
+			->once()
+			->andReturn( $post );
+
+		$this->instance->expects( 'should_change_rewrite_republish_copy' )
+			->with( $post )
+			->once()
+			->andReturnTrue();
+
+		Monkey\Functions\expect( '\get_permalink' )
+			->once()
+			->with( $post->ID )
+			->andReturn( $permalink );
+
+		Monkey\Functions\expect( '\get_option' )
+			->once()
+			->with( 'date_format' )
+			->andReturn( $date_format );
+
+		Monkey\Functions\expect( '\get_option' )
+			->once()
+			->with( 'time_format' )
+			->andReturn( $time_format );
+
+		Monkey\Functions\expect( '\get_the_time' )
+			->once()
+			->with( $date_format, $post )
+			->andReturn( $scheduled_date );
+
+		Monkey\Functions\expect( '\get_the_time' )
+			->once()
+			->with( $time_format, $post )
+			->andReturn( $scheduled_time );
+
+		$result = $this->instance->change_scheduled_notice_classic_editor( [] );
+
+		$expected_link = '<a href="' . $permalink . '">&lt;/a&gt;&lt;script&gt;alert(1)&lt;/script&gt;</a>';
+
+		$this->assertStringContainsString( $expected_link, $result['post'][9] );
+		$this->assertStringNotContainsString( '<script>', $result['post'][9] );
 	}
 
 	/**
