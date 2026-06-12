@@ -269,7 +269,8 @@ class Classic_Editor {
 			return $messages;
 		}
 
-		$permalink      = \get_permalink( $post->ID );
+		$permalink      = \esc_url( \get_permalink( $post->ID ) );
+		$title          = \esc_html( $post->post_title );
 		$scheduled_date = \get_the_time( \get_option( 'date_format' ), $post );
 		$scheduled_time = \get_the_time( \get_option( 'time_format' ), $post );
 
@@ -280,7 +281,7 @@ class Classic_Editor {
 					'This rewritten post %1$s is now scheduled to replace the original post. It will be published on %2$s.',
 					'duplicate-post',
 				),
-				'<a href="' . $permalink . '">' . $post->post_title . '</a>',
+				'<a href="' . $permalink . '">' . $title . '</a>',
 				'<strong>' . $scheduled_date . ' ' . $scheduled_time . '</strong>',
 			);
 			return $messages;
@@ -293,7 +294,7 @@ class Classic_Editor {
 					'This rewritten page %1$s is now scheduled to replace the original page. It will be published on %2$s.',
 					'duplicate-post',
 				),
-				'<a href="' . $permalink . '">' . $post->post_title . '</a>',
+				'<a href="' . $permalink . '">' . $title . '</a>',
 				'<strong>' . $scheduled_date . ' ' . $scheduled_time . '</strong>',
 			);
 		}
