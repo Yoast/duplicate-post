@@ -17,6 +17,17 @@
 }
 
 /* Copy links in the classic editor. */
+/* WP 7.0 turned #major-publishing-actions into a flex row; only opt that container into wrapping when our buttons are present. */
+#major-publishing-actions:has(> #duplicate-action),
+#major-publishing-actions:has(> #rewrite-republish-action) {
+	flex-wrap: wrap;
+}
+
+#major-publishing-actions:has(> #duplicate-action) > #duplicate-action,
+#major-publishing-actions:has(> #rewrite-republish-action) > #rewrite-republish-action {
+	flex-basis: 100%;
+}
+
 #duplicate-action {
 	margin-bottom: 12px;
 }
