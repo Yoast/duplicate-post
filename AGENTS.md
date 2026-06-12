@@ -18,6 +18,8 @@ If a rule appears to conflict between this file and `CONTRIBUTING.md` or [`.gith
 
 - **Don't paper over failures.** If a pre-push check, test, or coding-standard rule fails, fix it or flag it. Do not skip tests, raise the CS error/warning threshold (the `check-cs-thresholds` script), add ignore pragmas, or untick quality-assurance boxes on the PR template without explicit permission.
 
+- **Do not clean up PHPDoc just because branch CS reports it.** Run `composer check-cs-thresholds` before broadening a diff for PHPDoc/type-annotation complaints from `composer check-branch-cs`. If the threshold passes, leave unrelated PHPDoc alone unless the task explicitly requires it or a maintainer asks for PHPDoc cleanup.
+
 - **Don't hand-edit generated or vendored files.** `vendor/`, `node_modules/`, `js/dist/`, `artifact/`, `languages/` — regenerate via the appropriate tooling. The full list is in [CONTRIBUTING.md → "Repository layout"](./.github/CONTRIBUTING.md#repository-layout).
 
 - **Run `grunt build:images` only when you change the wp.org store assets.** `grunt build:images` (imagemin) is configured to optimise only the wp.org store assets under `svn-assets/` (banner, icons, screenshots); there is no `images/` source dir, and other image files elsewhere in the repo are not processed by it. If you edit an `svn-assets/` asset, run it and commit the optimised output. It is **not** part of `grunt build` or the release pipeline, so nothing runs it automatically — for any normal code change it is irrelevant.

@@ -126,6 +126,7 @@ All commands are run from the repo root.
 | `composer lint` | PHP parse-error check across the repo. |
 | `composer check-cs` | Run phpcs with the Yoast ruleset (errors only, no warnings). |
 | `composer check-branch-cs` | Run phpcs against the files changed on the current branch. |
+| `composer check-cs-thresholds` | Run phpcs across the repo and verify the configured error/warning thresholds are not exceeded. |
 | `composer check-staged-cs` | Run phpcs against staged files. |
 | `composer fix-cs` | Auto-fix fixable phpcs violations. |
 | `composer test` | Run PHPUnit unit tests (no WP, no coverage). |
@@ -158,6 +159,7 @@ The block-editor JavaScript is built through Grunt (which drives webpack). `pack
 - Follow the existing code. When two styles look plausible, match the file you are editing.
 - PHP: Yoast CS (`yoast/yoastcs`), configured in [`.phpcs.xml.dist`](../.phpcs.xml.dist). Namespaces live under `Yoast\WP\Duplicate_Post\…`.
 - The CS check enforces an error/warning **threshold** (see the `check-cs-thresholds` composer script). Do not raise the threshold to make a violation pass — fix the violation.
+- `composer check-branch-cs` is useful for finding issues in changed files, but it may report pre-existing PHPDoc or type-annotation issues on lines unrelated to the behavioural change. Do not edit PHPDoc only to satisfy `check-branch-cs` unless `composer check-cs-thresholds` fails, the PHPDoc is part of the change being made, or a maintainer explicitly asks for PHPDoc cleanup.
 - Comments: document **why**, not **what**. End every inline comment with a full stop.
 - Don't add features, scaffolding, or abstractions the task doesn't need.
 
@@ -178,7 +180,8 @@ Run these checks locally and make sure each one is clean. CI runs the same check
 
 * `composer test` — the unit test suite must pass.
 * `composer test-wp-env` — the WordPress integration tests (Docker via `@wordpress/env`) must pass if your change touches code that has or needs WP integration coverage.
-* `composer check-branch-cs` — must report **no new errors or warnings** introduced by your branch. Use `composer fix-cs` to auto-fix what it can, and address the rest by hand.
+* `composer check-cs-thresholds` — must pass without exceeding the configured error/warning thresholds.
+* `composer check-branch-cs` — use this to inspect changed-file CS output. If it reports PHPDoc/type-annotation issues while `composer check-cs-thresholds` passes, do not broaden the diff just to clean those up unless the PHPDoc is part of your change or a maintainer asks for it.
 * `composer lint` — PHP parse-error check.
 * For changes under `js/`: run `grunt build` and confirm the bundle builds.
 * Only if you changed a wp.org store asset under `svn-assets/`: run `grunt build:images` and commit the optimised output. (It is not run by `grunt build` or the release pipeline, so it will not happen automatically.)
