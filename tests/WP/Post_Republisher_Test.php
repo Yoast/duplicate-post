@@ -392,10 +392,15 @@ final class Post_Republisher_Test extends TestCase {
 	 * @return void
 	 */
 	public function test_republish_scheduled_post_republishes_copy() {
+		// The copy's author must be able to edit the original for the scheduled republish to run.
+		$admin_id = $this->factory->user->create( [ 'role' => 'administrator' ] );
+		\wp_set_current_user( $admin_id );
+
 		$original = $this->create_original_post(
 			[
 				'post_title'   => 'Original Title',
 				'post_content' => 'Original content.',
+				'post_author'  => $admin_id,
 			],
 		);
 
@@ -430,6 +435,65 @@ final class Post_Republisher_Test extends TestCase {
 
 		// Verify meta cleanup.
 		$this->assertSame( '', \get_post_meta( $original_id, '_dp_has_rewrite_republish_copy', true ) );
+	}
+
+	/**
+	 * Tests republish_scheduled_post reverts the copy to a draft and leaves the
+	 * original untouched when the copy's author cannot edit the original.
+	 *
+	 * @covers ::republish_scheduled_post
+	 *
+	 * @return void
+	 */
+	public function test_republish_scheduled_post_reverts_to_draft_when_author_cannot_edit_original() {
+		// An administrator owns the published original.
+		$admin_id = $this->factory->user->create( [ 'role' => 'administrator' ] );
+		\wp_set_current_user( $admin_id );
+
+		$original = $this->create_original_post(
+			[
+				'post_title'   => 'Original Title',
+				'post_content' => 'Original content.',
+				'post_author'  => $admin_id,
+			],
+		);
+
+		$original_id = $original->ID;
+
+		// An author who cannot edit the administrator's post creates the copy.
+		$author_id = $this->factory->user->create( [ 'role' => 'author' ] );
+		\wp_set_current_user( $author_id );
+
+		$copy = $this->create_rewrite_and_republish_copy( $original );
+
+		// Give the copy the author's content and simulate the cron transition to publish.
+		$this->update_post_without_republish(
+			[
+				'ID'           => $copy->ID,
+				'post_title'   => 'Hijacked Title',
+				'post_content' => 'Hijacked content.',
+				'post_status'  => 'publish',
+			],
+		);
+		$copy = \get_post( $copy->ID );
+
+		// Confirm the author cannot edit the administrator's original post.
+		$this->assertFalse( \user_can( $author_id, 'edit_post', $original_id ) );
+
+		// Run the scheduled republish.
+		$this->instance->republish_scheduled_post( $copy );
+
+		// The original must be untouched.
+		$unchanged_original = \get_post( $original_id );
+		$this->assertSame( 'Original Title', $unchanged_original->post_title );
+		$this->assertSame( 'Original content.', $unchanged_original->post_content );
+		$this->assertSame( $admin_id, (int) $unchanged_original->post_author );
+
+		// The copy is reverted to a draft, not deleted, and stays linked to the original.
+		$reverted_copy = \get_post( $copy->ID );
+		$this->assertNotNull( $reverted_copy );
+		$this->assertSame( 'draft', $reverted_copy->post_status );
+		$this->assertSame( $copy->ID, (int) \get_post_meta( $original_id, '_dp_has_rewrite_republish_copy', true ) );
 	}
 
 	/**

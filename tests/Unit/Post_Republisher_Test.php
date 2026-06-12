@@ -270,6 +270,7 @@ final class Post_Republisher_Test extends TestCase {
 		$copy              = Mockery::mock( WP_Post::class );
 		$copy->ID          = 123;
 		$copy->post_status = 'future';
+		$copy->post_author = 5;
 
 		$this->permissions_helper
 			->expects( 'is_rewrite_and_republish_copy' )
@@ -284,11 +285,69 @@ final class Post_Republisher_Test extends TestCase {
 			->once()
 			->andReturn( $original );
 
+		Monkey\Functions\expect( 'user_can' )
+			->with( 5, 'edit_post', $original->ID )
+			->once()
+			->andReturnTrue();
+
 		Monkey\Functions\expect( 'kses_remove_filters' );
 		Monkey\Functions\expect( 'kses_init_filters' );
 
 		$this->instance->expects( 'republish' )->with( $copy, $original )->once();
 		$this->instance->expects( 'delete_copy' )->with( $copy->ID, $original->ID )->once();
+
+		$this->instance->republish_scheduled_post( $copy );
+	}
+
+	/**
+	 * Tests the republish_scheduled_post function reverts the copy to a draft,
+	 * without republishing, when its author can no longer edit the original.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Post_Republisher::republish_scheduled_post
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 *
+	 * @return void
+	 */
+	public function test_republish_scheduled_post_reverts_unauthorized_copy_to_draft() {
+		$original              = Mockery::mock( WP_Post::class );
+		$original->ID          = 1;
+		$original->post_status = 'publish';
+
+		$copy              = Mockery::mock( WP_Post::class );
+		$copy->ID          = 123;
+		$copy->post_status = 'publish';
+		$copy->post_author = 6;
+
+		$this->permissions_helper
+			->expects( 'is_rewrite_and_republish_copy' )
+			->with( $copy )
+			->once()
+			->andReturnTrue();
+
+		$utils = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
+		$utils
+			->expects( 'get_original' )
+			->with( $copy->ID )
+			->once()
+			->andReturn( $original );
+
+		Monkey\Functions\expect( 'user_can' )
+			->with( 6, 'edit_post', $original->ID )
+			->once()
+			->andReturnFalse();
+
+		Monkey\Functions\expect( 'wp_update_post' )
+			->once()
+			->with(
+				[
+					'ID'          => $copy->ID,
+					'post_status' => 'draft',
+				],
+			);
+
+		$this->instance->expects( 'republish' )->never();
+		$this->instance->expects( 'delete_copy' )->never();
 
 		$this->instance->republish_scheduled_post( $copy );
 	}

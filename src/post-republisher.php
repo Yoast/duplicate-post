@@ -209,6 +209,21 @@ class Post_Republisher {
 			return;
 		}
 
+		// The scheduled republish runs on cron, where there is no current user to
+		// authorize the overwrite, so the copy's author is checked instead. If they
+		// can no longer edit the original, the copy is reverted to a draft rather
+		// than overwriting the original.
+		if ( ! \user_can( (int) $copy->post_author, 'edit_post', $original_post->ID ) ) {
+			\wp_update_post(
+				[
+					'ID'          => $copy->ID,
+					'post_status' => 'draft',
+				],
+			);
+
+			return;
+		}
+
 		\kses_remove_filters();
 		$this->republish( $copy, $original_post );
 		\kses_init_filters();
