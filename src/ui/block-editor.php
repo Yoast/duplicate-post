@@ -233,9 +233,11 @@ class Block_Editor {
 		$original_data                 = null;
 
 		if ( $original_item instanceof WP_Post ) {
-			$original_data = [
-				'editUrl'  => \esc_url_raw( \get_edit_post_link( $original_item->ID, 'raw' ) ),
-				'viewUrl'  => \esc_url_raw( \get_permalink( $original_item->ID ) ),
+			$edit_post_link = \get_edit_post_link( $original_item->ID, 'raw' );
+			$view_post_link = \get_permalink( $original_item->ID );
+			$original_data  = [
+				'editUrl'  => ( \is_string( $edit_post_link ) ) ? \esc_url_raw( $edit_post_link ) : '',
+				'viewUrl'  => ( \is_string( $view_post_link ) ) ? \esc_url_raw( $view_post_link ) : '',
 				'title'    => \html_entity_decode( \_draft_or_post_title( $original_item ), \ENT_QUOTES, 'UTF-8' ),
 				'canEdit'  => \current_user_can( 'edit_post', $original_item->ID ),
 			];
