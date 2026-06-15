@@ -3,6 +3,7 @@
 namespace Yoast\WP\Duplicate_Post\Tests\Unit;
 
 use Brain\Monkey;
+use Exception;
 use Mockery;
 use WP_Post;
 use Yoast\WP\Duplicate_Post\Permissions_Helper;
@@ -251,6 +252,267 @@ final class Post_Republisher_Test extends TestCase {
 				],
 			],
 		];
+	}
+
+	/**
+	 * Tests that republish_request returns early when the post is not a Rewrite & Republish copy.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Post_Republisher::republish_request
+	 *
+	 * @return void
+	 */
+	public function test_republish_request_returns_early_when_not_a_copy() {
+		$copy              = Mockery::mock( WP_Post::class );
+		$copy->ID          = 123;
+		$copy->post_status = 'dp-rewrite-republish';
+
+		$this->permissions_helper
+			->expects( 'is_rewrite_and_republish_copy' )
+			->with( $copy )
+			->andReturnFalse();
+
+		$this->permissions_helper->expects( 'is_copy_allowed_to_be_republished' )->never();
+		$this->instance->expects( 'republish' )->never();
+
+		$this->instance->republish_request( $copy );
+	}
+
+	/**
+	 * Tests that republish_request returns early when the copy is neither being republished nor scheduled.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Post_Republisher::republish_request
+	 *
+	 * @return void
+	 */
+	public function test_republish_request_returns_early_when_status_is_not_actionable() {
+		$copy              = Mockery::mock( WP_Post::class );
+		$copy->ID          = 123;
+		$copy->post_status = 'draft';
+
+		$this->permissions_helper
+			->expects( 'is_rewrite_and_republish_copy' )
+			->with( $copy )
+			->andReturnTrue();
+
+		$this->permissions_helper
+			->expects( 'is_copy_allowed_to_be_republished' )
+			->with( $copy )
+			->andReturnFalse();
+
+		$this->instance->expects( 'republish' )->never();
+
+		$this->instance->republish_request( $copy );
+	}
+
+	/**
+	 * Tests that republish_request republishes the copy when the user is allowed to edit the original.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Post_Republisher::republish_request
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 *
+	 * @return void
+	 */
+	public function test_republish_request_republishes_when_user_is_allowed() {
+		$original     = Mockery::mock( WP_Post::class );
+		$original->ID = 1;
+
+		$copy              = Mockery::mock( WP_Post::class );
+		$copy->ID          = 123;
+		$copy->post_status = 'dp-rewrite-republish';
+
+		$this->permissions_helper
+			->expects( 'is_rewrite_and_republish_copy' )
+			->with( $copy )
+			->andReturnTrue();
+
+		$this->permissions_helper
+			->expects( 'is_copy_allowed_to_be_republished' )
+			->with( $copy )
+			->andReturnTrue();
+
+		$utils = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
+		$utils
+			->expects( 'get_original' )
+			->with( $copy->ID )
+			->andReturn( $original );
+
+		Monkey\Functions\expect( '\current_user_can' )
+			->with( 'edit_post', $original->ID )
+			->andReturnTrue();
+
+		$this->instance->expects( 'republish' )->with( $copy, $original )->once();
+		$this->instance->expects( 'is_classic_editor_post_request' )->andReturnFalse();
+
+		$this->instance->republish_request( $copy );
+	}
+
+	/**
+	 * Tests that republish_request does not republish a scheduled copy when the user is allowed.
+	 *
+	 * The scheduled copy is republished later by cron, not at scheduling time.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Post_Republisher::republish_request
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 *
+	 * @return void
+	 */
+	public function test_republish_request_does_not_republish_scheduled_copy_when_user_is_allowed() {
+		$original     = Mockery::mock( WP_Post::class );
+		$original->ID = 1;
+
+		$copy              = Mockery::mock( WP_Post::class );
+		$copy->ID          = 123;
+		$copy->post_status = 'future';
+
+		$this->permissions_helper
+			->expects( 'is_rewrite_and_republish_copy' )
+			->with( $copy )
+			->andReturnTrue();
+
+		$this->permissions_helper
+			->expects( 'is_copy_allowed_to_be_republished' )
+			->with( $copy )
+			->andReturnFalse();
+
+		$utils = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
+		$utils
+			->expects( 'get_original' )
+			->with( $copy->ID )
+			->andReturn( $original );
+
+		Monkey\Functions\expect( '\current_user_can' )
+			->with( 'edit_post', $original->ID )
+			->andReturnTrue();
+
+		$this->instance->expects( 'republish' )->never();
+
+		$this->instance->republish_request( $copy );
+	}
+
+	/**
+	 * Tests that republish_request reverts the copy to draft and stops when the user may not republish.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Post_Republisher::republish_request
+	 * @covers \Yoast\WP\Duplicate_Post\Post_Republisher::revert_unauthorized_copy
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 *
+	 * @return void
+	 */
+	public function test_republish_request_reverts_to_draft_and_dies_when_user_is_not_allowed() {
+		$this->stubEscapeFunctions();
+		$this->stubTranslationFunctions();
+
+		$original     = Mockery::mock( WP_Post::class );
+		$original->ID = 1;
+
+		$copy              = Mockery::mock( WP_Post::class );
+		$copy->ID          = 123;
+		$copy->post_status = 'dp-rewrite-republish';
+
+		$this->permissions_helper
+			->expects( 'is_rewrite_and_republish_copy' )
+			->with( $copy )
+			->andReturnTrue();
+
+		$this->permissions_helper
+			->expects( 'is_copy_allowed_to_be_republished' )
+			->with( $copy )
+			->andReturnTrue();
+
+		$utils = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
+		$utils
+			->expects( 'get_original' )
+			->with( $copy->ID )
+			->andReturn( $original );
+
+		Monkey\Functions\expect( '\current_user_can' )
+			->with( 'edit_post', $original->ID )
+			->andReturnFalse();
+
+		Monkey\Functions\expect( '\wp_update_post' )
+			->once()
+			->with(
+				[
+					'ID'          => $copy->ID,
+					'post_status' => 'draft',
+				],
+			);
+
+		Monkey\Functions\expect( '\wp_die' )
+			->once()
+			->andThrow( Exception::class, 'wp_die called.' );
+
+		$this->instance->expects( 'republish' )->never();
+
+		$this->expectException( Exception::class );
+		$this->expectExceptionMessage( 'wp_die called.' );
+
+		$this->instance->republish_request( $copy );
+	}
+
+	/**
+	 * Tests that republish_request reverts a scheduled copy to draft and stops when the user may not republish.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Post_Republisher::republish_request
+	 * @covers \Yoast\WP\Duplicate_Post\Post_Republisher::revert_unauthorized_copy
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 *
+	 * @return void
+	 */
+	public function test_republish_request_reverts_scheduled_copy_to_draft_and_dies_when_user_is_not_allowed() {
+		$this->stubEscapeFunctions();
+		$this->stubTranslationFunctions();
+
+		$original     = Mockery::mock( WP_Post::class );
+		$original->ID = 1;
+
+		$copy              = Mockery::mock( WP_Post::class );
+		$copy->ID          = 123;
+		$copy->post_status = 'future';
+
+		$this->permissions_helper
+			->expects( 'is_rewrite_and_republish_copy' )
+			->with( $copy )
+			->andReturnTrue();
+
+		$this->permissions_helper
+			->expects( 'is_copy_allowed_to_be_republished' )
+			->with( $copy )
+			->andReturnFalse();
+
+		$utils = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
+		$utils
+			->expects( 'get_original' )
+			->with( $copy->ID )
+			->andReturn( $original );
+
+		Monkey\Functions\expect( '\current_user_can' )
+			->with( 'edit_post', $original->ID )
+			->andReturnFalse();
+
+		Monkey\Functions\expect( '\wp_update_post' )
+			->once()
+			->with(
+				[
+					'ID'          => $copy->ID,
+					'post_status' => 'draft',
+				],
+			);
+
+		Monkey\Functions\expect( '\wp_die' )
+			->once()
+			->andThrow( Exception::class, 'wp_die called.' );
+
+		$this->instance->expects( 'republish' )->never();
+
+		$this->expectException( Exception::class );
+		$this->expectExceptionMessage( 'wp_die called.' );
+
+		$this->instance->republish_request( $copy );
 	}
 
 	/**

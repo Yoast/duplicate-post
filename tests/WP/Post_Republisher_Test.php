@@ -1488,4 +1488,133 @@ final class Post_Republisher_Test extends TestCase {
 		// Clean up (may not be reached due to exception).
 		unset( $_GET['dprepublished'], $_GET['dpcopy'], $_GET['post'], $_GET['dpnonce'], $_REQUEST['dpnonce'] );
 	}
+
+	/**
+	 * Tests that republish_request blocks an immediate republish by a user who cannot edit the original.
+	 *
+	 * @covers ::republish_request
+	 * @covers ::revert_unauthorized_copy
+	 *
+	 * @return void
+	 */
+	public function test_republish_request_blocks_unauthorized_immediate_republish() {
+		$owner_id = $this->factory->user->create( [ 'role' => 'administrator' ] );
+		$original = $this->create_original_post(
+			[
+				'post_title'   => 'Original Title',
+				'post_content' => 'Original content.',
+				'post_author'  => $owner_id,
+			],
+		);
+		$copy     = $this->create_rewrite_and_republish_copy( $original );
+
+		// Put the copy in the republish-pending state, as a republish submission would.
+		$this->update_post_without_republish(
+			[
+				'ID'           => $copy->ID,
+				'post_title'   => 'Rewritten Title',
+				'post_content' => 'Rewritten content.',
+				'post_status'  => 'dp-rewrite-republish',
+			],
+		);
+		$copy = \get_post( $copy->ID );
+
+		// A user who cannot edit the original attempts the republish.
+		$unauthorized_id = $this->factory->user->create( [ 'role' => 'author' ] );
+		\wp_set_current_user( $unauthorized_id );
+
+		try {
+			$this->instance->republish_request( $copy );
+			$this->fail( 'Expected wp_die was not triggered for an unauthorized republish.' );
+		} catch ( WPDieException $e ) {
+			$this->assertInstanceOf( WPDieException::class, $e );
+		}
+
+		// The original is never overwritten.
+		$unchanged_original = \get_post( $original->ID );
+		$this->assertSame( 'Original Title', $unchanged_original->post_title );
+		$this->assertSame( 'Original content.', $unchanged_original->post_content );
+
+		// The copy is reverted to draft, preserving its content.
+		$reverted_copy = \get_post( $copy->ID );
+		$this->assertSame( 'draft', $reverted_copy->post_status );
+		$this->assertSame( 'Rewritten Title', $reverted_copy->post_title );
+	}
+
+	/**
+	 * Tests that republish_request blocks scheduling a republish by a user who cannot edit the original.
+	 *
+	 * @covers ::republish_request
+	 * @covers ::revert_unauthorized_copy
+	 *
+	 * @return void
+	 */
+	public function test_republish_request_blocks_unauthorized_scheduling() {
+		$owner_id = $this->factory->user->create( [ 'role' => 'administrator' ] );
+		$original = $this->create_original_post(
+			[
+				'post_title'   => 'Original Title',
+				'post_content' => 'Original content.',
+				'post_author'  => $owner_id,
+			],
+		);
+		$copy     = $this->create_rewrite_and_republish_copy( $original );
+
+		// Simulate the scheduling submission: republish_request receives the copy with the 'future'
+		// status, exactly as the save hooks pass it when a future date is set in the editor.
+		$copy              = \get_post( $copy->ID );
+		$copy->post_status = 'future';
+
+		// A user who cannot edit the original attempts to schedule the republish.
+		$unauthorized_id = $this->factory->user->create( [ 'role' => 'author' ] );
+		\wp_set_current_user( $unauthorized_id );
+
+		try {
+			$this->instance->republish_request( $copy );
+			$this->fail( 'Expected wp_die was not triggered for an unauthorized scheduling.' );
+		} catch ( WPDieException $e ) {
+			$this->assertInstanceOf( WPDieException::class, $e );
+		}
+
+		// The original is never overwritten.
+		$unchanged_original = \get_post( $original->ID );
+		$this->assertSame( 'Original Title', $unchanged_original->post_title );
+
+		// The copy is left as a draft (not scheduled or published), so it cannot republish the original.
+		$reverted_copy = \get_post( $copy->ID );
+		$this->assertSame( 'draft', $reverted_copy->post_status );
+	}
+
+	/**
+	 * Tests that republish_request leaves a scheduled copy untouched when the user can edit the original.
+	 *
+	 * @covers ::republish_request
+	 *
+	 * @return void
+	 */
+	public function test_republish_request_allows_authorized_scheduling() {
+		$original = $this->create_original_post(
+			[
+				'post_title'   => 'Original Title',
+				'post_content' => 'Original content.',
+			],
+		);
+		$copy     = $this->create_rewrite_and_republish_copy( $original );
+
+		// Simulate the scheduling submission: republish_request receives the copy with the 'future' status.
+		$copy              = \get_post( $copy->ID );
+		$copy->post_status = 'future';
+
+		// A user who can edit the original schedules the republish.
+		$admin_id = $this->factory->user->create( [ 'role' => 'administrator' ] );
+		\wp_set_current_user( $admin_id );
+
+		// An authorized scheduling is not blocked and is not republished now (cron does that at the scheduled time).
+		$this->instance->republish_request( $copy );
+
+		// The original is not republished yet.
+		$unchanged_original = \get_post( $original->ID );
+		$this->assertSame( 'Original Title', $unchanged_original->post_title );
+		$this->assertSame( 'Original content.', $unchanged_original->post_content );
+	}
 }
