@@ -468,6 +468,136 @@ final class Block_Editor_Test extends TestCase {
 	}
 
 	/**
+	 * Tests that the original item data falls back to an empty edit URL when the
+	 * current user cannot edit the original post.
+	 *
+	 * `get_edit_post_link()` returns null when the user lacks `edit_post` on the
+	 * original; passing that null to `esc_url_raw()` triggers a deprecation on PHP 8.1+.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Block_Editor::enqueue_block_editor_scripts
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Block_Editor::generate_js_object
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 *
+	 * @return void
+	 */
+	public function test_enqueue_block_editor_scripts_when_original_cannot_be_edited() {
+		$utils                      = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
+		$post                       = Mockery::mock( WP_Post::class );
+		$post->ID                   = 123;
+		$original                   = Mockery::mock( WP_Post::class );
+		$original->ID               = 456;
+		$new_draft_link             = 'http://fakeu.rl/new_draft';
+		$rewrite_and_republish_link = 'http://fakeu.rl/rewrite_and_republish';
+		$original_edit_url          = 'http://fakeu.rl/original';
+		$check_link                 = 'http://fakeu.rl/check';
+
+		$show_links = [
+			'new_draft'         => '1',
+			'clone'             => '1',
+			'rewrite_republish' => '1',
+		];
+
+		$show_links_in = [
+			'row'         => '1',
+			'adminbar'    => '1',
+			'submitbox'   => '1',
+			'bulkactions' => '1',
+		];
+
+		$this->permissions_helper
+			->expects( 'is_edit_post_screen' )
+			->andReturnTrue();
+
+		Monkey\Functions\expect( '\get_post' )
+			->andReturn( $post );
+
+		$this->permissions_helper
+			->expects( 'is_rewrite_and_republish_copy' )
+			->with( $post )
+			->twice()
+			->andReturnTrue();
+
+		$this->instance
+			->expects( 'get_new_draft_permalink' )
+			->andReturn( $new_draft_link );
+
+		$this->instance
+			->expects( 'get_rewrite_republish_permalink' )
+			->andReturn( $rewrite_and_republish_link );
+
+		$utils
+			->expects( 'get_option' )
+			->andReturn( $show_links );
+
+		$utils
+			->expects( 'get_option' )
+			->andReturn( $show_links_in );
+
+		$this->instance
+			->expects( 'get_original_post_edit_url' )
+			->andReturn( $original_edit_url );
+
+		Monkey\Functions\expect( '\get_option' )
+			->with( 'duplicate_post_show_original_meta_box' )
+			->andReturn( '0' );
+
+		$utils
+			->expects( 'get_original' )
+			->with( $post )
+			->andReturn( $original );
+
+		// The user cannot edit the original, so get_edit_post_link returns null.
+		Monkey\Functions\expect( '\get_edit_post_link' )
+			->with( $original->ID, 'raw' )
+			->andReturnNull();
+		Monkey\Functions\expect( '\get_permalink' )
+			->with( $original->ID )
+			->andReturn( 'http://fakeu.rl/original-view' );
+		Monkey\Functions\expect( '\_draft_or_post_title' )
+			->with( $original )
+			->andReturn( 'Original Title' );
+		Monkey\Functions\expect( '\current_user_can' )
+			->with( 'edit_post', $original->ID )
+			->andReturnFalse();
+		Monkey\Functions\when( '\esc_url_raw' )->returnArg();
+
+		$edit_js_object = [
+			'postId'                  => 123,
+			'newDraftLink'            => $new_draft_link,
+			'rewriteAndRepublishLink' => $rewrite_and_republish_link,
+			'showLinks'               => $show_links,
+			'showLinksIn'             => $show_links_in,
+			'rewriting'               => 1,
+			'originalEditURL'         => $original_edit_url,
+			'showOriginalMetaBox'     => false,
+			'originalItem'            => [
+				'editUrl' => '',
+				'viewUrl' => 'http://fakeu.rl/original-view',
+				'title'   => 'Original Title',
+				'canEdit' => false,
+			],
+		];
+
+		$this->asset_manager
+			->expects( 'enqueue_styles' );
+
+		$this->asset_manager
+			->expects( 'enqueue_edit_script' )
+			->with( $edit_js_object );
+
+		$this->instance
+			->expects( 'get_check_permalink' )
+			->andReturn( $check_link );
+
+		$this->asset_manager
+			->expects( 'enqueue_strings_script' )
+			->with( [ 'checkLink' => $check_link ] );
+
+		$this->instance->enqueue_block_editor_scripts();
+	}
+
+	/**
 	 * Tests the enqueueing of the scripts when no post is displayed.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\UI\Block_Editor::enqueue_block_editor_scripts
