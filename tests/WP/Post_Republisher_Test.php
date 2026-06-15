@@ -94,6 +94,32 @@ final class Post_Republisher_Test extends TestCase {
 	}
 
 	/**
+	 * Helper method to genuinely schedule a Rewrite & Republish copy for a future date.
+	 *
+	 * Both post_date and post_date_gmt are set, otherwise wp_update_post keeps the copy's
+	 * existing GMT date and WordPress coerces the 'future' status back to 'publish'.
+	 *
+	 * @param WP_Post $copy The Rewrite & Republish copy to schedule.
+	 *
+	 * @return WP_Post The refreshed copy, now persisted in the 'future' status.
+	 */
+	private function schedule_copy_for_future( WP_Post $copy ) {
+		$future = \gmdate( 'Y-m-d H:i:s', ( \time() + \DAY_IN_SECONDS ) );
+
+		$this->update_post_without_republish(
+			[
+				'ID'            => $copy->ID,
+				'post_status'   => 'future',
+				'post_date'     => $future,
+				'post_date_gmt' => $future,
+				'edit_date'     => true,
+			],
+		);
+
+		return \get_post( $copy->ID );
+	}
+
+	/**
 	 * Helper method to update a post without triggering the republish redirect.
 	 *
 	 * This prevents the republish flow by removing the filter that changes the
@@ -1560,10 +1586,9 @@ final class Post_Republisher_Test extends TestCase {
 		);
 		$copy     = $this->create_rewrite_and_republish_copy( $original );
 
-		// Simulate the scheduling submission: republish_request receives the copy with the 'future'
-		// status, exactly as the save hooks pass it when a future date is set in the editor.
-		$copy              = \get_post( $copy->ID );
-		$copy->post_status = 'future';
+		// Genuinely schedule the copy, as saving it with a future date in the editor would.
+		$copy = $this->schedule_copy_for_future( $copy );
+		$this->assertSame( 'future', $copy->post_status );
 
 		// A user who cannot edit the original attempts to schedule the republish.
 		$unauthorized_id = $this->factory->user->create( [ 'role' => 'author' ] );
@@ -1580,7 +1605,7 @@ final class Post_Republisher_Test extends TestCase {
 		$unchanged_original = \get_post( $original->ID );
 		$this->assertSame( 'Original Title', $unchanged_original->post_title );
 
-		// The copy is left as a draft (not scheduled or published), so it cannot republish the original.
+		// The scheduled copy is reverted from 'future' to 'draft', so cron can no longer publish it over the original.
 		$reverted_copy = \get_post( $copy->ID );
 		$this->assertSame( 'draft', $reverted_copy->post_status );
 	}
@@ -1601,9 +1626,9 @@ final class Post_Republisher_Test extends TestCase {
 		);
 		$copy     = $this->create_rewrite_and_republish_copy( $original );
 
-		// Simulate the scheduling submission: republish_request receives the copy with the 'future' status.
-		$copy              = \get_post( $copy->ID );
-		$copy->post_status = 'future';
+		// Genuinely schedule the copy for a future date.
+		$copy = $this->schedule_copy_for_future( $copy );
+		$this->assertSame( 'future', $copy->post_status );
 
 		// A user who can edit the original schedules the republish.
 		$admin_id = $this->factory->user->create( [ 'role' => 'administrator' ] );
@@ -1611,6 +1636,10 @@ final class Post_Republisher_Test extends TestCase {
 
 		// An authorized scheduling is not blocked and is not republished now (cron does that at the scheduled time).
 		$this->instance->republish_request( $copy );
+
+		// The copy stays scheduled: not reverted to draft and not republished onto the original now.
+		$scheduled_copy = \get_post( $copy->ID );
+		$this->assertSame( 'future', $scheduled_copy->post_status );
 
 		// The original is not republished yet.
 		$unchanged_original = \get_post( $original->ID );
