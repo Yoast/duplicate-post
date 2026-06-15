@@ -94,6 +94,32 @@ final class Post_Republisher_Test extends TestCase {
 	}
 
 	/**
+	 * Helper method to genuinely schedule a Rewrite & Republish copy for a future date.
+	 *
+	 * Both post_date and post_date_gmt are set, otherwise wp_update_post keeps the copy's
+	 * existing GMT date and WordPress coerces the 'future' status back to 'publish'.
+	 *
+	 * @param WP_Post $copy The Rewrite & Republish copy to schedule.
+	 *
+	 * @return WP_Post The refreshed copy, now persisted in the 'future' status.
+	 */
+	private function schedule_copy_for_future( WP_Post $copy ) {
+		$future = \gmdate( 'Y-m-d H:i:s', ( \time() + \DAY_IN_SECONDS ) );
+
+		$this->update_post_without_republish(
+			[
+				'ID'            => $copy->ID,
+				'post_status'   => 'future',
+				'post_date'     => $future,
+				'post_date_gmt' => $future,
+				'edit_date'     => true,
+			],
+		);
+
+		return \get_post( $copy->ID );
+	}
+
+	/**
 	 * Helper method to update a post without triggering the republish redirect.
 	 *
 	 * This prevents the republish flow by removing the filter that changes the
@@ -1487,5 +1513,137 @@ final class Post_Republisher_Test extends TestCase {
 
 		// Clean up (may not be reached due to exception).
 		unset( $_GET['dprepublished'], $_GET['dpcopy'], $_GET['post'], $_GET['dpnonce'], $_REQUEST['dpnonce'] );
+	}
+
+	/**
+	 * Tests that republish_request blocks an immediate republish by a user who cannot edit the original.
+	 *
+	 * @covers ::republish_request
+	 * @covers ::revert_unauthorized_copy
+	 *
+	 * @return void
+	 */
+	public function test_republish_request_blocks_unauthorized_immediate_republish() {
+		$owner_id = $this->factory->user->create( [ 'role' => 'administrator' ] );
+		$original = $this->create_original_post(
+			[
+				'post_title'   => 'Original Title',
+				'post_content' => 'Original content.',
+				'post_author'  => $owner_id,
+			],
+		);
+		$copy     = $this->create_rewrite_and_republish_copy( $original );
+
+		// Put the copy in the republish-pending state, as a republish submission would.
+		$this->update_post_without_republish(
+			[
+				'ID'           => $copy->ID,
+				'post_title'   => 'Rewritten Title',
+				'post_content' => 'Rewritten content.',
+				'post_status'  => 'dp-rewrite-republish',
+			],
+		);
+		$copy = \get_post( $copy->ID );
+
+		// A user who cannot edit the original attempts the republish.
+		$unauthorized_id = $this->factory->user->create( [ 'role' => 'author' ] );
+		\wp_set_current_user( $unauthorized_id );
+
+		try {
+			$this->instance->republish_request( $copy );
+			$this->fail( 'Expected wp_die was not triggered for an unauthorized republish.' );
+		} catch ( WPDieException $e ) {
+			$this->assertInstanceOf( WPDieException::class, $e );
+		}
+
+		// The original is never overwritten.
+		$unchanged_original = \get_post( $original->ID );
+		$this->assertSame( 'Original Title', $unchanged_original->post_title );
+		$this->assertSame( 'Original content.', $unchanged_original->post_content );
+
+		// The copy is reverted to draft, preserving its content.
+		$reverted_copy = \get_post( $copy->ID );
+		$this->assertSame( 'draft', $reverted_copy->post_status );
+		$this->assertSame( 'Rewritten Title', $reverted_copy->post_title );
+	}
+
+	/**
+	 * Tests that republish_request blocks scheduling a republish by a user who cannot edit the original.
+	 *
+	 * @covers ::republish_request
+	 * @covers ::revert_unauthorized_copy
+	 *
+	 * @return void
+	 */
+	public function test_republish_request_blocks_unauthorized_scheduling() {
+		$owner_id = $this->factory->user->create( [ 'role' => 'administrator' ] );
+		$original = $this->create_original_post(
+			[
+				'post_title'   => 'Original Title',
+				'post_content' => 'Original content.',
+				'post_author'  => $owner_id,
+			],
+		);
+		$copy     = $this->create_rewrite_and_republish_copy( $original );
+
+		// Genuinely schedule the copy, as saving it with a future date in the editor would.
+		$copy = $this->schedule_copy_for_future( $copy );
+		$this->assertSame( 'future', $copy->post_status );
+
+		// A user who cannot edit the original attempts to schedule the republish.
+		$unauthorized_id = $this->factory->user->create( [ 'role' => 'author' ] );
+		\wp_set_current_user( $unauthorized_id );
+
+		try {
+			$this->instance->republish_request( $copy );
+			$this->fail( 'Expected wp_die was not triggered for an unauthorized scheduling.' );
+		} catch ( WPDieException $e ) {
+			$this->assertInstanceOf( WPDieException::class, $e );
+		}
+
+		// The original is never overwritten.
+		$unchanged_original = \get_post( $original->ID );
+		$this->assertSame( 'Original Title', $unchanged_original->post_title );
+
+		// The scheduled copy is reverted from 'future' to 'draft', so cron can no longer publish it over the original.
+		$reverted_copy = \get_post( $copy->ID );
+		$this->assertSame( 'draft', $reverted_copy->post_status );
+	}
+
+	/**
+	 * Tests that republish_request leaves a scheduled copy untouched when the user can edit the original.
+	 *
+	 * @covers ::republish_request
+	 *
+	 * @return void
+	 */
+	public function test_republish_request_allows_authorized_scheduling() {
+		$original = $this->create_original_post(
+			[
+				'post_title'   => 'Original Title',
+				'post_content' => 'Original content.',
+			],
+		);
+		$copy     = $this->create_rewrite_and_republish_copy( $original );
+
+		// Genuinely schedule the copy for a future date.
+		$copy = $this->schedule_copy_for_future( $copy );
+		$this->assertSame( 'future', $copy->post_status );
+
+		// A user who can edit the original schedules the republish.
+		$admin_id = $this->factory->user->create( [ 'role' => 'administrator' ] );
+		\wp_set_current_user( $admin_id );
+
+		// An authorized scheduling is not blocked and is not republished now (cron does that at the scheduled time).
+		$this->instance->republish_request( $copy );
+
+		// The copy stays scheduled: not reverted to draft and not republished onto the original now.
+		$scheduled_copy = \get_post( $copy->ID );
+		$this->assertSame( 'future', $scheduled_copy->post_status );
+
+		// The original is not republished yet.
+		$unchanged_original = \get_post( $original->ID );
+		$this->assertSame( 'Original Title', $unchanged_original->post_title );
+		$this->assertSame( 'Original content.', $unchanged_original->post_content );
 	}
 }
