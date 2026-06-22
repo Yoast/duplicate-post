@@ -17,7 +17,7 @@ Release date: 2026-06-22
 
 #### Bugfixes
 
-* Fixes a bug where a published post could be overwritten by a user without permission to edit it, when that user scheduled a Rewrite & Republish copy of the post for future publication.
+* Fixes a bug where a published post could be overwritten by a user without permission to edit it, when that user scheduled a Rewrite & Republish copy of the post for future publication. Props to [@nacento](https://github.com/nacento).
 * Fixes a bug where a PHP deprecation notice appeared in the block editor, when a user opened a Rewrite & Republish copy of a post they were not allowed to edit.
 * Fixes a bug where the _Copy to a new draft_ and _Rewrite & Republish_ links broke the layout of the Classic Editor Publish meta box on WordPress 7.0.
 
