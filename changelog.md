@@ -9,7 +9,7 @@ Changelog
 
 ## 4.7
 
-Release date: 2026-06-30
+Release date: 2026-06-22
 
 #### Enhancements
 
