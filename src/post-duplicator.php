@@ -71,7 +71,7 @@ class Post_Duplicator {
 		}
 
 		if ( ! empty( $options['increase_menu_order_by'] ) && \is_numeric( $options['increase_menu_order_by'] ) ) {
-			$menu_order += \intval( $options['increase_menu_order_by'] );
+			$menu_order += (int) $options['increase_menu_order_by'];
 		}
 
 		$new_post = [

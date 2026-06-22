@@ -257,6 +257,7 @@ class DuplicatePost {
 					notice.text,
 					{
 						isDismissible: notice.isDismissible || true,
+						__unstableHTML: notice.isHTML || false,
 					}
 				);
 			}

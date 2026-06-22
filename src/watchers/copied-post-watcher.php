@@ -47,9 +47,33 @@ class Copied_Post_Watcher {
 	 */
 	public function get_notice_text( $post ) {
 		if ( $this->permissions_helper->has_trashed_rewrite_and_republish_copy( $post ) ) {
+			$trash_url       = \add_query_arg(
+				[
+					'post_status' => 'trash',
+					'post_type'   => $post->post_type,
+				],
+				\admin_url( 'edit.php' ),
+			);
+			$view_trash_html = \sprintf(
+				' <a href="%1$s">%2$s</a>',
+				\esc_url( $trash_url ),
+				\__( 'View trash.', 'duplicate-post' ),
+			);
+
 			return \__(
 				'You can only make one Rewrite & Republish duplicate at a time, and a duplicate of this post already exists in the trash. Permanently delete it if you want to make a new duplicate.',
 				'duplicate-post',
+			) . $view_trash_html;
+		}
+
+		$copy      = $this->permissions_helper->get_rewrite_and_republish_copy( $post );
+		$edit_url  = ( $copy instanceof WP_Post ) ? \get_edit_post_link( $copy->ID, 'raw' ) : '';
+		$link_html = '';
+		if ( ! empty( $edit_url ) ) {
+			$link_html = \sprintf(
+				' <a href="%1$s">%2$s</a>',
+				\esc_url( $edit_url ),
+				\__( 'Edit the duplicate.', 'duplicate-post' ),
 			);
 		}
 
@@ -58,7 +82,7 @@ class Copied_Post_Watcher {
 			return \__(
 				'A duplicate of this post was made. Please note that any changes you make to this post will be replaced when the duplicated version is republished.',
 				'duplicate-post',
-			);
+			) . $link_html;
 		}
 
 		return \sprintf(
@@ -69,7 +93,7 @@ class Copied_Post_Watcher {
 			),
 			\get_the_time( \get_option( 'date_format' ), $scheduled_copy ),
 			\get_the_time( \get_option( 'time_format' ), $scheduled_copy ),
-		);
+		) . $link_html;
 	}
 
 	/**
@@ -90,7 +114,7 @@ class Copied_Post_Watcher {
 
 		if ( $this->permissions_helper->has_rewrite_and_republish_copy( $post ) ) {
 			print '<div id="message" class="notice notice-warning is-dismissible fade"><p>'
-				. \esc_html( $this->get_notice_text( $post ) )
+				. \wp_kses( $this->get_notice_text( $post ), [ 'a' => [ 'href' => [] ] ] )
 				. '</p></div>';
 		}
 	}
@@ -113,6 +137,7 @@ class Copied_Post_Watcher {
 				'text'          => $this->get_notice_text( $post ),
 				'status'        => 'warning',
 				'isDismissible' => true,
+				'isHTML'        => true,
 			];
 
 			\wp_add_inline_script(

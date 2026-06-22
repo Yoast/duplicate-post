@@ -65,7 +65,7 @@ class Link_Actions_Watcher {
 				return;
 			}
 
-			$copied_posts = \intval( $_REQUEST['cloned'] );
+			$copied_posts = (int) $_REQUEST['cloned'];
 			\printf(
 				'<div id="message" class="notice notice-success fade"><p>'
 				. \esc_html(

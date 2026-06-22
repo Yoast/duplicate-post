@@ -141,7 +141,7 @@ final class Options_Test extends TestCase {
 	public function test_get_options_for_non_existing_tab() {
 		$options = $this->instance->get_options_for_tab( 'tab3' );
 
-		$this->assertEmpty( $options );
+		$this->assertSame( [], $options );
 	}
 
 	/**
@@ -154,7 +154,7 @@ final class Options_Test extends TestCase {
 	public function test_get_options_for_non_existing_fieldset() {
 		$options = $this->instance->get_options_for_tab( 'tab1', 'fieldset2' );
 
-		$this->assertEmpty( $options );
+		$this->assertSame( [], $options );
 	}
 
 	/**
@@ -191,6 +191,6 @@ final class Options_Test extends TestCase {
 	public function test_get_invalid_option() {
 		$options = $this->instance->get_option( 'option_4' );
 
-		$this->assertEmpty( $options );
+		$this->assertSame( [], $options );
 	}
 }

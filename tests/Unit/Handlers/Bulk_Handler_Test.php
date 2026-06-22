@@ -81,7 +81,7 @@ final class Bulk_Handler_Test extends TestCase {
 
 		$result = $this->instance->clone_bulk_action_handler( $redirect_to, 'trash', [ 1, 2 ] );
 
-		$this->assertEquals( $redirect_to, $result );
+		$this->assertSame( $redirect_to, $result );
 	}
 
 	/**
@@ -195,7 +195,7 @@ final class Bulk_Handler_Test extends TestCase {
 
 		$result = $this->instance->clone_bulk_action_handler( $redirect_to, 'duplicate_post_bulk_clone', [ 1 ] );
 
-		$this->assertEquals( $redirect_to . '?bulk_cloned=1', $result );
+		$this->assertSame( $redirect_to . '?bulk_cloned=1', $result );
 	}
 
 	/**
@@ -265,7 +265,7 @@ final class Bulk_Handler_Test extends TestCase {
 
 		$result = $this->instance->rewrite_bulk_action_handler( $redirect_to, 'trash', [ 1, 2 ] );
 
-		$this->assertEquals( $redirect_to, $result );
+		$this->assertSame( $redirect_to, $result );
 	}
 
 	/**
@@ -364,6 +364,6 @@ final class Bulk_Handler_Test extends TestCase {
 
 		$result = $this->instance->rewrite_bulk_action_handler( $redirect_to, 'duplicate_post_bulk_rewrite_republish', [ 1 ] );
 
-		$this->assertEquals( $redirect_to . '?bulk_rewriting=1', $result );
+		$this->assertSame( $redirect_to . '?bulk_rewriting=1', $result );
 	}
 }

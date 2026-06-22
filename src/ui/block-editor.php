@@ -233,8 +233,11 @@ class Block_Editor {
 		$original_data                 = null;
 
 		if ( $original_item instanceof WP_Post ) {
+			// get_edit_post_link() returns null when the current user cannot edit the original post.
+			$edit_link = (string) \get_edit_post_link( $original_item->ID, 'raw' );
+
 			$original_data = [
-				'editUrl'  => \esc_url_raw( \get_edit_post_link( $original_item->ID, 'raw' ) ),
+				'editUrl'  => \esc_url_raw( $edit_link ),
 				'viewUrl'  => \esc_url_raw( \get_permalink( $original_item->ID ) ),
 				'title'    => \html_entity_decode( \_draft_or_post_title( $original_item ), \ENT_QUOTES, 'UTF-8' ),
 				'canEdit'  => \current_user_can( 'edit_post', $original_item->ID ),
@@ -249,7 +252,7 @@ class Block_Editor {
 			'showLinksIn'             => Utils::get_option( 'duplicate_post_show_link_in' ),
 			'rewriting'               => ( $is_rewrite_and_republish_copy ) ? 1 : 0,
 			'originalEditURL'         => $this->get_original_post_edit_url(),
-			'showOriginalMetaBox'     => \intval( \get_option( 'duplicate_post_show_original_meta_box' ) ) === 1,
+			'showOriginalMetaBox'     => (int) \get_option( 'duplicate_post_show_original_meta_box' ) === 1,
 			'originalItem'            => $original_data,
 		];
 	}

@@ -1,11 +1,31 @@
 Yoast Duplicate Post
 =========
 Requires at least: 	6.8
-Tested up to: 		6.9
+Tested up to: 		7.0
 Requires PHP: 7.4
 
 Changelog
 =========
+
+## 4.7
+
+Release date: 2026-06-22
+
+#### Enhancements
+
+* Adds a link to the existing duplicate in the Rewrite & Republish admin notices, so you can open it directly instead of hunting for it in the post list. Props to [@johnbillion](https://github.com/johnbillion).
+
+#### Bugfixes
+
+* Fixes a bug where a published post could be overwritten by a user without permission to edit it, when that user scheduled a Rewrite & Republish copy of the post for future publication. Props to [@nacento](https://github.com/nacento).
+* Fixes a bug where a PHP deprecation notice appeared in the block editor, when a user opened a Rewrite & Republish copy of a post they were not allowed to edit.
+* Fixes a bug where the _Copy to a new draft_ and _Rewrite & Republish_ links broke the layout of the Classic Editor Publish meta box on WordPress 7.0.
+
+#### Other
+
+* Improves the security of the welcome notice dismissal by requiring a valid nonce and the `manage_options` capability.
+* Improves the security of the scheduled republish notice in the Classic editor by escaping the post title and permalink before output.
+* Sets the _WordPress tested up to_ version to 7.0.
 
 ## 4.6
 
@@ -42,22 +62,6 @@ Introduces smoother post duplication, more reliable rewrite workflows, and bette
 * Improves how the translations are loaded by relying on the WordPress mechanism for that. Props to @swissspidy.
 * Improves discoverability of security policy in Packagist.
 * Users requiring this package via [WP]Packagist can now use the `composer/installers` v2.
-
-## 4.5
-
-Release date: 2022-06-28
-
-#### Enhancements
-
-* Improves the impact of the plugin on the performance of the site by avoiding useless calls on the `gettext` filter.
-
-#### Bugfixes
-
-* Fixes a bug where a section in the Classic Editor's submitbox would be displayed with incorrect margins.
-
-#### Other
-
-* Sets the WordPress tested up to version to 6.0.
 
 ### Earlier versions
 For the changelog of earlier versions, please refer to [the changelog on yoast.com](https://yoa.st/duplicate-post-changelog).

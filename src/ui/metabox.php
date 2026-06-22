@@ -33,7 +33,7 @@ class Metabox {
 	 * @return void
 	 */
 	public function register_hooks() {
-		if ( \intval( \get_option( 'duplicate_post_show_original_meta_box' ) ) === 1 ) {
+		if ( (int) \get_option( 'duplicate_post_show_original_meta_box' ) === 1 ) {
 			\add_action( 'add_meta_boxes', [ $this, 'add_custom_metabox' ], 10, 2 );
 		}
 	}

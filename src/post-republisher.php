@@ -128,11 +128,15 @@ class Post_Republisher {
 	 * @return void
 	 */
 	public function republish_request( $post ) {
-		if (
-			! $post instanceof WP_Post
-			|| ! $this->permissions_helper->is_rewrite_and_republish_copy( $post )
-			|| ! $this->permissions_helper->is_copy_allowed_to_be_republished( $post )
-		) {
+		if ( ! $post instanceof WP_Post || ! $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
+			return;
+		}
+
+		$is_republishing = $this->permissions_helper->is_copy_allowed_to_be_republished( $post );
+		$is_scheduling   = ( $post->post_status === 'future' );
+
+		// Only act on a republish submission or the scheduling of a republish.
+		if ( ! $is_republishing && ! $is_scheduling ) {
 			return;
 		}
 
@@ -143,6 +147,9 @@ class Post_Republisher {
 		}
 
 		if ( ! \current_user_can( 'edit_post', $original_post->ID ) ) {
+			// Undo the republish or scheduling but keep the copy's content, so the original is never overwritten.
+			$this->revert_unauthorized_copy( $post );
+
 			\wp_die(
 				\esc_html__( 'You are not allowed to republish this post.', 'duplicate-post' ),
 				\esc_html__( 'Permission denied', 'duplicate-post' ),
@@ -150,11 +157,14 @@ class Post_Republisher {
 			);
 		}
 
-		$this->republish( $post, $original_post );
+		// A scheduled copy is republished by cron at the scheduled time, not now.
+		if ( $is_republishing ) {
+			$this->republish( $post, $original_post );
 
-		// Trigger the redirect in the Classic Editor.
-		if ( $this->is_classic_editor_post_request() ) {
-			$this->redirect( $original_post->ID, $post->ID );
+			// Trigger the redirect in the Classic Editor.
+			if ( $this->is_classic_editor_post_request() ) {
+				$this->redirect( $original_post->ID, $post->ID );
+			}
 		}
 	}
 
@@ -260,7 +270,7 @@ class Post_Republisher {
 
 			\check_admin_referer( 'dp-republish', 'dpnonce' );
 
-			if ( \intval( \get_post_meta( $copy_id, '_dp_has_been_republished', true ) ) === 1 ) {
+			if ( (int) \get_post_meta( $copy_id, '_dp_has_been_republished', true ) === 1 ) {
 				$this->delete_copy( $copy_id, $post_id );
 			}
 			else {
@@ -368,7 +378,7 @@ class Post_Republisher {
 		// Delete the copy bypassing the trash so it also deletes the copy post meta.
 		\wp_delete_post( $copy_id, $permanently_delete );
 
-		if ( ! \is_null( $post_id ) ) {
+		if ( $post_id !== null ) {
 			// Delete the meta that marks the original post has having a copy.
 			\delete_post_meta( $post_id, '_dp_has_rewrite_republish_copy' );
 		}
@@ -463,6 +473,25 @@ class Post_Republisher {
 			),
 		);
 		exit();
+	}
+
+	/**
+	 * Reverts a copy that the current user is not allowed to republish back to draft.
+	 *
+	 * Preserves the copy's content while undoing the republish or scheduling, so the original
+	 * is never overwritten and the copy is not left published or in a republish-pending state.
+	 *
+	 * @param WP_Post $post The copy's post object.
+	 *
+	 * @return void
+	 */
+	protected function revert_unauthorized_copy( WP_Post $post ) {
+		\wp_update_post(
+			[
+				'ID'          => $post->ID,
+				'post_status' => 'draft',
+			],
+		);
 	}
 
 	/**
