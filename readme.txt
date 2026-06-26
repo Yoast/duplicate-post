@@ -1,7 +1,7 @@
 === Yoast Duplicate Post ===
 Contributors: 		yoast, lopo
 Donate link: 		https://yoast.com/wordpress/plugins/duplicate-post/
-Tags: 				duplicate post, copy, clone
+Tags: 				duplicate post, duplicate page, clone, copy, rewrite republish
 Requires at least: 	6.8
 Tested up to: 		7.0
 Stable tag: 		4.7
