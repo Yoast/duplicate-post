@@ -173,6 +173,8 @@ class Post_Duplicator {
 			\update_post_meta( $new_post_id, '_dp_creation_date_gmt', \current_time( 'mysql', 1 ) );
 		}
 
+		wp_save_post_revision( $new_post_id );
+
 		return $new_post_id;
 	}
 
