@@ -9,8 +9,6 @@ name: Release
 #   2. Bumps the version (package.json, plugin header, DUPLICATE_POST_CURRENT_VERSION, Stable tag)
 #      on the source branch: release/x.y when an RC was cut, otherwise trunk.
 #   3. Merges the source branch into main (--no-ff), tags and pushes from main.
-#      (The tag push also triggers .github/workflows/deploy.yml, which builds
-#       and pushes the artifact to Yoast-dist/duplicate-post.)
 #   4. Builds the artifact locally and deploys it to wordpress.org SVN via the
 #      10up action (uses WPORG_SVN_USERNAME / WPORG_SVN_PASSWORD secrets).
 #   5. Creates a GitHub release with the changelog.md section as notes and
@@ -19,10 +17,14 @@ name: Release
 #      next version.
 #   7. Merges main back into trunk.
 #   8. Emits a Slack message body in the job summary for manual posting.
+#   9. Calls .github/workflows/deploy.yml from a follow-up job, which builds the
+#      tag and pushes the artifact to Yoast-dist/duplicate-post. A push made with
+#      the built-in Actions token raises no events, so the tag push in step 3
+#      cannot trigger that workflow by itself.
 #
 # Pass `dry-run=true` to rehearse the pipeline without any remote side effect:
-# every `git push`, the SVN deploy, the GitHub release, and the milestone API
-# calls are skipped. The built zip is still uploaded as a workflow artifact
+# every `git push`, the SVN deploy, the GitHub release, the dist deploy, and the
+# milestone API calls are skipped. The built zip is still uploaded as a workflow artifact
 # (named duplicate-post-${VERSION}, containing the duplicate-post/ folder)
 # so you can inspect it.
 ##############################################################################
@@ -39,7 +41,7 @@ on:
         required: false
         type: string
       dry-run:
-        description: 'Dry-run: do all in-tree work (version bump, local commit/merge/tag, artifact build) but skip every remote side-effect (no git push, no SVN, no GH release, no milestone changes). The built zip is uploaded as a workflow artifact for inspection.'
+        description: 'Dry-run: do all in-tree work (version bump, local commit/merge/tag, artifact build) but skip every remote side-effect (no git push, no SVN, no GH release, no dist deploy, no milestone changes). The built zip is uploaded as a workflow artifact for inspection.'
         required: false
         default: false
         type: boolean
@@ -376,6 +378,7 @@ jobs:
             echo "* \`gh release create ${VERSION}\` with \`${ZIP_NAME}\` attached and the release notes below"
             echo "* Close milestone \`${VERSION}\` and open milestone \`${NEXT_VERSION}\`"
             echo "* \`git push origin trunk\` (after merging \`main\` back)"
+            echo "* Build tag \`${VERSION}\` and push the artifact to Yoast-dist/duplicate-post"
             echo ""
             echo "The built plugin is available as the \`duplicate-post-${VERSION}\` workflow artifact above (download yields \`duplicate-post-${VERSION}.zip\` containing the \`duplicate-post/\` folder)."
             echo ""
@@ -383,3 +386,14 @@ jobs:
             echo ""
             cat release-notes.md
           } >> "$GITHUB_STEP_SUMMARY"
+
+  deploy-to-dist:
+    name: "Deploy to dist"
+    needs: release
+    # A dry run pushes no tag, so there is nothing to deploy.
+    if: ${{ inputs.dry-run != true }}
+    uses: ./.github/workflows/deploy.yml
+    with:
+      ref: ${{ inputs.version }}
+      is-release: true
+    secrets: inherit
