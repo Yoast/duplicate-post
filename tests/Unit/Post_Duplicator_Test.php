@@ -355,7 +355,7 @@ final class Post_Duplicator_Test extends TestCase {
 	 * Tests the get_configured_options function with all copy settings enabled.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Post_Duplicator::get_configured_options
-	 * @covers \Yoast\WP\Duplicate_Post\Post_Duplicator::is_option_enabled
+	 * @covers \Yoast\WP\Duplicate_Post\Post_Duplicator::is_copy_enabled
 	 * @covers \Yoast\WP\Duplicate_Post\Post_Duplicator::get_meta_excludelist
 	 * @covers \Yoast\WP\Duplicate_Post\Post_Duplicator::get_taxonomies_excludelist
 	 *
@@ -419,7 +419,7 @@ final class Post_Duplicator_Test extends TestCase {
 	 * Tests the get_configured_options function with all copy settings disabled.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Post_Duplicator::get_configured_options
-	 * @covers \Yoast\WP\Duplicate_Post\Post_Duplicator::is_option_enabled
+	 * @covers \Yoast\WP\Duplicate_Post\Post_Duplicator::is_copy_enabled
 	 * @covers \Yoast\WP\Duplicate_Post\Post_Duplicator::get_meta_excludelist
 	 * @covers \Yoast\WP\Duplicate_Post\Post_Duplicator::get_taxonomies_excludelist
 	 *

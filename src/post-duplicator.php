@@ -56,18 +56,18 @@ class Post_Duplicator {
 	 */
 	public function get_configured_options() {
 		$options = [
-			'copy_title'             => $this->is_option_enabled( 'duplicate_post_copytitle' ),
-			'copy_date'              => $this->is_option_enabled( 'duplicate_post_copydate' ),
-			'copy_status'            => $this->is_option_enabled( 'duplicate_post_copystatus' ),
-			'copy_name'              => $this->is_option_enabled( 'duplicate_post_copyslug' ),
-			'copy_excerpt'           => $this->is_option_enabled( 'duplicate_post_copyexcerpt' ),
-			'copy_content'           => $this->is_option_enabled( 'duplicate_post_copycontent' ),
-			'copy_thumbnail'         => $this->is_option_enabled( 'duplicate_post_copythumbnail' ),
-			'copy_template'          => $this->is_option_enabled( 'duplicate_post_copytemplate' ),
-			'copy_format'            => $this->is_option_enabled( 'duplicate_post_copyformat' ),
-			'copy_author'            => $this->is_option_enabled( 'duplicate_post_copyauthor' ),
-			'copy_password'          => $this->is_option_enabled( 'duplicate_post_copypassword' ),
-			'copy_menu_order'        => $this->is_option_enabled( 'duplicate_post_copymenuorder' ),
+			'copy_title'             => $this->is_copy_enabled( 'title' ),
+			'copy_date'              => $this->is_copy_enabled( 'date' ),
+			'copy_status'            => $this->is_copy_enabled( 'status' ),
+			'copy_name'              => $this->is_copy_enabled( 'slug' ),
+			'copy_excerpt'           => $this->is_copy_enabled( 'excerpt' ),
+			'copy_content'           => $this->is_copy_enabled( 'content' ),
+			'copy_thumbnail'         => $this->is_copy_enabled( 'thumbnail' ),
+			'copy_template'          => $this->is_copy_enabled( 'template' ),
+			'copy_format'            => $this->is_copy_enabled( 'format' ),
+			'copy_author'            => $this->is_copy_enabled( 'author' ),
+			'copy_password'          => $this->is_copy_enabled( 'password' ),
+			'copy_menu_order'        => $this->is_copy_enabled( 'menuorder' ),
 			'title_prefix'           => (string) \get_option( 'duplicate_post_title_prefix' ),
 			'title_suffix'           => (string) \get_option( 'duplicate_post_title_suffix' ),
 			'increase_menu_order_by' => \get_option( 'duplicate_post_increase_menu_order_by' ),
@@ -79,14 +79,15 @@ class Post_Duplicator {
 	}
 
 	/**
-	 * Determines whether a copy setting is enabled.
+	 * Determines whether the setting to copy the passed post element is enabled.
 	 *
-	 * @param string $option The name of the option.
+	 * @param string $element The post element to copy, as used in the option name
+	 *                        after the `duplicate_post_copy` prefix. For example `title`.
 	 *
-	 * @return bool Whether the option is enabled.
+	 * @return bool Whether the element is set to be copied.
 	 */
-	protected function is_option_enabled( $option ) {
-		return ( (int) \get_option( $option ) === 1 );
+	protected function is_copy_enabled( $element ) {
+		return ( (int) \get_option( 'duplicate_post_copy' . $element ) === 1 );
 	}
 
 	/**
