@@ -350,4 +350,152 @@ final class Post_Duplicator_Test extends TestCase {
 
 		return $data;
 	}
+
+	/**
+	 * Tests the get_configured_options function with all copy settings enabled.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Post_Duplicator::get_configured_options
+	 * @covers \Yoast\WP\Duplicate_Post\Post_Duplicator::is_option_enabled
+	 * @covers \Yoast\WP\Duplicate_Post\Post_Duplicator::get_meta_excludelist
+	 * @covers \Yoast\WP\Duplicate_Post\Post_Duplicator::get_taxonomies_excludelist
+	 *
+	 * @return void
+	 */
+	public function test_get_configured_options_with_settings_enabled() {
+		$this->stub_options(
+			[
+				'duplicate_post_copytitle'              => '1',
+				'duplicate_post_copydate'               => '1',
+				'duplicate_post_copystatus'             => '1',
+				'duplicate_post_copyslug'               => '1',
+				'duplicate_post_copyexcerpt'            => '1',
+				'duplicate_post_copycontent'            => '1',
+				'duplicate_post_copythumbnail'          => '1',
+				'duplicate_post_copytemplate'           => '1',
+				'duplicate_post_copyformat'             => '1',
+				'duplicate_post_copyauthor'             => '1',
+				'duplicate_post_copypassword'           => '1',
+				'duplicate_post_copymenuorder'          => '1',
+				'duplicate_post_title_prefix'           => 'Copy of',
+				'duplicate_post_title_suffix'           => '(copy)',
+				'duplicate_post_increase_menu_order_by' => '2',
+				'duplicate_post_blacklist'              => '_my_meta, _other_meta',
+				'duplicate_post_taxonomies_blacklist'   => [ 'post_tag' ],
+			],
+		);
+
+		$options = $this->instance->get_configured_options();
+
+		$this->assertSame(
+			[
+				'copy_title'             => true,
+				'copy_date'              => true,
+				'copy_status'            => true,
+				'copy_name'              => true,
+				'copy_excerpt'           => true,
+				'copy_content'           => true,
+				'copy_thumbnail'         => true,
+				'copy_template'          => true,
+				'copy_format'            => true,
+				'copy_author'            => true,
+				'copy_password'          => true,
+				'copy_attachments'       => false,
+				'copy_children'          => false,
+				'copy_comments'          => false,
+				'copy_menu_order'        => true,
+				'title_prefix'           => 'Copy of',
+				'title_suffix'           => '(copy)',
+				'increase_menu_order_by' => '2',
+				'parent_id'              => null,
+				'meta_excludelist'       => [ '_my_meta', '_other_meta' ],
+				'taxonomies_excludelist' => [ 'post_tag' ],
+				'use_filters'            => true,
+			],
+			$options,
+		);
+	}
+
+	/**
+	 * Tests the get_configured_options function with all copy settings disabled.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Post_Duplicator::get_configured_options
+	 * @covers \Yoast\WP\Duplicate_Post\Post_Duplicator::is_option_enabled
+	 * @covers \Yoast\WP\Duplicate_Post\Post_Duplicator::get_meta_excludelist
+	 * @covers \Yoast\WP\Duplicate_Post\Post_Duplicator::get_taxonomies_excludelist
+	 *
+	 * @return void
+	 */
+	public function test_get_configured_options_with_settings_disabled() {
+		$this->stub_options( [] );
+
+		$options = $this->instance->get_configured_options();
+
+		$this->assertSame(
+			[
+				'copy_title'             => false,
+				'copy_date'              => false,
+				'copy_status'            => false,
+				'copy_name'              => false,
+				'copy_excerpt'           => false,
+				'copy_content'           => false,
+				'copy_thumbnail'         => false,
+				'copy_template'          => false,
+				'copy_format'            => false,
+				'copy_author'            => false,
+				'copy_password'          => false,
+				'copy_attachments'       => false,
+				'copy_children'          => false,
+				'copy_comments'          => false,
+				'copy_menu_order'        => false,
+				'title_prefix'           => '',
+				'title_suffix'           => '',
+				'increase_menu_order_by' => false,
+				'parent_id'              => null,
+				'meta_excludelist'       => [],
+				'taxonomies_excludelist' => [],
+				'use_filters'            => true,
+			],
+			$options,
+		);
+	}
+
+	/**
+	 * Tests that a taxonomies excludelist which is not an array is cast to one.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Post_Duplicator::get_taxonomies_excludelist
+	 *
+	 * @return void
+	 */
+	public function test_get_configured_options_with_single_taxonomy_excluded() {
+		$this->stub_options( [ 'duplicate_post_taxonomies_blacklist' => 'post_tag' ] );
+
+		$options = $this->instance->get_configured_options();
+
+		$this->assertSame( [ 'post_tag' ], $options['taxonomies_excludelist'] );
+	}
+
+	/**
+	 * Stubs the options used to build the copy options.
+	 *
+	 * @param array<string, mixed> $options The values of the stubbed options.
+	 *
+	 * @return void
+	 */
+	protected function stub_options( array $options ) {
+		Monkey\Functions\when( 'get_option' )->alias(
+			static function ( $option, $default_value = false ) use ( $options ) {
+				if ( \array_key_exists( $option, $options ) ) {
+					return $options[ $option ];
+				}
+
+				return $default_value;
+			},
+		);
+
+		Monkey\Functions\when( 'wp_parse_args' )->alias(
+			static function ( $args, $defaults ) {
+				return \array_merge( $defaults, $args );
+			},
+		);
+	}
 }
