@@ -63,6 +63,13 @@ class Duplicate_Post {
 	protected $watchers;
 
 	/**
+	 * Abilities object.
+	 *
+	 * @var Abilities
+	 */
+	protected $abilities;
+
+	/**
 	 * Initializes the main class.
 	 */
 	public function __construct() {
@@ -73,8 +80,10 @@ class Duplicate_Post {
 		$this->post_republisher   = new Post_Republisher( $this->post_duplicator, $this->permissions_helper );
 		$this->revisions_migrator = new Revisions_Migrator();
 		$this->watchers           = new Watchers( $this->permissions_helper );
+		$this->abilities          = new Abilities( $this->post_duplicator, $this->post_republisher, $this->permissions_helper );
 
 		$this->post_republisher->register_hooks();
 		$this->revisions_migrator->register_hooks();
+		$this->abilities->register_hooks();
 	}
 }
