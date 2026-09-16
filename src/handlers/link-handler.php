@@ -172,7 +172,7 @@ class Link_Handler {
 					'cloned' => 1,
 					'ids'    => $post->ID,
 				],
-				$sendback,
+				\wp_make_link_relative( $sendback ),
 			),
 		);
 		exit();
