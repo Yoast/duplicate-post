@@ -47,6 +47,7 @@ final class Post_Republisher_Test extends TestCase {
 
 		// Enable post and page for duplication.
 		\update_option( 'duplicate_post_types_enabled', [ 'post', 'page' ] );
+		\update_option( 'duplicate_post_preserve_date_on_scheduled_republish', '0' );
 
 		$this->post_duplicator    = new Post_Duplicator();
 		$this->permissions_helper = new Permissions_Helper();
@@ -456,6 +457,117 @@ final class Post_Republisher_Test extends TestCase {
 
 		// Verify meta cleanup.
 		$this->assertSame( '', \get_post_meta( $original_id, '_dp_has_rewrite_republish_copy', true ) );
+	}
+
+	/**
+	 * Tests republish_scheduled_post preserves the original post date when the option is enabled.
+	 *
+	 * @covers ::republish_scheduled_post
+	 * @covers ::republish_post_elements
+	 *
+	 * @return void
+	 */
+	public function test_republish_scheduled_post_preserves_original_date_when_option_enabled() {
+		\update_option( 'duplicate_post_preserve_date_on_scheduled_republish', '1' );
+
+		$original = $this->create_original_post(
+			[
+				'post_title'     => 'Original Title',
+				'post_content'   => 'Original content.',
+				'post_date'      => '2020-01-01 00:00:00',
+				'post_date_gmt'  => '2020-01-01 00:00:00',
+			],
+		);
+
+		$copy = $this->create_rewrite_and_republish_copy( $original );
+
+		// Pin the original's modified date in the past so the refresh is observable.
+		// wp_update_post is not used here because it recalculates post_modified itself.
+		global $wpdb;
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+		$wpdb->update(
+			$wpdb->posts,
+			[
+				'post_modified'     => '2020-01-02 00:00:00',
+				'post_modified_gmt' => '2020-01-02 00:00:00',
+			],
+			[ 'ID' => $original->ID ],
+		);
+		\clean_post_cache( $original->ID );
+
+		$this->update_post_without_republish(
+			[
+				'ID'           => $copy->ID,
+				'post_title'   => 'Scheduled Updated Title',
+				'post_content' => 'Scheduled updated content.',
+			],
+		);
+
+		$copy = $this->schedule_copy_for_future( $copy );
+
+		$this->instance->republish_scheduled_post( $copy );
+
+		$updated_original = \get_post( $original->ID );
+
+		// The content is republished as usual.
+		$this->assertSame( 'Scheduled Updated Title', $updated_original->post_title );
+		$this->assertSame( 'Scheduled updated content.', $updated_original->post_content );
+
+		// The publish date is untouched, so the post does not jump to the top of the feed.
+		$this->assertSame( '2020-01-01 00:00:00', $updated_original->post_date );
+		$this->assertSame( '2020-01-01 00:00:00', $updated_original->post_date_gmt );
+
+		// The modified date is refreshed, mimicking a default WordPress post update.
+		$this->assertNotSame( '2020-01-02 00:00:00', $updated_original->post_modified );
+		$this->assertNotSame( '2020-01-02 00:00:00', $updated_original->post_modified_gmt );
+		$this->assertSame( 'publish', $updated_original->post_status );
+
+		// Verify the copy was deleted.
+		$this->assertNull( \get_post( $copy->ID ) );
+	}
+
+	/**
+	 * Tests republish_scheduled_post overwrites the original post date by default.
+	 *
+	 * Without the option, the pre-existing behavior is kept: the original takes the
+	 * scheduled date of the copy.
+	 *
+	 * @covers ::republish_scheduled_post
+	 * @covers ::republish_post_elements
+	 *
+	 * @return void
+	 */
+	public function test_republish_scheduled_post_overwrites_original_date_by_default() {
+		$original = $this->create_original_post(
+			[
+				'post_title'    => 'Original Title',
+				'post_content'  => 'Original content.',
+				'post_date'     => '2020-01-01 00:00:00',
+				'post_date_gmt' => '2020-01-01 00:00:00',
+			],
+		);
+
+		$copy = $this->create_rewrite_and_republish_copy( $original );
+
+		$this->update_post_without_republish(
+			[
+				'ID'           => $copy->ID,
+				'post_title'   => 'Scheduled Updated Title',
+				'post_content' => 'Scheduled updated content.',
+			],
+		);
+
+		$copy = $this->schedule_copy_for_future( $copy );
+
+		$this->instance->republish_scheduled_post( $copy );
+
+		$updated_original = \get_post( $original->ID );
+
+		$this->assertSame( 'Scheduled Updated Title', $updated_original->post_title );
+
+		// Without the option the original adopts the copy's scheduled date.
+		$this->assertSame( $copy->post_date, $updated_original->post_date );
+		$this->assertNotSame( '2020-01-01 00:00:00', $updated_original->post_date );
 	}
 
 	/**
