@@ -30,6 +30,7 @@ final class Admin_Functions_Test extends TestCase {
 		'duplicate_post_copycontent',
 		'duplicate_post_copyexcerpt',
 		'duplicate_post_copydate',
+		'duplicate_post_preserve_date_on_scheduled_republish',
 		'duplicate_post_copystatus',
 		'duplicate_post_copyslug',
 		'duplicate_post_copyauthor',

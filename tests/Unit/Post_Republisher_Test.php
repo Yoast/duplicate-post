@@ -546,10 +546,60 @@ final class Post_Republisher_Test extends TestCase {
 			->once()
 			->andReturn( $original );
 
+		Monkey\Functions\expect( 'get_option' )
+			->with( 'duplicate_post_preserve_date_on_scheduled_republish' )
+			->once()
+			->andReturn( '0' );
+
 		Monkey\Functions\expect( 'kses_remove_filters' );
 		Monkey\Functions\expect( 'kses_init_filters' );
 
-		$this->instance->expects( 'republish' )->with( $copy, $original )->once();
+		$this->instance->expects( 'republish' )->with( $copy, $original, false )->once();
+		$this->instance->expects( 'delete_copy' )->with( $copy->ID, $original->ID )->once();
+
+		$this->instance->republish_scheduled_post( $copy );
+	}
+
+	/**
+	 * Tests the republish_scheduled_post function when the original date should be preserved.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Post_Republisher::republish_scheduled_post
+	 * @runInSeparateProcess
+	 * @preserveGlobalState disabled
+	 *
+	 * @return void
+	 */
+	public function test_republish_scheduled_post_preserves_original_date_when_enabled() {
+		$original              = Mockery::mock( WP_Post::class );
+		$original->ID          = 1;
+		$original->post_status = 'publish';
+
+		$copy              = Mockery::mock( WP_Post::class );
+		$copy->ID          = 123;
+		$copy->post_status = 'future';
+
+		$this->permissions_helper
+			->expects( 'is_rewrite_and_republish_copy' )
+			->with( $copy )
+			->once()
+			->andReturnTrue();
+
+		$utils = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
+		$utils
+			->expects( 'get_original' )
+			->with( $copy->ID )
+			->once()
+			->andReturn( $original );
+
+		Monkey\Functions\expect( 'get_option' )
+			->with( 'duplicate_post_preserve_date_on_scheduled_republish' )
+			->once()
+			->andReturn( '1' );
+
+		Monkey\Functions\expect( 'kses_remove_filters' );
+		Monkey\Functions\expect( 'kses_init_filters' );
+
+		$this->instance->expects( 'republish' )->with( $copy, $original, true )->once();
 		$this->instance->expects( 'delete_copy' )->with( $copy->ID, $original->ID )->once();
 
 		$this->instance->republish_scheduled_post( $copy );
