@@ -157,7 +157,15 @@ class Post_Duplicator {
 			'copy_excerpt'    => true,
 			'copy_author'     => true,
 			'copy_menu_order' => true,
-			'use_filters'     => false,
+			/**
+			 * Filters the option `use_filters` during post duplicate creation for rewrite and
+			 * republish.
+			 *
+			 * @param bool $use_filters Default is false.
+			 *
+			 * @return bool
+			 */
+			'use_filters' => \apply_filters( 'duplicate_post_create_duplicate_use_filters', false ),
 		];
 		$defaults = $this->get_default_options();
 		$options  = \wp_parse_args( $options, $defaults );
