@@ -34,16 +34,34 @@ on:
       - '**'
   # Allow manually triggering the workflow.
   workflow_dispatch:
+  # Allow the release workflows to deploy the tag they just pushed. A push made with the
+  # built-in Actions token raises no events, so a release workflow cannot rely on its own
+  # tag push to trigger this workflow.
+  workflow_call:
+    inputs:
+      ref:
+        description: 'Git ref to build and deploy. Pass the tag name for a release.'
+        required: true
+        type: string
+      is-release:
+        description: 'Deploy `ref` as a release: take the version from the ref name, sync to the dist default branch and tag it there.'
+        required: false
+        default: false
+        type: boolean
 
 # Cancels all previous workflow runs for the same branch that have not yet completed.
 concurrency:
-  # The concurrency group contains the workflow name and the branch name.
-  group: ${{ github.workflow }}-${{ github.ref }}
+  # The concurrency group contains the workflow name and the deployed ref.
+  group: ${{ github.workflow }}-${{ inputs.ref || github.ref }}
   cancel-in-progress: true
 
 env:
   DIST_ORG: 'Yoast-dist'
   DIST_DEFAULT_BRANCH: 'main'
+  # A `workflow_call` gets the ref to deploy and the release flag from the calling
+  # workflow; `push` and `workflow_dispatch` derive both from the triggering ref.
+  DEPLOY_REF_NAME: ${{ inputs.ref || github.ref_name }}
+  IS_RELEASE: ${{ inputs.is-release || github.ref_type == 'tag' }}
 
 jobs:
   prepare:
@@ -53,11 +71,31 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    outputs:
+      SHA: ${{ steps.set_metadata.outputs.SHA }}
+      COMMIT_MSG: ${{ steps.set_metadata.outputs.COMMIT_MSG }}
+      COMMIT_TIME: ${{ steps.set_metadata.outputs.COMMIT_TIME }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          ref: ${{ inputs.ref || github.ref }}
           persist-credentials: false
+
+      - name: "Set variables: commit metadata"
+        id: set_metadata
+        # The `push` payload carries the commit that triggered the run, but the
+        # `workflow_dispatch` and `workflow_call` payloads do not, so read the metadata
+        # from the checked-out ref instead.
+        run: |
+          {
+            echo "SHA=$(git rev-parse HEAD)"
+            echo "COMMIT_TIME=$(git log -1 --format=%cI)"
+            echo "COMMIT_MSG<<COMMIT_MSG_EOF"
+            git log -1 --format=%B
+            echo "COMMIT_MSG_EOF"
+          } >> "$GITHUB_OUTPUT"
 
       - name: Install PHP
         uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
@@ -92,14 +130,12 @@ jobs:
       - name: Yarn install
         run: yarn install
 
-      - name: "Grunt: set package version (tags only)"
-        if: ${{ github.event_name == 'push' && github.ref_type == 'tag' }}
-        env:
-          REF_NAME: ${{ github.ref_name }}
-        run: grunt set-version -new-version="$REF_NAME"
+      - name: "Grunt: set package version (releases only)"
+        if: ${{ env.IS_RELEASE == 'true' }}
+        run: grunt set-version -new-version="$DEPLOY_REF_NAME"
 
-      - name: "Grunt: update package version (tags only)"
-        if: ${{ github.event_name == 'push' && github.ref_type == 'tag' }}
+      - name: "Grunt: update package version (releases only)"
+        if: ${{ env.IS_RELEASE == 'true' }}
         run: grunt update-version
 
       - name: "Grunt: create artifact"
@@ -138,25 +174,26 @@ jobs:
       - name: "Set variable: short sha"
         id: set_sha
         env:
-          SHA: ${{ github.sha }}
+          SHA: ${{ needs.prepare.outputs.SHA }}
         run: |
           shortsha=$(echo "$SHA" | cut -b 1-6)
           echo "SHORTSHA=$shortsha" >> "$GITHUB_OUTPUT"
 
       - name: "Set variables: target branch, commit title"
         id: set_vars
-        env:
-          REF_NAME: ${{ github.ref_name }}
         run: |
-          if [[ "${{ github.event_name }}" == 'push' && "${{ github.ref_type }}" == 'branch' && "$REF_NAME" != "${{ env.DIST_DEFAULT_BRANCH }}" ]]; then
-            echo "BRANCH=$REF_NAME" >> "$GITHUB_OUTPUT"
-            echo "TITLE=Syncing branch $REF_NAME (sha: ${{ steps.set_sha.outputs.SHORTSHA }})" >> "$GITHUB_OUTPUT"
-          elif [[ "${{ github.event_name }}" == 'workflow_dispatch' && "$REF_NAME" != "${{ env.DIST_DEFAULT_BRANCH }}" ]]; then
-            echo "BRANCH=$REF_NAME" >> "$GITHUB_OUTPUT"
-            echo "TITLE=Manual deploy for $REF_NAME (sha: ${{ steps.set_sha.outputs.SHORTSHA }})" >> "$GITHUB_OUTPUT"
-          else # = Pushed tag.
+          # A release goes to the dist default branch and gets tagged there; any other ref
+          # syncs to a same-named branch. A run on the dist default branch itself takes the
+          # release path, as it did before.
+          if [[ "$IS_RELEASE" == 'true' || "$DEPLOY_REF_NAME" == "${{ env.DIST_DEFAULT_BRANCH }}" ]]; then
             echo "BRANCH=${{ env.DIST_DEFAULT_BRANCH }}" >> "$GITHUB_OUTPUT"
-            echo "TITLE=Release $REF_NAME" >> "$GITHUB_OUTPUT"
+            echo "TITLE=Release $DEPLOY_REF_NAME" >> "$GITHUB_OUTPUT"
+          elif [[ "${{ github.event_name }}" == 'push' && "${{ github.ref_type }}" == 'branch' ]]; then
+            echo "BRANCH=$DEPLOY_REF_NAME" >> "$GITHUB_OUTPUT"
+            echo "TITLE=Syncing branch $DEPLOY_REF_NAME (sha: ${{ steps.set_sha.outputs.SHORTSHA }})" >> "$GITHUB_OUTPUT"
+          else
+            echo "BRANCH=$DEPLOY_REF_NAME" >> "$GITHUB_OUTPUT"
+            echo "TITLE=Manual deploy for $DEPLOY_REF_NAME (sha: ${{ steps.set_sha.outputs.SHORTSHA }})" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Checkout Yoast Dist repo
@@ -215,12 +252,12 @@ jobs:
         run: git add -A
 
       - name: "Commit the files (branch)"
-        if: ${{ github.event_name != 'push' || github.ref_type != 'tag' }}
+        if: ${{ env.IS_RELEASE != 'true' }}
         env:
-          COMMITTER: ${{ github.event.head_commit.committer.username }}
-          COMMIT_MSG: ${{ github.event.head_commit.message }}
-          COMMIT_URL: ${{ github.event.head_commit.url }}
-          COMMIT_TIME: ${{ github.event.head_commit.timestamp }}
+          COMMITTER: ${{ github.event.head_commit.committer.username || github.actor }}
+          COMMIT_MSG: ${{ github.event.head_commit.message || needs.prepare.outputs.COMMIT_MSG }}
+          COMMIT_URL: ${{ github.event.head_commit.url || format('{0}/{1}/commit/{2}', github.server_url, github.repository, needs.prepare.outputs.SHA) }}
+          COMMIT_TIME: ${{ github.event.head_commit.timestamp || needs.prepare.outputs.COMMIT_TIME }}
         run: |
           git commit --allow-empty -m "${{ steps.set_vars.outputs.TITLE }}" \
             -m "Synced up to commit hash: $COMMIT_URL" \
@@ -232,12 +269,12 @@ jobs:
             -m "$COMMIT_MSG"
 
       - name: "Commit the files (release)"
-        if: ${{ github.event_name == 'push' && github.ref_type == 'tag' }}
+        if: ${{ env.IS_RELEASE == 'true' }}
         env:
-          COMMITTER: ${{ github.event.head_commit.committer.username }}
-          COMMIT_MSG: ${{ github.event.head_commit.message }}
-          COMMIT_URL: ${{ github.event.head_commit.url }}
-          COMMIT_TIME: ${{ github.event.head_commit.timestamp }}
+          COMMITTER: ${{ github.event.head_commit.committer.username || github.actor }}
+          COMMIT_MSG: ${{ github.event.head_commit.message || needs.prepare.outputs.COMMIT_MSG }}
+          COMMIT_URL: ${{ github.event.head_commit.url || format('{0}/{1}/commit/{2}', github.server_url, github.repository, needs.prepare.outputs.SHA) }}
+          COMMIT_TIME: ${{ github.event.head_commit.timestamp || needs.prepare.outputs.COMMIT_TIME }}
         run: |
           git commit -m "${{ steps.set_vars.outputs.TITLE }}" \
             -m "Commit hash for tag: $COMMIT_URL" \
@@ -249,10 +286,8 @@ jobs:
             -m "$COMMIT_MSG"
 
       - name: "Tag the commit (releases only)"
-        if: ${{ github.event_name == 'push' && github.ref_type == 'tag' }}
-        env:
-          REF_NAME: ${{ github.ref_name }}
-        run: git tag "$REF_NAME" "$(git rev-parse HEAD)"
+        if: ${{ env.IS_RELEASE == 'true' }}
+        run: git tag "$DEPLOY_REF_NAME" "$(git rev-parse HEAD)"
 
       - name: Push to target branch
         run: git push -u origin ${{ steps.set_vars.outputs.BRANCH }} --tags -v
