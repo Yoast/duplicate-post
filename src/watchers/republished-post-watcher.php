@@ -52,6 +52,7 @@ class Republished_Post_Watcher {
 			$removable_query_args[] = 'dprepublished';
 			$removable_query_args[] = 'dpcopy';
 			$removable_query_args[] = 'dpnonce';
+			$removable_query_args[] = 'dpcollabredirected';
 		}
 		return $removable_query_args;
 	}
@@ -69,6 +70,18 @@ class Republished_Post_Watcher {
 	}
 
 	/**
+	 * Generates the translated text for the collaborator redirect notice.
+	 *
+	 * @return string The translated text for the collaborator redirect notice.
+	 */
+	public function get_collab_redirect_notice_text() {
+		return \__(
+			'Another user has republished the Rewrite & Republish copy you were editing. You are now viewing the original post.',
+			'duplicate-post',
+		);
+	}
+
+	/**
 	 * Shows a notice on the Classic editor.
 	 *
 	 * @return void
@@ -81,6 +94,12 @@ class Republished_Post_Watcher {
 		if ( ! empty( $_REQUEST['dprepublished'] ) ) {
 			echo '<div id="message" class="notice notice-success is-dismissible"><p>'
 				. \esc_html( $this->get_notice_text() )
+				. '</p></div>';
+		}
+
+		if ( ! empty( $_REQUEST['dpcollabredirected'] ) ) {
+			echo '<div id="message" class="notice notice-info is-dismissible"><p>'
+				. \esc_html( $this->get_collab_redirect_notice_text() )
 				. '</p></div>';
 		}
 	}
@@ -101,6 +120,20 @@ class Republished_Post_Watcher {
 			\wp_add_inline_script(
 				'duplicate_post_edit_script',
 				'duplicatePostNotices.republished_notice = ' . \wp_json_encode( $notice ) . ';',
+				'before',
+			);
+		}
+
+		if ( ! empty( $_REQUEST['dpcollabredirected'] ) ) {
+			$notice = [
+				'text'          => $this->get_collab_redirect_notice_text(),
+				'status'        => 'info',
+				'isDismissible' => true,
+			];
+
+			\wp_add_inline_script(
+				'duplicate_post_edit_script',
+				'duplicatePostNotices.collab_redirect_notice = ' . \wp_json_encode( $notice ) . ';',
 				'before',
 			);
 		}
