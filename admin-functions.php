@@ -136,6 +136,7 @@ function duplicate_post_plugin_upgrade() {
 	add_option( 'duplicate_post_show_original_column', '0' );
 	add_option( 'duplicate_post_show_original_in_post_states', '0' );
 	add_option( 'duplicate_post_show_original_meta_box', '0' );
+	add_option( 'duplicate_post_preserve_date_on_scheduled_republish', '0' );
 	add_option(
 		'duplicate_post_show_link',
 		[
