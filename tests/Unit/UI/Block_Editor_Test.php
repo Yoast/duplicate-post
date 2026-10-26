@@ -140,6 +140,17 @@ final class Block_Editor_Test extends TestCase {
 		);
 
 		$this->assertNotFalse(
+			\has_action(
+				'rest_api_init',
+				[
+					$this->instance,
+					'register_rest_filters',
+				],
+			),
+			'Does not have expected rest_api_init action',
+		);
+
+		$this->assertNotFalse(
 			\has_filter(
 				'wpseo_link_suggestions_indexables',
 				[
@@ -148,6 +159,28 @@ final class Block_Editor_Test extends TestCase {
 				],
 			),
 			'Does not have expected wpseo_link_suggestions_indexables filter',
+		);
+	}
+
+	/**
+	 * Tests registration of REST response filters for REST-enabled post types.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Block_Editor::register_rest_filters
+	 *
+	 * @return void
+	 */
+	public function test_register_rest_filters() {
+		Monkey\Functions\expect( '\\get_post_types' )
+			->with( [ 'show_in_rest' => true ] )
+			->andReturn( [ 'post', 'book' ] );
+
+		$this->instance->register_rest_filters();
+
+		$this->assertNotFalse(
+			\has_filter( 'rest_prepare_post', [ $this->instance, 'remove_rewrite_republish_permalink' ] ),
+		);
+		$this->assertNotFalse(
+			\has_filter( 'rest_prepare_book', [ $this->instance, 'remove_rewrite_republish_permalink' ] ),
 		);
 	}
 

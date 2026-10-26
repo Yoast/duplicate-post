@@ -3,6 +3,8 @@
 namespace Yoast\WP\Duplicate_Post\UI;
 
 use WP_Post;
+use WP_REST_Request;
+use WP_REST_Response;
 use Yoast\WP\Duplicate_Post\Permissions_Helper;
 use Yoast\WP\Duplicate_Post\Utils;
 
@@ -55,7 +57,50 @@ class Block_Editor {
 		\add_action( 'elementor/editor/before_enqueue_scripts', [ $this, 'enqueue_elementor_script' ], 9 );
 		\add_action( 'admin_enqueue_scripts', [ $this, 'should_previously_used_keyword_assessment_run' ], 9 );
 		\add_action( 'enqueue_block_editor_assets', [ $this, 'enqueue_block_editor_scripts' ] );
+		\add_action( 'rest_api_init', [ $this, 'register_rest_filters' ] );
 		\add_filter( 'wpseo_link_suggestions_indexables', [ $this, 'remove_original_from_wpseo_link_suggestions' ], 10, 3 );
+	}
+
+	/**
+	 * Registers REST API filters for the post types exposed through the REST API.
+	 *
+	 * @return void
+	 */
+	public function register_rest_filters() {
+		$post_types = \get_post_types( [ 'show_in_rest' => true ] );
+
+		foreach ( $post_types as $post_type ) {
+			\add_filter( "rest_prepare_{$post_type}", [ $this, 'remove_rewrite_republish_permalink' ], 10, 3 );
+		}
+	}
+
+	/**
+	 * Removes the unused permalink fields from a Rewrite & Republish copy.
+	 *
+	 * The copy's slug is never carried over to the original on republish, and
+	 * the block editor hides the URL row when no permalink template is set.
+	 *
+	 * @param WP_REST_Response $response The REST response.
+	 * @param WP_Post          $post     The post being prepared.
+	 * @param WP_REST_Request  $request  The REST request.
+	 *
+	 * @return WP_REST_Response The filtered REST response.
+	 */
+	public function remove_rewrite_republish_permalink( $response, $post, $request ) {
+		if (
+			! $response instanceof WP_REST_Response
+			|| ! $post instanceof WP_Post
+			|| $request['context'] !== 'edit'
+			|| ! $this->permissions_helper->is_rewrite_and_republish_copy( $post )
+		) {
+			return $response;
+		}
+
+		$data = $response->get_data();
+		unset( $data['permalink_template'], $data['generated_slug'] );
+		$response->set_data( $data );
+
+		return $response;
 	}
 
 	/**
