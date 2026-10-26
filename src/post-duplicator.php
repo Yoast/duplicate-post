@@ -45,6 +45,86 @@ class Post_Duplicator {
 	}
 
 	/**
+	 * Returns the options array built from the copy settings of the plugin.
+	 *
+	 * The admin copy handlers build the same options from these settings, so copies created
+	 * outside an admin request, for example through an ability, respect the same settings.
+	 * Copying children, attachments and comments is handled by the admin-only handlers on the
+	 * `duplicate_post_after_duplicated` action and is therefore not part of these options.
+	 *
+	 * @return array<string, bool|int|string|array|null> The options based on the saved settings.
+	 */
+	public function get_configured_options() {
+		$options = [
+			'copy_title'             => $this->is_copy_enabled( 'title' ),
+			'copy_date'              => $this->is_copy_enabled( 'date' ),
+			'copy_status'            => $this->is_copy_enabled( 'status' ),
+			'copy_name'              => $this->is_copy_enabled( 'slug' ),
+			'copy_excerpt'           => $this->is_copy_enabled( 'excerpt' ),
+			'copy_content'           => $this->is_copy_enabled( 'content' ),
+			'copy_thumbnail'         => $this->is_copy_enabled( 'thumbnail' ),
+			'copy_template'          => $this->is_copy_enabled( 'template' ),
+			'copy_format'            => $this->is_copy_enabled( 'format' ),
+			'copy_author'            => $this->is_copy_enabled( 'author' ),
+			'copy_password'          => $this->is_copy_enabled( 'password' ),
+			'copy_menu_order'        => $this->is_copy_enabled( 'menuorder' ),
+			'title_prefix'           => (string) \get_option( 'duplicate_post_title_prefix' ),
+			'title_suffix'           => (string) \get_option( 'duplicate_post_title_suffix' ),
+			'increase_menu_order_by' => \get_option( 'duplicate_post_increase_menu_order_by' ),
+			'meta_excludelist'       => $this->get_meta_excludelist(),
+			'taxonomies_excludelist' => $this->get_taxonomies_excludelist(),
+		];
+
+		return \wp_parse_args( $options, $this->get_default_options() );
+	}
+
+	/**
+	 * Determines whether the setting to copy the passed post element is enabled.
+	 *
+	 * @param string $element The post element to copy, as used in the option name
+	 *                        after the `duplicate_post_copy` prefix. For example `title`.
+	 *
+	 * @return bool Whether the element is set to be copied.
+	 */
+	protected function is_copy_enabled( $element ) {
+		return ( (int) \get_option( 'duplicate_post_copy' . $element ) === 1 );
+	}
+
+	/**
+	 * Returns the meta fields excludelist from the settings.
+	 *
+	 * @return array<string> The names of the meta fields not to copy.
+	 */
+	protected function get_meta_excludelist() {
+		$meta_excludelist = \get_option( 'duplicate_post_blacklist' );
+
+		if ( ! \is_string( $meta_excludelist ) || $meta_excludelist === '' ) {
+			return [];
+		}
+
+		return \array_map( 'trim', \array_filter( \explode( ',', $meta_excludelist ) ) );
+	}
+
+	/**
+	 * Returns the taxonomies excludelist from the settings.
+	 *
+	 * @return array<string> The names of the taxonomies not to copy.
+	 */
+	protected function get_taxonomies_excludelist() {
+		$taxonomies_excludelist = \get_option( 'duplicate_post_taxonomies_blacklist', [] );
+
+		if ( empty( $taxonomies_excludelist ) ) {
+			return [];
+		}
+
+		if ( ! \is_array( $taxonomies_excludelist ) ) {
+			return [ $taxonomies_excludelist ];
+		}
+
+		return $taxonomies_excludelist;
+	}
+
+	/**
 	 * Creates a copy of a post object, accordingly to an options array.
 	 *
 	 * @param WP_Post $post    The original post object.
