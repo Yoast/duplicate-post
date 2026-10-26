@@ -21,10 +21,15 @@ name: Release RC
 # Finally merges the release branch back into trunk so the version bump and
 # changelog regen land there too.
 #
+# A follow-up job calls .github/workflows/deploy.yml, which builds the RC tag and
+# pushes the artifact to Yoast-dist/duplicate-post. A push made with the built-in
+# Actions token raises no events, so the tag push cannot trigger that workflow by
+# itself.
+#
 # Pass `dry-run=true` to rehearse the pipeline without any remote side effect:
-# every `git push`, the SVN deploy, the GitHub pre-release, and the merge-back
-# push are skipped. The built zip is uploaded as a workflow artifact so you
-# can inspect it. Overrides `deploy-to-svn-trunk`.
+# every `git push`, the SVN deploy, the GitHub pre-release, the dist deploy, and
+# the merge-back push are skipped. The built zip is uploaded as a workflow
+# artifact so you can inspect it. Overrides `deploy-to-svn-trunk`.
 ##############################################################################
 
 on:
@@ -45,7 +50,7 @@ on:
         default: false
         type: boolean
       dry-run:
-        description: 'Dry-run: do all in-tree work (changelog regen, version bump, local commit/merge/tag, artifact build) but skip every remote side-effect (no git push, no SVN, no GH pre-release). The built zip is uploaded as a workflow artifact for inspection. Overrides `deploy-to-svn-trunk`.'
+        description: 'Dry-run: do all in-tree work (changelog regen, version bump, local commit/merge/tag, artifact build) but skip every remote side-effect (no git push, no SVN, no GH pre-release, no dist deploy). The built zip is uploaded as a workflow artifact for inspection. Overrides `deploy-to-svn-trunk`.'
         required: false
         default: false
         type: boolean
@@ -64,6 +69,9 @@ jobs:
     permissions:
       contents: write
       pull-requests: read
+
+    outputs:
+      RC_VERSION: ${{ steps.rc.outputs.RC_VERSION }}
 
     env:
       RELEASE_BRANCH: "release/${{ inputs.version }}"
@@ -96,6 +104,7 @@ jobs:
           git config user.email "$ACTOR@users.noreply.github.com"
 
       - name: Determine next RC number
+        id: rc
         env:
           VERSION: ${{ inputs.version }}
         run: |
@@ -106,6 +115,7 @@ jobs:
           RC_VERSION="${VERSION}-RC${NEXT}"
           echo "RC_VERSION=${RC_VERSION}" >> "$GITHUB_ENV"
           echo "RC_NUM=${NEXT}" >> "$GITHUB_ENV"
+          echo "RC_VERSION=${RC_VERSION}" >> "$GITHUB_OUTPUT"
           echo "Previous RC: ${LAST:-none}. Next RC: ${RC_VERSION}"
 
       - name: Create or check out release branch
@@ -482,6 +492,7 @@ jobs:
             fi
             echo "* \`gh release create ${RC_VERSION} --prerelease\` with \`${ZIP}\` attached and the QA changelog below"
             echo "* \`git push origin trunk\` (after merging \`${RELEASE_BRANCH}\` back)"
+            echo "* Build tag \`${RC_VERSION}\` and push the artifact to Yoast-dist/duplicate-post"
             echo ""
             echo "The built plugin is available as the \`duplicate-post-${RC_VERSION}\` workflow artifact above (download yields \`${ZIP}\` containing the \`duplicate-post/\` folder)."
             echo ""
@@ -489,3 +500,14 @@ jobs:
             echo ""
             cat qa-changelog.md
           } >> "$GITHUB_STEP_SUMMARY"
+
+  deploy-to-dist:
+    name: "Deploy to dist"
+    needs: release-rc
+    # A dry run pushes no tag, so there is nothing to deploy.
+    if: ${{ inputs.dry-run != true }}
+    uses: ./.github/workflows/deploy.yml
+    with:
+      ref: ${{ needs.release-rc.outputs.RC_VERSION }}
+      is-release: true
+    secrets: inherit
