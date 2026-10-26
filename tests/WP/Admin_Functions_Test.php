@@ -38,6 +38,7 @@ final class Admin_Functions_Test extends TestCase {
 		'duplicate_post_increase_menu_order_by',
 		'duplicate_post_copychildren',
 		'duplicate_post_copycomments',
+		'duplicate_post_copynotes',
 		'duplicate_post_copythumbnail',
 		'duplicate_post_copytemplate',
 		'duplicate_post_copyformat',
@@ -106,6 +107,7 @@ final class Admin_Functions_Test extends TestCase {
 		\update_option( 'duplicate_post_increase_menu_order_by', '' );
 		\update_option( 'duplicate_post_copychildren', '0' );
 		\update_option( 'duplicate_post_copycomments', '0' );
+		\update_option( 'duplicate_post_copynotes', '0' );
 		\update_option( 'duplicate_post_copythumbnail', '1' );
 		\update_option( 'duplicate_post_copytemplate', '1' );
 		\update_option( 'duplicate_post_copyformat', '1' );
