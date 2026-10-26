@@ -1,12 +1,12 @@
 /* global duplicatePost, duplicatePostNotices */
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { registerPlugin } from "@wordpress/plugins";
 import { PluginDocumentSettingPanel, PluginPostStatusInfo } from "@wordpress/editor";
 import { Fragment } from "@wordpress/element";
 import { Button, ExternalLink, Modal } from '@wordpress/components';
 import { __ } from "@wordpress/i18n";
-import { select, subscribe, dispatch } from "@wordpress/data";
+import { select, subscribe, dispatch, useSelect } from "@wordpress/data";
 import apiFetch from "@wordpress/api-fetch";
 import { redirectOnSaveCompletion } from "./duplicate-post-functions";
 
@@ -123,13 +123,62 @@ function DuplicatePostPanel() {
  *
  * @returns {JSX.Element|null} The rendered component or null.
  */
+/**
+ * Interval in milliseconds for polling the R&R copy meta.
+ *
+ * The R&R copy is created via a server-side admin action, so the meta change
+ * does not enter the RTC CRDT document. Periodic cache invalidation ensures
+ * the editor refetches the entity record and picks up the change.
+ *
+ * @type {number}
+ */
+const RR_COPY_POLL_INTERVAL = 15000;
+
 function DuplicatePostRender() {
 	// Don't try to render anything if there is no store.
 	if ( ! select( 'core/editor' ) || ! ( wp.editor && wp.editor.PluginPostStatusInfo ) ) {
 		return null;
 	}
 
-	const currentPostStatus = select( 'core/editor' ).getEditedPostAttribute( 'status' );
+	const { currentPostStatus, hasRewriteAndRepublishCopy, postType, postId } = useSelect( ( sel ) => {
+		const editor   = sel( 'core/editor' );
+		const type     = editor.getCurrentPostType();
+		const id       = editor.getCurrentPostId();
+		const record   = sel( 'core' ).getEntityRecord( 'postType', type, id );
+
+		return {
+			currentPostStatus: editor.getEditedPostAttribute( 'status' ),
+			hasRewriteAndRepublishCopy: !! record?.meta?._dp_has_rewrite_republish_copy,
+			postType: type,
+			postId: id,
+		};
+	}, [] );
+
+	const prevHasRRCopy = useRef( hasRewriteAndRepublishCopy );
+
+	// Periodically invalidate the entity record cache to detect server-side
+	// meta changes (e.g. when another user creates an R&R copy via admin action).
+	useEffect( () => {
+		if ( hasRewriteAndRepublishCopy || ! postType || ! postId ) {
+			return;
+		}
+		const interval = setInterval( () => {
+			dispatch( 'core' ).invalidateResolution( 'getEntityRecord', [ 'postType', postType, postId ] );
+		}, RR_COPY_POLL_INTERVAL );
+		return () => clearInterval( interval );
+	}, [ hasRewriteAndRepublishCopy, postType, postId ] );
+
+	// Notify the user when another collaborator creates an R&R copy.
+	useEffect( () => {
+		if ( hasRewriteAndRepublishCopy && ! prevHasRRCopy.current ) {
+			dispatch( 'core/notices' ).createNotice(
+				'info',
+				__( 'Another user has started a Rewrite & Republish for this post.', 'duplicate-post' ),
+				{ isDismissible: true, type: 'snackbar' },
+			);
+		}
+		prevHasRRCopy.current = hasRewriteAndRepublishCopy;
+	}, [ hasRewriteAndRepublishCopy ] );
 
 	return (
 		<Fragment>
@@ -146,7 +195,7 @@ function DuplicatePostRender() {
 							</Button>
 						</PluginPostStatusInfo>
 					}
-					{ ( currentPostStatus === 'publish' && duplicatePost.rewriteAndRepublishLink !== '' && duplicatePost.showLinks.rewrite_republish === '1' ) &&
+					{ ( currentPostStatus === 'publish' && ! hasRewriteAndRepublishCopy && duplicatePost.rewriteAndRepublishLink !== '' && duplicatePost.showLinks.rewrite_republish === '1' ) &&
 						<PluginPostStatusInfo>
 							<Button
 								variant="secondary"
@@ -200,6 +249,59 @@ class DuplicatePost {
 			wasSavingMetaboxes = completed.isSavingMetaBoxes;
 			wasAutoSavingPost  = completed.isAutosavingPost;
 		} );
+
+		// When another collaborator republishes, the copy is deleted server-side.
+		// The RTC status change may not propagate (User A navigates away too quickly),
+		// so periodically check if the copy still exists via the REST API.
+		this.detectCopyDeletion();
+	}
+
+	/**
+	 * Periodically checks if the R&R copy still exists.
+	 *
+	 * When another collaborator republishes, the copy is deleted after cleanup.
+	 * A 404 response means the copy is gone and we should redirect to the original.
+	 *
+	 * @returns {void}
+	 */
+	detectCopyDeletion() {
+		const originalEditUrl = duplicatePost.originalItem?.editUrl;
+		if ( ! originalEditUrl || ! duplicatePost.restBase ) {
+			return;
+		}
+
+		const path = `/wp/v2/${ duplicatePost.restBase }/${ duplicatePost.postId }?_fields=id,status&context=edit`;
+
+		const redirectToOriginal = () => {
+			clearInterval( interval );
+			dispatch( 'core/notices' ).createNotice(
+				'info',
+				__( 'Another user has republished this post. Redirecting to the original…', 'duplicate-post' ),
+				{ isDismissible: false, type: 'snackbar' },
+			);
+			const separator = originalEditUrl.includes( '?' ) ? '&' : '?';
+			setTimeout( () => window.location.assign( originalEditUrl + separator + 'dpcollabredirected=1' ), 3000 );
+		};
+
+		const checkCopy = async () => {
+			try {
+				const response = await apiFetch( { path } );
+
+				// The copy was republished but not yet cleaned up.
+				if ( response.status === 'dp-rewrite-republish' || response.status === 'trash' ) {
+					redirectToOriginal();
+				}
+			} catch ( error ) {
+				// Only redirect on confirmed deletion/permission errors, not transient network failures.
+				const status = error?.data?.status ?? error?.status;
+				if ( status === 404 || status === 410 || status === 403 ) {
+					redirectToOriginal();
+				}
+			}
+		};
+
+		const interval = setInterval( checkCopy, 2000 );
+		checkCopy();
 	}
 
 	/**
