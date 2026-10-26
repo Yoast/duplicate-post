@@ -10,6 +10,7 @@ if ( ! is_admin() ) {
 	return;
 }
 
+use Yoast\WP\Duplicate_Post\Notes_Cleaner;
 use Yoast\WP\Duplicate_Post\UI\Newsletter;
 use Yoast\WP\Duplicate_Post\Utils;
 
@@ -70,6 +71,7 @@ function duplicate_post_admin_init() {
 		add_action( 'duplicate_post_after_duplicated', 'duplicate_post_copy_comments', 40, 2 );
 	}
 
+	add_action( 'duplicate_post_after_duplicated', 'duplicate_post_clean_note_metadata', 46, 1 );
 	add_action( 'duplicate_post_after_duplicated', 'duplicate_post_copy_post_taxonomies', 50, 2 );
 
 	add_filter( 'plugin_row_meta', 'duplicate_post_add_plugin_links', 10, 2 );
@@ -538,6 +540,18 @@ function duplicate_post_copy_children( $new_id, $post, $status = '' ) {
 		}
 		duplicate_post_create_duplicate( $child, $status, $new_id );
 	}
+}
+
+/**
+ * Removes invalid Note metadata from a duplicated post.
+ *
+ * @param int $new_id The new post ID.
+ *
+ * @return void
+ */
+function duplicate_post_clean_note_metadata( $new_id ) {
+	$notes_cleaner = new Notes_Cleaner();
+	$notes_cleaner->clean( $new_id );
 }
 
 /**

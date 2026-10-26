@@ -3,6 +3,7 @@
 namespace Yoast\WP\Duplicate_Post\Tests\WP;
 
 use WP_Post;
+use Yoast\WP\Duplicate_Post\Notes_Cleaner;
 use Yoast\WPTestUtils\WPIntegration\TestCase;
 
 /**
@@ -355,6 +356,77 @@ final class Legacy_Duplication_Test extends TestCase {
 		$this->assertArrayHasKey( 'Parent comment', $by_content );
 		$this->assertArrayHasKey( 'Reply comment', $by_content );
 		$this->assertSame( (int) $by_content['Parent comment']->comment_ID, (int) $by_content['Reply comment']->comment_parent );
+	}
+
+	/**
+	 * Tests that stale Note metadata is removed from cloned content.
+	 *
+	 * @covers ::duplicate_post_create_duplicate
+	 * @covers ::duplicate_post_clean_note_metadata
+	 * @covers \Yoast\WP\Duplicate_Post\Notes_Cleaner::clean
+	 *
+	 * @return void
+	 */
+	public function test_removes_stale_note_metadata_from_cloned_content() {
+		$original = $this->create_original_post();
+		$note_id  = $this->factory->comment->create(
+			[
+				'comment_post_ID' => $original->ID,
+				'comment_type'    => 'note',
+				'comment_content' => 'Original note',
+			],
+		);
+
+		global $wpdb;
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$wpdb->update(
+			$wpdb->posts,
+			[ 'post_content' => '<!-- wp:group {"metadata":{"noteId":[' . $note_id . ',999999]}} --><div class="wp-block-group"><!-- wp:paragraph {"metadata":{"noteId":' . $note_id . '}} --><p>Original content.</p><!-- /wp:paragraph --></div><!-- /wp:group -->' ],
+			[ 'ID' => $original->ID ],
+		);
+		\clean_post_cache( $original->ID );
+		$original = \get_post( $original->ID );
+
+		\add_action( 'duplicate_post_after_duplicated', 'duplicate_post_clean_note_metadata', 46, 1 );
+		$new_id = \duplicate_post_create_duplicate( $original );
+		\remove_action( 'duplicate_post_after_duplicated', 'duplicate_post_clean_note_metadata', 46 );
+		\clean_post_cache( $new_id );
+		$blocks = \parse_blocks( \get_post_field( 'post_content', $new_id ) );
+
+		$this->assertArrayNotHasKey( 'noteId', $blocks[0]['attrs']['metadata'] );
+		$this->assertArrayNotHasKey( 'noteId', $blocks[0]['innerBlocks'][0]['attrs']['metadata'] );
+	}
+
+	/**
+	 * Tests that valid target Notes are retained while foreign references are removed.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Notes_Cleaner::clean
+	 *
+	 * @return void
+	 */
+	public function test_retains_note_metadata_belonging_to_target_post() {
+		$target_id = $this->factory->post->create();
+		$note_id   = $this->factory->comment->create(
+			[
+				'comment_post_ID' => $target_id,
+				'comment_type'    => 'note',
+				'comment_content' => 'Target note',
+			],
+		);
+		global $wpdb;
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$wpdb->update(
+			$wpdb->posts,
+			[ 'post_content' => '<!-- wp:paragraph {"metadata":{"noteId":[' . $note_id . ',999999]}} --><p>Content</p><!-- /wp:paragraph -->' ],
+			[ 'ID' => $target_id ],
+		);
+		\clean_post_cache( $target_id );
+
+		( new Notes_Cleaner() )->clean( $target_id );
+
+		$blocks = \parse_blocks( \get_post_field( 'post_content', $target_id ) );
+
+		$this->assertSame( [ $note_id ], $blocks[0]['attrs']['metadata']['noteId'] );
 	}
 
 	/**
