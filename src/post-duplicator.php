@@ -162,9 +162,16 @@ class Post_Duplicator {
 		$defaults = $this->get_default_options();
 		$options  = \wp_parse_args( $options, $defaults );
 
-		$new_post_id = $this->create_duplicate( $post, $options );
+		$new_post_id     = $this->create_duplicate( $post, $options );
+		$new_post_status = $this->generate_copy_status( $post, $options );
 
 		if ( ! \is_wp_error( $new_post_id ) ) {
+			if ( $post->post_type === 'page' || is_post_type_hierarchical( $post->post_type ) ) {
+				do_action( 'dp_duplicate_page', $new_post_id, $post, $new_post_status );
+			} else {
+				do_action( 'dp_duplicate_post', $new_post_id, $post, $new_post_status );
+			}
+
 			$this->copy_post_taxonomies( $new_post_id, $post, $options );
 			$this->copy_post_meta_info( $new_post_id, $post, $options );
 
@@ -172,6 +179,15 @@ class Post_Duplicator {
 			\update_post_meta( $post->ID, '_dp_has_rewrite_republish_copy', $new_post_id );
 			\update_post_meta( $new_post_id, '_dp_creation_date_gmt', \current_time( 'mysql', 1 ) );
 		}
+
+		/**
+		 * Fires after duplicating a post.
+		 *
+		 * @param int|WP_Error $new_post_id The new post id or WP_Error object on error.
+		 * @param WP_Post      $post        The original post object.
+		 * @param bool         $status      The intended destination status.
+		 */
+		do_action( 'duplicate_rewrite_and_republish_post_copy', $new_post_id, $post, $new_post_status );
 
 		return $new_post_id;
 	}
