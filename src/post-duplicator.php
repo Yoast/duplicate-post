@@ -119,6 +119,11 @@ class Post_Duplicator {
 		if ( ! \is_wp_error( $new_post_id ) ) {
 			\delete_post_meta( $new_post_id, '_dp_original' );
 			\add_post_meta( $new_post_id, '_dp_original', $post->ID );
+
+			// Sticky is only a feature of the post post type.
+			if ( $post->post_type === 'post' && \is_sticky( $post->ID ) ) {
+				\stick_post( $new_post_id );
+			}
 		}
 
 		return $new_post_id;
