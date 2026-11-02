@@ -10,6 +10,7 @@ if ( ! is_admin() ) {
 	return;
 }
 
+use Yoast\WP\Duplicate_Post\Notes_Copier;
 use Yoast\WP\Duplicate_Post\UI\Newsletter;
 use Yoast\WP\Duplicate_Post\Utils;
 
@@ -68,6 +69,10 @@ function duplicate_post_admin_init() {
 
 	if ( (int) get_option( 'duplicate_post_copycomments' ) === 1 ) {
 		add_action( 'duplicate_post_after_duplicated', 'duplicate_post_copy_comments', 40, 2 );
+	}
+
+	if ( (int) get_option( 'duplicate_post_copynotes' ) === 1 ) {
+		add_action( 'duplicate_post_after_duplicated', 'duplicate_post_copy_notes', 45, 2 );
 	}
 
 	add_action( 'duplicate_post_after_duplicated', 'duplicate_post_copy_post_taxonomies', 50, 2 );
@@ -129,6 +134,7 @@ function duplicate_post_plugin_upgrade() {
 	add_option( 'duplicate_post_copyattachments', '0' );
 	add_option( 'duplicate_post_copychildren', '0' );
 	add_option( 'duplicate_post_copycomments', '0' );
+	add_option( 'duplicate_post_copynotes', '0' );
 	add_option( 'duplicate_post_copymenuorder', '1' );
 	add_option( 'duplicate_post_taxonomies_blacklist', [] );
 	add_option( 'duplicate_post_blacklist', '' );
@@ -538,6 +544,19 @@ function duplicate_post_copy_children( $new_id, $post, $status = '' ) {
 		}
 		duplicate_post_create_duplicate( $child, $status, $new_id );
 	}
+}
+
+/**
+ * Copies Notes.
+ *
+ * @param int     $new_id The new post ID.
+ * @param WP_Post $post   The original post object.
+ *
+ * @return void
+ */
+function duplicate_post_copy_notes( $new_id, $post ) {
+	$notes_copier = new Notes_Copier();
+	$notes_copier->copy( $new_id, $post, (int) get_option( 'duplicate_post_copydate' ) === 1 );
 }
 
 /**

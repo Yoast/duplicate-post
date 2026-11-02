@@ -179,6 +179,14 @@ class Options {
 				'value'       => 1,
 				'description' => \__( 'except pingbacks and trackbacks', 'duplicate-post' ),
 			],
+			'duplicate_post_copynotes' => [
+				'tab'         => 'what-to-copy',
+				'fieldset'    => 'elements-to-copy',
+				'type'        => 'checkbox',
+				'label'       => \__( 'Notes', 'duplicate-post' ),
+				'value'       => 1,
+				'description' => \__( 'including their replies', 'duplicate-post' ),
+			],
 			'duplicate_post_copymenuorder'                => [
 				'tab'      => 'what-to-copy',
 				'fieldset' => 'elements-to-copy',

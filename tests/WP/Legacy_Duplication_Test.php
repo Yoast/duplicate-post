@@ -57,6 +57,7 @@ final class Legacy_Duplication_Test extends TestCase {
 		'duplicate_post_copychildren',
 		'duplicate_post_copyattachments',
 		'duplicate_post_copycomments',
+		'duplicate_post_copynotes',
 		'duplicate_post_copythumbnail',
 		'duplicate_post_copytemplate',
 		'duplicate_post_copyformat',
@@ -120,6 +121,7 @@ final class Legacy_Duplication_Test extends TestCase {
 		\update_option( 'duplicate_post_copychildren', '0' );
 		\update_option( 'duplicate_post_copyattachments', '0' );
 		\update_option( 'duplicate_post_copycomments', '0' );
+		\update_option( 'duplicate_post_copynotes', '0' );
 		\update_option( 'duplicate_post_copythumbnail', '1' );
 		\update_option( 'duplicate_post_copytemplate', '1' );
 		\update_option( 'duplicate_post_copyformat', '1' );
@@ -355,6 +357,66 @@ final class Legacy_Duplication_Test extends TestCase {
 		$this->assertArrayHasKey( 'Parent comment', $by_content );
 		$this->assertArrayHasKey( 'Reply comment', $by_content );
 		$this->assertSame( (int) $by_content['Parent comment']->comment_ID, (int) $by_content['Reply comment']->comment_parent );
+	}
+
+	/**
+	 * Tests that Notes and their block references are copied when enabled.
+	 *
+	 * @covers ::duplicate_post_copy_notes
+	 *
+	 * @return void
+	 */
+	public function test_copies_notes_and_remaps_block_references() {
+		\update_option( 'duplicate_post_copynotes', '1' );
+		\add_action( 'duplicate_post_after_duplicated', 'duplicate_post_copy_notes', 45, 2 );
+
+		$original = $this->create_original_post();
+		$note_id  = $this->factory->comment->create(
+			[
+				'comment_post_ID'  => $original->ID,
+				'comment_content'  => 'Parent note',
+				'comment_type'     => 'note',
+				'comment_approved' => '0',
+			],
+		);
+		$reply_id = $this->factory->comment->create(
+			[
+				'comment_post_ID'  => $original->ID,
+				'comment_content'  => 'Reply note',
+				'comment_type'     => 'note',
+				'comment_parent'   => $note_id,
+				'comment_approved' => '1',
+			],
+		);
+		global $wpdb;
+		$content = "<!-- wp:paragraph {\"metadata\":{\"noteId\":$note_id}} -->\n<p>Content</p>\n<!-- /wp:paragraph -->";
+		// Bypass post update hooks so the fixture keeps the invalid note reference.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+		$wpdb->update( $wpdb->posts, [ 'post_content' => $content ], [ 'ID' => $original->ID ] );
+		\clean_post_cache( $original->ID );
+		$original = \get_post( $original->ID );
+
+		$new_id = \duplicate_post_create_duplicate( $original );
+
+		\remove_action( 'duplicate_post_after_duplicated', 'duplicate_post_copy_notes', 45 );
+		$new_notes  = \get_comments(
+			[
+				'post_id' => $new_id,
+				'type'    => 'note',
+			],
+		);
+		$by_content = [];
+		foreach ( $new_notes as $new_note ) {
+			$by_content[ $new_note->comment_content ] = $new_note;
+		}
+
+		$this->assertCount( 2, $new_notes );
+		$this->assertArrayHasKey( 'Parent note', $by_content );
+		$this->assertArrayHasKey( 'Reply note', $by_content );
+		$this->assertSame( (int) $by_content['Parent note']->comment_ID, (int) $by_content['Reply note']->comment_parent );
+		$this->assertNotSame( $note_id, (int) $by_content['Parent note']->comment_ID );
+		$this->assertStringContainsString( '"noteId":' . $by_content['Parent note']->comment_ID, \get_post_field( 'post_content', $new_id ) );
+		$this->assertNotSame( $reply_id, (int) $by_content['Reply note']->comment_ID );
 	}
 
 	/**
