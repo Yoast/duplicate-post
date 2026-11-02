@@ -241,6 +241,7 @@ final class Republished_Post_Watcher_Test extends TestCase {
 				'dprepublished',
 				'dpcopy',
 				'dpnonce',
+				'dpcollabredirected',
 			],
 			$this->instance->add_removable_query_args( $array ),
 		);

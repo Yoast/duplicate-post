@@ -97,6 +97,17 @@ final class Block_Editor_Test extends TestCase {
 
 		$this->assertNotFalse(
 			\has_action(
+				'init',
+				[
+					$this->instance,
+					'register_post_meta',
+				],
+			),
+			'Does not have expected init action',
+		);
+
+		$this->assertNotFalse(
+			\has_action(
 				'elementor/editor/after_enqueue_styles',
 				[
 					$this->instance,
@@ -149,6 +160,39 @@ final class Block_Editor_Test extends TestCase {
 			),
 			'Does not have expected wpseo_link_suggestions_indexables filter',
 		);
+	}
+
+	/**
+	 * Tests that register_post_meta registers the meta for each enabled post type.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\UI\Block_Editor::register_post_meta
+	 *
+	 * @return void
+	 */
+	public function test_register_post_meta() {
+		$this->permissions_helper
+			->expects( 'get_enabled_post_types' )
+			->andReturn( [ 'post', 'page' ] );
+
+		$expected_args = Mockery::on(
+			static function ( $args ) {
+				return $args['show_in_rest'] === true
+					&& $args['single'] === true
+					&& $args['type'] === 'string'
+					&& $args['sanitize_callback'] === 'sanitize_text_field'
+					&& \is_callable( $args['auth_callback'] );
+			},
+		);
+
+		Monkey\Functions\expect( '\register_post_meta' )
+			->once()
+			->with( 'post', '_dp_has_rewrite_republish_copy', $expected_args );
+
+		Monkey\Functions\expect( '\register_post_meta' )
+			->once()
+			->with( 'page', '_dp_has_rewrite_republish_copy', $expected_args );
+
+		$this->instance->register_post_meta();
 	}
 
 	/**
@@ -268,6 +312,7 @@ final class Block_Editor_Test extends TestCase {
 		$utils                      = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
 		$post                       = Mockery::mock( WP_Post::class );
 		$post->ID                   = 123;
+		$post->post_type            = 'post';
 		$new_draft_link             = 'http://fakeu.rl/new_draft';
 		$rewrite_and_republish_link = 'http://fakeu.rl/rewrite_and_republish';
 		$rewriting                  = 0;
@@ -332,8 +377,16 @@ final class Block_Editor_Test extends TestCase {
 			->with( $post )
 			->andReturnNull();
 
+		$post_type_object            = Mockery::mock( 'WP_Post_Type' );
+		$post_type_object->rest_base = 'posts';
+
+		Monkey\Functions\expect( '\get_post_type_object' )
+			->with( 'post' )
+			->andReturn( $post_type_object );
+
 		$edit_js_object = [
 			'postId'                  => 123,
+			'restBase'                => 'posts',
 			'newDraftLink'            => $new_draft_link,
 			'rewriteAndRepublishLink' => $rewrite_and_republish_link,
 			'showLinks'               => $show_links,
@@ -372,6 +425,7 @@ final class Block_Editor_Test extends TestCase {
 		$utils                      = Mockery::mock( 'alias:\Yoast\WP\Duplicate_Post\Utils' );
 		$post                       = Mockery::mock( WP_Post::class );
 		$post->ID                   = 123;
+		$post->post_type            = 'post';
 		$new_draft_link             = 'http://fakeu.rl/new_draft';
 		$rewrite_and_republish_link = 'http://fakeu.rl/rewrite_and_republish';
 		$rewriting                  = 1;
@@ -433,8 +487,16 @@ final class Block_Editor_Test extends TestCase {
 			->with( $post )
 			->andReturnNull();
 
+		$post_type_object            = Mockery::mock( 'WP_Post_Type' );
+		$post_type_object->rest_base = 'posts';
+
+		Monkey\Functions\expect( '\get_post_type_object' )
+			->with( 'post' )
+			->andReturn( $post_type_object );
+
 		$edit_js_object = [
 			'postId'                  => 123,
+			'restBase'                => 'posts',
 			'newDraftLink'            => $new_draft_link,
 			'rewriteAndRepublishLink' => $rewrite_and_republish_link,
 			'showLinks'               => $show_links,
