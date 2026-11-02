@@ -123,7 +123,7 @@ final class Post_Republisher_Test extends TestCase {
 			->with( [ $this->instance, 'clean_up_orphaned_copy' ], 11 );
 
 		Monkey\Actions\expectAdded( 'before_delete_post' )
-			->with( [ $this->instance, 'clean_up_when_copy_manually_deleted' ] );
+			->with( [ $this->instance, 'clean_up_when_copy_manually_deleted' ], 10, 2 );
 
 		$this->instance->register_hooks();
 	}
@@ -794,5 +794,83 @@ final class Post_Republisher_Test extends TestCase {
 			->never();
 
 		$this->instance->clean_up_orphaned_copy();
+	}
+
+	/**
+	 * Tests that clean_up_when_copy_manually_deleted removes the flag from the original using the passed post.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Post_Republisher::clean_up_when_copy_manually_deleted
+	 *
+	 * @return void
+	 */
+	public function test_clean_up_when_copy_manually_deleted_uses_passed_post() {
+		$copy     = Mockery::mock( WP_Post::class );
+		$copy->ID = 123;
+
+		Monkey\Functions\expect( 'get_post' )
+			->never();
+
+		$this->permissions_helper
+			->expects( 'is_rewrite_and_republish_copy' )
+			->once()
+			->with( $copy )
+			->andReturnTrue();
+
+		Monkey\Functions\expect( 'get_post_meta' )
+			->once()
+			->with( 123, '_dp_original', true )
+			->andReturn( '1' );
+
+		Monkey\Functions\expect( 'delete_post_meta' )
+			->once()
+			->with( 1, '_dp_has_rewrite_republish_copy' );
+
+		$this->instance->clean_up_when_copy_manually_deleted( 123, $copy );
+	}
+
+	/**
+	 * Tests that clean_up_when_copy_manually_deleted returns early when the post is not a Rewrite & Republish copy.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Post_Republisher::clean_up_when_copy_manually_deleted
+	 *
+	 * @return void
+	 */
+	public function test_clean_up_when_copy_manually_deleted_returns_early_when_not_a_copy() {
+		$post     = Mockery::mock( WP_Post::class );
+		$post->ID = 123;
+
+		$this->permissions_helper
+			->expects( 'is_rewrite_and_republish_copy' )
+			->once()
+			->with( $post )
+			->andReturnFalse();
+
+		Monkey\Functions\expect( 'delete_post_meta' )
+			->never();
+
+		$this->instance->clean_up_when_copy_manually_deleted( 123, $post );
+	}
+
+	/**
+	 * Tests that clean_up_when_copy_manually_deleted returns early when the post no longer exists.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Post_Republisher::clean_up_when_copy_manually_deleted
+	 *
+	 * @return void
+	 */
+	public function test_clean_up_when_copy_manually_deleted_returns_early_when_post_is_gone() {
+		Monkey\Functions\expect( 'get_post' )
+			->once()
+			->with( 123 )
+			->andReturnNull();
+
+		$this->permissions_helper
+			->expects( 'is_rewrite_and_republish_copy' )
+			->never();
+
+		Monkey\Functions\expect( 'delete_post_meta' )
+			->never();
+
+		$this->instance->clean_up_when_copy_manually_deleted( 123 );
 	}
 }

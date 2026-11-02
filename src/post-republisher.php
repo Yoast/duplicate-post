@@ -66,7 +66,7 @@ class Post_Republisher {
 		// Clean up orphaned R&R copies when opening a post for editing.
 		\add_action( 'load-post.php', [ $this, 'clean_up_orphaned_copy' ], 11 );
 		// Clean up the original when the copy is manually deleted from the trash.
-		\add_action( 'before_delete_post', [ $this, 'clean_up_when_copy_manually_deleted' ] );
+		\add_action( 'before_delete_post', [ $this, 'clean_up_when_copy_manually_deleted' ], 10, 2 );
 		// Ensure scheduled Rewrite and Republish posts are properly handled.
 		\add_action( 'future_to_publish', [ $this, 'republish_scheduled_post' ] );
 	}
@@ -517,14 +517,18 @@ class Post_Republisher {
 	/**
 	 * Deletes the original post meta that flags it as having a copy when the copy is manually deleted.
 	 *
-	 * @param int $post_id Post ID of a post that is going to be deleted.
+	 * @param int          $post_id Post ID of a post that is going to be deleted.
+	 * @param WP_Post|null $post    Post object of the post that is going to be deleted.
 	 *
 	 * @return void
 	 */
-	public function clean_up_when_copy_manually_deleted( $post_id ) {
-		$post = \get_post( $post_id );
+	public function clean_up_when_copy_manually_deleted( $post_id, $post = null ) {
+		if ( ! $post instanceof WP_Post ) {
+			$post = \get_post( $post_id );
+		}
 
-		if ( ! $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
+		// The post can already be gone when a concurrent request deleted it first.
+		if ( ! $post instanceof WP_Post || ! $this->permissions_helper->is_rewrite_and_republish_copy( $post ) ) {
 			return;
 		}
 

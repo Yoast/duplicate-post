@@ -1310,6 +1310,26 @@ final class Post_Republisher_Test extends TestCase {
 	}
 
 	/**
+	 * Tests that clean_up_when_copy_manually_deleted does not fail when a concurrent request already deleted the copy.
+	 *
+	 * @covers ::clean_up_when_copy_manually_deleted
+	 *
+	 * @return void
+	 */
+	public function test_clean_up_when_copy_manually_deleted_when_copy_was_already_deleted() {
+		$original = $this->create_original_post();
+		$copy     = $this->create_rewrite_and_republish_copy( $original );
+
+		// A concurrent request deletes the copy after this request's wp_delete_post() has read it.
+		\wp_delete_post( $copy->ID, true );
+
+		$this->instance->clean_up_when_copy_manually_deleted( $copy->ID, $copy );
+		$this->instance->clean_up_when_copy_manually_deleted( $copy->ID );
+
+		$this->assertSame( '', \get_post_meta( $original->ID, '_dp_has_rewrite_republish_copy', true ) );
+	}
+
+	/**
 	 * Tests that delete_copy fires the duplicate_post_after_rewriting action.
 	 *
 	 * @covers ::delete_copy
