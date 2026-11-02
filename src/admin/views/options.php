@@ -133,6 +133,16 @@ if ( ! \defined( 'DUPLICATE_POST_CURRENT_VERSION' ) ) {
 						</fieldset>
 					</td>
 				</tr>
+				<tr>
+					<th scope="row"><?php \esc_html_e( 'Scheduled Rewrite & Republish', 'duplicate-post' ); ?></th>
+					<td>
+						<?php
+						// phpcs:ignore WordPress.Security.EscapeOutput -- Already escapes correctly.
+						echo $this->generate_input( 'duplicate_post_preserve_date_on_scheduled_republish' );
+						?>
+						<p><?php \esc_html_e( 'Keep the original publication date when a scheduled Rewrite & Republish update is applied. The modified date is always updated.', 'duplicate-post' ); ?></p>
+					</td>
+				</tr>
 			</table>
 		</section>
 		<section
