@@ -157,12 +157,12 @@ jobs:
       - name: "Grunt: set package version"
         env:
           VERSION: ${{ inputs.version }}
-        run: yarn grunt set-version -new-version="$VERSION"
+        run: grunt set-version -new-version="$VERSION"
 
       - name: "Grunt: update version references"
         # Updates plugin file Version header, DUPLICATE_POST_CURRENT_VERSION,
         # AND readme.txt Stable tag (this is a stable release).
-        run: yarn grunt update-version
+        run: grunt update-version
 
       - name: Commit version bump on the source branch
         env:
@@ -211,7 +211,7 @@ jobs:
         run: git push origin "${VERSION}"
 
       - name: "Grunt: build artifact"
-        run: yarn grunt artifact
+        run: grunt artifact
 
       - name: "Copy composer.json into artifact"
         # Matches deploy.yml behaviour: the dist artifact includes composer.json so
