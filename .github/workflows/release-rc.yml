@@ -169,14 +169,14 @@ jobs:
         run: yarn install
 
       - name: "Grunt: set package version to RC"
-        run: grunt set-version -new-version="${RC_VERSION}"
+        run: yarn grunt set-version -new-version="${RC_VERSION}"
 
       - name: "Grunt: update version references (trunk variant)"
         # `update-version-trunk` updates the plugin file Version header and
         # DUPLICATE_POST_CURRENT_VERSION but deliberately leaves the readme.txt
         # `Stable tag:` alone, so the wordpress.org listing keeps serving the
         # last stable release while the RC zip is published.
-        run: grunt update-version-trunk
+        run: yarn grunt update-version-trunk
 
       - name: Commit version bump on release branch
         run: |
@@ -199,7 +199,7 @@ jobs:
         run: git push origin "${RC_VERSION}"
 
       - name: "Grunt: build artifact"
-        run: grunt artifact
+        run: yarn grunt artifact
 
       - name: "Copy composer.json into artifact"
         # Matches deploy.yml behaviour: the dist artifact includes composer.json so
