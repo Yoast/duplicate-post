@@ -112,19 +112,24 @@ class Newsletter {
 			'https://my.yoast.com/api/Mailing-list/subscribe',
 			[
 				'method'      => 'POST',
-				'body'        => [
-					'customerDetails' => [
-						'email'     => $email,
-						'firstName' => '',
-					],
-					'list'            => 'Yoast newsletter',
+				'headers'     => [
+					'Content-Type' => 'application/json',
 				],
+				'body'        => \wp_json_encode(
+					[
+						'customerDetails' => [
+							'email'     => $email,
+							'firstName' => '',
+						],
+						'list'            => 'Yoast newsletter',
+					],
+				),
 			],
 		);
 
 		$wp_remote_retrieve_response_code = \wp_remote_retrieve_response_code( $response );
 
-		if ( $wp_remote_retrieve_response_code <= 200 || $wp_remote_retrieve_response_code >= 300 ) {
+		if ( $wp_remote_retrieve_response_code < 200 || $wp_remote_retrieve_response_code >= 300 ) {
 			return [
 				'status'    => 'error',
 				'message'   => \esc_html__( 'Something went wrong. Please try again later.', 'duplicate-post' ),
