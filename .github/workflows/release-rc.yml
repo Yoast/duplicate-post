@@ -57,7 +57,7 @@ concurrency:
 jobs:
   release-rc:
     name: "RC for ${{ inputs.version }}"
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     if: github.repository_owner == 'Yoast'
 
