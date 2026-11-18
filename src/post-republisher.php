@@ -219,8 +219,11 @@ class Post_Republisher {
 			return;
 		}
 
+		// Only scheduled republishing can change the publish date, so the option applies here.
+		$preserve_original_date = ( (int) \get_option( 'duplicate_post_preserve_date_on_scheduled_republish' ) === 1 );
+
 		\kses_remove_filters();
-		$this->republish( $copy, $original_post );
+		$this->republish( $copy, $original_post, $preserve_original_date );
 		\kses_init_filters();
 		$this->delete_copy( $copy->ID, $original_post->ID );
 	}
@@ -304,12 +307,13 @@ class Post_Republisher {
 	/**
 	 * Republishes the post by overwriting the original post.
 	 *
-	 * @param WP_Post $post          The Rewrite & Republish copy.
-	 * @param WP_Post $original_post The original post.
+	 * @param WP_Post $post                   The Rewrite & Republish copy.
+	 * @param WP_Post $original_post          The original post.
+	 * @param bool    $preserve_original_date Whether to preserve the original post date.
 	 *
 	 * @return void
 	 */
-	public function republish( WP_Post $post, WP_Post $original_post ) {
+	public function republish( WP_Post $post, WP_Post $original_post, $preserve_original_date = false ) {
 
 		/**
 		 * Fires before the Rewrite & Republish copy is republished to the original post.
@@ -333,7 +337,7 @@ class Post_Republisher {
 		$this->republish_post_meta( $post );
 
 		// Republish the post.
-		$this->republish_post_elements( $post, $original_post );
+		$this->republish_post_elements( $post, $original_post, $preserve_original_date );
 
 		// Mark the copy as already published.
 		\update_post_meta( $post->ID, '_dp_has_been_republished', '1' );
@@ -387,12 +391,13 @@ class Post_Republisher {
 	/**
 	 * Republishes the post elements overwriting the original post.
 	 *
-	 * @param WP_Post $post          The post object.
-	 * @param WP_Post $original_post The original post.
+	 * @param WP_Post $post                   The post object.
+	 * @param WP_Post $original_post          The original post.
+	 * @param bool    $preserve_original_date Whether to preserve the original post date.
 	 *
 	 * @return void
 	 */
-	protected function republish_post_elements( $post, $original_post ) {
+	protected function republish_post_elements( $post, $original_post, $preserve_original_date = false ) {
 		// Cast to array and not alter the copy's original object.
 		$post_to_be_rewritten = clone $post;
 
@@ -400,6 +405,15 @@ class Post_Republisher {
 		$post_to_be_rewritten->ID          = $original_post->ID;
 		$post_to_be_rewritten->post_name   = $original_post->post_name;
 		$post_to_be_rewritten->post_status = $this->determine_post_status( $post, $original_post );
+
+		if ( $preserve_original_date ) {
+			unset(
+				$post_to_be_rewritten->post_date,
+				$post_to_be_rewritten->post_date_gmt,
+				$post_to_be_rewritten->post_modified,
+				$post_to_be_rewritten->post_modified_gmt,
+			);
+		}
 
 		/**
 		 * Yoast SEO and other plugins prevent from accidentally updating another post's
