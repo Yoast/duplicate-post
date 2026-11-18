@@ -691,6 +691,39 @@ final class Legacy_Duplication_Test extends TestCase {
 	}
 
 	/**
+	 * Tests that the sticky setting is copied to the duplicate.
+	 *
+	 * @covers ::duplicate_post_create_duplicate
+	 *
+	 * @return void
+	 */
+	public function test_copies_sticky_state() {
+		$original = $this->create_original_post();
+		\stick_post( $original->ID );
+
+		$new_id = \duplicate_post_create_duplicate( $original );
+
+		$this->assertIsInt( $new_id );
+		$this->assertTrue( \is_sticky( $new_id ) );
+	}
+
+	/**
+	 * Tests that a non sticky post does not produce a sticky duplicate.
+	 *
+	 * @covers ::duplicate_post_create_duplicate
+	 *
+	 * @return void
+	 */
+	public function test_does_not_stick_duplicate_of_non_sticky_post() {
+		$original = $this->create_original_post();
+
+		$new_id = \duplicate_post_create_duplicate( $original );
+
+		$this->assertIsInt( $new_id );
+		$this->assertFalse( \is_sticky( $new_id ) );
+	}
+
+	/**
 	 * Tests that a disabled copystatus setting forces draft even when a status is passed.
 	 *
 	 * @covers ::duplicate_post_create_duplicate
