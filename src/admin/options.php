@@ -179,6 +179,12 @@ class Options {
 				'value'       => 1,
 				'description' => \__( 'except pingbacks and trackbacks', 'duplicate-post' ),
 			],
+			'duplicate_post_preserve_date_on_scheduled_republish' => [
+				'tab'   => 'what-to-copy',
+				'type'  => 'checkbox',
+				'label' => \__( 'Preserve the original publication date', 'duplicate-post' ),
+				'value' => 1,
+			],
 			'duplicate_post_copymenuorder'                => [
 				'tab'      => 'what-to-copy',
 				'fieldset' => 'elements-to-copy',
