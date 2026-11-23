@@ -213,6 +213,42 @@ final class Post_Republisher_Test extends TestCase {
 	}
 
 	/**
+	 * Tests that create_duplicate_for_rewrite_and_republish copies sticky state.
+	 *
+	 * @covers \Yoast\WP\Duplicate_Post\Post_Duplicator::create_duplicate_for_rewrite_and_republish
+	 * @covers \Yoast\WP\Duplicate_Post\Post_Duplicator::create_duplicate
+	 *
+	 * @return void
+	 */
+	public function test_create_duplicate_for_rewrite_and_republish_copies_sticky_state() {
+		$original = $this->create_original_post();
+		\stick_post( $original->ID );
+
+		$copy = $this->create_rewrite_and_republish_copy( $original );
+
+		$this->assertTrue( \is_sticky( $copy->ID ) );
+	}
+
+	/**
+	 * Tests that republish does not clear the original post sticky state.
+	 *
+	 * @covers ::republish
+	 * @covers ::republish_post_elements
+	 *
+	 * @return void
+	 */
+	public function test_republish_preserves_original_sticky_state() {
+		$original = $this->create_original_post();
+		\stick_post( $original->ID );
+
+		$copy = $this->create_rewrite_and_republish_copy( $original );
+
+		$this->instance->republish( $copy, $original );
+
+		$this->assertTrue( \is_sticky( $original->ID ) );
+	}
+
+	/**
 	 * Tests that create_duplicate_for_rewrite_and_republish copies taxonomies.
 	 *
 	 * @covers \Yoast\WP\Duplicate_Post\Post_Duplicator::create_duplicate_for_rewrite_and_republish
