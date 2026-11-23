@@ -144,6 +144,7 @@
 		 at a future date. -->
 	<rule ref="Yoast.NamingConventions.ValidHookName.WrongPrefix">
 		<exclude-pattern>/(admin|common)-functions\.php$</exclude-pattern>
+		<exclude-pattern>/src/abilities\.php$</exclude-pattern>
 		<exclude-pattern>/src/(permissions-helper|post-(duplicator|republisher))\.php$</exclude-pattern>
 		<exclude-pattern>/src/ui/link-builder\.php$</exclude-pattern>
 	</rule>
